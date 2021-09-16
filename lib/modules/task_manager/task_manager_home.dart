@@ -7,9 +7,14 @@ import 'package:task_manager/core/components/app_drawer_container.dart';
 import 'package:task_manager/core/constants/app_contant.dart';
 import 'package:task_manager/core/services/theme_service.dart';
 import 'package:task_manager/core/utils/app_util.dart';
+import 'package:task_manager/models/form_section.dart';
+import 'package:task_manager/models/task.dart';
 import 'package:task_manager/models/user.dart';
 import 'package:task_manager/modules/task_manager/components/task_list_container.dart';
 import 'package:task_manager/modules/task_manager/components/task_list_filter.dart';
+import 'package:task_manager/modules/task_manager/components/todo_form_container.dart';
+import 'package:task_manager/modules/task_manager/helpers/task_form_state_helper.dart';
+import 'package:task_manager/modules/task_manager/models/task_form.dart';
 
 class TaskMangerHome extends StatelessWidget {
   const TaskMangerHome({Key? key}) : super(key: key);
@@ -18,16 +23,21 @@ class TaskMangerHome extends StatelessWidget {
     BuildContext context,
     User? currentUser,
   ) async {
+    Task task = new Task(title: '', description: '');
+    task.assignedTo =
+        currentUser != null ? currentUser.id : AppContant.defaultUserId;
+    task.createdBy = currentUser != null ? currentUser.fullName : '';
+    TaskFormStateHelper.updateFormState(context, task, true);
     String currentTheme =
         Provider.of<AppThemeState>(context, listen: false).currentTheme;
     Color textColor = currentTheme == ThemeServices.darkTheme
         ? AppContant.darkTextColor
         : AppContant.ligthTextColor;
-    Widget modal = Container(
-      child: Text(
-        'Yeah on add',
-        style: TextStyle().copyWith(color: textColor),
-      ),
+    final List<FormSection> taskFormSections =
+        TaskForm.getFormSections(textColor);
+    Widget modal = TaskFormContainer(
+      taskFormSections: taskFormSections,
+      subTasks: task.subTasks,
     );
     await AppUtil.showPopUpModal(context, modal, false);
   }
