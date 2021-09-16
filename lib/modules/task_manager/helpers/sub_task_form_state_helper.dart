@@ -16,7 +16,7 @@ class SubTaskFormStateHelper {
     Provider.of<SubTaskFormState>(context, listen: false)
         .setFormFieldState('id', subTask.id);
     Provider.of<SubTaskFormState>(context, listen: false)
-        .setFormFieldState('todoId', subTask.taskId);
+        .setFormFieldState('taskId', subTask.taskId);
     Provider.of<SubTaskFormState>(context, listen: false)
         .setFormFieldState('title', subTask.title);
     Provider.of<SubTaskFormState>(context, listen: false)

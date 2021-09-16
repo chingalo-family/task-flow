@@ -20,8 +20,8 @@ import 'package:task_manager/modules/task_manager/sub_module/components/delete_t
 import 'package:task_manager/modules/task_manager/sub_module/components/sub_task_form_container.dart';
 import 'package:task_manager/modules/task_manager/sub_module/components/todo_view_container.dart';
 
-class TaskMangerHome extends StatelessWidget {
-  const TaskMangerHome({Key? key}) : super(key: key);
+class TaskMangerView extends StatelessWidget {
+  const TaskMangerView({Key? key}) : super(key: key);
 
   onAddSubTask(
     BuildContext context,

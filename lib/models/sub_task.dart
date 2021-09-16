@@ -29,7 +29,7 @@ class SubTask {
   Map<String, dynamic> toMap(SubTask todoTask) {
     var data = Map<String, dynamic>();
     data['id'] = todoTask.id;
-    data['todoId'] = todoTask.taskId;
+    data['taskId'] = todoTask.taskId;
     data['title'] = todoTask.title;
     data['isCompleted'] = todoTask.isCompleted! ? 1 : 0;
     data['createdBy'] = todoTask.createdBy;
