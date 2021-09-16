@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_manager/app_state/app_info_state/app_info_state.dart';
 import 'package:task_manager/app_state/app_theme_state/app_theme_state.dart';
+import 'package:task_manager/app_state/task_state/task_state.dart';
 import 'package:task_manager/core/services/theme_service.dart';
 import 'package:task_manager/modules/task_manager/task_manager_home.dart';
 
@@ -27,6 +28,7 @@ class _SplashState extends State<Splash> {
     Timer(Duration(seconds: 1), () {
       ThemeServices.getCurrentTheme().then((theme) {
         appThemeState.setCurrentTheme(theme);
+        Provider.of<TaskState>(context, listen: false).initiateTaskList();
         Provider.of<AppInfoState>(context, listen: false).setCurrentAppInfo();
         Timer(
           Duration(
