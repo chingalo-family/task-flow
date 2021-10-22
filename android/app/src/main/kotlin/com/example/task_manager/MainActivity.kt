@@ -1,4 +1,4 @@
-package com.example.task_manager
+package chingalo.family.todo_app
 
 import io.flutter.embedding.android.FlutterActivity
 

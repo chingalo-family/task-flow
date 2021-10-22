@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
 import 'package:task_manager/core/components/input_fields/boolean_input_field_container.dart';
+import 'package:task_manager/core/components/input_fields/check_box_list_input_field.dart';
 import 'package:task_manager/core/components/input_fields/coordinate_input_field_container.dart';
 import 'package:task_manager/core/components/input_fields/date_input_field_container.dart';
 import 'package:task_manager/core/components/input_fields/input_clear_icon.dart';
@@ -12,8 +13,6 @@ import 'package:task_manager/core/components/input_fields/true_only_input_field_
 import 'package:task_manager/core/components/line_separator.dart';
 import 'package:task_manager/models/input_field.dart';
 import 'package:task_manager/models/input_field_option.dart';
-
-import 'check_box_list_input_field.dart';
 
 class InputFieldContainer extends StatelessWidget {
   const InputFieldContainer({

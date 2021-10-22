@@ -4,6 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:task_manager/app_state/app_info_state/app_info_state.dart';
 import 'package:task_manager/app_state/app_theme_state/app_theme_state.dart';
 import 'package:task_manager/app_state/device_connectivity_state/device_connectivity_state.dart';
+import 'package:task_manager/app_state/task_state/sub_task_form_state.dart';
+import 'package:task_manager/app_state/task_state/task_form_state.dart';
+import 'package:task_manager/app_state/task_state/task_state.dart';
 import 'package:task_manager/app_state/user_state/sign_in_sign_up_form_state.dart';
 import 'package:task_manager/app_state/user_state/user_group_state.dart';
 import 'package:task_manager/app_state/user_state/user_state.dart';
@@ -25,6 +28,9 @@ class App extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => DeviceConnectivityState()),
         ChangeNotifierProvider(create: (_) => AppThemeState()),
         ChangeNotifierProvider(create: (_) => SignInSignUpFormState()),
+        ChangeNotifierProvider(create: (_) => TaskState()),
+        ChangeNotifierProvider(create: (_) => TaskFormState()),
+        ChangeNotifierProvider(create: (_) => SubTaskFormState()),
         ChangeNotifierProvider(create: (_) => UserState()),
         ChangeNotifierProvider(create: (_) => UserGroupState()),
       ],

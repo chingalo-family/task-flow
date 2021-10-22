@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_manager/app_state/app_theme_state/app_theme_state.dart';
+import 'package:task_manager/core/constants/app_contant.dart';
 import 'package:task_manager/models/app_pop_up_menu_item.dart';
 import 'package:task_manager/modules/about/about.dart';
 
@@ -56,8 +57,8 @@ class AppPopUpMenu extends StatelessWidget {
                           child: Icon(
                             menuItem.icon,
                             color: appThemeState.currentTheme == 'dark'
-                                ? ThemeData.dark().colorScheme.onSecondary
-                                : ThemeData.light().colorScheme.onSecondary,
+                                ? AppContant.darkTextColor
+                                : AppContant.ligthTextColor,
                           ),
                         );
                       },

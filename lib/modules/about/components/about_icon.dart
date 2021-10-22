@@ -17,7 +17,7 @@ class AboutIcon extends StatelessWidget {
       ),
       height: size.height * 0.2,
       child: SvgPicture.asset(
-        'assets/logos/todo-logo.svg',
+        'assets/icons/todo-logo.svg',
         fit: BoxFit.contain,
       ),
     );
