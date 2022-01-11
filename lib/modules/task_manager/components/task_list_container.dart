@@ -17,6 +17,7 @@ class TaskListContainer extends StatelessWidget {
     );
   }
 
+  //@TODO loading and listing tasks by pagination
   @override
   Widget build(BuildContext context) {
     return Consumer<TaskState>(

@@ -11,7 +11,7 @@ class SignUpForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text("sign up form"),
+      child: Text('sign up form'),
     );
   }
 }

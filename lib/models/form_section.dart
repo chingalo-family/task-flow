@@ -31,7 +31,7 @@ class FormSection {
     this.borderColor = this.borderColor ?? Colors.transparent;
     this.subSections = this.subSections ?? [];
     this.inputFields = this.inputFields ?? [];
-    this.description = this.description ?? "";
+    this.description = this.description ?? '';
   }
 
   @override
