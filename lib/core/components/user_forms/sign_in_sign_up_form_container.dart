@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_manager/app_state/app_theme_state/app_theme_state.dart';
+import 'package:task_manager/core/components/user_forms/models/sign_in_sign_up_form.dart';
 import 'package:task_manager/core/components/user_forms/sign_in_form.dart';
 import 'package:task_manager/core/components/user_forms/sign_up_form.dart';
 import 'package:task_manager/core/constants/app_contant.dart';
@@ -66,7 +67,7 @@ class _SignInSignUpFormContainerState extends State<SignInSignUpFormContainer> {
                           TextSpan(
                             text: _showSignInForm
                                 ? "Don't have account?"
-                                : 'Have account already?',
+                                : 'Already have an account?',
                             style: TextStyle().copyWith(
                               fontStyle: FontStyle.italic,
                               fontWeight: FontWeight.normal,
@@ -75,7 +76,7 @@ class _SignInSignUpFormContainerState extends State<SignInSignUpFormContainer> {
                             ),
                           ),
                           TextSpan(
-                            text: _showSignInForm ? ' Sign up' : ' Sign in',
+                            text: _showSignInForm ? ' Sign up' : ' Log in',
                             style: TextStyle().copyWith(
                               color: textColor,
                               fontWeight: FontWeight.bold,
