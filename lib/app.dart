@@ -14,7 +14,7 @@ import 'package:task_manager/core/services/theme_service.dart';
 import 'package:task_manager/modules/splash/splash.dart';
 
 class App extends StatelessWidget {
-  final String title = 'Task Manager';
+  final String title = 'chingalo todo app';
 
   @override
   Widget build(BuildContext context) {

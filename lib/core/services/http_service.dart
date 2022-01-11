@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 class HttpService {
-  static final String baseUrl = 'lsis-ovc-dreams.org';
+  static final String baseUrl = '170.187.147.30:8080';
   final String? username;
   final String? password;
   String? basicAuth;
@@ -26,8 +26,8 @@ class HttpService {
     return http.post(
       apiUrl,
       headers: {
-        HttpHeaders.authorizationHeader: "Basic $basicAuth",
-        "Content-Type": "application/json",
+        HttpHeaders.authorizationHeader: 'Basic $basicAuth',
+        'Content-Type': 'application/json',
       },
       body: body,
     );
@@ -42,8 +42,8 @@ class HttpService {
     return http.put(
       apiUrl,
       headers: {
-        HttpHeaders.authorizationHeader: "Basic $basicAuth",
-        "Content-Type": "application/json",
+        HttpHeaders.authorizationHeader: 'Basic $basicAuth',
+        'Content-Type': 'application/json',
       },
       body: body,
     );
@@ -55,7 +55,7 @@ class HttpService {
   }) async {
     Uri apiUrl = getApiUrl(url, queryParameters: queryParameters);
     return await http.delete(apiUrl, headers: {
-      HttpHeaders.authorizationHeader: "Basic $basicAuth",
+      HttpHeaders.authorizationHeader: 'Basic $basicAuth',
     });
   }
 
@@ -65,7 +65,7 @@ class HttpService {
   }) async {
     Uri apiUrl = getApiUrl(url, queryParameters: queryParameters);
     return await http.get(apiUrl, headers: {
-      HttpHeaders.authorizationHeader: "Basic $basicAuth",
+      HttpHeaders.authorizationHeader: 'Basic $basicAuth',
     });
   }
 
@@ -74,9 +74,9 @@ class HttpService {
     Map<String, dynamic> queryParameters,
   ) async {
     Map<String, String?> dataQueryParameters = {
-      "totalPages": "true",
-      "pageSize": "1",
-      "fields": "none",
+      'totalPages': 'true',
+      'pageSize': '1',
+      'fields': 'none',
     };
     dataQueryParameters.addAll(queryParameters as Map<String, String?>);
     return await this.httpGet(url, queryParameters: dataQueryParameters);
