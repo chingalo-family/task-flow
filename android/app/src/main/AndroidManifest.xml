@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="chingalo.family.todo_app">
    <application
-        android:label="Task Manager"
+        android:label="chingalo todo app"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
