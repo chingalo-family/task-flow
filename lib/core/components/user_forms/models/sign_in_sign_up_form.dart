@@ -10,18 +10,19 @@ class SignInSignUpForm {
         color: textColor,
         inputFields: [
           InputField(
-            id: 'title',
-            name: 'Title',
+            id: 'username',
+            name: 'Username',
             valueType: 'TEXT',
             inputColor: textColor,
             labelColor: textColor,
           ),
           InputField(
-            id: 'description',
-            name: 'Desctiption',
+            id: 'password',
+            name: 'Password',
             valueType: 'TEXT',
             inputColor: textColor,
             labelColor: textColor,
+            isPassowrdField: true,
           ),
         ],
       ),
