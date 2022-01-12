@@ -8,7 +8,7 @@ import 'package:task_manager/modules/task_manager/sub_module/task_manager_view.d
 class TaskListContainer extends StatelessWidget {
   const TaskListContainer({Key? key}) : super(key: key);
 
-  onSelectTodo(BuildContext context, Task task) {
+  onSelectTask(BuildContext context, Task task) {
     Provider.of<TaskState>(context, listen: false).setCurrentTodo(task);
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -32,7 +32,7 @@ class TaskListContainer extends StatelessWidget {
                 .map(
                   (Task task) => TaskList(
                     task: task,
-                    onSelectTodo: () => onSelectTodo(
+                    onSelectTask: () => onSelectTask(
                       context,
                       task,
                     ),

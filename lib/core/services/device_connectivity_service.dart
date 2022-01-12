@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:task_manager/app_state/device_connectivity_state/device_connectivity_state.dart';
 import 'package:provider/provider.dart';
 
-class DeviceConnectivityProvider {
+class DeviceConnectivityService {
   StreamSubscription checkChangeOfDeviceConnectionStatus(BuildContext context) {
     return Connectivity()
         .onConnectivityChanged
