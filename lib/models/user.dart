@@ -6,6 +6,7 @@ class User {
   late String fullName;
   late String? password;
   late String? emial;
+  late String? gender;
   late String? phoneNumber;
   late bool isLogin;
 
@@ -13,8 +14,9 @@ class User {
     required this.username,
     this.emial,
     required this.fullName,
-    this.password,
+    required this.password,
     this.phoneNumber,
+    this.gender,
     this.isLogin = false,
   }) {
     this.id = AppUtil.getUid();
