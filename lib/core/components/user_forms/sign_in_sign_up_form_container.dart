@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_manager/app_state/app_theme_state/app_theme_state.dart';
-import 'package:task_manager/core/components/user_forms/models/sign_in_sign_up_form.dart';
 import 'package:task_manager/core/components/user_forms/sign_in_form.dart';
 import 'package:task_manager/core/components/user_forms/sign_up_form.dart';
 import 'package:task_manager/core/constants/app_contant.dart';
 import 'package:task_manager/core/services/theme_service.dart';
+import 'package:task_manager/models/user.dart';
 
 class SignInSignUpFormContainer extends StatefulWidget {
   const SignInSignUpFormContainer({
@@ -21,9 +21,14 @@ class _SignInSignUpFormContainerState extends State<SignInSignUpFormContainer> {
   bool _showSignInForm = true;
 
   void onChangeFormState() {
-    //@TODO clean form states
     _showSignInForm = !_showSignInForm;
     setState(() {});
+  }
+
+  onSuccessLoginOrSignUp(BuildContext context, User user) {
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context, user);
+    }
   }
 
   @override
@@ -43,6 +48,8 @@ class _SignInSignUpFormContainerState extends State<SignInSignUpFormContainer> {
                 child: _showSignInForm
                     ? SignInForm(
                         currentTheme: currentTheme,
+                        onSuccessLogin: (User user) =>
+                            onSuccessLoginOrSignUp(context, user),
                       )
                     : SignUpForm(
                         currentTheme: currentTheme,

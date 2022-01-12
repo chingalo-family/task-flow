@@ -7,14 +7,17 @@ import 'package:task_manager/core/components/user_forms/models/sign_in_sign_up_f
 import 'package:task_manager/core/constants/app_contant.dart';
 import 'package:task_manager/core/services/theme_service.dart';
 import 'package:task_manager/models/form_section.dart';
+import 'package:task_manager/models/user.dart';
 
 class SignInForm extends StatefulWidget {
   const SignInForm({
     Key? key,
     required this.currentTheme,
+    required this.onSuccessLogin,
   }) : super(key: key);
 
   final String currentTheme;
+  final Function onSuccessLogin;
 
   @override
   State<SignInForm> createState() => _SignInFormState();
@@ -25,6 +28,17 @@ class _SignInFormState extends State<SignInForm> {
   List<FormSection>? formSections;
   bool isFormReady = false;
   bool isSaving = false;
+
+  onLogin() {
+    //@TODO login for login
+
+    User user = new User(
+      username: 'username',
+      fullName: 'fullName',
+      password: 'password',
+    );
+    widget.onSuccessLogin(user);
+  }
 
   @override
   void initState() {
@@ -68,6 +82,19 @@ class _SignInFormState extends State<SignInForm> {
                     'Button',
                     style: TextStyle().copyWith(
                       color: textColor,
+                    ),
+                  ),
+                ),
+                Container(
+                  child: Center(
+                    child: TextButton(
+                      onPressed: onLogin,
+                      child: Text(
+                        'log in',
+                        style: TextStyle().copyWith(
+                          color: textColor,
+                        ),
+                      ),
                     ),
                   ),
                 )
