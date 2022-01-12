@@ -90,22 +90,31 @@ class _NumericalInputFieldContainerState
               decoration: InputDecoration(
                 border: InputBorder.none,
                 errorText: null,
+                suffixIconConstraints: BoxConstraints(
+                  maxHeight: 20.0,
+                  minHeight: 20.0,
+                ),
+                suffixIcon: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Visibility(
+                      child: Text(widget.inputField.suffixLabel ?? '',
+                          style: TextStyle().copyWith(
+                            color: widget.inputField.inputColor,
+                          )),
+                      visible: widget.inputField.suffixLabel != '' &&
+                          _value != null &&
+                          '$_value'.trim() != '',
+                    ),
+                    InputCheckedIcon(
+                      showTickedIcon: _value != null && '$_value'.trim() != '',
+                      color: widget.inputField.inputColor,
+                    )
+                  ],
+                ),
               ),
             ),
           ),
-          Visibility(
-            child: Text(widget.inputField.suffixLabel ?? '',
-                style: TextStyle().copyWith(
-                  color: widget.inputField.inputColor,
-                )),
-            visible: widget.inputField.suffixLabel != '' &&
-                _value != null &&
-                '$_value'.trim() != '',
-          ),
-          InputCheckedIcon(
-            showTickedIcon: _value != null && '$_value'.trim() != '',
-            color: widget.inputField.inputColor,
-          )
         ],
       ),
     );

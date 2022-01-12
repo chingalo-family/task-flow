@@ -106,43 +106,54 @@ class _TextInputFieldContainerState extends State<TextInputFieldContainer> {
                 suffixIconConstraints: BoxConstraints(
                   maxHeight: 20.0,
                   minHeight: 20.0,
-                  maxWidth: 20.0,
-                  minWidth: 20.0,
                 ),
-                suffixIcon: !widget.inputField.isPassowrdField!
-                    ? null
-                    : GestureDetector(
-                        onTap: _updatePasswordVisibilityStatus,
-                        child: Container(
-                          height: 10.0,
-                          color:
-                              widget.inputField.inputColor!.withOpacity(0.01),
-                          child: SvgPicture.asset(
-                            _isPasswordVisible!
-                                ? 'assets/icons/login-close-eye.svg'
-                                : 'assets/icons/login-open-eye.svg',
+                suffixIcon: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Visibility(
+                      child: Text(widget.inputField.suffixLabel ?? '',
+                          style: TextStyle().copyWith(
                             color: widget.inputField.inputColor,
-                          ),
-                        ),
-                      ),
+                          )),
+                      visible: widget.inputField.suffixLabel != '' &&
+                          _value != null &&
+                          '$_value'.trim() != '',
+                    ),
+                    Container(
+                      child: !widget.inputField.isPassowrdField!
+                          ? null
+                          : Container(
+                              margin: EdgeInsets.only(
+                                right: _value != null && '$_value'.trim() != ''
+                                    ? 0.0
+                                    : 5.0,
+                              ),
+                              child: GestureDetector(
+                                onTap: _updatePasswordVisibilityStatus,
+                                child: Container(
+                                  color: widget.inputField.inputColor!
+                                      .withOpacity(0.01),
+                                  child: SvgPicture.asset(
+                                    _isPasswordVisible!
+                                        ? 'assets/icons/login-close-eye.svg'
+                                        : 'assets/icons/login-open-eye.svg',
+                                    color: widget.inputField.inputColor,
+                                  ),
+                                ),
+                              ),
+                            ),
+                    ),
+                    InputCheckedIcon(
+                      showTickedIcon: !widget.inputField.isPassowrdField! &&
+                          widget.showInputCheckedIcon &&
+                          _value != null &&
+                          '$_value'.trim() != '',
+                      color: widget.inputField.inputColor,
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          Visibility(
-            child: Text(widget.inputField.suffixLabel ?? '',
-                style: TextStyle().copyWith(
-                  color: widget.inputField.inputColor,
-                )),
-            visible: widget.inputField.suffixLabel != '' &&
-                _value != null &&
-                '$_value'.trim() != '',
-          ),
-          InputCheckedIcon(
-            showTickedIcon: !widget.inputField.isPassowrdField! &&
-                widget.showInputCheckedIcon &&
-                _value != null &&
-                '$_value'.trim() != '',
-            color: widget.inputField.inputColor,
           ),
         ],
       ),
