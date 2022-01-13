@@ -1,5 +1,3 @@
-import 'package:task_manager/core/utils/app_util.dart';
-
 class UserGroup {
   late String id;
   late String name;
@@ -7,9 +5,9 @@ class UserGroup {
 
   UserGroup({
     required this.name,
+    required this.id,
     this.description = '',
   }) {
-    this.id = AppUtil.getUid();
     this.description = this.description != '' ? this.description : '';
   }
 

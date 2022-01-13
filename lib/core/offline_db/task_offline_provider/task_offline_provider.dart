@@ -3,7 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:task_manager/core/offline_db/offline_db_provider.dart';
 import 'package:task_manager/models/task.dart';
 
-class TaskOfflineProvider extends DbProvider {
+class TaskOfflineProvider extends OfflineDbProvider {
   String tableName = 'task';
 
   // columns
@@ -18,16 +18,22 @@ class TaskOfflineProvider extends DbProvider {
   final String assignedTo = 'assignedTo';
   final String groupId = 'groupId';
 
-  addOrUpdateTask(Task todo) async {
+  addOrUpdateTask(Task task) async {
     var dbClient = await db;
-    await dbClient!.insert(tableName, todo.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    await dbClient!.insert(
+      tableName,
+      task.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   deleteTask(String taskId) async {
     var dbClient = await db;
-    return await dbClient!
-        .delete(tableName, where: '$id = ?', whereArgs: [taskId]);
+    return await dbClient!.delete(
+      tableName,
+      where: '$id = ?',
+      whereArgs: [taskId],
+    );
   }
 
   Future<List<Task>> getAllTasks() async {

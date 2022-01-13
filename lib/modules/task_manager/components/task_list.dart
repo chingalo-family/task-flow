@@ -10,11 +10,11 @@ class TaskList extends StatelessWidget {
   const TaskList({
     Key? key,
     required this.task,
-    this.onSelectTodo,
+    this.onSelectTask,
   }) : super(key: key);
 
   final Task task;
-  final VoidCallback? onSelectTodo;
+  final VoidCallback? onSelectTask;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class TaskList extends StatelessWidget {
             vertical: 5.0,
           ),
           child: GestureDetector(
-            onTap: onSelectTodo,
+            onTap: onSelectTask,
             child: MaterialCard(
               body: Container(
                 padding: EdgeInsets.only(
