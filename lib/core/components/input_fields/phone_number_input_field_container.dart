@@ -59,13 +59,22 @@ class _PhoneNumberInputFieldContainerState
               decoration: InputDecoration(
                 border: InputBorder.none,
                 errorText: null,
+                suffixIconConstraints: BoxConstraints(
+                  maxHeight: 20.0,
+                  minHeight: 20.0,
+                ),
+                suffixIcon: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    InputCheckedIcon(
+                      showTickedIcon: _value != null && '$_value'.trim() != '',
+                      color: widget.inputField.inputColor,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-          InputCheckedIcon(
-            showTickedIcon: _value != null && '$_value'.trim() != '',
-            color: widget.inputField.inputColor,
-          )
         ],
       ),
     );

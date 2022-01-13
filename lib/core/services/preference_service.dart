@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class PreferenceProvider {
+class PreferenceService {
   static setPreferenceValue(String preferenceKey, String value) async {
     SharedPreferences _preferences = await SharedPreferences.getInstance();
     await _preferences.setString(preferenceKey, value);

@@ -1,4 +1,4 @@
-import 'package:task_manager/core/services/preference_provider.dart';
+import 'package:task_manager/core/services/preference_service.dart';
 
 class ThemeServices {
   static final String darkTheme = 'dark';
@@ -7,11 +7,11 @@ class ThemeServices {
   static final String themePreferenceKey = 'app_theme';
 
   static setCurrentTheme(String theme) async {
-    await PreferenceProvider.setPreferenceValue(themePreferenceKey, theme);
+    await PreferenceService.setPreferenceValue(themePreferenceKey, theme);
   }
 
   static Future<String> getCurrentTheme() async {
-    return await PreferenceProvider.getPreferenceValue(themePreferenceKey) ??
+    return await PreferenceService.getPreferenceValue(themePreferenceKey) ??
         darkTheme;
   }
 }

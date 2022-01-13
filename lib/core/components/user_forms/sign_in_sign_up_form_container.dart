@@ -5,6 +5,7 @@ import 'package:task_manager/core/components/user_forms/sign_in_form.dart';
 import 'package:task_manager/core/components/user_forms/sign_up_form.dart';
 import 'package:task_manager/core/constants/app_contant.dart';
 import 'package:task_manager/core/services/theme_service.dart';
+import 'package:task_manager/models/user.dart';
 
 class SignInSignUpFormContainer extends StatefulWidget {
   const SignInSignUpFormContainer({
@@ -20,9 +21,14 @@ class _SignInSignUpFormContainerState extends State<SignInSignUpFormContainer> {
   bool _showSignInForm = true;
 
   void onChangeFormState() {
-    //@TODO clean form states
     _showSignInForm = !_showSignInForm;
     setState(() {});
+  }
+
+  onSuccessLoginOrSignUp(BuildContext context, User user) {
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context, user);
+    }
   }
 
   @override
@@ -42,6 +48,8 @@ class _SignInSignUpFormContainerState extends State<SignInSignUpFormContainer> {
                 child: _showSignInForm
                     ? SignInForm(
                         currentTheme: currentTheme,
+                        onSuccessLogin: (User user) =>
+                            onSuccessLoginOrSignUp(context, user),
                       )
                     : SignUpForm(
                         currentTheme: currentTheme,
@@ -66,7 +74,7 @@ class _SignInSignUpFormContainerState extends State<SignInSignUpFormContainer> {
                           TextSpan(
                             text: _showSignInForm
                                 ? "Don't have account?"
-                                : 'Have account already?',
+                                : 'Already have an account?',
                             style: TextStyle().copyWith(
                               fontStyle: FontStyle.italic,
                               fontWeight: FontWeight.normal,
@@ -75,7 +83,7 @@ class _SignInSignUpFormContainerState extends State<SignInSignUpFormContainer> {
                             ),
                           ),
                           TextSpan(
-                            text: _showSignInForm ? ' Sign up' : ' Sign in',
+                            text: _showSignInForm ? ' Sign up' : ' Log in',
                             style: TextStyle().copyWith(
                               color: textColor,
                               fontWeight: FontWeight.bold,
