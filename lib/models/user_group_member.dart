@@ -1,5 +1,3 @@
-import 'package:task_manager/core/utils/app_util.dart';
-
 class UserGroupMember {
   late String id;
   late String groupId;
@@ -10,8 +8,10 @@ class UserGroupMember {
   UserGroupMember({
     required this.groupId,
     required this.userId,
+    this.username = '',
+    this.fullName = '',
   }) {
-    this.id = AppUtil.getUid();
+    this.id = '${groupId}_$userId';
   }
 
   Map<String, dynamic> toMap() {
