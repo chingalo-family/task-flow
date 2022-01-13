@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:task_manager/core/utils/app_util.dart';
 import 'package:task_manager/models/user.dart';
 
 class UserState with ChangeNotifier {
@@ -10,6 +11,7 @@ class UserState with ChangeNotifier {
         username: '',
         fullName: '',
         password: '',
+        id: AppUtil.getUid(),
       );
 
   String get usernameIcon => _currentUser != null && _currentUser!.isLogin

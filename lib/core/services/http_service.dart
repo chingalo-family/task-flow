@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:task_manager/core/constants/dhis2_connection.dart';
 
 class HttpService {
-  static final String baseUrl = '170.187.147.30:8080';
   final String? username;
   final String? password;
   String? basicAuth;
@@ -14,7 +14,7 @@ class HttpService {
   }
 
   Uri getApiUrl(String url, {Map<String, dynamic>? queryParameters}) {
-    return Uri.https(baseUrl, 'kbtraining/$url', queryParameters);
+    return Uri.https(Dhis2Connection.baseUrl, 'kbtraining/$url', queryParameters);
   }
 
   Future<http.Response> httpPost(
@@ -84,6 +84,6 @@ class HttpService {
 
   @override
   String toString() {
-    return '$baseUrl => $username : $password';
+    return '${Dhis2Connection.baseUrl} => $username : $password';
   }
 }

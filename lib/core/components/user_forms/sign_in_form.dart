@@ -47,7 +47,7 @@ class _SignInFormState extends State<SignInForm> {
 
   void setCurrentUser() {
     //@TODO getting current user if present username if user is set
-    currentUser = new User(username: '', fullName: '', password: '');
+    currentUser = new User(username: '', fullName: '', password: '', id: '');
     Provider.of<EntryFormState>(context, listen: false)
         .setFormFieldState('username', currentUser!.username);
   }
