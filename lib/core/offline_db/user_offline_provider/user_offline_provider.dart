@@ -3,7 +3,7 @@ import 'package:task_manager/core/offline_db/offline_db_provider.dart';
 import 'package:task_manager/models/user.dart';
 
 class UserOfflineProvider extends OfflineDbProvider {
-  final String tableName = '';
+  final String tableName = 'user';
 
   final String id = 'id';
   final String username = 'username';

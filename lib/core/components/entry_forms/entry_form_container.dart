@@ -5,7 +5,6 @@ import 'package:task_manager/core/components/line_separator.dart';
 import 'package:task_manager/core/components/material_card.dart';
 import 'package:task_manager/models/form_section.dart';
 import 'package:task_manager/models/input_field.dart';
-import 'package:provider/provider.dart';
 
 class EntryFormContainer extends StatelessWidget {
   const EntryFormContainer({
@@ -34,8 +33,7 @@ class EntryFormContainer extends StatelessWidget {
   final List? unFilledMandatoryFields;
 
   void setFieldErrors() {
-    if (unFilledMandatoryFields != null &&
-        unFilledMandatoryFields!.isNotEmpty) {
+    if (unFilledMandatoryFields != null && unFilledMandatoryFields!.isNotEmpty) {
       formSections!.forEach((section) {
         section.inputFields!.forEach((inputField) {
           if (unFilledMandatoryFields!.contains(inputField.id)) {
@@ -56,8 +54,8 @@ class EntryFormContainer extends StatelessWidget {
       children: formSections!
           .map(
             (FormSection formSection) => Visibility(
-              visible: hiddenSections == null ||
-                  '${hiddenSections![formSection.id]}'.trim() != 'true',
+              visible:
+                  hiddenSections == null || '${hiddenSections![formSection.id]}'.trim() != 'true',
               child: Container(
                 margin: EdgeInsets.only(bottom: 10.0),
                 child: MaterialCard(
@@ -66,8 +64,7 @@ class EntryFormContainer extends StatelessWidget {
                     margin: EdgeInsets.symmetric(vertical: 10.0),
                     decoration: BoxDecoration(
                         border: Border(
-                          left: BorderSide(
-                              color: formSection.borderColor!, width: 8.0),
+                          left: BorderSide(color: formSection.borderColor!, width: 8.0),
                         ),
                         color: formSection.backgroundColor),
                     child: Column(
@@ -95,8 +92,7 @@ class EntryFormContainer extends StatelessWidget {
                         Visibility(
                           visible: formSection.description != '',
                           child: Container(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 15.0, horizontal: 10.0),
+                            padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
                             child: Row(
                               children: [
                                 Expanded(
@@ -122,19 +118,15 @@ class EntryFormContainer extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.symmetric(
-                              vertical: 5.0, horizontal: 10.0),
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 10.0),
+                          margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                          padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: formSection.inputFields!
                                 .map(
                                   (InputField inputField) => Visibility(
                                     visible: hiddenFields == null ||
-                                        '${hiddenFields![inputField.id]}'
-                                                .trim() !=
-                                            'true',
+                                        '${hiddenFields![inputField.id]}'.trim() != 'true',
                                     child: Container(
                                       margin: EdgeInsets.only(
                                         top: 10.0,
@@ -142,16 +134,13 @@ class EntryFormContainer extends StatelessWidget {
                                       child: InputFieldContainer(
                                         hiddenFields: hiddenFields,
                                         inputField: inputField,
-                                        hiddenInputFieldOptions:
-                                            hiddenInputFieldOptions ?? Map(),
+                                        hiddenInputFieldOptions: hiddenInputFieldOptions ?? Map(),
                                         isEditableMode: isEditableMode,
-                                        mandatoryFieldObject: isEditableMode
-                                            ? mandatoryFieldObject
-                                            : Map(),
+                                        mandatoryFieldObject:
+                                            isEditableMode ? mandatoryFieldObject : Map(),
                                         dataObject: dataObject,
-                                        onInputValueChange:
-                                            (String id, dynamic value) =>
-                                                onInputValueChange!(id, value),
+                                        onInputValueChange: (String id, dynamic value) =>
+                                            onInputValueChange!(id, value),
                                       ),
                                     ),
                                   ),
@@ -162,8 +151,7 @@ class EntryFormContainer extends StatelessWidget {
                         EntrySubFormContainer(
                           hiddenFields: hiddenFields ?? Map(),
                           hiddenSections: hiddenSections ?? Map(),
-                          hiddenInputFieldOptions:
-                              hiddenInputFieldOptions ?? Map(),
+                          hiddenInputFieldOptions: hiddenInputFieldOptions ?? Map(),
                           subSections: formSection.subSections,
                           dataObject: dataObject,
                           isEditableMode: isEditableMode,
