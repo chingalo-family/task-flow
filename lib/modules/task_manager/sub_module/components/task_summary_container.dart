@@ -45,7 +45,7 @@ class TaskSummaryContainer extends StatelessWidget {
                           ),
                         ),
                         Visibility(
-                          visible: currentTask.description != "",
+                          visible: currentTask.description != '',
                           child: Container(
                             margin: EdgeInsets.only(
                               bottom: 3.0,

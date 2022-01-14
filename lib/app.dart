@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:task_manager/app_state/app_info_state/app_info_state.dart';
 import 'package:task_manager/app_state/app_theme_state/app_theme_state.dart';
 import 'package:task_manager/app_state/device_connectivity_state/device_connectivity_state.dart';
-import 'package:task_manager/app_state/entry_form_state/entry_form_state.dart';
 import 'package:task_manager/app_state/task_state/sub_task_form_state.dart';
 import 'package:task_manager/app_state/task_state/task_form_state.dart';
 import 'package:task_manager/app_state/task_state/task_state.dart';
@@ -34,7 +33,6 @@ class App extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => SubTaskFormState()),
         ChangeNotifierProvider(create: (_) => UserState()),
         ChangeNotifierProvider(create: (_) => UserGroupState()),
-        ChangeNotifierProvider(create: (_) => EntryFormState()),
       ],
       child: Consumer<AppThemeState>(
         builder: (context, appThemeState, child) => MaterialApp(

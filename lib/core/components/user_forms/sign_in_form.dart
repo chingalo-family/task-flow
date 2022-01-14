@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:task_manager/app_state/entry_form_state/entry_form_state.dart';
+import 'package:task_manager/app_state/user_state/sign_in_sign_up_form_state.dart';
 import 'package:task_manager/core/components/circular_process_loader.dart';
 import 'package:task_manager/core/components/entry_forms/entry_form_container.dart';
 import 'package:task_manager/core/components/user_forms/models/sign_in_sign_up_form.dart';
@@ -49,13 +49,13 @@ class _SignInFormState extends State<SignInForm> {
   void setCurrentUser() async {
     var user = await UserService().getCurrentUser();
     currentUser = user ?? new User(username: '', fullName: '', password: '', id: '');
-    Provider.of<EntryFormState>(context, listen: false)
+    Provider.of<SignInSignUpFormState>(context, listen: false)
         .setFormFieldState('username', currentUser!.username);
   }
 
   void setFormMetadata() {
     try {
-      Provider.of<EntryFormState>(context, listen: false).resetFormState();
+      Provider.of<SignInSignUpFormState>(context, listen: false).resetFormState();
     } catch (e) {
       print(e.toString());
     }
@@ -68,7 +68,7 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   void onInputValueChange(String id, dynamic value) {
-    Provider.of<EntryFormState>(context, listen: false).setFormFieldState(id, value);
+    Provider.of<SignInSignUpFormState>(context, listen: false).setFormFieldState(id, value);
   }
 
   void onLogin(Map dataObject) async {
@@ -104,14 +104,14 @@ class _SignInFormState extends State<SignInForm> {
                 color: Colors.blueGrey,
               ),
             )
-          : Consumer<EntryFormState>(
-              builder: (context, entryFormState, child) => Column(
+          : Consumer<SignInSignUpFormState>(
+              builder: (context, SignInSignUpFormState, child) => Column(
                 children: [
                   EntryFormContainer(
                     elevation: 0.0,
                     onInputValueChange: (String id, dynamic value) => onInputValueChange(id, value),
                     formSections: formSections!,
-                    dataObject: entryFormState.formState,
+                    dataObject: SignInSignUpFormState.formState,
                     mandatoryFieldObject: mandatoryFieldObject,
                   ),
                   Container(
@@ -123,7 +123,7 @@ class _SignInFormState extends State<SignInForm> {
                       children: [
                         Expanded(
                           child: TextButton(
-                            onPressed: () => onLogin(entryFormState.formState),
+                            onPressed: () => onLogin(SignInSignUpFormState.formState),
                             child: Text(
                               'log in',
                               style: TextStyle().copyWith(
