@@ -8,6 +8,7 @@ import 'package:task_manager/core/components/entry_forms/entry_form_container.da
 import 'package:task_manager/core/components/user_forms/models/sign_in_sign_up_form.dart';
 import 'package:task_manager/core/constants/app_contant.dart';
 import 'package:task_manager/core/services/theme_service.dart';
+import 'package:task_manager/core/services/user_service.dart';
 import 'package:task_manager/core/utils/app_util.dart';
 import 'package:task_manager/models/form_section.dart';
 import 'package:task_manager/models/user.dart';
@@ -45,9 +46,9 @@ class _SignInFormState extends State<SignInForm> {
     });
   }
 
-  void setCurrentUser() {
-    //@TODO getting current user if present username if user is set
-    currentUser = new User(username: '', fullName: '', password: '', id: '');
+  void setCurrentUser() async {
+    var user = await UserService().getCurrentUser();
+    currentUser = user ?? new User(username: '', fullName: '', password: '', id: '');
     Provider.of<EntryFormState>(context, listen: false)
         .setFormFieldState('username', currentUser!.username);
   }
@@ -67,18 +68,26 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   void onInputValueChange(String id, dynamic value) {
-    Provider.of<EntryFormState>(context, listen: false)
-        .setFormFieldState(id, value);
+    Provider.of<EntryFormState>(context, listen: false).setFormFieldState(id, value);
   }
 
-  void onLogin(Map dataObject) {
+  void onLogin(Map dataObject) async {
     var username = dataObject['username'] ?? '';
     var password = dataObject['password'] ?? '';
     if ('$username'.isNotEmpty && '$password'.isNotEmpty) {
-      currentUser!.username = username;
-      currentUser!.password = password;
-      print(currentUser);
-      // widget.onSuccessLogin(user);
+      //@TODO adding loading process
+      //@TODO authenticate and loading necessary metadata
+      try {
+        currentUser!.username = username;
+        currentUser!.password = password;
+        var user = await UserService().login(
+          username: username,
+          password: password,
+        );
+        print('user => $user');
+      } catch (e) {
+        print('error=>${e.toString()}');
+      }
     } else {
       AppUtil.showToastMessage(
         message: 'Enter username and password',
@@ -100,8 +109,7 @@ class _SignInFormState extends State<SignInForm> {
                 children: [
                   EntryFormContainer(
                     elevation: 0.0,
-                    onInputValueChange: (String id, dynamic value) =>
-                        onInputValueChange(id, value),
+                    onInputValueChange: (String id, dynamic value) => onInputValueChange(id, value),
                     formSections: formSections!,
                     dataObject: entryFormState.formState,
                     mandatoryFieldObject: mandatoryFieldObject,
