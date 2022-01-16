@@ -20,8 +20,10 @@ class SignInSignUpFormState with ChangeNotifier {
   bool get isSignUpFormValid => _isSignUpFormValid;
 
   void setSignUpFormValidity() {
-    //@TODO checking all form fields which are mandatory
-
+    String fullName = _formState['fullName'] ?? '';
+    String username = _formState['username'] ?? '';
+    String password = _formState['password'] ?? '';
+    _isSignUpFormValid = fullName.isNotEmpty && username.isNotEmpty && password.isNotEmpty;
     notifyListeners();
   }
 
