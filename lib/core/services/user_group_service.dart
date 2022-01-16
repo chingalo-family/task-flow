@@ -1,7 +1,10 @@
 import 'dart:convert';
 
+import 'package:task_manager/core/offline_db/user_offline_provider/user_group_member_offline_provider.dart';
+import 'package:task_manager/core/offline_db/user_offline_provider/user_group_offline_provider.dart';
 import 'package:task_manager/core/services/http_service.dart';
 import 'package:task_manager/models/user_group.dart';
+import 'package:task_manager/models/user_group_member.dart';
 
 class UserGroupService {
   Future<UserGroup?> getUserGroupById({
@@ -31,7 +34,14 @@ class UserGroupService {
     }
   }
 
-  setUserGroups(List<UserGroup> usergroups) {
-    // @TODO login to save user groups
+  setUserGroups(List<UserGroup> userGroups) async {
+    if (userGroups.isNotEmpty) {
+      List<UserGroupMember> userGroupMembers =
+          userGroups.expand((UserGroup userGroup) => userGroup.groupMembers).toList();
+      await UserGroupOfflineProvider().addOrUpdateUserGroup(userGroups);
+      if (userGroupMembers.isNotEmpty) {
+        await UserGroupMemberOfflineProvider().addOrUpdateUserGroupMember(userGroupMembers);
+      }
+    }
   }
 }

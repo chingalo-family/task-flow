@@ -48,6 +48,10 @@ class _SignInFormState extends State<SignInForm> {
     });
   }
 
+  void onSuccessLogin(User user) {
+    widget.onSuccessLogin(user);
+  }
+
   void setCurrentUser() async {
     var user = await UserService().getCurrentUser();
     currentUser = user ?? new User(username: '', fullName: '', password: '', id: '');
@@ -95,10 +99,11 @@ class _SignInFormState extends State<SignInForm> {
           );
           userGroups.add(group!);
         }
-        // set current user into state and local db
-        // set user groups on state and local db
+        await UserService().setCurrentUser(user);
+        await UserGroupService().setUserGroups(userGroups);
         isSaving = false;
         setState(() {});
+        onSuccessLogin(user);
       } else {
         AppUtil.showToastMessage(
           message: 'Wrong username or password, try again',
