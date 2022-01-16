@@ -13,6 +13,8 @@ class InputField {
   Color? background;
   bool? renderAsRadio;
   bool? isReadOnly;
+  bool? isPassowrdField;
+  bool? shouldCapitalize;
   bool? allowFuturePeriod;
   bool? showCountryLevelTree;
   bool? disablePastPeriod;
@@ -41,6 +43,8 @@ class InputField {
     this.background,
     this.renderAsRadio,
     this.isReadOnly,
+    this.isPassowrdField,
+    this.shouldCapitalize,
     this.options,
     this.subInputField,
     this.allowedSelectedLevels,
@@ -59,6 +63,8 @@ class InputField {
     this.shouldUserCustomAgeLimit,
     this.showCountryLevelTree,
   }) {
+    this.isPassowrdField = this.isPassowrdField ?? false;
+    this.shouldCapitalize = this.shouldCapitalize ?? false;
     this.showCountryLevelTree = this.showCountryLevelTree ?? false;
     this.allowedSelectedLevels = this.allowedSelectedLevels ?? [];
     this.allowFuturePeriod = this.allowFuturePeriod ?? false;

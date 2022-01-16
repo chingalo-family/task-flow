@@ -1,23 +1,26 @@
-import 'package:task_manager/core/utils/app_util.dart';
-
 class User {
   late String id;
   late String username;
   late String fullName;
   late String? password;
-  late String? emial;
+  late String? email;
+  late String? gender;
   late String? phoneNumber;
+  late List<String>? userGroups;
   late bool isLogin;
 
   User({
+    required this.id,
     required this.username,
-    this.emial,
+    this.email,
     required this.fullName,
-    this.password,
+    required this.password,
     this.phoneNumber,
+    this.gender,
+    this.userGroups,
     this.isLogin = false,
   }) {
-    this.id = AppUtil.getUid();
+    this.userGroups = this.userGroups ?? [];
   }
 
   Map<String, dynamic> toMap() {
@@ -26,7 +29,7 @@ class User {
     data['username'] = this.username;
     data['fullName'] = this.fullName;
     data['password'] = this.password;
-    data['emial'] = this.emial;
+    data['email'] = this.email;
     data['phoneNumber'] = this.phoneNumber;
     data['isLogin'] = this.isLogin ? '1' : '0';
     return data;
@@ -37,9 +40,41 @@ class User {
     this.username = mapData['username'];
     this.fullName = mapData['fullName'];
     this.password = mapData['password'];
-    this.emial = mapData['emial'];
+    this.email = mapData['email'];
     this.phoneNumber = mapData['phoneNumber'];
     this.isLogin = mapData['isLogin'] == '1';
+  }
+
+  factory User.fromJson(
+    dynamic json,
+    String username,
+    String password,
+  ) {
+    List<String> userGroups = _getUserGroups(json);
+    return User(
+      fullName: json['name'],
+      id: json['id'],
+      password: password,
+      username: username,
+      email: json['email'] ?? '',
+      gender: json['gender'] ?? '',
+      phoneNumber: json['phoneNumber'] ?? '',
+      userGroups: userGroups,
+      isLogin: true,
+    );
+  }
+
+  static List<String> _getUserGroups(
+    dynamic json,
+  ) {
+    List userGroupsList = json['userGroups'] as List<dynamic>;
+    return userGroupsList
+        .map((dynamic userGroup) => userGroup['id'] ?? '')
+        .toList()
+        .toSet()
+        .toList()
+        .where((id) => '$id'.isNotEmpty)
+        .toList() as List<String>;
   }
 
   @override

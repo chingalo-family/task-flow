@@ -14,6 +14,9 @@ class AppInfoState with ChangeNotifier {
   String get currentAppId => _currentAppId ?? '';
 
   void setCurrentAppInfo() async {
+    _currentAppId = AppInfoReference.androidId;
+    _currentAppName = AppInfoReference.currentAppName;
+    _currentAppVersion = AppInfoReference.currentAppVersion;
     try {
       final newVersion = NewVersion(
         androidId: AppInfoReference.androidId,
@@ -22,8 +25,6 @@ class AppInfoState with ChangeNotifier {
       _canUpdate = status!.canUpdate;
       //@TODO adding modal in case of need for app update
       _currentAppVersion = status.localVersion;
-      _currentAppId = AppInfoReference.androidId;
-      _currentAppName = AppInfoReference.currentAppName;
     } catch (error) {}
     notifyListeners();
   }
