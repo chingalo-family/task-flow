@@ -56,8 +56,9 @@ class User {
       id: json['id'],
       password: password,
       username: username,
-      email: json['email'],
-      phoneNumber: json['phoneNumber'],
+      email: json['email'] ?? '',
+      gender: json['gender'] ?? '',
+      phoneNumber: json['phoneNumber'] ?? '',
       userGroups: userGroups,
       isLogin: true,
     );

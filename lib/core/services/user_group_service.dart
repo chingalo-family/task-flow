@@ -1,3 +1,37 @@
+import 'dart:convert';
+
+import 'package:task_manager/core/services/http_service.dart';
+import 'package:task_manager/models/user_group.dart';
+
 class UserGroupService {
-  //@TODO adding handling of user groups managements
+  Future<UserGroup?> getUserGroupById({
+    required String username,
+    required String password,
+    required String userGroupId,
+  }) async {
+    UserGroup? userGroups;
+    try {
+      if (userGroupId.isNotEmpty) {
+        var url = 'api/userGroups/$userGroupId.json';
+        var queryParameters = {
+          'fields': 'id,name,users[id,name,username]',
+        };
+        HttpService http = new HttpService(
+          username: username,
+          password: password,
+        );
+        var response = await http.httpGet(url, queryParameters: queryParameters);
+        if (response.statusCode == 200) {
+          userGroups = UserGroup.fromJson(json.decode(response.body));
+        }
+      }
+      return userGroups;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  setUserGroups(List<UserGroup> usergroups) {
+    // @TODO login to save user groups
+  }
 }

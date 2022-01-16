@@ -16,8 +16,7 @@ class UserService {
     try {
       var url = 'api/me.json';
       var queryParameters = {
-        'fields':
-            'id,name,email,phoneNumber,programs,organisationUnits[id],attributeValues[value,attribute[id]],userGroups[name,id],userCredentials[userRoles[id,name]]'
+        'fields': 'id,name,email,gender,phoneNumber,organisationUnits[id],userGroups[name,id]'
       };
       HttpService http = new HttpService(
         username: username,
