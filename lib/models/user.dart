@@ -1,3 +1,8 @@
+import 'dart:convert';
+
+import 'package:path/path.dart';
+import 'package:task_manager/core/constants/app_contant.dart';
+
 class User {
   late String id;
   late String username;
@@ -21,6 +26,21 @@ class User {
     this.isLogin = false,
   }) {
     this.userGroups = this.userGroups ?? [];
+  }
+
+  dynamic toDhis2Json() {
+    String ous = '{"id" : "${AppContant.defaultUserOrganisationUnit}"}';
+    List<String>? nameList = fullName.split(' ');
+    String firstName = nameList.first;
+    String surname = nameList.length == 1
+        ? nameList.first
+        : nameList.where((String name) => name != firstName).join('');
+    String userGroupsString =
+        userGroups!.map((String groupId) => '{"id": "$groupId"}').toList().join(',');
+    String userCredentials =
+        '{"username":"$username", "password":"$password","userInfo":{"id":"$id"},"userRoles":[{"id": "${AppContant.defaultUserRole}"}]}';
+    return json.decode(
+        '{"id":"$id","firstName":"$firstName","surname":"$surname","phoneNumber":"$phoneNumber","email":"$email","userGroups":[$userGroupsString],"userCredentials":$userCredentials,"organisationUnits":[$ous],"dataViewOrganisationUnits":[$ous],"teiSearchOrganisationUnits":[$ous] }');
   }
 
   Map<String, dynamic> toMap() {

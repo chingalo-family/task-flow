@@ -42,7 +42,7 @@ class _SignInFormState extends State<SignInForm> {
     super.initState();
     setFormMetadata();
     setCurrentUser();
-    Timer(Duration(seconds: 2), () {
+    Timer(Duration(seconds: 1), () {
       isFormReady = true;
       setState(() {});
     });
@@ -159,7 +159,7 @@ class _SignInFormState extends State<SignInForm> {
                                       size: 2,
                                     )
                                   : Text(
-                                      'log in',
+                                      'Log In',
                                       style: TextStyle().copyWith(
                                         color: textColor,
                                       ),
