@@ -1,5 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:task_manager/core/offline_db/offline_db_provider.dart';
+import 'package:task_manager/core/utils/app_util.dart';
 import 'package:task_manager/models/user_group_member.dart';
 
 class UserGroupMemberOfflineProvider extends OfflineDbProvider {
@@ -11,14 +12,25 @@ class UserGroupMemberOfflineProvider extends OfflineDbProvider {
   final String username = 'username';
   final String fullName = 'fullName';
 
-  //@TODO support of adding in batches
-  addOrUpdateUserGroupMember(UserGroupMember userGroupMember) async {
-    var dbClient = await db;
-    await dbClient!.insert(
-      tableName,
-      userGroupMember.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+  addOrUpdateUserGroupMember(List<UserGroupMember> userGroupMembers) async {
+    try {
+      var dbClient = await db;
+      List<List<UserGroupMember>> chunkedUserGroups =
+          AppUtil.chunkItems(items: userGroupMembers, size: 100) as List<List<UserGroupMember>>;
+      for (List<UserGroupMember> chunkedUserGroupMembers in chunkedUserGroups) {
+        var userGroupMemberBatch = dbClient!.batch();
+        for (UserGroupMember userGroupMember in chunkedUserGroupMembers) {
+          userGroupMemberBatch.insert(
+            tableName,
+            userGroupMember.toMap(),
+            conflictAlgorithm: ConflictAlgorithm.replace,
+          );
+        }
+        await userGroupMemberBatch.commit(exclusive: true, noResult: true, continueOnError: true);
+      }
+    } catch (e) {
+      throw e;
+    }
   }
 
   deleteUserGroupMember(String selectedUserId) async {
