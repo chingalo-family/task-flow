@@ -10,4 +10,6 @@ class AppContant {
   static final Color ligthLabelTextColor = Color(0xFFFEFEFF);
   static final String defaultUserId = 'default-user';
   static final String defaultUserGroupId = 'default-user-group';
+  static final String defaultUserOrganisationUnit = 'mCnxfpKUZGC';
+  static final String defaultUserRole = 'jaE4Vnp1EQp';
 }
