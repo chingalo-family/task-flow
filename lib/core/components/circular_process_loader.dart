@@ -18,7 +18,7 @@ class CircularProcessLoader extends StatelessWidget {
               CircularProgressIndicator(
                 strokeWidth: size ?? 4,
                 valueColor: new AlwaysStoppedAnimation(color ?? Colors.white),
-              )
+              ),
             ],
           ),
         )
