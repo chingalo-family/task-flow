@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:path/path.dart';
 import 'package:task_manager/core/constants/app_contant.dart';
 
 class User {
@@ -89,12 +88,15 @@ class User {
   ) {
     List userGroupsList = json['userGroups'] as List<dynamic>;
     return userGroupsList
-        .map((dynamic userGroup) => userGroup['id'] ?? '')
+        .map((dynamic userGroup) {
+          String id = userGroup['id'] ?? '';
+          return id;
+        })
         .toList()
         .toSet()
         .toList()
         .where((id) => '$id'.isNotEmpty)
-        .toList() as List<String>;
+        .toList();
   }
 
   @override
