@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_manager/app_state/app_theme_state/app_theme_state.dart';
-import 'package:task_manager/core/components/user_forms/sign_in_form.dart';
-import 'package:task_manager/core/components/user_forms/sign_up_form.dart';
+import 'package:task_manager/app_state/user_state/sign_in_sign_up_form_state.dart';
 import 'package:task_manager/core/constants/app_contant.dart';
 import 'package:task_manager/core/services/theme_service.dart';
+import 'package:task_manager/core/services/user_group_service.dart';
 import 'package:task_manager/models/user.dart';
+import 'package:task_manager/models/user_group.dart';
+import 'package:task_manager/modules/user/components/sign_in_form.dart';
+import 'package:task_manager/modules/user/components/sign_up_form.dart';
 
 class SignInSignUpFormContainer extends StatefulWidget {
   const SignInSignUpFormContainer({
@@ -13,8 +16,7 @@ class SignInSignUpFormContainer extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _SignInSignUpFormContainerState createState() =>
-      _SignInSignUpFormContainerState();
+  _SignInSignUpFormContainerState createState() => _SignInSignUpFormContainerState();
 }
 
 class _SignInSignUpFormContainerState extends State<SignInSignUpFormContainer> {
@@ -22,12 +24,15 @@ class _SignInSignUpFormContainerState extends State<SignInSignUpFormContainer> {
 
   void onChangeFormState() {
     _showSignInForm = !_showSignInForm;
+    Provider.of<SignInSignUpFormState>(context, listen: false).resetFormState();
     setState(() {});
   }
 
-  onSuccessLoginOrSignUp(BuildContext context, User user) {
+  onSuccessLoginOrSignUp(BuildContext context, User user) async {
     if (Navigator.canPop(context)) {
-      Navigator.pop(context, user);
+      print(user);
+      List<UserGroup> userGroups = await UserGroupService().getUserGroupsByUserId(userId: user.id);
+      //@TODO Set state for user and user groups
     }
   }
 
@@ -48,8 +53,7 @@ class _SignInSignUpFormContainerState extends State<SignInSignUpFormContainer> {
                 child: _showSignInForm
                     ? SignInForm(
                         currentTheme: currentTheme,
-                        onSuccessLogin: (User user) =>
-                            onSuccessLoginOrSignUp(context, user),
+                        onSuccessLogin: (User user) => onSuccessLoginOrSignUp(context, user),
                       )
                     : SignUpForm(
                         currentTheme: currentTheme,
@@ -59,9 +63,8 @@ class _SignInSignUpFormContainerState extends State<SignInSignUpFormContainer> {
                 child: GestureDetector(
                   onTap: onChangeFormState,
                   child: Container(
-                    margin: EdgeInsets.only(
-                      top: 70.0,
-                      bottom: 5.0,
+                    margin: EdgeInsets.symmetric(
+                      vertical: 10.0,
                     ),
                     padding: EdgeInsets.symmetric(
                       vertical: 10.0,

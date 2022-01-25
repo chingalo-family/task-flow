@@ -15,9 +15,9 @@ class UserGroupMemberOfflineProvider extends OfflineDbProvider {
   addOrUpdateUserGroupMember(List<UserGroupMember> userGroupMembers) async {
     try {
       var dbClient = await db;
-      List<List<UserGroupMember>> chunkedUserGroups =
-          AppUtil.chunkItems(items: userGroupMembers, size: 100) as List<List<UserGroupMember>>;
-      for (List<UserGroupMember> chunkedUserGroupMembers in chunkedUserGroups) {
+      List<List<dynamic>> chunkedUserGroups =
+          AppUtil.chunkItems(items: userGroupMembers, size: 100);
+      for (List<dynamic> chunkedUserGroupMembers in chunkedUserGroups) {
         var userGroupMemberBatch = dbClient!.batch();
         for (UserGroupMember userGroupMember in chunkedUserGroupMembers) {
           userGroupMemberBatch.insert(
@@ -29,7 +29,7 @@ class UserGroupMemberOfflineProvider extends OfflineDbProvider {
         await userGroupMemberBatch.commit(exclusive: true, noResult: true, continueOnError: true);
       }
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 
@@ -40,6 +40,34 @@ class UserGroupMemberOfflineProvider extends OfflineDbProvider {
       where: '$userId = ?',
       whereArgs: [selectedUserId],
     );
+  }
+
+  Future<List<UserGroupMember>> getUserGroupMembersByUser(String selectedUserId) async {
+    List<UserGroupMember> userGroupMembers = [];
+    try {
+      var dbClient = await db;
+      List<Map> maps = await dbClient!.query(
+        tableName,
+        columns: [
+          id,
+          groupId,
+          userId,
+          username,
+          fullName,
+        ],
+        where: '$userId = ?',
+        whereArgs: [selectedUserId],
+      );
+      if (maps.isNotEmpty) {
+        for (Map map in maps) {
+          UserGroupMember userGroupMember = UserGroupMember.fromMap(map as Map<String, dynamic>);
+          userGroupMembers.add(userGroupMember);
+        }
+      }
+    } catch (e) {
+      //
+    }
+    return userGroupMembers;
   }
 
   Future<List<UserGroupMember>> getUserGroupMembersByGroup(String selectedGroupId) async {
@@ -64,7 +92,9 @@ class UserGroupMemberOfflineProvider extends OfflineDbProvider {
           userGroupMembers.add(userGroupMember);
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      //
+    }
     return userGroupMembers;
   }
 }

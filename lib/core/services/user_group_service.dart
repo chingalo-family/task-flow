@@ -44,4 +44,15 @@ class UserGroupService {
       }
     }
   }
+
+  Future<List<UserGroup>> getUserGroupsByUserId({
+    required String userId,
+  }) async {
+    List<UserGroupMember> userGroupMembers =
+        await UserGroupMemberOfflineProvider().getUserGroupMembersByUser(userId);
+    List<String> groupIds =
+        userGroupMembers.map((UserGroupMember userGroupMember) => userGroupMember.groupId).toList();
+    List<UserGroup> userGroups = await UserGroupOfflineProvider().getUserGroups();
+    return userGroups.where((UserGroup userGroup) => groupIds.contains(userGroup.id)).toList();
+  }
 }

@@ -79,8 +79,10 @@ class TaskMangerView extends StatelessWidget {
 
   onOpenUserActionSheet(BuildContext context) {
     double maxHeightRatio = 0.6;
+    double initialHeightRatio = 0.4;
     AppUtil.showActionSheetModal(
       context: context,
+      initialHeightRatio: initialHeightRatio,
       maxHeightRatio: maxHeightRatio,
       containerBody: UserActionSheet(
         maxHeightRatio: maxHeightRatio,

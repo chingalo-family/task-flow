@@ -13,9 +13,8 @@ class UserGroupOfflineProvider extends OfflineDbProvider {
   addOrUpdateUserGroup(List<UserGroup> userGroups) async {
     try {
       var dbClient = await db;
-      List<List<UserGroup>> chunkedUserGroups =
-          AppUtil.chunkItems(items: userGroups, size: 100) as List<List<UserGroup>>;
-      for (List<UserGroup> chunkedUserGroup in chunkedUserGroups) {
+      List<List<dynamic>> chunkedUserGroups = AppUtil.chunkItems(items: userGroups, size: 100);
+      for (List<dynamic> chunkedUserGroup in chunkedUserGroups) {
         var userGroupBatch = dbClient!.batch();
         for (UserGroup userGroup in chunkedUserGroup) {
           userGroupBatch.insert(
@@ -48,6 +47,8 @@ class UserGroupOfflineProvider extends OfflineDbProvider {
         tableName,
         columns: [
           id,
+          name,
+          description,
         ],
       );
       if (maps.isNotEmpty) {

@@ -5,35 +5,29 @@ import 'package:provider/provider.dart';
 import 'package:task_manager/app_state/user_state/sign_in_sign_up_form_state.dart';
 import 'package:task_manager/core/components/circular_process_loader.dart';
 import 'package:task_manager/core/components/entry_forms/entry_form_container.dart';
-import 'package:task_manager/core/components/user_forms/models/sign_in_sign_up_form.dart';
 import 'package:task_manager/core/constants/app_contant.dart';
 import 'package:task_manager/core/services/theme_service.dart';
-import 'package:task_manager/core/services/user_group_service.dart';
-import 'package:task_manager/core/services/user_service.dart';
 import 'package:task_manager/core/utils/app_util.dart';
 import 'package:task_manager/models/form_section.dart';
 import 'package:task_manager/models/user.dart';
-import 'package:task_manager/models/user_group.dart';
+import 'package:task_manager/modules/user/models/sign_in_sign_up_form.dart';
 
-class SignInForm extends StatefulWidget {
-  const SignInForm({
+class SignUpForm extends StatefulWidget {
+  const SignUpForm({
     Key? key,
     required this.currentTheme,
-    required this.onSuccessLogin,
   }) : super(key: key);
 
   final String currentTheme;
-  final Function onSuccessLogin;
 
   @override
-  State<SignInForm> createState() => _SignInFormState();
+  State<SignUpForm> createState() => _SignUpFormState();
 }
 
-class _SignInFormState extends State<SignInForm> {
+class _SignUpFormState extends State<SignUpForm> {
   Color? textColor;
   List<FormSection>? formSections;
   Map mandatoryFieldObject = new Map();
-  User? currentUser;
   bool isFormReady = false;
   bool isSaving = false;
 
@@ -41,34 +35,19 @@ class _SignInFormState extends State<SignInForm> {
   void initState() {
     super.initState();
     setFormMetadata();
-    setCurrentUser();
     Timer(Duration(seconds: 1), () {
-      isFormReady = true;
-      setState(() {});
+      setState(() {
+        isFormReady = true;
+      });
     });
   }
 
-  void onSuccessLogin(User user) {
-    widget.onSuccessLogin(user);
-  }
-
-  void setCurrentUser() async {
-    var user = await UserService().getCurrentUser();
-    currentUser = user ?? new User(username: '', fullName: '', password: '', id: '');
-    Provider.of<SignInSignUpFormState>(context, listen: false)
-        .setFormFieldState('username', currentUser!.username);
-  }
-
   void setFormMetadata() {
-    try {
-      Provider.of<SignInSignUpFormState>(context, listen: false).resetFormState();
-    } catch (e) {
-      print(e.toString());
-    }
     textColor = widget.currentTheme == ThemeServices.darkTheme
         ? AppContant.darkTextColor
         : AppContant.ligthTextColor;
-    formSections = SignInSignUpForm.getSignInFormSections(textColor!);
+    formSections = SignInSignUpForm.getSignUpFormSections(textColor!);
+    mandatoryFieldObject['fullName'] = true;
     mandatoryFieldObject['username'] = true;
     mandatoryFieldObject['password'] = true;
   }
@@ -77,45 +56,20 @@ class _SignInFormState extends State<SignInForm> {
     Provider.of<SignInSignUpFormState>(context, listen: false).setFormFieldState(id, value);
   }
 
-  void onLogin(Map dataObject) async {
-    try {
-      isSaving = true;
-      setState(() {});
-      String username = dataObject['username'] ?? '';
-      String password = dataObject['password'] ?? '';
-      currentUser!.username = username;
-      currentUser!.password = password;
-      var user = await UserService().login(
-        username: username,
-        password: password,
-      );
-      if (user != null) {
-        List<UserGroup> userGroups = [];
-        for (String userGroupId in user.userGroups!) {
-          var group = await UserGroupService().getUserGroupById(
-            username: username,
-            password: password,
-            userGroupId: userGroupId,
-          );
-          userGroups.add(group!);
-        }
-        await UserService().setCurrentUser(user);
-        await UserGroupService().setUserGroups(userGroups);
-        isSaving = false;
-        setState(() {});
-        onSuccessLogin(user);
-      } else {
-        AppUtil.showToastMessage(
-          message: 'Wrong username or password, try again',
-        );
-        isSaving = false;
-        setState(() {});
-      }
-    } catch (e) {
-      isSaving = false;
-      setState(() {});
-      print('error=>${e.toString()}');
-    }
+  void onSignUp(Map dataObject) async {
+    //@TODO checking if user name exits on the system
+    // create user account if not exist
+    User user = User(
+      id: AppUtil.getUid(),
+      username: dataObject['username'] ?? '',
+      fullName: dataObject['fullName'] ?? '',
+      password: dataObject['password'] ?? '',
+      gender: dataObject['gender'] ?? '',
+      phoneNumber: dataObject['phoneNumber'] ?? '',
+      email: dataObject['email'] ?? '',
+    );
+    // generating sign up account for posting or put
+    print(user.toDhis2Json());
   }
 
   @override
@@ -150,16 +104,16 @@ class _SignInFormState extends State<SignInForm> {
                               vertical: 0.0,
                             ),
                             child: TextButton(
-                              onPressed: !signInSignUpFormState.isLoginFormValid
+                              onPressed: !signInSignUpFormState.isSignUpFormValid
                                   ? null
-                                  : () => onLogin(signInSignUpFormState.formState),
+                                  : () => onSignUp(signInSignUpFormState.formState),
                               child: isSaving
                                   ? CircularProcessLoader(
                                       color: textColor,
                                       size: 2,
                                     )
                                   : Text(
-                                      'Log In',
+                                      'Sign Up',
                                       style: TextStyle().copyWith(
                                         color: textColor,
                                       ),
