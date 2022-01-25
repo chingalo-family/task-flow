@@ -19,6 +19,7 @@ import 'package:task_manager/modules/task_manager/models/task_form.dart';
 import 'package:task_manager/modules/task_manager/sub_module/components/delete_task_confirmation.dart';
 import 'package:task_manager/modules/task_manager/sub_module/components/sub_task_form_container.dart';
 import 'package:task_manager/modules/task_manager/sub_module/components/todo_view_container.dart';
+import 'package:task_manager/modules/user/user_action_sheet.dart';
 
 class TaskMangerView extends StatelessWidget {
   const TaskMangerView({Key? key}) : super(key: key);
@@ -28,20 +29,15 @@ class TaskMangerView extends StatelessWidget {
     Task currentTask,
     User currentUser,
   ) async {
-    SubTask subTask =
-        SubTask(taskId: currentTask.id, title: '', isCompleted: false);
-    subTask.assignedTo =
-        currentUser != null ? currentUser.id : AppContant.defaultUserId;
+    SubTask subTask = SubTask(taskId: currentTask.id, title: '', isCompleted: false);
+    subTask.assignedTo = currentUser != null ? currentUser.id : AppContant.defaultUserId;
     subTask.createdBy = currentUser != null ? currentUser.fullName : '';
-    SubTaskFormStateHelper.updateFormState(
-        context, subTask, !subTask.isCompleted!);
-    String currentTheme =
-        Provider.of<AppThemeState>(context, listen: false).currentTheme;
+    SubTaskFormStateHelper.updateFormState(context, subTask, !subTask.isCompleted!);
+    String currentTheme = Provider.of<AppThemeState>(context, listen: false).currentTheme;
     Color textColor = currentTheme == ThemeServices.darkTheme
         ? AppContant.darkTextColor
         : AppContant.ligthTextColor;
-    final List<FormSection> subTaskFormSections =
-        SubTaskForm.getFormSections(textColor);
+    final List<FormSection> subTaskFormSections = SubTaskForm.getFormSections(textColor);
     Widget modal = SubTaskFormContainer(
       subTaskFormSections: subTaskFormSections,
     );
@@ -55,13 +51,11 @@ class TaskMangerView extends StatelessWidget {
       currentTask,
       isEditableMode,
     );
-    String currentTheme =
-        Provider.of<AppThemeState>(context, listen: false).currentTheme;
+    String currentTheme = Provider.of<AppThemeState>(context, listen: false).currentTheme;
     Color textColor = currentTheme == ThemeServices.darkTheme
         ? AppContant.darkTextColor
         : AppContant.ligthTextColor;
-    final List<FormSection> taskFormSections =
-        TaskForm.getFormSections(textColor);
+    final List<FormSection> taskFormSections = TaskForm.getFormSections(textColor);
     Widget modal = TaskFormContainer(
       taskFormSections: taskFormSections,
       subTasks: currentTask.subTasks,
@@ -81,6 +75,17 @@ class TaskMangerView extends StatelessWidget {
     } catch (error) {
       print(error.toString());
     }
+  }
+
+  onOpenUserActionSheet(BuildContext context) {
+    double maxHeightRatio = 0.6;
+    AppUtil.showActionSheetModal(
+      context: context,
+      maxHeightRatio: maxHeightRatio,
+      containerBody: UserActionSheet(
+        maxHeightRatio: maxHeightRatio,
+      ),
+    );
   }
 
   onOpenTodoChartSummary(BuildContext context, Task currentTask) {
@@ -105,12 +110,12 @@ class TaskMangerView extends StatelessWidget {
                     isViewChartVisible: true,
                     isDeleteVisible: true,
                     isEditVisible: true,
-                    onAdd: () => onAddSubTask(
-                        context, currentTask, userState.currrentUser),
+                    isUserVisible: true,
+                    onOpenUserActionSheet: () => onOpenUserActionSheet(context),
+                    onAdd: () => onAddSubTask(context, currentTask, userState.currrentUser),
                     onEdit: () => onEditTask(context, currentTask),
                     onDelete: () => onDeleteTask(context, currentTask),
-                    onOpenChart: () =>
-                        onOpenTodoChartSummary(context, currentTask),
+                    onOpenChart: () => onOpenTodoChartSummary(context, currentTask),
                   ),
                 ),
                 body: SingleChildScrollView(
