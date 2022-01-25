@@ -1,10 +1,13 @@
 import 'package:flutter/foundation.dart';
+import 'package:task_manager/models/user_group.dart';
 
 class UserGroupState with ChangeNotifier {
-  // initial state
+  List<UserGroup>? _currentUserGroups;
 
-  // selectors
+  List<UserGroup> get currentUserGroups => _currentUserGroups ?? [];
 
-  // reducers
-
+  void setCurrentUserGroups(List<UserGroup> userGroups) {
+    _currentUserGroups == userGroups;
+    notifyListeners();
+  }
 }
