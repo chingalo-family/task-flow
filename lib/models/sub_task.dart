@@ -1,9 +1,11 @@
+import 'package:task_manager/core/constants/task_status_constant.dart';
 import 'package:task_manager/core/utils/app_util.dart';
 
 class SubTask {
   String? id;
   String? taskId;
   String? title;
+  String? status;
   bool? isCompleted;
   String? createdOn;
   String? createdBy;
@@ -16,8 +18,10 @@ class SubTask {
     required this.taskId,
     required this.title,
     required this.isCompleted,
+    this.status,
   }) {
     this.id = AppUtil.getUid();
+    this.status = this.status != '' ? this.status : TaskStatusContant.notStarted;
     this.createdOn = DateTime.now().toString().split('.')[0];
     this.createdBy = '';
     this.dueDate = '';
@@ -39,6 +43,7 @@ class SubTask {
     data['assignedTo'] = todoTask.assignedTo;
     data['dueDate'] = todoTask.dueDate;
     data['completedOn'] = todoTask.completedOn;
+    data['status'] = todoTask.status;
     return data;
   }
 
@@ -53,8 +58,8 @@ class SubTask {
     this.completedBy = mapData['completedBy'] ?? '';
     this.assignedTo = mapData['assignedTo'] ?? '';
     this.dueDate = mapData['dueDate'] ?? '';
-    this.isCompleted = '${mapData['isCompleted']}' == '1' ||
-        '${mapData['isCompleted']}' == 'true';
+    this.status = mapData['status'] ?? '';
+    this.isCompleted = '${mapData['isCompleted']}' == '1' || '${mapData['isCompleted']}' == 'true';
   }
 
   @override
