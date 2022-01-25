@@ -15,6 +15,7 @@ import 'package:task_manager/modules/task_manager/components/task_list_filter.da
 import 'package:task_manager/modules/task_manager/components/todo_form_container.dart';
 import 'package:task_manager/modules/task_manager/helpers/task_form_state_helper.dart';
 import 'package:task_manager/modules/task_manager/models/task_form.dart';
+import 'package:task_manager/modules/user/user_action_sheet.dart';
 
 class TaskMangerHome extends StatelessWidget {
   const TaskMangerHome({Key? key}) : super(key: key);
@@ -24,22 +25,30 @@ class TaskMangerHome extends StatelessWidget {
     User? currentUser,
   ) async {
     Task task = new Task(title: '', description: '');
-    task.assignedTo =
-        currentUser != null ? currentUser.id : AppContant.defaultUserId;
+    task.assignedTo = currentUser != null ? currentUser.id : AppContant.defaultUserId;
     task.createdBy = currentUser != null ? currentUser.fullName : '';
     TaskFormStateHelper.updateFormState(context, task, true);
-    String currentTheme =
-        Provider.of<AppThemeState>(context, listen: false).currentTheme;
+    String currentTheme = Provider.of<AppThemeState>(context, listen: false).currentTheme;
     Color textColor = currentTheme == ThemeServices.darkTheme
         ? AppContant.darkTextColor
         : AppContant.ligthTextColor;
-    final List<FormSection> taskFormSections =
-        TaskForm.getFormSections(textColor);
+    final List<FormSection> taskFormSections = TaskForm.getFormSections(textColor);
     Widget modal = TaskFormContainer(
       taskFormSections: taskFormSections,
       subTasks: task.subTasks,
     );
     await AppUtil.showPopUpModal(context, modal, false);
+  }
+
+  onOpenUserActionSheet(BuildContext context) {
+    double maxHeightRatio = 0.6;
+    AppUtil.showActionSheetModal(
+      context: context,
+      maxHeightRatio: maxHeightRatio,
+      containerBody: UserActionSheet(
+        maxHeightRatio: maxHeightRatio,
+      ),
+    );
   }
 
   onOpenTodoListChartSummary(BuildContext context) {
@@ -49,7 +58,6 @@ class TaskMangerHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: AppDrawerContainer(),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(AppContant.appBarHeight),
         child: Consumer<UserState>(
@@ -59,6 +67,8 @@ class TaskMangerHome extends StatelessWidget {
               isAboutPage: false,
               isAddVisible: true,
               isViewChartVisible: true,
+              isUserVisible: true,
+              onOpenUserActionSheet: () => onOpenUserActionSheet(context),
               onAdd: () => onAddTodo(context, userState.currrentUser),
               onOpenChart: () => onOpenTodoListChartSummary(context),
             );
