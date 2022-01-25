@@ -190,13 +190,6 @@ class AppUtil {
                   margin: const EdgeInsets.symmetric(
                     horizontal: 1.0,
                   ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(15.0),
-                      topRight: Radius.circular(15.0),
-                    ),
-                  ),
                   child: containerBody,
                 ),
               );
