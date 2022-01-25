@@ -13,19 +13,23 @@ class AppBarContainer extends StatelessWidget {
     this.onOpenChart,
     this.isEditVisible = false,
     this.isDeleteVisible = false,
+    this.isUserVisible = false,
     this.onEdit,
     this.onDelete,
+    this.onOpenUserActionSheet,
   }) : super(key: key);
 
   final String title;
   final bool? isAboutPage;
   final bool? isViewChartVisible;
   final bool? isAddVisible;
+  final bool? isUserVisible;
   final bool isEditVisible;
   final bool isDeleteVisible;
   final double elevation;
 
   final VoidCallback? onOpenChart;
+  final VoidCallback? onOpenUserActionSheet;
   final VoidCallback? onAdd;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
@@ -42,7 +46,7 @@ class AppBarContainer extends StatelessWidget {
       ),
       actions: [
         Visibility(
-          visible: isViewChartVisible ?? false,
+          visible: isViewChartVisible!,
           child: IconButton(
             icon: Icon(
               Icons.bar_chart,
@@ -51,7 +55,7 @@ class AppBarContainer extends StatelessWidget {
           ),
         ),
         Visibility(
-          visible: isAddVisible ?? false,
+          visible: isAddVisible!,
           child: IconButton(
             icon: Icon(
               Icons.add,
@@ -75,6 +79,15 @@ class AppBarContainer extends StatelessWidget {
               Icons.delete,
             ),
             onPressed: onDelete,
+          ),
+        ),
+        Visibility(
+          visible: isUserVisible!,
+          child: IconButton(
+            icon: Icon(
+              Icons.person,
+            ),
+            onPressed: onOpenUserActionSheet,
           ),
         ),
         Container(

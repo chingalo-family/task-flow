@@ -164,9 +164,9 @@ class AppUtil {
   static showActionSheetModal({
     required BuildContext context,
     required Widget containerBody,
-    double initialChildSize = 0.3,
-    double maxChildSize = 0.7,
-    double minChildSize = 0.1,
+    double initialHeightRatio = 0.3,
+    double maxHeightRatio = 0.7,
+    double minHeightRatio = 0.1,
   }) {
     showModalBottomSheet(
       context: context,
@@ -180,9 +180,9 @@ class AppUtil {
         child: GestureDetector(
           onTap: () {},
           child: DraggableScrollableSheet(
-            initialChildSize: initialChildSize,
-            maxChildSize: maxChildSize,
-            minChildSize: minChildSize,
+            initialChildSize: initialHeightRatio,
+            maxChildSize: maxHeightRatio,
+            minChildSize: minHeightRatio,
             builder: (BuildContext context, ScrollController scrollController) {
               return SingleChildScrollView(
                 controller: scrollController,
