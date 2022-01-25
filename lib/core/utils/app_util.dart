@@ -180,17 +180,27 @@ class AppUtil {
         child: GestureDetector(
           onTap: () {},
           child: DraggableScrollableSheet(
-            initialChildSize: initialHeightRatio,
+            initialChildSize: initialHeightRatio < maxHeightRatio
+                ? initialHeightRatio + maxHeightRatio / 2
+                : initialHeightRatio,
             maxChildSize: maxHeightRatio,
             minChildSize: minHeightRatio,
             builder: (BuildContext context, ScrollController scrollController) {
-              return SingleChildScrollView(
-                controller: scrollController,
-                child: Container(
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 1.0,
-                  ),
-                  child: containerBody,
+              return Flexible(
+                child: ListView(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 1.0,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(20.0),
+                        ),
+                      ),
+                      child: containerBody,
+                    ),
+                  ],
                 ),
               );
             },

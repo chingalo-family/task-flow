@@ -64,7 +64,13 @@ class UserActionSheet extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        child: Text('user container'),
+                        child: Text('user container',
+                            style: TextStyle().copyWith(
+                              color: currentTheme == ThemeServices.darkTheme
+                                  ? AppContant.darkTextColor
+                                  : AppContant.ligthTextColor,
+                              fontSize: 20.0,
+                            )),
                       )
                     ],
                   ),

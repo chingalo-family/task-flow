@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:task_manager/app_state/user_state/sign_in_sign_up_form_state.dart';
 import 'package:task_manager/core/components/circular_process_loader.dart';
 import 'package:task_manager/core/components/entry_forms/entry_form_container.dart';
+import 'package:task_manager/core/components/material_card.dart';
 import 'package:task_manager/core/constants/app_contant.dart';
 import 'package:task_manager/core/services/theme_service.dart';
 import 'package:task_manager/core/utils/app_util.dart';
@@ -16,9 +17,13 @@ class SignUpForm extends StatefulWidget {
   const SignUpForm({
     Key? key,
     required this.currentTheme,
+    required this.onSuccessSignUp,
+    required this.onFormReady,
   }) : super(key: key);
 
   final String currentTheme;
+  final VoidCallback onFormReady;
+  final Function onSuccessSignUp;
 
   @override
   State<SignUpForm> createState() => _SignUpFormState();
@@ -36,10 +41,15 @@ class _SignUpFormState extends State<SignUpForm> {
     super.initState();
     setFormMetadata();
     Timer(Duration(seconds: 1), () {
-      setState(() {
-        isFormReady = true;
-      });
+      widget.onFormReady();
+      isFormReady = true;
+      setState(() {});
     });
+  }
+
+  void onSuccessSignUp(User user) {
+    user.isLogin = true;
+    widget.onSuccessSignUp(user);
   }
 
   void setFormMetadata() {
@@ -57,8 +67,6 @@ class _SignUpFormState extends State<SignUpForm> {
   }
 
   void onSignUp(Map dataObject) async {
-    //@TODO checking if user name exits on the system
-    // create user account if not exist
     User user = User(
       id: AppUtil.getUid(),
       username: dataObject['username'] ?? '',
@@ -69,7 +77,10 @@ class _SignUpFormState extends State<SignUpForm> {
       email: dataObject['email'] ?? '',
     );
     // generating sign up account for posting or put
-    print(user.toDhis2Json());
+    print(user.toDhis2Json().toString());
+    //@TODO cheking for exisiting user if exit using username
+    //@TODO sign up the account
+    onSuccessSignUp(user);
   }
 
   @override
@@ -77,6 +88,9 @@ class _SignUpFormState extends State<SignUpForm> {
     return Container(
       child: !isFormReady
           ? Container(
+              margin: const EdgeInsets.only(
+                top: 10.0,
+              ),
               child: CircularProcessLoader(
                 color: Colors.blueGrey,
               ),
@@ -94,31 +108,35 @@ class _SignUpFormState extends State<SignUpForm> {
                   Container(
                     margin: const EdgeInsets.symmetric(
                       vertical: 10.0,
-                      horizontal: 20.0,
+                      horizontal: 5.0,
                     ),
                     child: Row(
                       children: [
                         Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 0.0,
-                            ),
-                            child: TextButton(
-                              onPressed: !signInSignUpFormState.isSignUpFormValid
-                                  ? null
-                                  : () => onSignUp(signInSignUpFormState.formState),
-                              child: isSaving
-                                  ? CircularProcessLoader(
-                                      color: textColor,
-                                      size: 2,
-                                    )
-                                  : Text(
-                                      'Sign Up',
-                                      style: TextStyle().copyWith(
-                                        color: textColor,
+                          child: TextButton(
+                            onPressed: !signInSignUpFormState.isSignUpFormValid
+                                ? null
+                                : () => onSignUp(signInSignUpFormState.formState),
+                            child: isSaving
+                                ? CircularProcessLoader(
+                                    color: textColor,
+                                    size: 2,
+                                  )
+                                : MaterialCard(
+                                    body: Container(
+                                      alignment: Alignment.center,
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 20.0,
+                                      ),
+                                      width: double.infinity,
+                                      child: Text(
+                                        'Sign Up',
+                                        style: TextStyle().copyWith(
+                                          color: textColor,
+                                        ),
                                       ),
                                     ),
-                            ),
+                                  ),
                           ),
                         ),
                       ],
