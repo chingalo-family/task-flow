@@ -1,4 +1,5 @@
 import 'package:task_manager/core/constants/app_contant.dart';
+import 'package:task_manager/core/constants/task_status_constant.dart';
 import 'package:task_manager/core/utils/app_util.dart';
 import 'package:task_manager/models/sub_task.dart';
 
@@ -9,6 +10,7 @@ class Task {
   String? createdOn;
   String? createdBy;
   String? dueDate;
+  String? status;
   String? completedOn;
   String? completedBy;
   bool? isCompleted;
@@ -27,16 +29,15 @@ class Task {
     this.completedOn = '',
     this.createdBy = '',
     this.isCompleted = false,
+    this.status = '',
     this.dueDate = '',
     this.groupId = '',
   }) {
     this.id = AppUtil.getUid();
-    this.assignedTo =
-        this.assignedTo != '' ? this.assignedTo : AppContant.defaultUserId;
-    this.createdBy =
-        this.createdBy != '' ? this.createdBy : AppContant.defaultUserId;
-    this.groupId =
-        this.groupId != '' ? this.groupId : AppContant.defaultUserGroupId;
+    this.status = this.status != '' ? this.status : TaskStatusContant.notStarted;
+    this.assignedTo = this.assignedTo != '' ? this.assignedTo : AppContant.defaultUserId;
+    this.createdBy = this.createdBy != '' ? this.createdBy : AppContant.defaultUserId;
+    this.groupId = this.groupId != '' ? this.groupId : AppContant.defaultUserGroupId;
     this.subTasks = [];
     this.createdOn = DateTime.now().toString().split('.')[0];
   }
@@ -53,6 +54,7 @@ class Task {
     data['createdBy'] = this.createdBy != '' ? this.createdBy : '';
     data['dueDate'] = this.dueDate != '' ? this.dueDate : '';
     data['groupId'] = this.groupId;
+    data['status'] = this.status;
     return data;
   }
 
@@ -66,6 +68,7 @@ class Task {
     this.completedOn = mapData['completedOn'] ?? '';
     this.createdBy = mapData['createdBy'] ?? AppContant.defaultUserId;
     this.dueDate = mapData['dueDate'] ?? '';
+    this.status = mapData['status'];
     this.assignedTo = mapData['assignedTo'] ?? AppContant.defaultUserId;
     this.groupId = mapData['groupId'] ?? AppContant.defaultUserGroupId;
   }

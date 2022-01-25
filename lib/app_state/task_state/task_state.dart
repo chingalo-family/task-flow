@@ -6,8 +6,7 @@ import 'package:task_manager/models/task.dart';
 
 class TaskState with ChangeNotifier {
   final TaskOfflineProvider taskOfflineProvider = new TaskOfflineProvider();
-  final SubTaskOfflineProvider subtaskOfflineProvider =
-      new SubTaskOfflineProvider();
+  final SubTaskOfflineProvider subtaskOfflineProvider = new SubTaskOfflineProvider();
 
   List<Task> _taskList = [];
   Task? _currentTask;
@@ -17,25 +16,22 @@ class TaskState with ChangeNotifier {
   Task? get currentTask => _currentTask;
 
   void initiateTaskList() async {
+    //@TODO refecture app status methods
     List<Task> tasks = await taskOfflineProvider.getAllTasks();
     List<SubTask> subTasks = await subtaskOfflineProvider.getAllSubTasks();
     _taskList = tasks.map((Task task) {
       String taskId = task.id!;
-      task.subTasks = subTasks
-          .where((SubTask todoTask) => todoTask.taskId == taskId)
-          .toList();
+      task.subTasks = subTasks.where((SubTask todoTask) => todoTask.taskId == taskId).toList();
       List<bool> completenesStatus =
           task.subTasks.map((SubTask subTask) => subTask.isCompleted!).toList();
       task.isCompleted = !completenesStatus.contains(false);
-      List<SubTask> completedSubTasks = task.subTasks
-          .where((SubTask subTask) => subTask.isCompleted!)
-          .toList();
+      List<SubTask> completedSubTasks =
+          task.subTasks.where((SubTask subTask) => subTask.isCompleted!).toList();
       task.completedTasks = '${completedSubTasks.length}';
       return task;
     }).toList();
     if (_currentTask != null && _currentTask!.id!.isNotEmpty) {
-      int index =
-          _taskList.indexWhere((Task task) => task.id == _currentTask!.id);
+      int index = _taskList.indexWhere((Task task) => task.id == _currentTask!.id);
       _currentTask = _taskList[index];
     }
     notifyListeners();
@@ -52,6 +48,7 @@ class TaskState with ChangeNotifier {
   }
 
   void addTodo(Task todo) async {
+    //@TODO refecture app status methods
     await taskOfflineProvider.addOrUpdateTask(todo);
     initiateTaskList();
   }
@@ -66,6 +63,7 @@ class TaskState with ChangeNotifier {
   }
 
   void addSubTask(SubTask subTask) async {
+    //@TODO refecture app status methods
     await subtaskOfflineProvider.addOrUpdateSubTask(subTask);
     initiateTaskList();
   }

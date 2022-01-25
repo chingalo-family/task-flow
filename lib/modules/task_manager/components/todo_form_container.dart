@@ -23,8 +23,7 @@ class TaskFormContainer extends StatelessWidget {
   final List<SubTask> subTasks;
 
   onInputValueChange(BuildContext context, String id, dynamic value) {
-    Provider.of<TaskFormState>(context, listen: false)
-        .setFormFieldState(id, value);
+    Provider.of<TaskFormState>(context, listen: false).setFormFieldState(id, value);
   }
 
   onSaveTodoForm(
@@ -33,10 +32,8 @@ class TaskFormContainer extends StatelessWidget {
   ) {
     try {
       List mandatoryFields = mandatoryFieldObject.keys.toList();
-      Map dataObject =
-          Provider.of<TaskFormState>(context, listen: false).formState;
-      bool isMandatoryFieldsSet =
-          AppUtil.hasAllMandatoryFieldsFilled(mandatoryFields, dataObject);
+      Map dataObject = Provider.of<TaskFormState>(context, listen: false).formState;
+      bool isMandatoryFieldsSet = AppUtil.hasAllMandatoryFieldsFilled(mandatoryFields, dataObject);
       if (isMandatoryFieldsSet) {
         Task task = Task.fromMap(dataObject);
         task.subTasks = subTasks;
@@ -84,8 +81,7 @@ class TaskFormContainer extends StatelessWidget {
                       hiddenFields: taskFormState.hiddenFields,
                       hiddenSections: taskFormState.hiddenSections,
                       mandatoryFieldObject: mandatoryFieldObject,
-                      onInputValueChange: (id, value) =>
-                          onInputValueChange(context, id, value),
+                      onInputValueChange: (id, value) => onInputValueChange(context, id, value),
                     ),
                   ),
                   Visibility(
@@ -125,8 +121,7 @@ class TaskFormContainer extends StatelessWidget {
                                   child: Text(
                                     'Save',
                                     style: TextStyle().copyWith(
-                                      color: currentTheme ==
-                                              ThemeServices.darkTheme
+                                      color: currentTheme == ThemeServices.darkTheme
                                           ? AppContant.darkTextColor
                                           : AppContant.ligthTextColor,
                                     ),
