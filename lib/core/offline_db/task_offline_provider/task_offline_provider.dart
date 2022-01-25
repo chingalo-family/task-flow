@@ -12,6 +12,7 @@ class TaskOfflineProvider extends OfflineDbProvider {
   final String description = 'description';
   final String createdOn = 'createdOn';
   final String dueDate = 'dueDate';
+  final String status = 'status';
   final String completedOn = 'completedOn';
   final String completedBy = 'completedBy';
   final String createdBy = 'createdBy';
@@ -49,6 +50,7 @@ class TaskOfflineProvider extends OfflineDbProvider {
           createdOn,
           createdBy,
           dueDate,
+          status,
           completedOn,
           completedBy,
           assignedTo,

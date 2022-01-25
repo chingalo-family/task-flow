@@ -13,6 +13,7 @@ class SubTaskOfflineProvider extends OfflineDbProvider {
   final String isCompleted = 'isCompleted';
   final String createdOn = 'createdOn';
   final String dueDate = 'dueDate';
+  final String status = 'status';
   final String completedOn = 'completedOn';
   final String completedBy = 'completedBy';
   final String createdBy = 'createdBy';
@@ -50,6 +51,7 @@ class SubTaskOfflineProvider extends OfflineDbProvider {
           createdOn,
           createdBy,
           dueDate,
+          status,
           completedOn,
           completedBy,
           assignedTo,
