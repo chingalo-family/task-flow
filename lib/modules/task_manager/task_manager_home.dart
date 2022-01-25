@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:task_manager/app_state/app_theme_state/app_theme_state.dart';
 import 'package:task_manager/app_state/user_state/user_state.dart';
 import 'package:task_manager/core/components/app_bar_container.dart';
-import 'package:task_manager/core/components/app_drawer_container.dart';
 import 'package:task_manager/core/constants/app_contant.dart';
 import 'package:task_manager/core/services/theme_service.dart';
 import 'package:task_manager/core/utils/app_util.dart';
@@ -42,8 +41,10 @@ class TaskMangerHome extends StatelessWidget {
 
   onOpenUserActionSheet(BuildContext context) {
     double maxHeightRatio = 0.6;
+    double initialHeightRatio = 0.4;
     AppUtil.showActionSheetModal(
       context: context,
+      initialHeightRatio: initialHeightRatio,
       maxHeightRatio: maxHeightRatio,
       containerBody: UserActionSheet(
         maxHeightRatio: maxHeightRatio,

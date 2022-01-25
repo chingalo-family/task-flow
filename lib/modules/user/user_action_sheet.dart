@@ -6,6 +6,8 @@ import 'package:task_manager/core/constants/app_contant.dart';
 import 'package:task_manager/core/services/theme_service.dart';
 import 'package:task_manager/models/user.dart';
 
+import 'components/sign_in_sign_up_form_container.dart';
+
 class UserActionSheet extends StatelessWidget {
   const UserActionSheet({
     Key? key,
@@ -13,6 +15,8 @@ class UserActionSheet extends StatelessWidget {
   }) : super(key: key);
 
   final double maxHeightRatio;
+
+  onSignInOrSignOut(BuildContext context, User user) {}
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +29,58 @@ class UserActionSheet extends StatelessWidget {
         return Container(
           height: size.height * this.maxHeightRatio,
           decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15.0),
+              topRight: Radius.circular(15.0),
+            ),
             color: currentTheme == ThemeServices.darkTheme
-                ? AppContant.darkThemeColor
-                : AppContant.lightThemeColor,
+                ? AppContant.darkBackgoundColor
+                : AppContant.lightBackgroundColor,
+          ),
+          child: Column(
+            children: [
+              Visibility(
+                visible: user.isLogin,
+                child: Container(
+                  margin: EdgeInsets.only(
+                    top: 10.0,
+                    bottom: 5.0,
+                  ),
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        radius: size.height * 0.05,
+                        backgroundColor: currentTheme == ThemeServices.darkTheme
+                            ? AppContant.darkThemeColor
+                            : AppContant.darkTextColor,
+                        child: Text(
+                          usernameIcon,
+                          style: TextStyle().copyWith(
+                            color: currentTheme == ThemeServices.darkTheme
+                                ? AppContant.darkTextColor
+                                : AppContant.ligthTextColor,
+                            fontSize: 20.0,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        child: Text('user container'),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: !user.isLogin,
+                child: Container(
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 10.0,
+                    horizontal: 10.0,
+                  ),
+                  child: SignInSignUpFormContainer(),
+                ),
+              ),
+            ],
           ),
         );
       });
