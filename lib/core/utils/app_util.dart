@@ -13,9 +13,8 @@ class AppUtil {
     List fieldIds = dataDynamic.keys.toList();
     List hiddenFieldsIds = hiddenFields.keys.toList();
     //Remove all hidden fields which are mandatory from the list
-    List filteredMandatoryFields = mandatoryFields
-        .where((field) => hiddenFieldsIds.indexOf(field) < 0)
-        .toList();
+    List filteredMandatoryFields =
+        mandatoryFields.where((field) => hiddenFieldsIds.indexOf(field) < 0).toList();
     for (var mandatoryField in filteredMandatoryFields) {
       if (fieldIds.indexOf(mandatoryField) == -1) {
         hasFilled = false;
@@ -35,9 +34,8 @@ class AppUtil {
     List fieldIds = dataDynamic.keys.toList();
     List hiddenFieldsIds = hiddenFields.keys.toList();
     //Remove all hidden fields which are mandatory from the list
-    List filteredMandatoryFields = mandatoryFields
-        .where((field) => hiddenFieldsIds.indexOf(field) < 0)
-        .toList();
+    List filteredMandatoryFields =
+        mandatoryFields.where((field) => hiddenFieldsIds.indexOf(field) < 0).toList();
     for (var mandatoryField in filteredMandatoryFields) {
       if (fieldIds.indexOf(mandatoryField) == -1) {
         unFilledMandatoryFields.add(mandatoryField);
@@ -61,8 +59,7 @@ class AppUtil {
       if (fieldIds.indexOf(field) == -1) {
         unFilledFields.add(field);
       } else {
-        if ('${dataDynamic[field]}'.trim() == '' ||
-            '${dataDynamic[field]}'.trim() == 'null') {
+        if ('${dataDynamic[field]}'.trim() == '' || '${dataDynamic[field]}'.trim() == 'null') {
           unFilledFields.add(field);
         }
       }
@@ -129,15 +126,13 @@ class AppUtil {
     return age;
   }
 
-  static List<List<dynamic>> chunkItems(
-      {List<dynamic> items = const [], int size = 0}) {
+  static List<List<dynamic>> chunkItems({List<dynamic> items = const [], int size = 0}) {
     List<List<dynamic>> groupedItems = [];
     size = size != 0 ? size : items.length;
     for (var count = 1; count <= (items.length / size).ceil(); count++) {
       int start = (count - 1) * size;
       int end = (count * size);
-      List<dynamic> subList =
-          items.sublist(start, end > items.length ? items.length : end);
+      List<dynamic> subList = items.sublist(start, end > items.length ? items.length : end);
       groupedItems.add(subList);
     }
     return groupedItems;
@@ -164,6 +159,52 @@ class AppUtil {
         gravity: position,
         backgroundColor: Color(0xFF656565),
       );
+  }
+
+  static showActionSheetModal({
+    required BuildContext context,
+    required Widget containerBody,
+    double initialChildSize = 0.3,
+    double maxChildSize = 0.7,
+    double minChildSize = 0.1,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      elevation: 2.0,
+      isDismissible: false,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => Navigator.of(context).pop(),
+        child: GestureDetector(
+          onTap: () {},
+          child: DraggableScrollableSheet(
+            initialChildSize: initialChildSize,
+            maxChildSize: maxChildSize,
+            minChildSize: minChildSize,
+            builder: (BuildContext context, ScrollController scrollController) {
+              return SingleChildScrollView(
+                controller: scrollController,
+                child: Container(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 1.0,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(15.0),
+                      topRight: Radius.circular(15.0),
+                    ),
+                  ),
+                  child: containerBody,
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
   }
 
   static showPopUpModal(
