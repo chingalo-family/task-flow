@@ -8,6 +8,7 @@ import 'package:task_manager/core/components/entry_forms/entry_form_container.da
 import 'package:task_manager/core/components/material_card.dart';
 import 'package:task_manager/core/constants/app_contant.dart';
 import 'package:task_manager/core/services/theme_service.dart';
+import 'package:task_manager/core/services/user_service.dart';
 import 'package:task_manager/core/utils/app_util.dart';
 import 'package:task_manager/models/form_section.dart';
 import 'package:task_manager/models/user.dart';
@@ -67,20 +68,38 @@ class _SignUpFormState extends State<SignUpForm> {
   }
 
   void onSignUp(Map dataObject) async {
-    User user = User(
-      id: AppUtil.getUid(),
-      username: dataObject['username'] ?? '',
-      fullName: dataObject['fullName'] ?? '',
-      password: dataObject['password'] ?? '',
-      gender: dataObject['gender'] ?? '',
-      phoneNumber: dataObject['phoneNumber'] ?? '',
-      email: dataObject['email'] ?? '',
-    );
-    // generating sign up account for posting or put
-    print(user.toDhis2Json().toString());
-    //@TODO cheking for exisiting user if exit using username
-    //@TODO sign up the account
-    onSuccessSignUp(user);
+    //@TODO Adding loader on ui for background operations
+    //@TODO Validate password;
+    try {
+      isSaving = true;
+      setState(() {});
+      User user = User(
+        id: AppUtil.getUid(),
+        username: dataObject['username'] ?? '',
+        fullName: dataObject['fullName'] ?? '',
+        password: dataObject['password'] ?? '',
+        gender: dataObject['gender'] ?? '',
+        phoneNumber: dataObject['phoneNumber'] ?? '',
+        email: dataObject['email'] ?? '',
+      );
+      bool isAccountExist = await UserService().isUserAccountExist(dhisUsername: user.username);
+      if (!isAccountExist) {
+        await UserService().createOrUpdateDhis2UserAccount(user: user);
+        //  onSuccessSignUp(user);
+      } else {
+        AppUtil.showToastMessage(
+          message: 'User with username ${user.username} has already signed up in the system',
+        );
+      }
+      isSaving = false;
+      setState(() {});
+    } catch (error) {
+      isSaving = false;
+      setState(() {});
+      AppUtil.showToastMessage(
+        message: error.toString(),
+      );
+    }
   }
 
   @override

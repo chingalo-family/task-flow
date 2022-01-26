@@ -34,7 +34,6 @@ class _SignInSignUpFormContainerState extends State<SignInSignUpFormContainer> {
 
   onSuccessLoginOrSignUp(BuildContext context, User user) async {
     if (Navigator.canPop(context)) {
-      print(user.isLogin);
       List<UserGroup> userGroups = await UserGroupService().getUserGroupsByUserId(userId: user.id);
       Provider.of<UserState>(context, listen: false).setCurrentUser(user);
       Provider.of<UserGroupState>(context, listen: false).setCurrentUserGroups(userGroups);
