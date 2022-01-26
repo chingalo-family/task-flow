@@ -165,9 +165,9 @@ class AppUtil {
     required BuildContext context,
     required Widget containerBody,
     double initialHeightRatio = 0.3,
-    double maxHeightRatio = 0.7,
     double minHeightRatio = 0.1,
   }) {
+    double maxHeightRatio = 0.9;
     showModalBottomSheet(
       context: context,
       elevation: 2.0,
@@ -180,28 +180,25 @@ class AppUtil {
         child: GestureDetector(
           onTap: () {},
           child: DraggableScrollableSheet(
-            initialChildSize: initialHeightRatio < maxHeightRatio
-                ? initialHeightRatio + maxHeightRatio / 2
-                : initialHeightRatio,
+            initialChildSize: initialHeightRatio,
             maxChildSize: maxHeightRatio,
             minChildSize: minHeightRatio,
             builder: (BuildContext context, ScrollController scrollController) {
-              return Flexible(
-                child: ListView(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 1.0,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(20.0),
-                        ),
-                      ),
-                      child: containerBody,
+              return ListView(
+                controller: scrollController,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 1.0,
                     ),
-                  ],
-                ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20.0),
+                      ),
+                    ),
+                    child: containerBody,
+                  ),
+                ],
               );
             },
           ),
