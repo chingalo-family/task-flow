@@ -53,6 +53,14 @@ class UserGroupService {
     List<String> groupIds =
         userGroupMembers.map((UserGroupMember userGroupMember) => userGroupMember.groupId).toList();
     List<UserGroup> userGroups = await UserGroupOfflineProvider().getUserGroups();
-    return userGroups.where((UserGroup userGroup) => groupIds.contains(userGroup.id)).toList();
+    return userGroups
+        .where((UserGroup userGroup) => groupIds.contains(userGroup.id))
+        .toList()
+        .map((UserGroup userGroup) {
+      userGroup.groupMembers = userGroupMembers
+          .where((UserGroupMember userGroupMembe) => userGroupMembe.groupId == userGroup.id)
+          .toList();
+      return userGroup;
+    }).toList();
   }
 }
