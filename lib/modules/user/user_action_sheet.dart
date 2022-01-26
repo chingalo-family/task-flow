@@ -5,6 +5,7 @@ import 'package:task_manager/app_state/user_state/user_state.dart';
 import 'package:task_manager/core/constants/app_contant.dart';
 import 'package:task_manager/core/services/theme_service.dart';
 import 'package:task_manager/models/user.dart';
+import 'package:task_manager/modules/user/components/user_profile_container.dart';
 
 import 'components/sign_in_sign_up_form_container.dart';
 
@@ -38,39 +39,11 @@ class UserActionSheet extends StatelessWidget {
             children: [
               Visibility(
                 visible: user.isLogin,
-                child: Container(
-                  margin: EdgeInsets.only(
-                    top: 10.0,
-                    bottom: 5.0,
-                  ),
-                  child: Column(
-                    children: [
-                      CircleAvatar(
-                        radius: size.height * 0.05,
-                        backgroundColor: currentTheme == ThemeServices.darkTheme
-                            ? AppContant.darkThemeColor
-                            : AppContant.darkTextColor,
-                        child: Text(
-                          usernameIcon,
-                          style: TextStyle().copyWith(
-                            color: currentTheme == ThemeServices.darkTheme
-                                ? AppContant.darkTextColor
-                                : AppContant.ligthTextColor,
-                            fontSize: 20.0,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        child: Text('user container',
-                            style: TextStyle().copyWith(
-                              color: currentTheme == ThemeServices.darkTheme
-                                  ? AppContant.darkTextColor
-                                  : AppContant.ligthTextColor,
-                              fontSize: 20.0,
-                            )),
-                      )
-                    ],
-                  ),
+                child: UserProfileContainer(
+                  size: size,
+                  currentTheme: currentTheme,
+                  usernameIcon: usernameIcon,
+                  user: user,
                 ),
               ),
               Visibility(
