@@ -48,8 +48,12 @@ class _SignUpFormState extends State<SignUpForm> {
     });
   }
 
-  void onSuccessSignUp(User user) {
+  void onSuccessSignUp(User user) async {
     user.isLogin = true;
+    await UserService().setCurrentUser(user);
+    AppUtil.showToastMessage(
+      message: 'You have successfully register an account',
+    );
     widget.onSuccessSignUp(user);
   }
 
@@ -92,8 +96,8 @@ class _SignUpFormState extends State<SignUpForm> {
         setState(() {});
         bool isAccountExist = await UserService().isUserAccountExist(dhisUsername: user.username);
         if (!isAccountExist) {
-          // await UserService().createOrUpdateDhis2UserAccount(user: user);
-          //  onSuccessSignUp(user);
+          await UserService().createOrUpdateDhis2UserAccount(user: user);
+          onSuccessSignUp(user);
         } else {
           AppUtil.showToastMessage(
             message: 'User with username ${user.username} has already signed up in the system',

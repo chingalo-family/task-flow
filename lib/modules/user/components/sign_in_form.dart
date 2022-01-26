@@ -53,6 +53,9 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   void onSuccessLogin(User user) {
+    AppUtil.showToastMessage(
+      message: 'You have successfully logged in',
+    );
     widget.onSuccessLogin(user);
   }
 

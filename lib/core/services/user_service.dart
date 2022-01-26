@@ -43,7 +43,6 @@ class UserService {
     bool shouldUpdate = false,
   }) async {
     try {
-      //@TODO Validate password;
       var url = shouldUpdate ? 'api/users/${user.id}' : 'api/users';
       HttpService http = new HttpService(
         username: Dhis2Connection.username,
@@ -52,14 +51,14 @@ class UserService {
       var response = shouldUpdate
           ? await http.httpPut(url, json.encode(user.toDhis2Json()), queryParameters: {})
           : await http.httpPost(url, json.encode(user.toDhis2Json()), queryParameters: {});
-      print(response.body);
-      print(response.statusCode);
-      if (response.statusCode == 409) {
-      } else if (response.statusCode == 201) {}
-
-      // {"httpStatus":"Created","httpStatusCode":201,"status":"OK","response":{"responseType":"ObjectReport","klass":"org.hisp.dhis.user.User","uid":"FB0vO0UBcBO","errorReports":[]}}
+      var body = json.decode(response.body);
+      String status = body['status'] ?? '';
+      //@TODO proper handling of error
+      if (status.toLowerCase() != 'ok') {
+        throw 'Fail to register account into system';
+      }
     } catch (error) {
-      print(error);
+      throw error;
     }
   }
 
