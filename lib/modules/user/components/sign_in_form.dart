@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:task_manager/app_state/user_state/sign_in_sign_up_form_state.dart';
 import 'package:task_manager/core/components/circular_process_loader.dart';
 import 'package:task_manager/core/components/entry_forms/entry_form_container.dart';
+import 'package:task_manager/core/components/material_card.dart';
 import 'package:task_manager/core/constants/app_contant.dart';
 import 'package:task_manager/core/services/theme_service.dart';
 import 'package:task_manager/core/services/user_group_service.dart';
@@ -20,10 +21,12 @@ class SignInForm extends StatefulWidget {
     Key? key,
     required this.currentTheme,
     required this.onSuccessLogin,
+    required this.onFormReady,
   }) : super(key: key);
 
   final String currentTheme;
   final Function onSuccessLogin;
+  final VoidCallback onFormReady;
 
   @override
   State<SignInForm> createState() => _SignInFormState();
@@ -44,11 +47,15 @@ class _SignInFormState extends State<SignInForm> {
     setCurrentUser();
     Timer(Duration(seconds: 1), () {
       isFormReady = true;
+      widget.onFormReady();
       setState(() {});
     });
   }
 
   void onSuccessLogin(User user) {
+    AppUtil.showToastMessage(
+      message: 'You have successfully logged in',
+    );
     widget.onSuccessLogin(user);
   }
 
@@ -119,6 +126,9 @@ class _SignInFormState extends State<SignInForm> {
     return Container(
       child: !isFormReady
           ? Container(
+              margin: const EdgeInsets.only(
+                top: 10.0,
+              ),
               child: CircularProcessLoader(
                 color: Colors.blueGrey,
               ),
@@ -136,31 +146,35 @@ class _SignInFormState extends State<SignInForm> {
                   Container(
                     margin: const EdgeInsets.symmetric(
                       vertical: 10.0,
-                      horizontal: 20.0,
+                      horizontal: 5.0,
                     ),
                     child: Row(
                       children: [
                         Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 0.0,
-                            ),
-                            child: TextButton(
-                              onPressed: !signInSignUpFormState.isLoginFormValid
-                                  ? null
-                                  : () => onLogin(signInSignUpFormState.formState),
-                              child: isSaving
-                                  ? CircularProcessLoader(
-                                      color: textColor,
-                                      size: 2,
-                                    )
-                                  : Text(
-                                      'Log In',
-                                      style: TextStyle().copyWith(
-                                        color: textColor,
+                          child: TextButton(
+                            onPressed: !signInSignUpFormState.isLoginFormValid
+                                ? null
+                                : () => onLogin(signInSignUpFormState.formState),
+                            child: isSaving
+                                ? CircularProcessLoader(
+                                    color: textColor,
+                                    size: 2,
+                                  )
+                                : MaterialCard(
+                                    body: Container(
+                                      alignment: Alignment.center,
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 20.0,
+                                      ),
+                                      width: double.infinity,
+                                      child: Text(
+                                        'Log In',
+                                        style: TextStyle().copyWith(
+                                          color: textColor,
+                                        ),
                                       ),
                                     ),
-                            ),
+                                  ),
                           ),
                         ),
                       ],

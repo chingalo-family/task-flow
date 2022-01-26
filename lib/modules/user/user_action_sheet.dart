@@ -11,10 +11,7 @@ import 'components/sign_in_sign_up_form_container.dart';
 class UserActionSheet extends StatelessWidget {
   const UserActionSheet({
     Key? key,
-    required this.maxHeightRatio,
   }) : super(key: key);
-
-  final double maxHeightRatio;
 
   onSignInOrSignOut(BuildContext context, User user) {}
 
@@ -27,7 +24,7 @@ class UserActionSheet extends StatelessWidget {
         String usernameIcon = userState.usernameIcon;
         User user = userState.currrentUser;
         return Container(
-          height: size.height * this.maxHeightRatio,
+          height: size.height,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(15.0),
@@ -64,7 +61,13 @@ class UserActionSheet extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        child: Text('user container'),
+                        child: Text('user container',
+                            style: TextStyle().copyWith(
+                              color: currentTheme == ThemeServices.darkTheme
+                                  ? AppContant.darkTextColor
+                                  : AppContant.ligthTextColor,
+                              fontSize: 20.0,
+                            )),
                       )
                     ],
                   ),

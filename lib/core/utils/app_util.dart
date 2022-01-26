@@ -76,6 +76,17 @@ class AppUtil {
     );
   }
 
+  static isEmailValid(String emial) {
+    return RegExp(
+            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+        .hasMatch(emial);
+  }
+
+  static isPasswordValid(String password) {
+    return RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+        .hasMatch(password);
+  }
+
   static String getUid() {
     Random rnd = new Random();
     const letters = 'abcdefghijklmnopqrstuvwxyz' + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -165,9 +176,9 @@ class AppUtil {
     required BuildContext context,
     required Widget containerBody,
     double initialHeightRatio = 0.3,
-    double maxHeightRatio = 0.7,
     double minHeightRatio = 0.1,
   }) {
+    double maxHeightRatio = 0.9;
     showModalBottomSheet(
       context: context,
       elevation: 2.0,
@@ -184,14 +195,21 @@ class AppUtil {
             maxChildSize: maxHeightRatio,
             minChildSize: minHeightRatio,
             builder: (BuildContext context, ScrollController scrollController) {
-              return SingleChildScrollView(
+              return ListView(
                 controller: scrollController,
-                child: Container(
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 1.0,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 1.0,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20.0),
+                      ),
+                    ),
+                    child: containerBody,
                   ),
-                  child: containerBody,
-                ),
+                ],
               );
             },
           ),

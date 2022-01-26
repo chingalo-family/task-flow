@@ -34,6 +34,6 @@ class UserGroupMember {
 
   @override
   String toString() {
-    return 'Group Member <$id >';
+    return 'Group Member <$id $username> ';
   }
 }
