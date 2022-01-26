@@ -68,11 +68,7 @@ class _SignUpFormState extends State<SignUpForm> {
   }
 
   void onSignUp(Map dataObject) async {
-    //@TODO Adding loader on ui for background operations
-    //@TODO Validate password;
     try {
-      isSaving = true;
-      setState(() {});
       User user = User(
         id: AppUtil.getUid(),
         username: dataObject['username'] ?? '',
@@ -82,17 +78,30 @@ class _SignUpFormState extends State<SignUpForm> {
         phoneNumber: dataObject['phoneNumber'] ?? '',
         email: dataObject['email'] ?? '',
       );
-      bool isAccountExist = await UserService().isUserAccountExist(dhisUsername: user.username);
-      if (!isAccountExist) {
-        await UserService().createOrUpdateDhis2UserAccount(user: user);
-        //  onSuccessSignUp(user);
-      } else {
+      if (user.email!.isNotEmpty && !AppUtil.isEmailValid(user.email!)) {
         AppUtil.showToastMessage(
-          message: 'User with username ${user.username} has already signed up in the system',
+          message: '${user.email!} is not valid email',
         );
+      } else if (!AppUtil.isPasswordValid(user.password!)) {
+        AppUtil.showToastMessage(
+          message:
+              'Password should contain at least one upper case, one lower case, one digit, one special character and 8 characters in length',
+        );
+      } else {
+        isSaving = true;
+        setState(() {});
+        bool isAccountExist = await UserService().isUserAccountExist(dhisUsername: user.username);
+        if (!isAccountExist) {
+          // await UserService().createOrUpdateDhis2UserAccount(user: user);
+          //  onSuccessSignUp(user);
+        } else {
+          AppUtil.showToastMessage(
+            message: 'User with username ${user.username} has already signed up in the system',
+          );
+        }
+        isSaving = false;
+        setState(() {});
       }
-      isSaving = false;
-      setState(() {});
     } catch (error) {
       isSaving = false;
       setState(() {});
