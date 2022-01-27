@@ -178,7 +178,7 @@ class AppUtil {
     double initialHeightRatio = 0.3,
     double minHeightRatio = 0.1,
   }) {
-    double maxHeightRatio = 0.9;
+    double maxHeightRatio = 0.85;
     showModalBottomSheet(
       context: context,
       elevation: 2.0,

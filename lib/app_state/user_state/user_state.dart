@@ -17,8 +17,13 @@ class UserState with ChangeNotifier {
   String get usernameIcon => _currentUser != null && _currentUser!.isLogin
       ? _currentUser!.fullName.split(' ').map((name) => '$name'[0]).toList().join('').toUpperCase()
       : '';
+
   void setCurrentUser(User user) {
     _currentUser = user;
     notifyListeners();
+  }
+
+  void resetCurrentUser() {
+    _currentUser = null;
   }
 }

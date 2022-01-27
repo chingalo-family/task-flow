@@ -10,4 +10,8 @@ class UserGroupState with ChangeNotifier {
     _currentUserGroups == userGroups;
     notifyListeners();
   }
+
+  void resetCurrentUserGroups() {
+    _currentUserGroups = null;
+  }
 }
