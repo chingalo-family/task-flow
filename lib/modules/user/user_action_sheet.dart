@@ -12,7 +12,10 @@ import 'components/sign_in_sign_up_form_container.dart';
 class UserActionSheet extends StatelessWidget {
   const UserActionSheet({
     Key? key,
+    required this.initialHeightRatio,
   }) : super(key: key);
+
+  final double initialHeightRatio;
 
   onSignInOrSignOut(BuildContext context, User user) {}
 
@@ -24,8 +27,9 @@ class UserActionSheet extends StatelessWidget {
       return Consumer<UserState>(builder: (context, userState, child) {
         String usernameIcon = userState.usernameIcon;
         User user = userState.currrentUser;
+        double heightRatio = user.isLogin ? initialHeightRatio : 1;
         return Container(
-          height: size.height,
+          height: size.height * heightRatio,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(15.0),

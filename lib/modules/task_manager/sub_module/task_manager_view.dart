@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:task_manager/app_state/app_theme_state/app_theme_state.dart';
 import 'package:task_manager/app_state/task_state/task_state.dart';
@@ -6,6 +7,7 @@ import 'package:task_manager/app_state/user_state/user_state.dart';
 import 'package:task_manager/core/components/app_bar_container.dart';
 import 'package:task_manager/core/constants/app_contant.dart';
 import 'package:task_manager/core/services/theme_service.dart';
+import 'package:task_manager/core/services/user_service.dart';
 import 'package:task_manager/core/utils/app_util.dart';
 import 'package:task_manager/models/form_section.dart';
 import 'package:task_manager/models/sub_task.dart';
@@ -77,12 +79,17 @@ class TaskMangerView extends StatelessWidget {
     }
   }
 
-  onOpenUserActionSheet(BuildContext context) {
+  onOpenUserActionSheet(BuildContext context) async {
+    User? user = Provider.of<UserState>(context, listen: false).currrentUser;
     double initialHeightRatio = 0.45;
+    bool isLogin = user.isLogin;
     AppUtil.showActionSheetModal(
       context: context,
       initialHeightRatio: initialHeightRatio,
-      containerBody: UserActionSheet(),
+      maxHeightRatio: isLogin ? initialHeightRatio : 0,
+      containerBody: UserActionSheet(
+        initialHeightRatio: initialHeightRatio,
+      ),
     );
   }
 

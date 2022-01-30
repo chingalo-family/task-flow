@@ -5,6 +5,7 @@ import 'package:task_manager/app_state/user_state/user_state.dart';
 import 'package:task_manager/core/components/app_bar_container.dart';
 import 'package:task_manager/core/constants/app_contant.dart';
 import 'package:task_manager/core/services/theme_service.dart';
+import 'package:task_manager/core/services/user_service.dart';
 import 'package:task_manager/core/utils/app_util.dart';
 import 'package:task_manager/models/form_section.dart';
 import 'package:task_manager/models/task.dart';
@@ -39,12 +40,18 @@ class TaskMangerHome extends StatelessWidget {
     await AppUtil.showPopUpModal(context, modal, false);
   }
 
-  onOpenUserActionSheet(BuildContext context) {
+  onOpenUserActionSheet(BuildContext context) async {
+    User? user = Provider.of<UserState>(context, listen: false).currrentUser;
     double initialHeightRatio = 0.45;
+    bool isLogin = user.isLogin;
+    print('islogin =>  $isLogin');
     AppUtil.showActionSheetModal(
       context: context,
       initialHeightRatio: initialHeightRatio,
-      containerBody: UserActionSheet(),
+      maxHeightRatio: isLogin ? initialHeightRatio : 0,
+      containerBody: UserActionSheet(
+        initialHeightRatio: initialHeightRatio,
+      ),
     );
   }
 
