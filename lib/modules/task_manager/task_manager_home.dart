@@ -39,12 +39,17 @@ class TaskMangerHome extends StatelessWidget {
     await AppUtil.showPopUpModal(context, modal, false);
   }
 
-  onOpenUserActionSheet(BuildContext context) {
+  onOpenUserActionSheet(BuildContext context) async {
+    User? user = Provider.of<UserState>(context, listen: false).currrentUser;
     double initialHeightRatio = 0.45;
+    bool isLogin = user.isLogin;
     AppUtil.showActionSheetModal(
       context: context,
       initialHeightRatio: initialHeightRatio,
-      containerBody: UserActionSheet(),
+      maxHeightRatio: isLogin ? initialHeightRatio : 0,
+      containerBody: UserActionSheet(
+        initialHeightRatio: initialHeightRatio,
+      ),
     );
   }
 

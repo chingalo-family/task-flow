@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_manager/app_state/app_theme_state/app_theme_state.dart';
+import 'package:task_manager/app_state/user_state/user_group_state.dart';
 import 'package:task_manager/app_state/user_state/user_state.dart';
 import 'package:task_manager/core/constants/app_contant.dart';
 import 'package:task_manager/core/services/theme_service.dart';
 import 'package:task_manager/models/user.dart';
-
-import 'components/sign_in_sign_up_form_container.dart';
+import 'package:task_manager/models/user_group.dart';
+import 'package:task_manager/modules/user/sub_module/user_module/components/sign_in_sign_up_form_container.dart';
+import 'package:task_manager/modules/user/sub_module/user_module/components/user_profile_container.dart';
 
 class UserActionSheet extends StatelessWidget {
   const UserActionSheet({
     Key? key,
+    required this.initialHeightRatio,
   }) : super(key: key);
 
-  onSignInOrSignOut(BuildContext context, User user) {}
+  final double initialHeightRatio;
 
   @override
   Widget build(BuildContext context) {
@@ -23,69 +26,49 @@ class UserActionSheet extends StatelessWidget {
       return Consumer<UserState>(builder: (context, userState, child) {
         String usernameIcon = userState.usernameIcon;
         User user = userState.currrentUser;
-        return Container(
-          height: size.height,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(15.0),
-              topRight: Radius.circular(15.0),
+        double heightRatio = user.isLogin ? initialHeightRatio : 1;
+        return Consumer<UserGroupState>(builder: (context, userGroupState, child) {
+          List<UserGroup> userGroups = userGroupState.currentUserGroups;
+          return Container(
+            margin: EdgeInsets.only(
+              top: 25.0,
             ),
-            color: currentTheme == ThemeServices.darkTheme
-                ? AppContant.darkBackgoundColor
-                : AppContant.lightBackgroundColor,
-          ),
-          child: Column(
-            children: [
-              Visibility(
-                visible: user.isLogin,
-                child: Container(
-                  margin: EdgeInsets.only(
-                    top: 10.0,
-                    bottom: 5.0,
-                  ),
-                  child: Column(
-                    children: [
-                      CircleAvatar(
-                        radius: size.height * 0.05,
-                        backgroundColor: currentTheme == ThemeServices.darkTheme
-                            ? AppContant.darkThemeColor
-                            : AppContant.darkTextColor,
-                        child: Text(
-                          usernameIcon,
-                          style: TextStyle().copyWith(
-                            color: currentTheme == ThemeServices.darkTheme
-                                ? AppContant.darkTextColor
-                                : AppContant.ligthTextColor,
-                            fontSize: 20.0,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        child: Text('user container',
-                            style: TextStyle().copyWith(
-                              color: currentTheme == ThemeServices.darkTheme
-                                  ? AppContant.darkTextColor
-                                  : AppContant.ligthTextColor,
-                              fontSize: 20.0,
-                            )),
-                      )
-                    ],
+            height: size.height * heightRatio,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(15.0),
+                topRight: Radius.circular(15.0),
+              ),
+              color: currentTheme == ThemeServices.darkTheme
+                  ? AppContant.darkBackgoundColor
+                  : AppContant.lightBackgroundColor,
+            ),
+            child: Column(
+              children: [
+                Visibility(
+                  visible: user.isLogin,
+                  child: UserProfileContainer(
+                    size: size,
+                    currentTheme: currentTheme,
+                    usernameIcon: usernameIcon,
+                    user: user,
+                    userGroups: userGroups,
                   ),
                 ),
-              ),
-              Visibility(
-                visible: !user.isLogin,
-                child: Container(
-                  margin: const EdgeInsets.symmetric(
-                    vertical: 10.0,
-                    horizontal: 10.0,
+                Visibility(
+                  visible: !user.isLogin,
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 10.0,
+                      horizontal: 10.0,
+                    ),
+                    child: SignInSignUpFormContainer(),
                   ),
-                  child: SignInSignUpFormContainer(),
                 ),
-              ),
-            ],
-          ),
-        );
+              ],
+            ),
+          );
+        });
       });
     });
   }

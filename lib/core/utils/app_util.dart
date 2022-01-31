@@ -177,8 +177,9 @@ class AppUtil {
     required Widget containerBody,
     double initialHeightRatio = 0.3,
     double minHeightRatio = 0.1,
+    double maxHeightRatio = 0.85,
   }) {
-    double maxHeightRatio = 0.9;
+    maxHeightRatio = maxHeightRatio > 0 ? maxHeightRatio : 0.85;
     showModalBottomSheet(
       context: context,
       elevation: 2.0,
@@ -192,8 +193,8 @@ class AppUtil {
           onTap: () {},
           child: DraggableScrollableSheet(
             initialChildSize: initialHeightRatio,
-            maxChildSize: maxHeightRatio,
-            minChildSize: minHeightRatio,
+            maxChildSize: maxHeightRatio < initialHeightRatio ? initialHeightRatio : maxHeightRatio,
+            minChildSize: minHeightRatio < initialHeightRatio ? minHeightRatio : initialHeightRatio,
             builder: (BuildContext context, ScrollController scrollController) {
               return ListView(
                 controller: scrollController,
