@@ -43,7 +43,6 @@ class TaskMangerHome extends StatelessWidget {
     User? user = Provider.of<UserState>(context, listen: false).currrentUser;
     double initialHeightRatio = 0.45;
     bool isLogin = user.isLogin;
-    print('islogin =>  $isLogin');
     AppUtil.showActionSheetModal(
       context: context,
       initialHeightRatio: initialHeightRatio,
