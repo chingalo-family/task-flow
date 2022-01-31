@@ -8,7 +8,7 @@ class UserGroupOfflineProvider extends OfflineDbProvider {
 
   final String id = 'id';
   final String name = 'name';
-  final String description = 'description';
+  final String createdBy = 'createdBy';
 
   addOrUpdateUserGroup(List<UserGroup> userGroups) async {
     try {
@@ -48,7 +48,7 @@ class UserGroupOfflineProvider extends OfflineDbProvider {
         columns: [
           id,
           name,
-          description,
+          createdBy,
         ],
       );
       if (maps.isNotEmpty) {
@@ -57,7 +57,9 @@ class UserGroupOfflineProvider extends OfflineDbProvider {
           userGroups.add(userGroup);
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      print(e.toString());
+    }
     return userGroups;
   }
 }

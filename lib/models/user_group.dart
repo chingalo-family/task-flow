@@ -3,41 +3,44 @@ import 'package:task_manager/models/user_group_member.dart';
 class UserGroup {
   late String id;
   late String name;
-  late String description;
+  late String createdBy;
+
   late List<UserGroupMember> groupMembers;
 
   UserGroup({
     required this.name,
     required this.id,
-    this.description = '',
+    this.createdBy = '',
     this.groupMembers = const [],
   }) {
-    this.description = this.description != '' ? this.description : '';
+    this.createdBy = this.createdBy != '' ? this.createdBy : '';
   }
 
-  String get groupMemberCount => '${groupMembers.length}';
+  String get groupMemberCount =>
+      groupMembers.length > 1 ? '${groupMembers.length} members' : '${groupMembers.length} memmber';
 
   Map<String, dynamic> toMap() {
     var data = Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
-    data['description'] = this.description;
+    data['createdBy'] = this.createdBy;
     return data;
   }
 
   UserGroup.fromMap(Map mapData) {
     this.id = mapData['id'];
     this.name = mapData['name'];
-    this.description = mapData['description'];
+    this.createdBy = mapData['createdBy'];
   }
 
   factory UserGroup.fromJson(
     dynamic json,
   ) {
+    dynamic createdBy = json['createdBy'];
     return UserGroup(
       name: json['name'] ?? '',
       id: json['id'] ?? '',
-      description: '',
+      createdBy: createdBy['username'] ?? '',
       groupMembers: _getUserGroupMembers(json),
     );
   }

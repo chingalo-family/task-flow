@@ -18,8 +18,6 @@ class UserActionSheet extends StatelessWidget {
 
   final double initialHeightRatio;
 
-  onSignInOrSignOut(BuildContext context, User user) {}
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
