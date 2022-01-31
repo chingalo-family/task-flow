@@ -174,18 +174,15 @@ class UserProfileContainer extends StatelessWidget {
           Container(
             margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
             child: ListTile(
-              title: Text(
-                'Assinged Groups ${userGroups.length}',
-                style: TextStyle().copyWith(
-                  color: currentTheme == ThemeServices.darkTheme
-                      ? AppContant.darkTextColor
-                      : AppContant.ligthTextColor,
-                ),
-              ),
+              textColor: currentTheme == ThemeServices.darkTheme
+                  ? AppContant.darkTextColor
+                  : AppContant.ligthTextColor,
+              iconColor: currentTheme == ThemeServices.darkTheme
+                  ? AppContant.darkTextColor
+                  : AppContant.ligthTextColor,
+              title: Text('Assinged Groups ${userGroups.length}'),
               trailing: Icon(
-                Icons.arrow_forward,
-                color:
-                    currentTheme == 'dark' ? AppContant.darkTextColor : AppContant.ligthTextColor,
+                Icons.arrow_forward_ios,
               ),
               onTap: () => onViewAndManageUserGroup(context),
             ),
