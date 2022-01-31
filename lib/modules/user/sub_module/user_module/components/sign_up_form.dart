@@ -8,35 +8,32 @@ import 'package:task_manager/core/components/entry_forms/entry_form_container.da
 import 'package:task_manager/core/components/material_card.dart';
 import 'package:task_manager/core/constants/app_contant.dart';
 import 'package:task_manager/core/services/theme_service.dart';
-import 'package:task_manager/core/services/user_group_service.dart';
 import 'package:task_manager/core/services/user_service.dart';
 import 'package:task_manager/core/utils/app_util.dart';
 import 'package:task_manager/models/form_section.dart';
 import 'package:task_manager/models/user.dart';
-import 'package:task_manager/models/user_group.dart';
-import 'package:task_manager/modules/user/models/sign_in_sign_up_form.dart';
+import 'package:task_manager/modules/user/sub_module/user_module/models/sign_in_sign_up_form.dart';
 
-class SignInForm extends StatefulWidget {
-  const SignInForm({
+class SignUpForm extends StatefulWidget {
+  const SignUpForm({
     Key? key,
     required this.currentTheme,
-    required this.onSuccessLogin,
+    required this.onSuccessSignUp,
     required this.onFormReady,
   }) : super(key: key);
 
   final String currentTheme;
-  final Function onSuccessLogin;
   final VoidCallback onFormReady;
+  final Function onSuccessSignUp;
 
   @override
-  State<SignInForm> createState() => _SignInFormState();
+  State<SignUpForm> createState() => _SignUpFormState();
 }
 
-class _SignInFormState extends State<SignInForm> {
+class _SignUpFormState extends State<SignUpForm> {
   Color? textColor;
   List<FormSection>? formSections;
   Map mandatoryFieldObject = new Map();
-  User? currentUser;
   bool isFormReady = false;
   bool isSaving = false;
 
@@ -44,33 +41,28 @@ class _SignInFormState extends State<SignInForm> {
   void initState() {
     super.initState();
     setFormMetadata();
-    setCurrentUser();
     Timer(Duration(seconds: 1), () {
-      isFormReady = true;
       widget.onFormReady();
+      isFormReady = true;
       setState(() {});
     });
   }
 
-  void onSuccessLogin(User user) {
+  void onSuccessSignUp(User user) async {
+    user.isLogin = true;
+    await UserService().setCurrentUser(user);
     AppUtil.showToastMessage(
-      message: 'You have successfully logged in',
+      message: 'You have successfully register an account',
     );
-    widget.onSuccessLogin(user);
-  }
-
-  void setCurrentUser() async {
-    var user = await UserService().getCurrentUser();
-    currentUser = user ?? new User(username: '', fullName: '', password: '', id: '');
-    Provider.of<SignInSignUpFormState>(context, listen: false)
-        .setFormFieldState('username', currentUser!.username);
+    widget.onSuccessSignUp(user);
   }
 
   void setFormMetadata() {
     textColor = widget.currentTheme == ThemeServices.darkTheme
         ? AppContant.darkTextColor
         : AppContant.ligthTextColor;
-    formSections = SignInSignUpForm.getSignInFormSections(textColor!);
+    formSections = SignInSignUpForm.getSignUpFormSections(textColor!);
+    mandatoryFieldObject['fullName'] = true;
     mandatoryFieldObject['username'] = true;
     mandatoryFieldObject['password'] = true;
   }
@@ -79,45 +71,47 @@ class _SignInFormState extends State<SignInForm> {
     Provider.of<SignInSignUpFormState>(context, listen: false).setFormFieldState(id, value);
   }
 
-  void onLogin(Map dataObject) async {
+  void onSignUp(Map dataObject) async {
     try {
-      isSaving = true;
-      setState(() {});
-      String username = dataObject['username'] ?? '';
-      String password = dataObject['password'] ?? '';
-      currentUser!.username = username;
-      currentUser!.password = password;
-      User? user = await UserService().login(
-        username: username,
-        password: password,
+      User user = User(
+        id: AppUtil.getUid(),
+        username: dataObject['username'] ?? '',
+        fullName: dataObject['fullName'] ?? '',
+        password: dataObject['password'] ?? '',
+        gender: dataObject['gender'] ?? '',
+        phoneNumber: dataObject['phoneNumber'] ?? '',
+        email: dataObject['email'] ?? '',
       );
-      if (user != null) {
-        List<UserGroup> userGroups = [];
-        for (String userGroupId in user.userGroups!) {
-          var group = await UserGroupService().getUserGroupById(
-            username: username,
-            password: password,
-            userGroupId: userGroupId,
-          );
-          userGroups.add(group!);
-        }
-        user.userGroups = userGroups.map((UserGroup userGroup) => userGroup.id).toList();
-        await UserService().setCurrentUser(user);
-        await UserGroupService().setUserGroups(userGroups);
-        isSaving = false;
-        setState(() {});
-        onSuccessLogin(user);
-      } else {
+      if (user.email!.isNotEmpty && !AppUtil.isEmailValid(user.email!)) {
         AppUtil.showToastMessage(
-          message: 'Wrong username or password, try again',
+          message: '${user.email!} is not valid email',
         );
+      } else if (!AppUtil.isPasswordValid(user.password!)) {
+        AppUtil.showToastMessage(
+          message:
+              'Password should contain at least one upper case, one lower case, one digit, one special character and 8 characters in length',
+        );
+      } else {
+        isSaving = true;
+        setState(() {});
+        bool isAccountExist = await UserService().isUserAccountExist(dhisUsername: user.username);
+        if (!isAccountExist) {
+          await UserService().createOrUpdateDhis2UserAccount(user: user);
+          onSuccessSignUp(user);
+        } else {
+          AppUtil.showToastMessage(
+            message: 'User with username ${user.username} has already signed up in the system',
+          );
+        }
         isSaving = false;
         setState(() {});
       }
-    } catch (e) {
+    } catch (error) {
       isSaving = false;
       setState(() {});
-      print('error=>${e.toString()}');
+      AppUtil.showToastMessage(
+        message: error.toString(),
+      );
     }
   }
 
@@ -152,9 +146,9 @@ class _SignInFormState extends State<SignInForm> {
                       children: [
                         Expanded(
                           child: TextButton(
-                            onPressed: !signInSignUpFormState.isLoginFormValid
+                            onPressed: !signInSignUpFormState.isSignUpFormValid
                                 ? null
-                                : () => onLogin(signInSignUpFormState.formState),
+                                : () => onSignUp(signInSignUpFormState.formState),
                             child: isSaving
                                 ? CircularProcessLoader(
                                     color: textColor,
@@ -168,7 +162,7 @@ class _SignInFormState extends State<SignInForm> {
                                       ),
                                       width: double.infinity,
                                       child: Text(
-                                        'Log In',
+                                        'Sign Up',
                                         style: TextStyle().copyWith(
                                           color: textColor,
                                         ),

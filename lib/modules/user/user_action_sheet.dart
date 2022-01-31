@@ -7,9 +7,8 @@ import 'package:task_manager/core/constants/app_contant.dart';
 import 'package:task_manager/core/services/theme_service.dart';
 import 'package:task_manager/models/user.dart';
 import 'package:task_manager/models/user_group.dart';
-import 'package:task_manager/modules/user/components/user_profile_container.dart';
-
-import 'components/sign_in_sign_up_form_container.dart';
+import 'package:task_manager/modules/user/sub_module/user_module/components/sign_in_sign_up_form_container.dart';
+import 'package:task_manager/modules/user/sub_module/user_module/components/user_profile_container.dart';
 
 class UserActionSheet extends StatelessWidget {
   const UserActionSheet({

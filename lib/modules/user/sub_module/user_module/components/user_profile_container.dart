@@ -10,6 +10,7 @@ import 'package:task_manager/core/services/user_service.dart';
 import 'package:task_manager/core/utils/app_util.dart';
 import 'package:task_manager/models/user.dart';
 import 'package:task_manager/models/user_group.dart';
+import 'package:task_manager/modules/user/sub_module/user_group_module/user_group_manager.dart';
 
 class UserProfileContainer extends StatelessWidget {
   const UserProfileContainer({
@@ -60,6 +61,12 @@ class UserProfileContainer extends StatelessWidget {
 
   void onViewAndManageUserGroup(BuildContext context) {
     AppUtil.showToastMessage(message: 'On view & manage user groups');
+    Navigator.pop(context);
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const UserGroupManager(),
+      ),
+    );
   }
 
   void onLogOut(BuildContext context) async {
