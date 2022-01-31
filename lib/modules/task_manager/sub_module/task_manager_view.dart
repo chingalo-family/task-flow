@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:task_manager/app_state/app_theme_state/app_theme_state.dart';
 import 'package:task_manager/app_state/task_state/task_state.dart';
@@ -7,7 +6,6 @@ import 'package:task_manager/app_state/user_state/user_state.dart';
 import 'package:task_manager/core/components/app_bar_container.dart';
 import 'package:task_manager/core/constants/app_contant.dart';
 import 'package:task_manager/core/services/theme_service.dart';
-import 'package:task_manager/core/services/user_service.dart';
 import 'package:task_manager/core/utils/app_util.dart';
 import 'package:task_manager/models/form_section.dart';
 import 'package:task_manager/models/sub_task.dart';
@@ -32,8 +30,8 @@ class TaskMangerView extends StatelessWidget {
     User currentUser,
   ) async {
     SubTask subTask = SubTask(taskId: currentTask.id, title: '', isCompleted: false);
-    subTask.assignedTo = currentUser != null ? currentUser.id : AppContant.defaultUserId;
-    subTask.createdBy = currentUser != null ? currentUser.fullName : '';
+    subTask.assignedTo = currentUser.isLogin ? currentUser.id : AppContant.defaultUserId;
+    subTask.createdBy = currentUser.isLogin ? currentUser.fullName : '';
     SubTaskFormStateHelper.updateFormState(context, subTask, !subTask.isCompleted!);
     String currentTheme = Provider.of<AppThemeState>(context, listen: false).currentTheme;
     Color textColor = currentTheme == ThemeServices.darkTheme

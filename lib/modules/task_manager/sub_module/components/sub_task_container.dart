@@ -37,15 +37,12 @@ class _SubTaskContainerState extends State<SubTaskContainer> {
     BuildContext context,
     SubTask subTask,
   ) async {
-    SubTaskFormStateHelper.updateFormState(
-        context, subTask, !subTask.isCompleted!);
-    String currentTheme =
-        Provider.of<AppThemeState>(context, listen: false).currentTheme;
+    SubTaskFormStateHelper.updateFormState(context, subTask, !subTask.isCompleted!);
+    String currentTheme = Provider.of<AppThemeState>(context, listen: false).currentTheme;
     Color textColor = currentTheme == ThemeServices.darkTheme
         ? AppContant.darkTextColor
         : AppContant.ligthTextColor;
-    final List<FormSection> subTaskFormSections =
-        SubTaskForm.getFormSections(textColor);
+    final List<FormSection> subTaskFormSections = SubTaskForm.getFormSections(textColor);
     Widget modal = SubTaskFormContainer(
       subTaskFormSections: subTaskFormSections,
     );
@@ -68,11 +65,8 @@ class _SubTaskContainerState extends State<SubTaskContainer> {
     bool isCompleted,
   ) {
     subTask.isCompleted = isCompleted;
-    subTask.completedOn =
-        isCompleted ? DateTime.now().toString().split('.')[0] : '';
-    subTask.completedBy = isCompleted && widget.currentUser != null
-        ? widget.currentUser.fullName
-        : 'default';
+    subTask.completedOn = isCompleted ? DateTime.now().toString().split('.')[0] : '';
+    subTask.completedBy = isCompleted ? widget.currentUser.fullName : 'default';
     Provider.of<TaskState>(context, listen: false).addSubTask(subTask);
   }
 
@@ -110,8 +104,7 @@ class _SubTaskContainerState extends State<SubTaskContainer> {
                         subTask: subTask,
                         onEdit: () => onEditTodoTask(context, subTask),
                         onDelete: () => onDeleteTodoTask(context, subTask),
-                        onUpdateTodoTaskStatus: (bool isCompleted) =>
-                            onUpdateTodoTaskStatus(
+                        onUpdateTodoTaskStatus: (bool isCompleted) => onUpdateTodoTaskStatus(
                           context,
                           subTask,
                           isCompleted,
