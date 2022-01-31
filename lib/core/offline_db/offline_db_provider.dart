@@ -4,7 +4,7 @@ import 'package:sqflite/sqflite.dart';
 class OfflineDbProvider {
   Database? _db;
 
-  final String databaseName = 'todo_app_v2';
+  final String databaseName = 'task_manager';
   // Script for migrations as well as intialization of tables
   final List<String> initialQuery = [
     'CREATE TABLE IF NOT EXISTS task ( id TEXT PRIMARY KEY, title TEXT, description TEXT,status TEXT,createdOn TEXT,createdBy TEXT,dueDate TEXT,completedOn TEXT,completedBy TEXT,assignedTo TEXT,groupId TEXT)',

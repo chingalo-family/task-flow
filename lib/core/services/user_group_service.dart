@@ -17,7 +17,7 @@ class UserGroupService {
       if (userGroupId.isNotEmpty) {
         var url = 'api/userGroups/$userGroupId.json';
         var queryParameters = {
-          'fields': 'id,name,users[id,name,username]',
+          'fields': 'id,name,users[id,name,username],createdBy[username]',
         };
         HttpService http = new HttpService(
           username: username,

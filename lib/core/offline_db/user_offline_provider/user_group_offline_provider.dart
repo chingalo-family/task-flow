@@ -57,7 +57,9 @@ class UserGroupOfflineProvider extends OfflineDbProvider {
           userGroups.add(userGroup);
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      print(e.toString());
+    }
     return userGroups;
   }
 }
