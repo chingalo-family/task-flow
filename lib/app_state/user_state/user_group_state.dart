@@ -7,11 +7,12 @@ class UserGroupState with ChangeNotifier {
   List<UserGroup> get currentUserGroups => _currentUserGroups ?? [];
 
   void setCurrentUserGroups(List<UserGroup> userGroups) {
-    _currentUserGroups == userGroups;
+    _currentUserGroups = userGroups;
     notifyListeners();
   }
 
   void resetCurrentUserGroups() {
     _currentUserGroups = null;
+    notifyListeners();
   }
 }
