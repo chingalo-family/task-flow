@@ -15,6 +15,8 @@ class UserGroup {
     this.description = this.description != '' ? this.description : '';
   }
 
+  String get groupMemberCount => '${groupMembers.length}';
+
   Map<String, dynamic> toMap() {
     var data = Map<String, dynamic>();
     data['id'] = this.id;
