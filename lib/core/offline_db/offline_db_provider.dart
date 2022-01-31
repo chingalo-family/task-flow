@@ -10,7 +10,7 @@ class OfflineDbProvider {
     'CREATE TABLE IF NOT EXISTS task ( id TEXT PRIMARY KEY, title TEXT, description TEXT,status TEXT,createdOn TEXT,createdBy TEXT,dueDate TEXT,completedOn TEXT,completedBy TEXT,assignedTo TEXT,groupId TEXT)',
     'CREATE TABLE IF NOT EXISTS sub_task (id TEXT PRIMARY KEY, taskId INTEGER, title TEXT, status TEXT, isCompleted INTEGER, createdOn TEXT,createdBy TEXT,dueDate TEXT,completedOn TEXT,completedBy TEXT,assignedTo TEXT)',
     'CREATE TABLE IF NOT EXISTS user (id TEXT PRIMARY KEY, username TEXT, fullName TEXT, password TEXT, email TEXT, phoneNumber TEXT,gender TEXT, isLogin TEXT)',
-    'CREATE TABLE IF NOT EXISTS user_group (id TEXT PRIMARY KEY, name TEXT, description TEXT)',
+    'CREATE TABLE IF NOT EXISTS user_group (id TEXT PRIMARY KEY, name TEXT, createdBy TEXT)',
     'CREATE TABLE IF NOT EXISTS user_group_member (id TEXT PRIMARY KEY, userId TEXT, groupId TEXT, fullName TEXT, username TEXT)'
   ];
 
