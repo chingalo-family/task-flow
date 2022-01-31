@@ -30,8 +30,8 @@ class TaskMangerView extends StatelessWidget {
     User currentUser,
   ) async {
     SubTask subTask = SubTask(taskId: currentTask.id, title: '', isCompleted: false);
-    subTask.assignedTo = currentUser != null ? currentUser.id : AppContant.defaultUserId;
-    subTask.createdBy = currentUser != null ? currentUser.fullName : '';
+    subTask.assignedTo = currentUser.isLogin ? currentUser.id : AppContant.defaultUserId;
+    subTask.createdBy = currentUser.isLogin ? currentUser.fullName : '';
     SubTaskFormStateHelper.updateFormState(context, subTask, !subTask.isCompleted!);
     String currentTheme = Provider.of<AppThemeState>(context, listen: false).currentTheme;
     Color textColor = currentTheme == ThemeServices.darkTheme
@@ -77,12 +77,17 @@ class TaskMangerView extends StatelessWidget {
     }
   }
 
-  onOpenUserActionSheet(BuildContext context) {
+  onOpenUserActionSheet(BuildContext context) async {
+    User? user = Provider.of<UserState>(context, listen: false).currrentUser;
     double initialHeightRatio = 0.45;
+    bool isLogin = user.isLogin;
     AppUtil.showActionSheetModal(
       context: context,
       initialHeightRatio: initialHeightRatio,
-      containerBody: UserActionSheet(),
+      maxHeightRatio: isLogin ? initialHeightRatio : 0,
+      containerBody: UserActionSheet(
+        initialHeightRatio: initialHeightRatio,
+      ),
     );
   }
 

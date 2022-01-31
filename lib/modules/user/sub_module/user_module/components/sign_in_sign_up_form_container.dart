@@ -9,8 +9,8 @@ import 'package:task_manager/core/services/theme_service.dart';
 import 'package:task_manager/core/services/user_group_service.dart';
 import 'package:task_manager/models/user.dart';
 import 'package:task_manager/models/user_group.dart';
-import 'package:task_manager/modules/user/components/sign_in_form.dart';
-import 'package:task_manager/modules/user/components/sign_up_form.dart';
+import 'package:task_manager/modules/user/sub_module/user_module/components/sign_in_form.dart';
+import 'package:task_manager/modules/user/sub_module/user_module/components/sign_up_form.dart';
 
 class SignInSignUpFormContainer extends StatefulWidget {
   const SignInSignUpFormContainer({

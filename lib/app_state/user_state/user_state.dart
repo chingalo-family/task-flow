@@ -25,5 +25,6 @@ class UserState with ChangeNotifier {
 
   void resetCurrentUser() {
     _currentUser = null;
+    notifyListeners();
   }
 }

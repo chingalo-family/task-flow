@@ -63,8 +63,7 @@ class InputFieldContainer extends StatelessWidget {
                       text: TextSpan(
                         text: inputField.name,
                         style: TextStyle(
-                          color: inputField.hasError != null &&
-                                  inputField.hasError!
+                          color: inputField.hasError != null && inputField.hasError!
                               ? Colors.red
                               : inputField.labelColor,
                           fontSize: 13.0,
@@ -112,8 +111,7 @@ class InputFieldContainer extends StatelessWidget {
             Visibility(
               visible: inputField.hasSubInputField! &&
                   inputField.subInputField != null &&
-                  (hiddenFields == null ||
-                      '${hiddenFields![inputField.id]}'.trim() != 'true'),
+                  (hiddenFields == null || '${hiddenFields![inputField.id]}'.trim() != 'true'),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -152,9 +150,8 @@ class InputFieldContainer extends StatelessWidget {
             Visibility(
               visible: !inputField.hasSubInputField!,
               child: Container(
-                child: isEditableMode!
-                    ? _getInputField(inputField)
-                    : _getInputFieldLabel(inputField),
+                child:
+                    isEditableMode! ? _getInputField(inputField) : _getInputFieldLabel(inputField),
               ),
             ),
             LineSeparator(
@@ -167,10 +164,9 @@ class InputFieldContainer extends StatelessWidget {
   }
 
   Widget _getInputFieldLabel(InputField? inputField) {
-    dynamic value =
-        inputField != null && '${dataObject![inputField.id]}' != 'null'
-            ? '${dataObject![inputField.id]}'
-            : '   ';
+    dynamic value = inputField != null && '${dataObject![inputField.id]}' != 'null'
+        ? '${dataObject![inputField.id]}'
+        : '   ';
     if (inputField != null) {
       if (inputField.valueType == 'BOOLEAN') {
         value = value == 'true'
@@ -182,8 +178,7 @@ class InputFieldContainer extends StatelessWidget {
         value = value == 'true' ? 'Yes' : value;
       } else if (inputField.options!.isNotEmpty) {
         InputFieldOption? option = inputField.options!.firstWhereOrNull(
-            (InputFieldOption option) =>
-                option.code != null && '${option.code}' == '$value');
+            (InputFieldOption option) => option.code != null && '${option.code}' == '$value');
         value = option != null ? option.name : value;
       }
     }
@@ -235,95 +230,66 @@ class InputFieldContainer extends StatelessWidget {
                         : inputField.options!.length > 0
                             ? SelectInputField(
                                 hiddenInputFieldOptions:
-                                    hiddenInputFieldOptions[inputField.id] ??
-                                        Map(),
+                                    hiddenInputFieldOptions[inputField.id] ?? Map(),
                                 color: inputField.inputColor,
                                 isReadOnly: inputField.isReadOnly,
                                 renderAsRadio: inputField.renderAsRadio,
-                                onInputValueChange: (dynamic value) => this
-                                    .onInputValueChange!(inputField.id, value),
+                                onInputValueChange: (dynamic value) =>
+                                    this.onInputValueChange!(inputField.id, value),
                                 options: inputField.options,
                                 selectedOption: dataObject![inputField.id],
                               )
-                            : inputField.valueType == 'TEXT' ||
-                                    inputField.valueType == 'LONG_TEXT'
+                            : inputField.valueType == 'TEXT' || inputField.valueType == 'LONG_TEXT'
                                 ? TextInputFieldContainer(
                                     inputField: inputField,
                                     inputValue: dataObject![inputField.id],
                                     onInputValueChange: (dynamic value) =>
-                                        this.onInputValueChange!(
-                                            inputField.id, value),
+                                        this.onInputValueChange!(inputField.id, value),
                                   )
-                                : inputField.valueType ==
-                                            'INTEGER_ZERO_OR_POSITIVE' ||
+                                : inputField.valueType == 'INTEGER_ZERO_OR_POSITIVE' ||
                                         inputField.valueType == 'NUMBER'
                                     ? NumericalInputFieldContainer(
                                         inputField: inputField,
                                         inputValue: dataObject![inputField.id],
                                         onInputValueChange: (dynamic value) =>
-                                            this.onInputValueChange!(
-                                                inputField.id, value),
+                                            this.onInputValueChange!(inputField.id, value),
                                       )
                                     : inputField.valueType == 'PHONE_NUMBER'
                                         ? PhoneNumberInputFieldContainer(
                                             inputField: inputField,
-                                            inputValue:
-                                                dataObject![inputField.id],
-                                            onInputValueChange:
-                                                (dynamic value) =>
-                                                    this.onInputValueChange!(
-                                                        inputField.id, value),
+                                            inputValue: dataObject![inputField.id],
+                                            onInputValueChange: (dynamic value) =>
+                                                this.onInputValueChange!(inputField.id, value),
                                           )
                                         : inputField.valueType == 'BOOLEAN'
                                             ? BooleanInputFieldContainer(
                                                 inputField: inputField,
-                                                inputValue:
-                                                    dataObject![inputField.id],
-                                                onInputValueChange: (dynamic
-                                                        value) =>
-                                                    this.onInputValueChange!(
-                                                        inputField.id, value),
+                                                inputValue: dataObject![inputField.id],
+                                                onInputValueChange: (dynamic value) =>
+                                                    this.onInputValueChange!(inputField.id, value),
                                               )
-                                            : inputField.valueType ==
-                                                    'TRUE_ONLY'
+                                            : inputField.valueType == 'TRUE_ONLY'
                                                 ? TrueOnlyInputFieldContainer(
                                                     inputField: inputField,
-                                                    inputValue: dataObject![
-                                                        inputField.id],
-                                                    onInputValueChange: (dynamic
-                                                            value) =>
-                                                        this.onInputValueChange!(
-                                                            inputField.id,
-                                                            value),
+                                                    inputValue: dataObject![inputField.id],
+                                                    onInputValueChange: (dynamic value) => this
+                                                        .onInputValueChange!(inputField.id, value),
                                                   )
                                                 : inputField.valueType == 'DATE'
                                                     ? DateInputFieldContainer(
                                                         inputField: inputField,
-                                                        inputValue: dataObject![
-                                                            inputField.id],
-                                                        onInputValueChange:
-                                                            (dynamic value) =>
-                                                                this.onInputValueChange!(
-                                                                    inputField
-                                                                        .id,
-                                                                    value),
+                                                        inputValue: dataObject![inputField.id],
+                                                        onInputValueChange: (dynamic value) =>
+                                                            this.onInputValueChange!(
+                                                                inputField.id, value),
                                                       )
-                                                    : inputField.valueType ==
-                                                            'COORDINATE'
+                                                    : inputField.valueType == 'COORDINATE'
                                                         ? CoordinateInputFieldContainer(
-                                                            inputField:
-                                                                inputField,
-                                                            inputValue:
-                                                                dataObject![
-                                                                    inputField
-                                                                        .id],
-                                                            onInputValueChange:
-                                                                (dynamic
-                                                                        value) =>
-                                                                    this.onInputValueChange!(
-                                                                        inputField
-                                                                            .id,
-                                                                        value),
+                                                            inputField: inputField,
+                                                            inputValue: dataObject![inputField.id],
+                                                            onInputValueChange: (dynamic value) =>
+                                                                this.onInputValueChange!(
+                                                                    inputField.id, value),
                                                           )
                                                         : Container(
                                                             child: Text(
@@ -332,8 +298,7 @@ class InputFieldContainer extends StatelessWidget {
                                                           ),
                   ),
                   InputClearIcon(
-                      showClearIcon: inputField != null &&
-                          dataObject![inputField.id] != null &&
+                      showClearIcon: dataObject![inputField.id] != null &&
                           dataObject![inputField.id] != '' &&
                           inputField.isReadOnly == false,
                       onClearInput: () {
