@@ -16,7 +16,8 @@ class UserGroup {
     this.createdBy = this.createdBy != '' ? this.createdBy : '';
   }
 
-  String get groupMemberCount => '${groupMembers.length}';
+  String get groupMemberCount =>
+      groupMembers.length > 1 ? '${groupMembers.length} members' : '${groupMembers.length} memmber';
 
   Map<String, dynamic> toMap() {
     var data = Map<String, dynamic>();

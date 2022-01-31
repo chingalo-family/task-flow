@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:task_manager/core/components/material_card.dart';
 import 'package:task_manager/core/constants/app_contant.dart';
@@ -24,7 +26,7 @@ class UserGroupListContainer extends StatelessWidget {
       ),
       child: Card(
         child: ListTile(
-          isThreeLine: false,
+          isThreeLine: true,
           iconColor: currentTheme == ThemeServices.darkTheme
               ? AppContant.darkTextColor
               : AppContant.ligthTextColor,
@@ -35,7 +37,27 @@ class UserGroupListContainer extends StatelessWidget {
             userGroup.name,
           ),
           onTap: () => {},
-          subtitle: Text('Total Member ${userGroup.groupMemberCount}'),
+          subtitle: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                userGroup.groupMemberCount,
+              ),
+              Container(
+                margin: const EdgeInsets.only(
+                  top: 3.0,
+                ),
+                child: Text(
+                  'Owned by ${userGroup.createdBy}',
+                  style: const TextStyle().copyWith(
+                    fontSize: 11.0,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ),
+            ],
+          ),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [

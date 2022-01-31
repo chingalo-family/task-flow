@@ -60,7 +60,6 @@ class UserProfileContainer extends StatelessWidget {
   }
 
   void onViewAndManageUserGroup(BuildContext context) {
-    AppUtil.showToastMessage(message: 'On view & manage user groups');
     Navigator.pop(context);
     Navigator.of(context).push(
       MaterialPageRoute(
