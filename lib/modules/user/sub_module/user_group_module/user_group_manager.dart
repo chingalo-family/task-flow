@@ -6,11 +6,20 @@ import 'package:task_manager/core/components/app_bar_container.dart';
 import 'package:task_manager/core/components/material_card.dart';
 import 'package:task_manager/core/constants/app_contant.dart';
 import 'package:task_manager/core/services/theme_service.dart';
+import 'package:task_manager/core/utils/app_util.dart';
 import 'package:task_manager/models/user_group.dart';
 import 'package:task_manager/modules/user/sub_module/user_group_module/conponent/user_group_list_container.dart';
 
 class UserGroupManager extends StatelessWidget {
   const UserGroupManager({Key? key}) : super(key: key);
+
+  onAddUserGroupMember(BuildContext context, UserGroup userGroup) {
+    AppUtil.showToastMessage(message: 'Add user on $userGroup');
+  }
+
+  onAddUserGroup(BuildContext context) {
+    AppUtil.showToastMessage(message: 'On add user group');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,11 +30,12 @@ class UserGroupManager extends StatelessWidget {
           child: AppBarContainer(
             title: 'User Group Management',
             isAboutPage: false,
-            isAddVisible: false,
+            isAddVisible: true,
             isViewChartVisible: false,
             isDeleteVisible: false,
             isEditVisible: false,
             isUserVisible: false,
+            onAdd: () => onAddUserGroup(context),
           ),
         ),
         body: SingleChildScrollView(
@@ -41,10 +51,12 @@ class UserGroupManager extends StatelessWidget {
                 return Column(
                   children: [
                     Container(
+                      margin: EdgeInsets.symmetric(horizontal: 3.0),
                       child: MaterialCard(
+                        borderRadius: 6.0,
                         body: Container(
                           width: double.maxFinite,
-                          margin: EdgeInsets.symmetric(vertical: 10.0),
+                          margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
                           padding: EdgeInsets.symmetric(
                             vertical: 5.0,
                             horizontal: 10.0,
@@ -69,6 +81,7 @@ class UserGroupManager extends StatelessWidget {
                           (UserGroup userGroup) => UserGroupListContainer(
                             currentTheme: currentTheme,
                             userGroup: userGroup,
+                            onAddUser: () => onAddUserGroupMember(context, userGroup),
                           ),
                         )
                         .toList()

@@ -9,10 +9,12 @@ class UserGroupListContainer extends StatelessWidget {
     Key? key,
     required this.currentTheme,
     required this.userGroup,
+    this.onAddUser,
   }) : super(key: key);
 
   final String currentTheme;
   final UserGroup userGroup;
+  final VoidCallback? onAddUser;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +47,7 @@ class UserGroupListContainer extends StatelessWidget {
                     Radius.circular(8.0),
                   ),
                   child: InkWell(
-                    onTap: () => {},
+                    onTap: onAddUser,
                     child: Container(
                       margin: const EdgeInsets.all(10.0),
                       child: Icon(
