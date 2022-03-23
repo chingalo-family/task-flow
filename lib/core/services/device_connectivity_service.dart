@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:task_manager/app_state/device_connectivity_state/device_connectivity_state.dart';
 import 'package:provider/provider.dart';
