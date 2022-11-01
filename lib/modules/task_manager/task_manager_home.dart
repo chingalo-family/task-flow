@@ -24,14 +24,17 @@ class TaskMangerHome extends StatelessWidget {
     User? currentUser,
   ) async {
     Task task = new Task(title: '', description: '');
-    task.assignedTo = currentUser != null ? currentUser.id : AppContant.defaultUserId;
+    task.assignedTo =
+        currentUser != null ? currentUser.id : AppContant.defaultUserId;
     task.createdBy = currentUser != null ? currentUser.fullName : '';
     TaskFormStateHelper.updateFormState(context, task, true);
-    String currentTheme = Provider.of<AppThemeState>(context, listen: false).currentTheme;
+    String currentTheme =
+        Provider.of<AppThemeState>(context, listen: false).currentTheme;
     Color textColor = currentTheme == ThemeServices.darkTheme
         ? AppContant.darkTextColor
         : AppContant.ligthTextColor;
-    final List<FormSection> taskFormSections = TaskForm.getFormSections(textColor);
+    final List<FormSection> taskFormSections =
+        TaskForm.getFormSections(textColor);
     Widget modal = TaskFormContainer(
       taskFormSections: taskFormSections,
       subTasks: task.subTasks,
@@ -69,7 +72,7 @@ class TaskMangerHome extends StatelessWidget {
               isAboutPage: false,
               isAddVisible: true,
               isViewChartVisible: true,
-              isUserVisible: true,
+              isUserVisible: false,
               onOpenUserActionSheet: () => onOpenUserActionSheet(context),
               onAdd: () => onAddTodo(context, userState.currrentUser),
               onOpenChart: () => onOpenTodoListChartSummary(context),
