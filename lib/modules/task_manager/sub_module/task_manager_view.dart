@@ -29,15 +29,20 @@ class TaskMangerView extends StatelessWidget {
     Task currentTask,
     User currentUser,
   ) async {
-    SubTask subTask = SubTask(taskId: currentTask.id, title: '', isCompleted: false);
-    subTask.assignedTo = currentUser.isLogin ? currentUser.id : AppContant.defaultUserId;
+    SubTask subTask =
+        SubTask(taskId: currentTask.id, title: '', isCompleted: false);
+    subTask.assignedTo =
+        currentUser.isLogin ? currentUser.id : AppContant.defaultUserId;
     subTask.createdBy = currentUser.isLogin ? currentUser.fullName : '';
-    SubTaskFormStateHelper.updateFormState(context, subTask, !subTask.isCompleted!);
-    String currentTheme = Provider.of<AppThemeState>(context, listen: false).currentTheme;
+    SubTaskFormStateHelper.updateFormState(
+        context, subTask, !subTask.isCompleted!);
+    String currentTheme =
+        Provider.of<AppThemeState>(context, listen: false).currentTheme;
     Color textColor = currentTheme == ThemeServices.darkTheme
         ? AppContant.darkTextColor
         : AppContant.ligthTextColor;
-    final List<FormSection> subTaskFormSections = SubTaskForm.getFormSections(textColor);
+    final List<FormSection> subTaskFormSections =
+        SubTaskForm.getFormSections(textColor);
     Widget modal = SubTaskFormContainer(
       subTaskFormSections: subTaskFormSections,
     );
@@ -51,11 +56,13 @@ class TaskMangerView extends StatelessWidget {
       currentTask,
       isEditableMode,
     );
-    String currentTheme = Provider.of<AppThemeState>(context, listen: false).currentTheme;
+    String currentTheme =
+        Provider.of<AppThemeState>(context, listen: false).currentTheme;
     Color textColor = currentTheme == ThemeServices.darkTheme
         ? AppContant.darkTextColor
         : AppContant.ligthTextColor;
-    final List<FormSection> taskFormSections = TaskForm.getFormSections(textColor);
+    final List<FormSection> taskFormSections =
+        TaskForm.getFormSections(textColor);
     Widget modal = TaskFormContainer(
       taskFormSections: taskFormSections,
       subTasks: currentTask.subTasks,
@@ -113,17 +120,19 @@ class TaskMangerView extends StatelessWidget {
                     isViewChartVisible: true,
                     isDeleteVisible: true,
                     isEditVisible: true,
-                    isUserVisible: true,
+                    isUserVisible: false,
                     onOpenUserActionSheet: () => onOpenUserActionSheet(context),
-                    onAdd: () => onAddSubTask(context, currentTask, userState.currrentUser),
+                    onAdd: () => onAddSubTask(
+                        context, currentTask, userState.currrentUser),
                     onEdit: () => onEditTask(context, currentTask),
                     onDelete: () => onDeleteTask(context, currentTask),
-                    onOpenChart: () => onOpenTodoChartSummary(context, currentTask),
+                    onOpenChart: () =>
+                        onOpenTodoChartSummary(context, currentTask),
                   ),
                 ),
                 body: SingleChildScrollView(
                   child: Container(
-                    margin: EdgeInsets.symmetric(
+                    margin: const EdgeInsets.symmetric(
                       horizontal: 10.0,
                       vertical: 10.0,
                     ),
