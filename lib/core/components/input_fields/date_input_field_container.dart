@@ -53,7 +53,7 @@ class _DateInputFieldContainerState extends State<DateInputFieldContainer> {
   DateTime getDateFromGivenYear(int year,
       {int numberOfMonth = 0, int numberOfDays = 0}) {
     DateTime currentDate = DateTime.now();
-    return new DateTime(
+    return DateTime(
       currentDate.year - year,
       currentDate.month - numberOfMonth,
       currentDate.day + numberOfDays,
@@ -82,7 +82,7 @@ class _DateInputFieldContainerState extends State<DateInputFieldContainer> {
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: ThemeData.light().copyWith(
-            colorScheme: ColorScheme.light().copyWith(
+            colorScheme: const ColorScheme.light().copyWith(
               primary: widget.inputField.inputColor,
             ),
           ),
@@ -90,7 +90,7 @@ class _DateInputFieldContainerState extends State<DateInputFieldContainer> {
         );
       },
       context: context,
-      fieldLabelText: '${widget.inputField.name}',
+      fieldLabelText: widget.inputField.name,
       initialDate: AppUtil.getDateIntoDateTimeFormat(_date!),
       firstDate:
           widget.inputField.disablePastPeriod! ? DateTime.now() : firstDate,
@@ -100,49 +100,46 @@ class _DateInputFieldContainerState extends State<DateInputFieldContainer> {
               numberOfYearBetweenCurrentAndMaxDate >= 0
           ? lastDate
           : DateTime.now(),
-      helpText: widget.inputField.hint != null
-          ? widget.inputField.hint
-          : '${widget.inputField.name}',
+      helpText: widget.inputField.hint ?? widget.inputField.name,
       errorFormatText: 'Enter valid ${widget.inputField.name}',
       errorInvalidText: 'Enter ${widget.inputField.name} in valid range',
     );
 
-    if (date != null)
+    if (date != null) {
       setState(() {
         _date = AppUtil.formattedDateTimeIntoString(date);
         dateController = TextEditingController(text: _date);
         widget.onInputValueChange(_date);
       });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        children: [
-          Expanded(
-            child: TextFormField(
-              controller: dateController,
-              style: TextStyle().copyWith(
-                color: widget.inputField.inputColor,
-              ),
-              onTap: () => widget.inputField.isReadOnly!
-                  ? null
-                  : onOpenDateSelection(context),
-              readOnly: true,
-              textInputAction: TextInputAction.done,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                errorText: null,
-              ),
+    return Row(
+      children: [
+        Expanded(
+          child: TextFormField(
+            controller: dateController,
+            style: const TextStyle().copyWith(
+              color: widget.inputField.inputColor,
+            ),
+            onTap: () => widget.inputField.isReadOnly!
+                ? null
+                : onOpenDateSelection(context),
+            readOnly: true,
+            textInputAction: TextInputAction.done,
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              errorText: null,
             ),
           ),
-          InputCheckedIcon(
-            showTickedIcon: _date != null && _date != '',
-            color: widget.inputField.inputColor,
-          )
-        ],
-      ),
+        ),
+        InputCheckedIcon(
+          showTickedIcon: _date != null && _date != '',
+          color: widget.inputField.inputColor,
+        )
+      ],
     );
   }
 }

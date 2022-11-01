@@ -44,7 +44,7 @@ class UserProfileContainer extends StatelessWidget {
           ),
           child: Text(
             title,
-            style: TextStyle().copyWith(
+            style: const TextStyle().copyWith(
               color: currentTheme == ThemeServices.darkTheme
                   ? AppContant.darkTextColor
                   : AppContant.ligthTextColor,
@@ -75,7 +75,8 @@ class UserProfileContainer extends StatelessWidget {
         message: 'You have uccessfully log out',
       );
       Provider.of<UserState>(context, listen: false).resetCurrentUser();
-      Provider.of<UserGroupState>(context, listen: false).resetCurrentUserGroups();
+      Provider.of<UserGroupState>(context, listen: false)
+          .resetCurrentUserGroups();
       Navigator.pop(context);
     } catch (error) {
       AppUtil.showToastMessage(
@@ -87,7 +88,7 @@ class UserProfileContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(
+      margin: const EdgeInsets.only(
         top: 10.0,
         bottom: 5.0,
       ),
@@ -100,7 +101,7 @@ class UserProfileContainer extends StatelessWidget {
                 : AppContant.darkTextColor,
             child: Text(
               usernameIcon,
-              style: TextStyle().copyWith(
+              style: const TextStyle().copyWith(
                 color: currentTheme == ThemeServices.darkTheme
                     ? AppContant.darkTextColor
                     : AppContant.ligthTextColor,
@@ -115,7 +116,7 @@ class UserProfileContainer extends StatelessWidget {
             ),
             child: Text(
               user.fullName,
-              style: TextStyle().copyWith(
+              style: const TextStyle().copyWith(
                 color: currentTheme == ThemeServices.darkTheme
                     ? AppContant.darkTextColor
                     : AppContant.ligthTextColor,
@@ -130,7 +131,7 @@ class UserProfileContainer extends StatelessWidget {
             ),
             child: Text(
               user.email!,
-              style: TextStyle().copyWith(
+              style: const TextStyle().copyWith(
                 color: currentTheme == ThemeServices.darkTheme
                     ? AppContant.darkTextColor
                     : AppContant.ligthTextColor,
@@ -171,7 +172,8 @@ class UserProfileContainer extends StatelessWidget {
             ),
           ),
           Container(
-            margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+            margin:
+                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
             child: ListTile(
               textColor: currentTheme == ThemeServices.darkTheme
                   ? AppContant.darkTextColor
@@ -180,7 +182,7 @@ class UserProfileContainer extends StatelessWidget {
                   ? AppContant.darkTextColor
                   : AppContant.ligthTextColor,
               title: Text('Assinged Groups ${userGroups.length}'),
-              trailing: Icon(
+              trailing: const Icon(
                 Icons.arrow_forward_ios,
               ),
               onTap: () => onViewAndManageUserGroup(context),

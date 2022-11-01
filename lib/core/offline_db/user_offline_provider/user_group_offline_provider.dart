@@ -13,7 +13,8 @@ class UserGroupOfflineProvider extends OfflineDbProvider {
   addOrUpdateUserGroup(List<UserGroup> userGroups) async {
     try {
       var dbClient = await db;
-      List<List<dynamic>> chunkedUserGroups = AppUtil.chunkItems(items: userGroups, size: 100);
+      List<List<dynamic>> chunkedUserGroups =
+          AppUtil.chunkItems(items: userGroups, size: 100);
       for (List<dynamic> chunkedUserGroup in chunkedUserGroups) {
         var userGroupBatch = dbClient!.batch();
         for (UserGroup userGroup in chunkedUserGroup) {
@@ -23,10 +24,11 @@ class UserGroupOfflineProvider extends OfflineDbProvider {
             conflictAlgorithm: ConflictAlgorithm.replace,
           );
         }
-        await userGroupBatch.commit(exclusive: true, noResult: true, continueOnError: true);
+        await userGroupBatch.commit(
+            exclusive: true, noResult: true, continueOnError: true);
       }
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 
@@ -58,7 +60,7 @@ class UserGroupOfflineProvider extends OfflineDbProvider {
         }
       }
     } catch (e) {
-      print(e.toString());
+      //
     }
     return userGroups;
   }

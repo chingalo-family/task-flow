@@ -10,7 +10,7 @@ class HttpService {
   String? basicAuth;
 
   HttpService({required this.username, required this.password}) {
-    this.basicAuth = base64Encode(utf8.encode('$username:$password'));
+    basicAuth = base64Encode(utf8.encode('$username:$password'));
   }
 
   Uri getApiUrl(String url, {Map<String, dynamic>? queryParameters}) {
@@ -79,7 +79,7 @@ class HttpService {
       'fields': 'none',
     };
     dataQueryParameters.addAll(queryParameters as Map<String, String?>);
-    return await this.httpGet(url, queryParameters: dataQueryParameters);
+    return await httpGet(url, queryParameters: dataQueryParameters);
   }
 
   @override

@@ -29,7 +29,7 @@ class DeleteTaskConfirmation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
         horizontal: 10.0,
       ),
       width: double.infinity,
@@ -37,6 +37,7 @@ class DeleteTaskConfirmation extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
+            margin: const EdgeInsets.symmetric(),
             child: Consumer<AppThemeState>(
               builder: (context, appThemeState, child) {
                 String currentTheme = appThemeState.currentTheme;
@@ -44,9 +45,10 @@ class DeleteTaskConfirmation extends StatelessWidget {
                     ? AppContant.darkTextColor
                     : AppContant.ligthTextColor;
                 return Container(
+                  margin: const EdgeInsets.symmetric(),
                   child: Text(
                     "Are you sure you want to delete '${currentTask.title}' with ${currentTask.subTasks.length} tasks?",
-                    style: TextStyle().copyWith(
+                    style: const TextStyle().copyWith(
                       color: textColor,
                       fontSize: 15.0,
                       fontStyle: FontStyle.italic,
@@ -57,18 +59,19 @@ class DeleteTaskConfirmation extends StatelessWidget {
             ),
           ),
           Container(
+            margin: const EdgeInsets.symmetric(),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Expanded(
                   child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 5.0),
+                    margin: const EdgeInsets.symmetric(horizontal: 5.0),
                     child: Center(
                       child: TextButton(
                         onPressed: () => onDeleteTodo(context),
                         child: Text(
                           'Delete',
-                          style: TextStyle().copyWith(
+                          style: const TextStyle().copyWith(
                             color: Colors.redAccent,
                           ),
                         ),
@@ -78,13 +81,13 @@ class DeleteTaskConfirmation extends StatelessWidget {
                 ),
                 Expanded(
                   child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 5.0),
+                    margin: const EdgeInsets.symmetric(horizontal: 5.0),
                     child: Center(
                       child: TextButton(
                         onPressed: () => Navigator.of(context).pop(false),
                         child: Text(
                           'Cancel',
-                          style: TextStyle().copyWith(),
+                          style: const TextStyle().copyWith(),
                         ),
                       ),
                     ),

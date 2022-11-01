@@ -23,7 +23,8 @@ class TaskFormContainer extends StatelessWidget {
   final List<SubTask> subTasks;
 
   onInputValueChange(BuildContext context, String id, dynamic value) {
-    Provider.of<TaskFormState>(context, listen: false).setFormFieldState(id, value);
+    Provider.of<TaskFormState>(context, listen: false)
+        .setFormFieldState(id, value);
   }
 
   onSaveTodoForm(
@@ -32,8 +33,10 @@ class TaskFormContainer extends StatelessWidget {
   ) {
     try {
       List mandatoryFields = mandatoryFieldObject.keys.toList();
-      Map dataObject = Provider.of<TaskFormState>(context, listen: false).formState;
-      bool isMandatoryFieldsSet = AppUtil.hasAllMandatoryFieldsFilled(mandatoryFields, dataObject);
+      Map dataObject =
+          Provider.of<TaskFormState>(context, listen: false).formState;
+      bool isMandatoryFieldsSet =
+          AppUtil.hasAllMandatoryFieldsFilled(mandatoryFields, dataObject);
       if (isMandatoryFieldsSet) {
         Task task = Task.fromMap(dataObject);
         task.subTasks = subTasks;
@@ -60,14 +63,14 @@ class TaskFormContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map mandatoryFieldObject = Map();
+    Map mandatoryFieldObject = {};
     mandatoryFieldObject['title'] = true;
     return Consumer<TaskFormState>(
       builder: (context, taskFormState, child) {
         return Consumer<AppThemeState>(
           builder: (context, appThemeState, child) {
             String currentTheme = appThemeState.currentTheme;
-            return Container(
+            return SizedBox(
               width: double.infinity,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,17 +84,19 @@ class TaskFormContainer extends StatelessWidget {
                       hiddenFields: taskFormState.hiddenFields,
                       hiddenSections: taskFormState.hiddenSections,
                       mandatoryFieldObject: mandatoryFieldObject,
-                      onInputValueChange: (id, value) => onInputValueChange(context, id, value),
+                      onInputValueChange: (id, value) =>
+                          onInputValueChange(context, id, value),
                     ),
                   ),
                   Visibility(
                     visible: taskFormState.isEditableMode,
                     child: Container(
+                      margin: const EdgeInsets.symmetric(),
                       child: Row(
                         children: [
                           Expanded(
                             child: Container(
-                              margin: EdgeInsets.symmetric(
+                              margin: const EdgeInsets.symmetric(
                                 horizontal: 5.0,
                               ),
                               child: Center(
@@ -99,7 +104,7 @@ class TaskFormContainer extends StatelessWidget {
                                   onPressed: () => Navigator.of(context).pop(),
                                   child: Text(
                                     'Cancel',
-                                    style: TextStyle().copyWith(
+                                    style: const TextStyle().copyWith(
                                       color: Colors.redAccent,
                                     ),
                                   ),
@@ -109,7 +114,7 @@ class TaskFormContainer extends StatelessWidget {
                           ),
                           Expanded(
                             child: Container(
-                              margin: EdgeInsets.symmetric(
+                              margin: const EdgeInsets.symmetric(
                                 horizontal: 5.0,
                               ),
                               child: Center(
@@ -120,8 +125,9 @@ class TaskFormContainer extends StatelessWidget {
                                   ),
                                   child: Text(
                                     'Save',
-                                    style: TextStyle().copyWith(
-                                      color: currentTheme == ThemeServices.darkTheme
+                                    style: const TextStyle().copyWith(
+                                      color: currentTheme ==
+                                              ThemeServices.darkTheme
                                           ? AppContant.darkTextColor
                                           : AppContant.ligthTextColor,
                                     ),

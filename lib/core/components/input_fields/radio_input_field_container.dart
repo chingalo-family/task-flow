@@ -52,11 +52,12 @@ class _RadioInputFieldContainerState extends State<RadioInputFieldContainer> {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.centerLeft,
-      padding: EdgeInsets.symmetric(vertical: 10.0),
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Wrap(
         children: widget.options!
             .map(
               (InputFieldOption option) => Container(
+                margin: const EdgeInsets.symmetric(),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -68,9 +69,10 @@ class _RadioInputFieldContainerState extends State<RadioInputFieldContainer> {
                       onChanged: widget.isReadOnly! ? null : setSelectedOption,
                     ),
                     Container(
+                      margin: const EdgeInsets.symmetric(),
                       child: Text(
                         option.name,
-                        style: TextStyle().copyWith(
+                        style: const TextStyle().copyWith(
                           color: _currentValue == option.code
                               ? widget.activeColor
                               : null,

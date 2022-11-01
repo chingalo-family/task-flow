@@ -19,28 +19,31 @@ class UserGroupService {
         var queryParameters = {
           'fields': 'id,name,users[id,name,username],createdBy[username]',
         };
-        HttpService http = new HttpService(
+        HttpService http = HttpService(
           username: username,
           password: password,
         );
-        var response = await http.httpGet(url, queryParameters: queryParameters);
+        var response =
+            await http.httpGet(url, queryParameters: queryParameters);
         if (response.statusCode == 200) {
           userGroups = UserGroup.fromJson(json.decode(response.body));
         }
       }
       return userGroups;
     } catch (error) {
-      throw error;
+      rethrow;
     }
   }
 
   setUserGroups(List<UserGroup> userGroups) async {
     if (userGroups.isNotEmpty) {
-      List<UserGroupMember> userGroupMembers =
-          userGroups.expand((UserGroup userGroup) => userGroup.groupMembers).toList();
+      List<UserGroupMember> userGroupMembers = userGroups
+          .expand((UserGroup userGroup) => userGroup.groupMembers)
+          .toList();
       await UserGroupOfflineProvider().addOrUpdateUserGroup(userGroups);
       if (userGroupMembers.isNotEmpty) {
-        await UserGroupMemberOfflineProvider().addOrUpdateUserGroupMember(userGroupMembers);
+        await UserGroupMemberOfflineProvider()
+            .addOrUpdateUserGroupMember(userGroupMembers);
       }
     }
   }
@@ -49,16 +52,20 @@ class UserGroupService {
     required String userId,
   }) async {
     List<UserGroupMember> userGroupMembers =
-        await UserGroupMemberOfflineProvider().getUserGroupMembersByUser(userId);
-    List<String> groupIds =
-        userGroupMembers.map((UserGroupMember userGroupMember) => userGroupMember.groupId).toList();
-    List<UserGroup> userGroups = await UserGroupOfflineProvider().getUserGroups();
+        await UserGroupMemberOfflineProvider()
+            .getUserGroupMembersByUser(userId);
+    List<String> groupIds = userGroupMembers
+        .map((UserGroupMember userGroupMember) => userGroupMember.groupId)
+        .toList();
+    List<UserGroup> userGroups =
+        await UserGroupOfflineProvider().getUserGroups();
     return userGroups
         .where((UserGroup userGroup) => groupIds.contains(userGroup.id))
         .toList()
         .map((UserGroup userGroup) {
       userGroup.groupMembers = userGroupMembers
-          .where((UserGroupMember userGroupMembe) => userGroupMembe.groupId == userGroup.id)
+          .where((UserGroupMember userGroupMembe) =>
+              userGroupMembe.groupId == userGroup.id)
           .toList();
       return userGroup;
     }).toList();

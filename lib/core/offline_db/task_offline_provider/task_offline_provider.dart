@@ -63,7 +63,7 @@ class TaskOfflineProvider extends OfflineDbProvider {
         }
       }
     } catch (e) {
-      print(e);
+      //
     }
     return taskList.reversed.toList();
   }

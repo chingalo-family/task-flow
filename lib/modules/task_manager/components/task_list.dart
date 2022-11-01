@@ -25,14 +25,14 @@ class TaskList extends StatelessWidget {
             ? AppContant.darkTextColor
             : AppContant.ligthTextColor;
         return Container(
-          margin: EdgeInsets.symmetric(
+          margin: const EdgeInsets.symmetric(
             vertical: 5.0,
           ),
           child: GestureDetector(
             onTap: onSelectTask,
             child: MaterialCard(
               body: Container(
-                padding: EdgeInsets.only(
+                padding: const EdgeInsets.only(
                   left: 15.0,
                   right: 5.0,
                   top: 10.0,
@@ -43,13 +43,15 @@ class TaskList extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Container(
+                        margin: const EdgeInsets.symmetric(),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
+                              margin: const EdgeInsets.symmetric(),
                               child: Text(
                                 task.title!,
-                                style: TextStyle().copyWith(
+                                style: const TextStyle().copyWith(
                                   fontSize: 18.0,
                                   color: textColor,
                                 ),
@@ -58,12 +60,12 @@ class TaskList extends StatelessWidget {
                             Visibility(
                               visible: task.description != '',
                               child: Container(
-                                margin: EdgeInsets.only(
+                                margin: const EdgeInsets.only(
                                   bottom: 3.0,
                                 ),
                                 child: Text(
                                   task.description!,
-                                  style: TextStyle().copyWith(
+                                  style: const TextStyle().copyWith(
                                     color: textColor,
                                     fontSize: 14.0,
                                   ),
@@ -71,7 +73,7 @@ class TaskList extends StatelessWidget {
                               ),
                             ),
                             Container(
-                              margin: EdgeInsets.only(
+                              margin: const EdgeInsets.only(
                                 top: 3.0,
                               ),
                               child: Row(
@@ -79,20 +81,21 @@ class TaskList extends StatelessWidget {
                                   Expanded(
                                     child: Text(
                                       'Status : ${task.isCompleted! ? 'Completed' : 'Not completed'}',
-                                      style: TextStyle().copyWith(
+                                      style: const TextStyle().copyWith(
                                         color: task.isCompleted!
-                                            ? Color(0xFF34C759)
+                                            ? const Color(0xFF34C759)
                                             : Colors.redAccent,
                                         fontSize: 12.0,
                                       ),
                                     ),
                                   ),
                                   Container(
+                                    margin: const EdgeInsets.symmetric(),
                                     child: Text(
                                       '${task.completedTasks}/${task.subTasks.length} tasks',
-                                      style: TextStyle().copyWith(
+                                      style: const TextStyle().copyWith(
                                         color: task.isCompleted!
-                                            ? Color(0xFF34C759)
+                                            ? const Color(0xFF34C759)
                                             : Colors.redAccent,
                                         fontSize: 12.0,
                                       ),
@@ -106,6 +109,7 @@ class TaskList extends StatelessWidget {
                       ),
                     ),
                     Container(
+                      margin: const EdgeInsets.symmetric(),
                       child: Icon(
                         Icons.chevron_right,
                         color: textColor,

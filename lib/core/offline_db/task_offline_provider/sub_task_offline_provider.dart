@@ -64,7 +64,7 @@ class SubTaskOfflineProvider extends OfflineDbProvider {
         }
       }
     } catch (e) {
-      print(e);
+      //
     }
     return subTaskList;
   }

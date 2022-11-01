@@ -3,6 +3,6 @@ import 'package:task_manager/app.dart';
 
 void main() {
   runApp(
-    App(),
+    const App(),
   );
 }

@@ -33,44 +33,44 @@ class Task {
     this.dueDate = '',
     this.groupId = '',
   }) {
-    this.id = AppUtil.getUid();
-    this.status = this.status != '' ? this.status : TaskStatusContant.notStarted;
-    this.assignedTo = this.assignedTo != '' ? this.assignedTo : AppContant.defaultUserId;
-    this.createdBy = this.createdBy != '' ? this.createdBy : AppContant.defaultUserId;
-    this.groupId = this.groupId != '' ? this.groupId : AppContant.defaultUserGroupId;
-    this.subTasks = [];
-    this.createdOn = DateTime.now().toString().split('.')[0];
+    id = AppUtil.getUid();
+    status = status != '' ? status : TaskStatusContant.notStarted;
+    assignedTo = assignedTo != '' ? assignedTo : AppContant.defaultUserId;
+    createdBy = createdBy != '' ? createdBy : AppContant.defaultUserId;
+    groupId = groupId != '' ? groupId : AppContant.defaultUserGroupId;
+    subTasks = [];
+    createdOn = DateTime.now().toString().split('.')[0];
   }
 
   Map<String, dynamic> toMap() {
-    var data = Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
-    data['description'] = this.description;
-    data['createdOn'] = this.createdOn;
-    data['assignedTo'] = this.assignedTo;
-    data['completedBy'] = this.completedBy;
-    data['completedOn'] = this.completedOn;
-    data['createdBy'] = this.createdBy != '' ? this.createdBy : '';
-    data['dueDate'] = this.dueDate != '' ? this.dueDate : '';
-    data['groupId'] = this.groupId;
-    data['status'] = this.status;
+    var data = <String, dynamic>{};
+    data['id'] = id;
+    data['title'] = title;
+    data['description'] = description;
+    data['createdOn'] = createdOn;
+    data['assignedTo'] = assignedTo;
+    data['completedBy'] = completedBy;
+    data['completedOn'] = completedOn;
+    data['createdBy'] = createdBy != '' ? createdBy : '';
+    data['dueDate'] = dueDate != '' ? dueDate : '';
+    data['groupId'] = groupId;
+    data['status'] = status;
     return data;
   }
 
   Task.fromMap(Map mapData) {
-    this.id = mapData['id'];
-    this.title = mapData['title'];
-    this.description = mapData['description'];
-    this.createdOn = mapData['createdOn'] ?? '';
-    this.assignedTo = mapData['assignedTo'] ?? AppContant.defaultUserId;
-    this.completedBy = mapData['completedBy'] ?? '';
-    this.completedOn = mapData['completedOn'] ?? '';
-    this.createdBy = mapData['createdBy'] ?? AppContant.defaultUserId;
-    this.dueDate = mapData['dueDate'] ?? '';
-    this.status = mapData['status'];
-    this.assignedTo = mapData['assignedTo'] ?? AppContant.defaultUserId;
-    this.groupId = mapData['groupId'] ?? AppContant.defaultUserGroupId;
+    id = mapData['id'];
+    title = mapData['title'];
+    description = mapData['description'];
+    createdOn = mapData['createdOn'] ?? '';
+    assignedTo = mapData['assignedTo'] ?? AppContant.defaultUserId;
+    completedBy = mapData['completedBy'] ?? '';
+    completedOn = mapData['completedOn'] ?? '';
+    createdBy = mapData['createdBy'] ?? AppContant.defaultUserId;
+    dueDate = mapData['dueDate'] ?? '';
+    status = mapData['status'];
+    assignedTo = mapData['assignedTo'] ?? AppContant.defaultUserId;
+    groupId = mapData['groupId'] ?? AppContant.defaultUserGroupId;
   }
 
   @override

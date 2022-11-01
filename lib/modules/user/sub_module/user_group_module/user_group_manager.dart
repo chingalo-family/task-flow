@@ -26,7 +26,7 @@ class UserGroupManager extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(AppContant.appBarHeight),
+          preferredSize: const Size.fromHeight(AppContant.appBarHeight),
           child: AppBarContainer(
             title: 'User Group Management',
             isAboutPage: false,
@@ -40,24 +40,27 @@ class UserGroupManager extends StatelessWidget {
         ),
         body: SingleChildScrollView(
           child: Container(
-            margin: EdgeInsets.symmetric(
+            margin: const EdgeInsets.symmetric(
               horizontal: 10.0,
               vertical: 10.0,
             ),
-            child: Consumer<AppThemeState>(builder: (context, appThemeState, child) {
+            child: Consumer<AppThemeState>(
+                builder: (context, appThemeState, child) {
               String currentTheme = appThemeState.currentTheme;
-              return Consumer<UserGroupState>(builder: (context, userGroupState, child) {
+              return Consumer<UserGroupState>(
+                  builder: (context, userGroupState, child) {
                 List<UserGroup> userGroups = userGroupState.currentUserGroups;
                 return Column(
                   children: [
                     Container(
-                      margin: EdgeInsets.symmetric(horizontal: 3.0),
+                      margin: const EdgeInsets.symmetric(horizontal: 3.0),
                       child: MaterialCard(
                         borderRadius: 6.0,
                         body: Container(
                           width: double.maxFinite,
-                          margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
-                          padding: EdgeInsets.symmetric(
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 5.0),
+                          padding: const EdgeInsets.symmetric(
                             vertical: 5.0,
                             horizontal: 10.0,
                           ),
@@ -81,7 +84,8 @@ class UserGroupManager extends StatelessWidget {
                           (UserGroup userGroup) => UserGroupListContainer(
                             currentTheme: currentTheme,
                             userGroup: userGroup,
-                            onAddUser: () => onAddUserGroupMember(context, userGroup),
+                            onAddUser: () =>
+                                onAddUserGroupMember(context, userGroup),
                           ),
                         )
                         .toList()

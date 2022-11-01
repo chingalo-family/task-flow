@@ -37,12 +37,15 @@ class _SubTaskContainerState extends State<SubTaskContainer> {
     BuildContext context,
     SubTask subTask,
   ) async {
-    SubTaskFormStateHelper.updateFormState(context, subTask, !subTask.isCompleted!);
-    String currentTheme = Provider.of<AppThemeState>(context, listen: false).currentTheme;
+    SubTaskFormStateHelper.updateFormState(
+        context, subTask, !subTask.isCompleted!);
+    String currentTheme =
+        Provider.of<AppThemeState>(context, listen: false).currentTheme;
     Color textColor = currentTheme == ThemeServices.darkTheme
         ? AppContant.darkTextColor
         : AppContant.ligthTextColor;
-    final List<FormSection> subTaskFormSections = SubTaskForm.getFormSections(textColor);
+    final List<FormSection> subTaskFormSections =
+        SubTaskForm.getFormSections(textColor);
     Widget modal = SubTaskFormContainer(
       subTaskFormSections: subTaskFormSections,
     );
@@ -65,38 +68,40 @@ class _SubTaskContainerState extends State<SubTaskContainer> {
     bool isCompleted,
   ) {
     subTask.isCompleted = isCompleted;
-    subTask.completedOn = isCompleted ? DateTime.now().toString().split('.')[0] : '';
+    subTask.completedOn =
+        isCompleted ? DateTime.now().toString().split('.')[0] : '';
     subTask.completedBy = isCompleted ? widget.currentUser.fullName : 'default';
     Provider.of<TaskState>(context, listen: false).addSubTask(subTask);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             alignment: Alignment.center,
-            margin: EdgeInsets.symmetric(
+            margin: const EdgeInsets.symmetric(
               vertical: 10.0,
             ),
             child: Text(
               "${widget.currentTask.title}'s list of tasks",
-              style: TextStyle().copyWith(
+              style: const TextStyle().copyWith(
                 fontSize: 18.0,
                 color: widget.textColor,
               ),
             ),
           ),
           Container(
+            margin: const EdgeInsets.symmetric(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: widget.currentTask.subTasks
                   .map(
                     (SubTask subTask) => Container(
-                      margin: EdgeInsets.symmetric(
+                      margin: const EdgeInsets.symmetric(
                         vertical: 5.0,
                       ),
                       child: SubTaskCard(
@@ -104,7 +109,8 @@ class _SubTaskContainerState extends State<SubTaskContainer> {
                         subTask: subTask,
                         onEdit: () => onEditTodoTask(context, subTask),
                         onDelete: () => onDeleteTodoTask(context, subTask),
-                        onUpdateTodoTaskStatus: (bool isCompleted) => onUpdateTodoTaskStatus(
+                        onUpdateTodoTaskStatus: (bool isCompleted) =>
+                            onUpdateTodoTaskStatus(
                           context,
                           subTask,
                           isCompleted,

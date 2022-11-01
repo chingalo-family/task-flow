@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:task_manager/core/components/material_card.dart';
 import 'package:task_manager/core/constants/app_contant.dart';
@@ -21,7 +19,7 @@ class UserGroupListContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
         vertical: 5.0,
       ),
       child: Card(
@@ -72,7 +70,7 @@ class UserGroupListContainer extends StatelessWidget {
                     onTap: onAddUser,
                     child: Container(
                       margin: const EdgeInsets.all(10.0),
-                      child: Icon(
+                      child: const Icon(
                         Icons.add,
                       ),
                     ),

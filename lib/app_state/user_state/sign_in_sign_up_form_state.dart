@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 class SignInSignUpFormState with ChangeNotifier {
   // intial state
-  Map _formState = {};
+  final Map _formState = {};
   Map _hiddenFields = {};
   Map _hiddenInputFieldOptions = {};
   Map _hiddenSections = {};
@@ -23,7 +23,8 @@ class SignInSignUpFormState with ChangeNotifier {
     String fullName = _formState['fullName'] ?? '';
     String username = _formState['username'] ?? '';
     String password = _formState['password'] ?? '';
-    _isSignUpFormValid = fullName.isNotEmpty && username.isNotEmpty && password.isNotEmpty;
+    _isSignUpFormValid =
+        fullName.isNotEmpty && username.isNotEmpty && password.isNotEmpty;
     notifyListeners();
   }
 

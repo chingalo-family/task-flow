@@ -99,7 +99,7 @@ class TaskMangerView extends StatelessWidget {
   }
 
   onOpenTodoChartSummary(BuildContext context, Task currentTask) {
-    print('on opening todo chart $currentTask');
+    debugPrint('on opening todo chart $currentTask');
   }
 
   @override
@@ -112,7 +112,7 @@ class TaskMangerView extends StatelessWidget {
             return SafeArea(
               child: Scaffold(
                 appBar: PreferredSize(
-                  preferredSize: Size.fromHeight(AppContant.appBarHeight),
+                  preferredSize: const Size.fromHeight(AppContant.appBarHeight),
                   child: AppBarContainer(
                     title: currentTask.title!,
                     isAboutPage: false,

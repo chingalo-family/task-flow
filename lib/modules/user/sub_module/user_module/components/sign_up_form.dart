@@ -33,7 +33,7 @@ class SignUpForm extends StatefulWidget {
 class _SignUpFormState extends State<SignUpForm> {
   Color? textColor;
   List<FormSection>? formSections;
-  Map mandatoryFieldObject = new Map();
+  Map mandatoryFieldObject = {};
   bool isFormReady = false;
   bool isSaving = false;
 
@@ -41,7 +41,7 @@ class _SignUpFormState extends State<SignUpForm> {
   void initState() {
     super.initState();
     setFormMetadata();
-    Timer(Duration(seconds: 1), () {
+    Timer(const Duration(seconds: 1), () {
       widget.onFormReady();
       isFormReady = true;
       setState(() {});
@@ -68,7 +68,8 @@ class _SignUpFormState extends State<SignUpForm> {
   }
 
   void onInputValueChange(String id, dynamic value) {
-    Provider.of<SignInSignUpFormState>(context, listen: false).setFormFieldState(id, value);
+    Provider.of<SignInSignUpFormState>(context, listen: false)
+        .setFormFieldState(id, value);
   }
 
   void onSignUp(Map dataObject) async {
@@ -94,13 +95,15 @@ class _SignUpFormState extends State<SignUpForm> {
       } else {
         isSaving = true;
         setState(() {});
-        bool isAccountExist = await UserService().isUserAccountExist(dhisUsername: user.username);
+        bool isAccountExist =
+            await UserService().isUserAccountExist(dhisUsername: user.username);
         if (!isAccountExist) {
           await UserService().createOrUpdateDhis2UserAccount(user: user);
           onSuccessSignUp(user);
         } else {
           AppUtil.showToastMessage(
-            message: 'User with username ${user.username} has already signed up in the system',
+            message:
+                'User with username ${user.username} has already signed up in the system',
           );
         }
         isSaving = false;
@@ -123,7 +126,7 @@ class _SignUpFormState extends State<SignUpForm> {
               margin: const EdgeInsets.only(
                 top: 10.0,
               ),
-              child: CircularProcessLoader(
+              child: const CircularProcessLoader(
                 color: Colors.blueGrey,
               ),
             )
@@ -132,7 +135,8 @@ class _SignUpFormState extends State<SignUpForm> {
                 children: [
                   EntryFormContainer(
                     elevation: 0.0,
-                    onInputValueChange: (String id, dynamic value) => onInputValueChange(id, value),
+                    onInputValueChange: (String id, dynamic value) =>
+                        onInputValueChange(id, value),
                     formSections: formSections!,
                     dataObject: signInSignUpFormState.formState,
                     mandatoryFieldObject: mandatoryFieldObject,
@@ -148,7 +152,8 @@ class _SignUpFormState extends State<SignUpForm> {
                           child: TextButton(
                             onPressed: !signInSignUpFormState.isSignUpFormValid
                                 ? null
-                                : () => onSignUp(signInSignUpFormState.formState),
+                                : () =>
+                                    onSignUp(signInSignUpFormState.formState),
                             child: isSaving
                                 ? CircularProcessLoader(
                                     color: textColor,
@@ -163,7 +168,7 @@ class _SignUpFormState extends State<SignUpForm> {
                                       width: double.infinity,
                                       child: Text(
                                         'Sign Up',
-                                        style: TextStyle().copyWith(
+                                        style: const TextStyle().copyWith(
                                           color: textColor,
                                         ),
                                       ),

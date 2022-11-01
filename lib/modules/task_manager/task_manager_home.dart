@@ -23,7 +23,7 @@ class TaskMangerHome extends StatelessWidget {
     BuildContext context,
     User? currentUser,
   ) async {
-    Task task = new Task(title: '', description: '');
+    Task task = Task(title: '', description: '');
     task.assignedTo =
         currentUser != null ? currentUser.id : AppContant.defaultUserId;
     task.createdBy = currentUser != null ? currentUser.fullName : '';
@@ -57,14 +57,14 @@ class TaskMangerHome extends StatelessWidget {
   }
 
   onOpenTodoListChartSummary(BuildContext context) {
-    print('on opening todo list chart');
+    debugPrint('on opening todo list chart');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(AppContant.appBarHeight),
+        preferredSize: const Size.fromHeight(AppContant.appBarHeight),
         child: Consumer<UserState>(
           builder: (context, userState, child) {
             return AppBarContainer(
@@ -81,13 +81,14 @@ class TaskMangerHome extends StatelessWidget {
         ),
       ),
       body: Scaffold(
-        appBar: PreferredSize(
+        appBar: const PreferredSize(
           preferredSize: Size.fromHeight(AppContant.todoListFilterHeight),
           child: TaskListFilter(),
         ),
         body: SingleChildScrollView(
           child: Container(
-            child: TaskListContainer(),
+            margin: const EdgeInsets.symmetric(),
+            child: const TaskListContainer(),
           ),
         ),
       ),

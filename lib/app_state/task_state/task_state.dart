@@ -5,8 +5,8 @@ import 'package:task_manager/models/sub_task.dart';
 import 'package:task_manager/models/task.dart';
 
 class TaskState with ChangeNotifier {
-  final TaskOfflineProvider taskOfflineProvider = new TaskOfflineProvider();
-  final SubTaskOfflineProvider subtaskOfflineProvider = new SubTaskOfflineProvider();
+  final TaskOfflineProvider taskOfflineProvider = TaskOfflineProvider();
+  final SubTaskOfflineProvider subtaskOfflineProvider = SubTaskOfflineProvider();
 
   List<Task> _taskList = [];
   Task? _currentTask;

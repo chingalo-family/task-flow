@@ -16,6 +16,8 @@ import 'package:task_manager/modules/splash/splash.dart';
 class App extends StatelessWidget {
   final String title = 'chingalo todo app';
 
+  const App({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return buildApp();

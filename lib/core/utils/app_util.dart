@@ -13,10 +13,11 @@ class AppUtil {
     List fieldIds = dataDynamic.keys.toList();
     List hiddenFieldsIds = hiddenFields.keys.toList();
     //Remove all hidden fields which are mandatory from the list
-    List filteredMandatoryFields =
-        mandatoryFields.where((field) => hiddenFieldsIds.indexOf(field) < 0).toList();
+    List filteredMandatoryFields = mandatoryFields
+        .where((field) => !hiddenFieldsIds.contains(field))
+        .toList();
     for (var mandatoryField in filteredMandatoryFields) {
-      if (fieldIds.indexOf(mandatoryField) == -1) {
+      if (!fieldIds.contains(mandatoryField)) {
         hasFilled = false;
       } else {
         if ('${dataDynamic[mandatoryField]}'.trim() == '' ||
@@ -34,10 +35,11 @@ class AppUtil {
     List fieldIds = dataDynamic.keys.toList();
     List hiddenFieldsIds = hiddenFields.keys.toList();
     //Remove all hidden fields which are mandatory from the list
-    List filteredMandatoryFields =
-        mandatoryFields.where((field) => hiddenFieldsIds.indexOf(field) < 0).toList();
+    List filteredMandatoryFields = mandatoryFields
+        .where((field) => !hiddenFieldsIds.contains(field))
+        .toList();
     for (var mandatoryField in filteredMandatoryFields) {
-      if (fieldIds.indexOf(mandatoryField) == -1) {
+      if (!fieldIds.contains(mandatoryField)) {
         unFilledMandatoryFields.add(mandatoryField);
       } else {
         if ('${dataDynamic[mandatoryField]}'.trim() == '' ||
@@ -56,10 +58,11 @@ class AppUtil {
     List unFilledFields = [];
     List fieldIds = dataDynamic.keys.toList();
     for (var field in fields) {
-      if (fieldIds.indexOf(field) == -1) {
+      if (!fieldIds.contains(field)) {
         unFilledFields.add(field);
       } else {
-        if ('${dataDynamic[field]}'.trim() == '' || '${dataDynamic[field]}'.trim() == 'null') {
+        if ('${dataDynamic[field]}'.trim() == '' ||
+            '${dataDynamic[field]}'.trim() == 'null') {
           unFilledFields.add(field);
         }
       }
@@ -83,13 +86,14 @@ class AppUtil {
   }
 
   static isPasswordValid(String password) {
-    return RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+    return RegExp(
+            r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
         .hasMatch(password);
   }
 
   static String getUid() {
-    Random rnd = new Random();
-    const letters = 'abcdefghijklmnopqrstuvwxyz' + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    Random rnd = Random();
+    const letters = 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const allowedChars = '0123456789' + letters;
     const NUMBER_OF_CODEPOINTS = allowedChars.length;
     const CODESIZE = 11;
@@ -137,22 +141,25 @@ class AppUtil {
     return age;
   }
 
-  static List<List<dynamic>> chunkItems({List<dynamic> items = const [], int size = 0}) {
+  static List<List<dynamic>> chunkItems(
+      {List<dynamic> items = const [], int size = 0}) {
     List<List<dynamic>> groupedItems = [];
     size = size != 0 ? size : items.length;
     for (var count = 1; count <= (items.length / size).ceil(); count++) {
       int start = (count - 1) * size;
       int end = (count * size);
-      List<dynamic> subList = items.sublist(start, end > items.length ? items.length : end);
+      List<dynamic> subList =
+          items.sublist(start, end > items.length ? items.length : end);
       groupedItems.add(subList);
     }
     return groupedItems;
   }
 
-  bool searchFromString({String? searchableString, required String searchedValue}) {
+  bool searchFromString(
+      {String? searchableString, required String searchedValue}) {
     List<String> searchedSubString = searchedValue.split(' ');
     for (String str in searchedSubString) {
-      if (searchableString!.toLowerCase().indexOf(str.toLowerCase()) == -1) {
+      if (!searchableString!.toLowerCase().contains(str.toLowerCase())) {
         return false;
       }
     }
@@ -163,13 +170,14 @@ class AppUtil {
     required String message,
     ToastGravity position = ToastGravity.BOTTOM,
   }) {
-    if (message.isNotEmpty)
+    if (message.isNotEmpty) {
       Fluttertoast.showToast(
         msg: message,
         toastLength: Toast.LENGTH_SHORT,
         gravity: position,
-        backgroundColor: Color(0xFF656565),
+        backgroundColor: const Color(0xFF656565),
       );
+    }
   }
 
   static showActionSheetModal({
@@ -193,8 +201,12 @@ class AppUtil {
           onTap: () {},
           child: DraggableScrollableSheet(
             initialChildSize: initialHeightRatio,
-            maxChildSize: maxHeightRatio < initialHeightRatio ? initialHeightRatio : maxHeightRatio,
-            minChildSize: minHeightRatio < initialHeightRatio ? minHeightRatio : initialHeightRatio,
+            maxChildSize: maxHeightRatio < initialHeightRatio
+                ? initialHeightRatio
+                : maxHeightRatio,
+            minChildSize: minHeightRatio < initialHeightRatio
+                ? minHeightRatio
+                : initialHeightRatio,
             builder: (BuildContext context, ScrollController scrollController) {
               return ListView(
                 controller: scrollController,
@@ -203,7 +215,7 @@ class AppUtil {
                     margin: const EdgeInsets.symmetric(
                       horizontal: 1.0,
                     ),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       borderRadius: BorderRadius.vertical(
                         top: Radius.circular(20.0),
                       ),
@@ -247,7 +259,7 @@ class AppUtil {
                 child: Column(
                   children: [
                     Container(
-                      padding: EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                         horizontal: 10.0,
                       ),
                       child: Row(
@@ -263,8 +275,8 @@ class AppUtil {
                                       children: [
                                         Text(
                                           title,
-                                          style: TextStyle().copyWith(
-                                            color: Color(0xFF82898D),
+                                          style: const TextStyle().copyWith(
+                                            color: const Color(0xFF82898D),
                                             fontSize: 14.0,
                                             fontWeight: FontWeight.bold,
                                           ),
@@ -282,7 +294,7 @@ class AppUtil {
                                   InkWell(
                                     onTap: () => Navigator.of(context).pop(),
                                     child: Container(
-                                      margin: EdgeInsets.all(10),
+                                      margin: const EdgeInsets.all(10),
                                       height: 22,
                                       width: 22,
                                       child: SvgPicture.asset(

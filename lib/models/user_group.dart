@@ -13,24 +13,25 @@ class UserGroup {
     this.createdBy = '',
     this.groupMembers = const [],
   }) {
-    this.createdBy = this.createdBy != '' ? this.createdBy : '';
+    createdBy = createdBy != '' ? createdBy : '';
   }
 
-  String get groupMemberCount =>
-      groupMembers.length > 1 ? '${groupMembers.length} members' : '${groupMembers.length} memmber';
+  String get groupMemberCount => groupMembers.length > 1
+      ? '${groupMembers.length} members'
+      : '${groupMembers.length} memmber';
 
   Map<String, dynamic> toMap() {
-    var data = Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['createdBy'] = this.createdBy;
+    var data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['createdBy'] = createdBy;
     return data;
   }
 
   UserGroup.fromMap(Map mapData) {
-    this.id = mapData['id'];
-    this.name = mapData['name'];
-    this.createdBy = mapData['createdBy'];
+    id = mapData['id'];
+    name = mapData['name'];
+    createdBy = mapData['createdBy'];
   }
 
   factory UserGroup.fromJson(

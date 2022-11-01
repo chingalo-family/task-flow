@@ -40,7 +40,7 @@ class AppBarContainer extends StatelessWidget {
       elevation: elevation,
       title: Text(
         title,
-        style: TextStyle().copyWith(
+        style: const TextStyle().copyWith(
           fontSize: 16.0,
         ),
       ),
@@ -48,7 +48,7 @@ class AppBarContainer extends StatelessWidget {
         Visibility(
           visible: isViewChartVisible!,
           child: IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.bar_chart,
             ),
             onPressed: onOpenChart,
@@ -57,7 +57,7 @@ class AppBarContainer extends StatelessWidget {
         Visibility(
           visible: isAddVisible!,
           child: IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.add,
             ),
             onPressed: onAdd,
@@ -66,7 +66,7 @@ class AppBarContainer extends StatelessWidget {
         Visibility(
           visible: isEditVisible,
           child: IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.edit,
             ),
             onPressed: onEdit,
@@ -75,7 +75,7 @@ class AppBarContainer extends StatelessWidget {
         Visibility(
           visible: isDeleteVisible,
           child: IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.delete,
             ),
             onPressed: onDelete,
@@ -84,16 +84,14 @@ class AppBarContainer extends StatelessWidget {
         Visibility(
           visible: isUserVisible!,
           child: IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.person,
             ),
             onPressed: onOpenUserActionSheet,
           ),
         ),
-        Container(
-          child: AppPopUpMenu(
-            currentPage: isAboutPage == true ? 'about' : '',
-          ),
+        AppPopUpMenu(
+          currentPage: isAboutPage == true ? 'about' : '',
         ),
       ],
     );

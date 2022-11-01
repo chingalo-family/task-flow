@@ -31,12 +31,12 @@ class AppPopUpMenu extends StatelessWidget {
         if (menuItem.id == 'about') {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => About(),
+              builder: (context) => const About(),
             ),
           );
         } else {
           Timer(
-            Duration(milliseconds: 100),
+            const Duration(milliseconds: 100),
             () {
               appThemeState.setCurrentTheme(menuItem.id);
             },
@@ -53,24 +53,20 @@ class AppPopUpMenu extends StatelessWidget {
                   children: [
                     Consumer<AppThemeState>(
                       builder: (context, appThemeState, child) {
-                        return Container(
-                          child: Icon(
-                            menuItem.icon,
-                            color: appThemeState.currentTheme == 'dark'
-                                ? AppContant.darkTextColor
-                                : AppContant.ligthTextColor,
-                          ),
+                        return Icon(
+                          menuItem.icon,
+                          color: appThemeState.currentTheme == 'dark'
+                              ? AppContant.darkTextColor
+                              : AppContant.ligthTextColor,
                         );
                       },
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 5.0,
                     ),
-                    Container(
-                      child: Text(
-                        menuItem.name,
-                        style: TextStyle().copyWith(),
-                      ),
+                    Text(
+                      menuItem.name,
+                      style: const TextStyle().copyWith(),
                     ),
                   ],
                 ),

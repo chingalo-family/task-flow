@@ -49,7 +49,9 @@ class OfflineDbProvider {
     for (String query in queries) {
       try {
         await db.execute(query);
-      } catch (error) {}
+      } catch (error) {
+        //
+      }
     }
   }
 
@@ -57,7 +59,9 @@ class OfflineDbProvider {
     for (String query in migrationQuery) {
       try {
         await db.execute(query);
-      } catch (error) {}
+      } catch (error) {
+        //
+      }
     }
   }
 
@@ -65,6 +69,8 @@ class OfflineDbProvider {
     try {
       var dbClient = await db;
       dbClient!.close();
-    } catch (e) {}
+    } catch (e) {
+      //
+    }
   }
 }

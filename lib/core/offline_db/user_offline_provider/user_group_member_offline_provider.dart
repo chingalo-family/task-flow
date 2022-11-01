@@ -26,7 +26,8 @@ class UserGroupMemberOfflineProvider extends OfflineDbProvider {
             conflictAlgorithm: ConflictAlgorithm.replace,
           );
         }
-        await userGroupMemberBatch.commit(exclusive: true, noResult: true, continueOnError: true);
+        await userGroupMemberBatch.commit(
+            exclusive: true, noResult: true, continueOnError: true);
       }
     } catch (e) {
       rethrow;
@@ -42,7 +43,8 @@ class UserGroupMemberOfflineProvider extends OfflineDbProvider {
     );
   }
 
-  Future<List<UserGroupMember>> getUserGroupMembersByUser(String selectedUserId) async {
+  Future<List<UserGroupMember>> getUserGroupMembersByUser(
+      String selectedUserId) async {
     List<UserGroupMember> userGroupMembers = [];
     try {
       var dbClient = await db;
@@ -60,7 +62,8 @@ class UserGroupMemberOfflineProvider extends OfflineDbProvider {
       );
       if (maps.isNotEmpty) {
         for (Map map in maps) {
-          UserGroupMember userGroupMember = UserGroupMember.fromMap(map as Map<String, dynamic>);
+          UserGroupMember userGroupMember =
+              UserGroupMember.fromMap(map as Map<String, dynamic>);
           userGroupMembers.add(userGroupMember);
         }
       }
@@ -70,7 +73,8 @@ class UserGroupMemberOfflineProvider extends OfflineDbProvider {
     return userGroupMembers;
   }
 
-  Future<List<UserGroupMember>> getUserGroupMembersByGroup(String selectedGroupId) async {
+  Future<List<UserGroupMember>> getUserGroupMembersByGroup(
+      String selectedGroupId) async {
     List<UserGroupMember> userGroupMembers = [];
     try {
       var dbClient = await db;
@@ -88,7 +92,8 @@ class UserGroupMemberOfflineProvider extends OfflineDbProvider {
       );
       if (maps.isNotEmpty) {
         for (Map map in maps) {
-          UserGroupMember userGroupMember = UserGroupMember.fromMap(map as Map<String, dynamic>);
+          UserGroupMember userGroupMember =
+              UserGroupMember.fromMap(map as Map<String, dynamic>);
           userGroupMembers.add(userGroupMember);
         }
       }

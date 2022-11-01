@@ -19,26 +19,27 @@ class TaskSummaryContainer extends StatelessWidget {
     return GestureDetector(
       onTap: onTapCurrentTask,
       child: Container(
-        margin: EdgeInsets.symmetric(
+        margin: const EdgeInsets.symmetric(
           vertical: 10.0,
         ),
         child: MaterialCard(
           body: Container(
-            padding: EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(10.0),
             child: Row(
               children: [
                 Expanded(
                   child: Container(
+                    margin: const EdgeInsets.symmetric(),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          margin: EdgeInsets.only(
+                          margin: const EdgeInsets.only(
                             bottom: 3.0,
                           ),
                           child: Text(
                             currentTask.title!,
-                            style: TextStyle().copyWith(
+                            style: const TextStyle().copyWith(
                               fontSize: 20.0,
                               color: textColor,
                             ),
@@ -47,12 +48,12 @@ class TaskSummaryContainer extends StatelessWidget {
                         Visibility(
                           visible: currentTask.description != '',
                           child: Container(
-                            margin: EdgeInsets.only(
+                            margin: const EdgeInsets.only(
                               bottom: 3.0,
                             ),
                             child: Text(
                               currentTask.description!,
-                              style: TextStyle().copyWith(
+                              style: const TextStyle().copyWith(
                                 color: textColor,
                                 fontSize: 14.0,
                               ),
@@ -60,7 +61,7 @@ class TaskSummaryContainer extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.only(
+                          margin: const EdgeInsets.only(
                             bottom: 3.0,
                           ),
                           child: Row(
@@ -68,20 +69,21 @@ class TaskSummaryContainer extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   'Status : ${currentTask.isCompleted! ? 'Completed' : 'Not completed'}',
-                                  style: TextStyle().copyWith(
+                                  style: const TextStyle().copyWith(
                                     color: currentTask.isCompleted!
-                                        ? Color(0xFF34C759)
+                                        ? const Color(0xFF34C759)
                                         : Colors.redAccent,
                                     fontSize: 12.0,
                                   ),
                                 ),
                               ),
                               Container(
+                                margin: const EdgeInsets.symmetric(),
                                 child: Text(
                                   '${currentTask.completedTasks}/${currentTask.subTasks.length} tasks',
-                                  style: TextStyle().copyWith(
+                                  style: const TextStyle().copyWith(
                                     color: currentTask.isCompleted!
-                                        ? Color(0xFF34C759)
+                                        ? const Color(0xFF34C759)
                                         : Colors.redAccent,
                                     fontSize: 12.0,
                                   ),
