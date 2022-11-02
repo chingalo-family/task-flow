@@ -30,7 +30,7 @@ class SelectInputField extends StatefulWidget {
 
 class _SelectInputFieldState extends State<SelectInputField> {
   dynamic _selectedOption;
-  Map _hiddenInputFieldOptions = Map();
+  Map _hiddenInputFieldOptions = {};
   List<InputFieldOption>? _options;
 
   @override
@@ -55,8 +55,9 @@ class _SelectInputFieldState extends State<SelectInputField> {
   void didUpdateWidget(covariant SelectInputField oldWidget) {
     super.didUpdateWidget(widget);
     if (oldWidget.selectedOption != widget.selectedOption ||
-        oldWidget.hiddenInputFieldOptions != widget.hiddenInputFieldOptions)
+        oldWidget.hiddenInputFieldOptions != widget.hiddenInputFieldOptions) {
       updateInputValueState(widget.selectedOption);
+    }
   }
 
   void onValueChange(dynamic value) {
@@ -68,6 +69,7 @@ class _SelectInputFieldState extends State<SelectInputField> {
   Widget build(BuildContext context) {
     return widget.renderAsRadio!
         ? Container(
+            margin: const EdgeInsets.symmetric(),
             child: RadioInputFieldContainer(
               options: _options,
               isReadOnly: widget.isReadOnly,
@@ -77,6 +79,7 @@ class _SelectInputFieldState extends State<SelectInputField> {
             ),
           )
         : Container(
+            margin: const EdgeInsets.symmetric(),
             child: SelectionOptionContainer(
               selectedOption: _selectedOption,
               options: _options,
@@ -108,7 +111,7 @@ class SelectionOptionContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void onChange(value) {
-      FocusScope.of(context).requestFocus(new FocusNode());
+      FocusScope.of(context).requestFocus(FocusNode());
       onValueChange!(value);
     }
 
@@ -118,7 +121,7 @@ class SelectionOptionContainer extends StatelessWidget {
           child: DropdownButton<dynamic>(
             value: _selectedOption,
             isExpanded: true,
-            icon: Container(
+            icon: SizedBox(
               height: 20.0,
               child: SvgPicture.asset(
                 'assets/icons/chevron_down.svg',

@@ -20,18 +20,18 @@ class SubTask {
     required this.isCompleted,
     this.status,
   }) {
-    this.id = AppUtil.getUid();
-    this.status = this.status != '' ? this.status : TaskStatusContant.notStarted;
-    this.createdOn = DateTime.now().toString().split('.')[0];
-    this.createdBy = '';
-    this.dueDate = '';
-    this.assignedTo = '';
-    this.completedBy = '';
-    this.completedOn = '';
+    id = AppUtil.getUid();
+    status = status != '' ? status : TaskStatusContant.notStarted;
+    createdOn = DateTime.now().toString().split('.')[0];
+    createdBy = '';
+    dueDate = '';
+    assignedTo = '';
+    completedBy = '';
+    completedOn = '';
   }
 
   Map<String, dynamic> toMap(SubTask todoTask) {
-    var data = Map<String, dynamic>();
+    var data = <String, dynamic>{};
     data['id'] = todoTask.id;
     data['taskId'] = todoTask.taskId;
     data['title'] = todoTask.title;
@@ -48,18 +48,19 @@ class SubTask {
   }
 
   SubTask.fromMap(Map mapData) {
-    this.id = mapData['id'];
-    this.taskId = mapData['taskId'];
-    this.title = mapData['title'];
-    this.createdOn = mapData['createdOn'] ?? '';
-    this.assignedTo = mapData['assignedTo'] ?? '';
-    this.createdBy = mapData['createdBy'] ?? '';
-    this.completedOn = mapData['completedOn'] ?? '';
-    this.completedBy = mapData['completedBy'] ?? '';
-    this.assignedTo = mapData['assignedTo'] ?? '';
-    this.dueDate = mapData['dueDate'] ?? '';
-    this.status = mapData['status'] ?? '';
-    this.isCompleted = '${mapData['isCompleted']}' == '1' || '${mapData['isCompleted']}' == 'true';
+    id = mapData['id'];
+    taskId = mapData['taskId'];
+    title = mapData['title'];
+    createdOn = mapData['createdOn'] ?? '';
+    assignedTo = mapData['assignedTo'] ?? '';
+    createdBy = mapData['createdBy'] ?? '';
+    completedOn = mapData['completedOn'] ?? '';
+    completedBy = mapData['completedBy'] ?? '';
+    assignedTo = mapData['assignedTo'] ?? '';
+    dueDate = mapData['dueDate'] ?? '';
+    status = mapData['status'] ?? '';
+    isCompleted = '${mapData['isCompleted']}' == '1' ||
+        '${mapData['isCompleted']}' == 'true';
   }
 
   @override

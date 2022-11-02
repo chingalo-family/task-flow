@@ -37,8 +37,9 @@ class _SubTaskCardState extends State<SubTaskCard> {
   @override
   void didUpdateWidget(covariant SubTaskCard oldWidget) {
     super.didUpdateWidget(widget);
-    if (oldWidget.subTask.isCompleted != widget.subTask.isCompleted)
+    if (oldWidget.subTask.isCompleted != widget.subTask.isCompleted) {
       onUpdateTodoTaskStatus(widget.subTask.isCompleted!);
+    }
   }
 
   onUpdateTodoTaskStatus(bool isCompleted) {
@@ -50,15 +51,17 @@ class _SubTaskCardState extends State<SubTaskCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.symmetric(),
       child: MaterialCard(
         body: Container(
-          padding: EdgeInsets.symmetric(
+          padding: const EdgeInsets.symmetric(
             vertical: 15.0,
             horizontal: 10.0,
           ),
           child: Row(
             children: [
               Container(
+                margin: const EdgeInsets.symmetric(),
                 child: TrueOnlyInputFieldContainer(
                   inputField: InputField(
                     id: widget.subTask.id!,
@@ -73,7 +76,7 @@ class _SubTaskCardState extends State<SubTaskCard> {
               Expanded(
                 child: Text(
                   widget.subTask.title!,
-                  style: TextStyle().copyWith(
+                  style: const TextStyle().copyWith(
                     decoration: widget.subTask.isCompleted!
                         ? TextDecoration.lineThrough
                         : null,
@@ -83,6 +86,7 @@ class _SubTaskCardState extends State<SubTaskCard> {
                 ),
               ),
               Container(
+                margin: const EdgeInsets.symmetric(),
                 child: InkWell(
                   child: _buildIcon(
                     Icons.edit,
@@ -92,6 +96,7 @@ class _SubTaskCardState extends State<SubTaskCard> {
                 ),
               ),
               Container(
+                margin: const EdgeInsets.symmetric(),
                 child: InkWell(
                   child: _buildIcon(
                     Icons.delete,
@@ -112,7 +117,7 @@ class _SubTaskCardState extends State<SubTaskCard> {
     Color color,
   ) {
     return Container(
-      padding: EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       child: Icon(
         icon,
         color: color.withOpacity(0.6),

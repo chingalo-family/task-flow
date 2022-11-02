@@ -12,7 +12,7 @@ class TaskListContainer extends StatelessWidget {
     Provider.of<TaskState>(context, listen: false).setCurrentTodo(task);
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => TaskMangerView(),
+        builder: (context) => const TaskMangerView(),
       ),
     );
   }
@@ -24,7 +24,7 @@ class TaskListContainer extends StatelessWidget {
       builder: (context, todoState, child) {
         List<Task> tasks = todoState.todoList;
         return Container(
-          margin: EdgeInsets.symmetric(
+          margin: const EdgeInsets.symmetric(
             horizontal: 10.0,
           ),
           child: Column(

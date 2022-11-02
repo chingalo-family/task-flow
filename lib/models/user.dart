@@ -24,7 +24,7 @@ class User {
     this.userGroups,
     this.isLogin = false,
   }) {
-    this.userGroups = this.userGroups ?? [];
+    userGroups = userGroups ?? [];
   }
 
   dynamic toDhis2Json() {
@@ -34,8 +34,10 @@ class User {
     String surname = nameList.length == 1
         ? nameList.first
         : nameList.where((String name) => name != firstName).join('');
-    String userGroupsString =
-        userGroups!.map((String groupId) => '{"id": "$groupId"}').toList().join(',');
+    String userGroupsString = userGroups!
+        .map((String groupId) => '{"id": "$groupId"}')
+        .toList()
+        .join(',');
     String userCredentials =
         '{"username":"$username", "password":"$password","userInfo":{"id":"$id"},"userRoles":[{"id": "${AppContant.defaultUserRole}"}]}';
     return json.decode(
@@ -43,25 +45,25 @@ class User {
   }
 
   Map<String, dynamic> toMap() {
-    var data = Map<String, dynamic>();
-    data['id'] = this.id;
-    data['username'] = this.username;
-    data['fullName'] = this.fullName;
-    data['password'] = this.password;
-    data['email'] = this.email;
-    data['phoneNumber'] = this.phoneNumber;
-    data['isLogin'] = this.isLogin ? '1' : '0';
+    var data = <String, dynamic>{};
+    data['id'] = id;
+    data['username'] = username;
+    data['fullName'] = fullName;
+    data['password'] = password;
+    data['email'] = email;
+    data['phoneNumber'] = phoneNumber;
+    data['isLogin'] = isLogin ? '1' : '0';
     return data;
   }
 
   User.fromMap(Map mapData) {
-    this.id = mapData['id'];
-    this.username = mapData['username'];
-    this.fullName = mapData['fullName'];
-    this.password = mapData['password'];
-    this.email = mapData['email'];
-    this.phoneNumber = mapData['phoneNumber'];
-    this.isLogin = mapData['isLogin'] == '1';
+    id = mapData['id'];
+    username = mapData['username'];
+    fullName = mapData['fullName'];
+    password = mapData['password'];
+    email = mapData['email'];
+    phoneNumber = mapData['phoneNumber'];
+    isLogin = mapData['isLogin'] == '1';
   }
 
   factory User.fromJson(
@@ -95,7 +97,7 @@ class User {
         .toList()
         .toSet()
         .toList()
-        .where((id) => '$id'.isNotEmpty)
+        .where((id) => id.isNotEmpty)
         .toList();
   }
 

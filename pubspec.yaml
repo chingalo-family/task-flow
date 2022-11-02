@@ -1,7 +1,7 @@
 name: task_manager
 description: A new Flutter project.
 publish_to: 'none' 
-version: 2.0.1+11
+version: 2.1.0+12
 
 environment:
   sdk: ">=2.16.1 <3.0.0"
@@ -38,3 +38,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/icons/
+    - assets/img/

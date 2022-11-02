@@ -55,7 +55,9 @@ class UserOfflineProvider extends OfflineDbProvider {
           users.add(user);
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      //
+    }
     return users;
   }
 }

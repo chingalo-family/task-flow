@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class AboutIcon extends StatelessWidget {
   const AboutIcon({
@@ -12,12 +11,12 @@ class AboutIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(
+      margin: const EdgeInsets.only(
         bottom: 10.0,
       ),
       height: size.height * 0.2,
-      child: SvgPicture.asset(
-        'assets/icons/todo-logo.svg',
+      child: Image.asset(
+        'assets/img/app-icon.png',
         fit: BoxFit.contain,
       ),
     );

@@ -44,6 +44,7 @@ class _PhoneNumberInputFieldContainerState
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.symmetric(),
       child: Row(
         children: [
           Expanded(
@@ -52,14 +53,14 @@ class _PhoneNumberInputFieldContainerState
               controller: phoneNumberController,
               keyboardType: TextInputType.phone,
               onChanged: onValueChange,
-              style: TextStyle().copyWith(
+              style: const TextStyle().copyWith(
                 color: widget.inputField.inputColor,
               ),
               textInputAction: TextInputAction.next,
               decoration: InputDecoration(
                 border: InputBorder.none,
                 errorText: null,
-                suffixIconConstraints: BoxConstraints(
+                suffixIconConstraints: const BoxConstraints(
                   maxHeight: 20.0,
                   minHeight: 20.0,
                 ),

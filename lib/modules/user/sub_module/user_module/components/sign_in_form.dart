@@ -35,7 +35,7 @@ class SignInForm extends StatefulWidget {
 class _SignInFormState extends State<SignInForm> {
   Color? textColor;
   List<FormSection>? formSections;
-  Map mandatoryFieldObject = new Map();
+  Map mandatoryFieldObject = {};
   User? currentUser;
   bool isFormReady = false;
   bool isSaving = false;
@@ -45,7 +45,7 @@ class _SignInFormState extends State<SignInForm> {
     super.initState();
     setFormMetadata();
     setCurrentUser();
-    Timer(Duration(seconds: 1), () {
+    Timer(const Duration(seconds: 1), () {
       isFormReady = true;
       widget.onFormReady();
       setState(() {});
@@ -61,7 +61,8 @@ class _SignInFormState extends State<SignInForm> {
 
   void setCurrentUser() async {
     var user = await UserService().getCurrentUser();
-    currentUser = user ?? new User(username: '', fullName: '', password: '', id: '');
+    currentUser =
+        user ?? User(username: '', fullName: '', password: '', id: '');
     Provider.of<SignInSignUpFormState>(context, listen: false)
         .setFormFieldState('username', currentUser!.username);
   }
@@ -76,7 +77,8 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   void onInputValueChange(String id, dynamic value) {
-    Provider.of<SignInSignUpFormState>(context, listen: false).setFormFieldState(id, value);
+    Provider.of<SignInSignUpFormState>(context, listen: false)
+        .setFormFieldState(id, value);
   }
 
   void onLogin(Map dataObject) async {
@@ -101,7 +103,8 @@ class _SignInFormState extends State<SignInForm> {
           );
           userGroups.add(group!);
         }
-        user.userGroups = userGroups.map((UserGroup userGroup) => userGroup.id).toList();
+        user.userGroups =
+            userGroups.map((UserGroup userGroup) => userGroup.id).toList();
         await UserService().setCurrentUser(user);
         await UserGroupService().setUserGroups(userGroups);
         isSaving = false;
@@ -129,7 +132,7 @@ class _SignInFormState extends State<SignInForm> {
               margin: const EdgeInsets.only(
                 top: 10.0,
               ),
-              child: CircularProcessLoader(
+              child: const CircularProcessLoader(
                 color: Colors.blueGrey,
               ),
             )
@@ -138,7 +141,8 @@ class _SignInFormState extends State<SignInForm> {
                 children: [
                   EntryFormContainer(
                     elevation: 0.0,
-                    onInputValueChange: (String id, dynamic value) => onInputValueChange(id, value),
+                    onInputValueChange: (String id, dynamic value) =>
+                        onInputValueChange(id, value),
                     formSections: formSections!,
                     dataObject: signInSignUpFormState.formState,
                     mandatoryFieldObject: mandatoryFieldObject,
@@ -154,7 +158,8 @@ class _SignInFormState extends State<SignInForm> {
                           child: TextButton(
                             onPressed: !signInSignUpFormState.isLoginFormValid
                                 ? null
-                                : () => onLogin(signInSignUpFormState.formState),
+                                : () =>
+                                    onLogin(signInSignUpFormState.formState),
                             child: isSaving
                                 ? CircularProcessLoader(
                                     color: textColor,
@@ -169,7 +174,7 @@ class _SignInFormState extends State<SignInForm> {
                                       width: double.infinity,
                                       child: Text(
                                         'Log In',
-                                        style: TextStyle().copyWith(
+                                        style: const TextStyle().copyWith(
                                           color: textColor,
                                         ),
                                       ),

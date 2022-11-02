@@ -20,7 +20,7 @@ class UserService {
         'filter': 'userCredentials.username:eq:$dhisUsername'
       };
       queryParameters['paging'] = 'false';
-      HttpService http = new HttpService(
+      HttpService http = HttpService(
         username: Dhis2Connection.username,
         password: Dhis2Connection.password,
       );
@@ -33,7 +33,7 @@ class UserService {
         throw 'Failed to check existance of account';
       }
     } catch (error) {
-      throw error;
+      rethrow;
     }
     return _isUserAccountExist;
   }
@@ -44,13 +44,15 @@ class UserService {
   }) async {
     try {
       var url = shouldUpdate ? 'api/users/${user.id}' : 'api/users';
-      HttpService http = new HttpService(
+      HttpService http = HttpService(
         username: Dhis2Connection.username,
         password: Dhis2Connection.password,
       );
       var response = shouldUpdate
-          ? await http.httpPut(url, json.encode(user.toDhis2Json()), queryParameters: {})
-          : await http.httpPost(url, json.encode(user.toDhis2Json()), queryParameters: {});
+          ? await http.httpPut(url, json.encode(user.toDhis2Json()),
+              queryParameters: {})
+          : await http.httpPost(url, json.encode(user.toDhis2Json()),
+              queryParameters: {});
       var body = json.decode(response.body);
       String status = body['status'] ?? '';
       //@TODO proper handling of error
@@ -58,7 +60,7 @@ class UserService {
         throw 'Fail to register account into system';
       }
     } catch (error) {
-      throw error;
+      rethrow;
     }
   }
 
@@ -70,9 +72,10 @@ class UserService {
     try {
       var url = 'api/me.json';
       var queryParameters = {
-        'fields': 'id,name,email,gender,phoneNumber,organisationUnits[id],userGroups[name,id]'
+        'fields':
+            'id,name,email,gender,phoneNumber,organisationUnits[id],userGroups[name,id]'
       };
-      HttpService http = new HttpService(
+      HttpService http = HttpService(
         username: username,
         password: password,
       );
@@ -86,7 +89,7 @@ class UserService {
       }
       return user;
     } catch (error) {
-      throw error;
+      rethrow;
     }
   }
 
@@ -101,8 +104,9 @@ class UserService {
   Future<User?> getCurrentUser() async {
     String? userId = await PreferenceService.getPreferenceValue(preferenceKey);
     List<User> users = await UserOfflineProvider().getUsers();
-    List<User> filteredUsers = users.where((User user) => user.id == userId).toList();
-    return filteredUsers.length > 0 ? filteredUsers[0] : null;
+    List<User> filteredUsers =
+        users.where((User user) => user.id == userId).toList();
+    return filteredUsers.isNotEmpty ? filteredUsers[0] : null;
   }
 
   setCurrentUser(

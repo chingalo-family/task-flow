@@ -40,7 +40,7 @@ class _TextInputFieldContainerState extends State<TextInputFieldContainer> {
   updateTextValue({String? value = ''}) {
     _value = value;
     setState(() {});
-    this.textController = TextEditingController(text: value);
+    textController = TextEditingController(text: value);
   }
 
   onValueChange(String value) {
@@ -79,6 +79,7 @@ class _TextInputFieldContainerState extends State<TextInputFieldContainer> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.symmetric(),
       child: Row(
         children: [
           Expanded(
@@ -97,13 +98,13 @@ class _TextInputFieldContainerState extends State<TextInputFieldContainer> {
               textCapitalization: widget.inputField.shouldCapitalize!
                   ? TextCapitalization.sentences
                   : TextCapitalization.none,
-              style: TextStyle().copyWith(
+              style: const TextStyle().copyWith(
                 color: widget.inputField.inputColor,
               ),
               decoration: InputDecoration(
                 border: InputBorder.none,
                 errorText: null,
-                suffixIconConstraints: BoxConstraints(
+                suffixIconConstraints: const BoxConstraints(
                   maxHeight: 20.0,
                   minHeight: 20.0,
                 ),
@@ -112,7 +113,7 @@ class _TextInputFieldContainerState extends State<TextInputFieldContainer> {
                   children: [
                     Visibility(
                       child: Text(widget.inputField.suffixLabel ?? '',
-                          style: TextStyle().copyWith(
+                          style: const TextStyle().copyWith(
                             color: widget.inputField.inputColor,
                           )),
                       visible: widget.inputField.suffixLabel != '' &&

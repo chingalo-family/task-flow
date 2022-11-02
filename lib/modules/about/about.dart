@@ -15,9 +15,10 @@ class About extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
+      margin: const EdgeInsets.symmetric(),
       child: SafeArea(
         child: Scaffold(
-          appBar: PreferredSize(
+          appBar: const PreferredSize(
             preferredSize: Size.fromHeight(AppContant.appBarHeight),
             child: AppBarContainer(
               title: 'About',
@@ -35,7 +36,7 @@ class About extends StatelessWidget {
               return Consumer<AppInfoState>(
                 builder: (context, appInfoState, child) {
                   return Container(
-                    padding: EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                       vertical: 20,
                       horizontal: 10,
                     ),
@@ -43,7 +44,7 @@ class About extends StatelessWidget {
                       child: Center(
                         child: Card(
                           child: Container(
-                            margin: EdgeInsets.symmetric(
+                            margin: const EdgeInsets.symmetric(
                               vertical: 20,
                             ),
                             child: Column(

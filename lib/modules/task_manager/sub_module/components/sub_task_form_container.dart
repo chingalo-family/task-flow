@@ -56,16 +56,17 @@ class SubTaskFormContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map mandatoryFieldObject = Map();
+    Map mandatoryFieldObject = {};
     mandatoryFieldObject['title'] = true;
     return Consumer<SubTaskFormState>(
       builder: (context, subTaskFormState, child) {
-        return Container(
+        return SizedBox(
           width: double.infinity,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
+                margin: const EdgeInsets.symmetric(),
                 child: EntryFormContainer(
                   elevation: 0.0,
                   isEditableMode: subTaskFormState.isEditableMode,
@@ -81,17 +82,18 @@ class SubTaskFormContainer extends StatelessWidget {
               Visibility(
                 visible: subTaskFormState.isEditableMode,
                 child: Container(
+                  margin: const EdgeInsets.symmetric(),
                   child: Row(
                     children: [
                       Expanded(
                         child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 5.0),
+                          margin: const EdgeInsets.symmetric(horizontal: 5.0),
                           child: Center(
                             child: TextButton(
                               onPressed: () => Navigator.of(context).pop(),
                               child: Text(
                                 'Cancel',
-                                style: TextStyle().copyWith(
+                                style: const TextStyle().copyWith(
                                   color: Colors.redAccent,
                                 ),
                               ),
@@ -101,7 +103,7 @@ class SubTaskFormContainer extends StatelessWidget {
                       ),
                       Expanded(
                         child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 5.0),
+                          margin: const EdgeInsets.symmetric(horizontal: 5.0),
                           child: Center(
                             child: TextButton(
                               onPressed: () => onSaveTodoTaskForm(
@@ -110,7 +112,7 @@ class SubTaskFormContainer extends StatelessWidget {
                               ),
                               child: Text(
                                 'Save',
-                                style: TextStyle().copyWith(),
+                                style: const TextStyle().copyWith(),
                               ),
                             ),
                           ),

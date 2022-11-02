@@ -11,25 +11,25 @@ class UserGroupMember {
     this.username = '',
     this.fullName = '',
   }) {
-    this.id = '${groupId}_$userId';
+    id = '${groupId}_$userId';
   }
 
   Map<String, dynamic> toMap() {
-    var data = Map<String, dynamic>();
-    data['id'] = this.id;
-    data['groupId'] = this.groupId;
-    data['userId'] = this.userId;
-    data['username'] = this.username;
-    data['fullName'] = this.fullName;
+    var data = <String, dynamic>{};
+    data['id'] = id;
+    data['groupId'] = groupId;
+    data['userId'] = userId;
+    data['username'] = username;
+    data['fullName'] = fullName;
     return data;
   }
 
   UserGroupMember.fromMap(Map mapData) {
-    this.id = mapData['id'];
-    this.groupId = mapData['groupId'];
-    this.userId = mapData['userId'];
-    this.username = mapData['username'];
-    this.fullName = mapData['fullName'];
+    id = mapData['id'];
+    groupId = mapData['groupId'];
+    userId = mapData['userId'];
+    username = mapData['username'];
+    fullName = mapData['fullName'];
   }
 
   @override

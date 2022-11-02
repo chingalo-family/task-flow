@@ -27,15 +27,16 @@ class UserActionSheet extends StatelessWidget {
         String usernameIcon = userState.usernameIcon;
         User user = userState.currrentUser;
         double heightRatio = user.isLogin ? initialHeightRatio : 1;
-        return Consumer<UserGroupState>(builder: (context, userGroupState, child) {
+        return Consumer<UserGroupState>(
+            builder: (context, userGroupState, child) {
           List<UserGroup> userGroups = userGroupState.currentUserGroups;
           return Container(
-            margin: EdgeInsets.only(
+            margin: const EdgeInsets.only(
               top: 25.0,
             ),
             height: size.height * heightRatio,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(15.0),
                 topRight: Radius.circular(15.0),
               ),
@@ -62,7 +63,7 @@ class UserActionSheet extends StatelessWidget {
                       vertical: 10.0,
                       horizontal: 10.0,
                     ),
-                    child: SignInSignUpFormContainer(),
+                    child: const SignInSignUpFormContainer(),
                   ),
                 ),
               ],

@@ -18,7 +18,8 @@ class SignInSignUpFormContainer extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _SignInSignUpFormContainerState createState() => _SignInSignUpFormContainerState();
+  _SignInSignUpFormContainerState createState() =>
+      _SignInSignUpFormContainerState();
 }
 
 class _SignInSignUpFormContainerState extends State<SignInSignUpFormContainer> {
@@ -34,9 +35,11 @@ class _SignInSignUpFormContainerState extends State<SignInSignUpFormContainer> {
 
   onSuccessLoginOrSignUp(BuildContext context, User user) async {
     if (Navigator.canPop(context)) {
-      List<UserGroup> userGroups = await UserGroupService().getUserGroupsByUserId(userId: user.id);
+      List<UserGroup> userGroups =
+          await UserGroupService().getUserGroupsByUserId(userId: user.id);
       Provider.of<UserState>(context, listen: false).setCurrentUser(user);
-      Provider.of<UserGroupState>(context, listen: false).setCurrentUserGroups(userGroups);
+      Provider.of<UserGroupState>(context, listen: false)
+          .setCurrentUserGroups(userGroups);
       Navigator.pop(context);
     }
   }
@@ -53,7 +56,7 @@ class _SignInSignUpFormContainerState extends State<SignInSignUpFormContainer> {
           Color textColor = currentTheme == ThemeServices.darkTheme
               ? AppContant.darkTextColor
               : AppContant.ligthTextColor;
-          return Container(
+          return SizedBox(
             width: double.infinity,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,7 +70,8 @@ class _SignInSignUpFormContainerState extends State<SignInSignUpFormContainer> {
                               _isFormContentSet = true;
                             })
                           },
-                          onSuccessLogin: (User user) => onSuccessLoginOrSignUp(context, user),
+                          onSuccessLogin: (User user) =>
+                              onSuccessLoginOrSignUp(context, user),
                         )
                       : SignUpForm(
                           onFormReady: () => {
@@ -75,7 +79,8 @@ class _SignInSignUpFormContainerState extends State<SignInSignUpFormContainer> {
                               _isFormContentSet = true;
                             })
                           },
-                          onSuccessSignUp: (User user) => onSuccessLoginOrSignUp(context, user),
+                          onSuccessSignUp: (User user) =>
+                              onSuccessLoginOrSignUp(context, user),
                           currentTheme: currentTheme,
                         ),
                 ),
@@ -84,10 +89,10 @@ class _SignInSignUpFormContainerState extends State<SignInSignUpFormContainer> {
                   child: GestureDetector(
                     onTap: onChangeFormState,
                     child: Container(
-                      margin: EdgeInsets.symmetric(
+                      margin: const EdgeInsets.symmetric(
                         vertical: 10.0,
                       ),
-                      padding: EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                         vertical: 10.0,
                       ),
                       alignment: Alignment.center,
@@ -99,7 +104,7 @@ class _SignInSignUpFormContainerState extends State<SignInSignUpFormContainer> {
                               text: _showSignInForm
                                   ? "Don't have account?"
                                   : 'Already have an account?',
-                              style: TextStyle().copyWith(
+                              style: const TextStyle().copyWith(
                                 fontStyle: FontStyle.italic,
                                 fontWeight: FontWeight.normal,
                                 fontSize: 12.0,
@@ -108,7 +113,7 @@ class _SignInSignUpFormContainerState extends State<SignInSignUpFormContainer> {
                             ),
                             TextSpan(
                               text: _showSignInForm ? ' Sign up' : ' Log in',
-                              style: TextStyle().copyWith(
+                              style: const TextStyle().copyWith(
                                 color: textColor,
                                 fontWeight: FontWeight.bold,
                               ),

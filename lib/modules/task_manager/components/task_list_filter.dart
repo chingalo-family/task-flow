@@ -16,6 +16,7 @@ class TaskListFilter extends StatelessWidget {
             ? AppContant.darkTextColor
             : AppContant.ligthTextColor;
         return Container(
+          margin: const EdgeInsets.symmetric(),
           child: AppBar(
             automaticallyImplyLeading: false,
             backgroundColor: Colors.transparent,
@@ -24,7 +25,7 @@ class TaskListFilter extends StatelessWidget {
               alignment: Alignment.topLeft,
               child: Text(
                 'Todo list filters',
-                style: TextStyle().copyWith(
+                style: const TextStyle().copyWith(
                   fontWeight: FontWeight.normal,
                   fontSize: 20.0,
                   color: textColor,

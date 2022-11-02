@@ -13,12 +13,13 @@ class AboutDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.symmetric(),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Text(
             value,
-            style: TextStyle().copyWith(
+            style: const TextStyle().copyWith(
               fontSize: 12.0,
               color: textColor,
             ),

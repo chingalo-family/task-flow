@@ -21,6 +21,7 @@ class TaskViewContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.symmetric(),
       child: Consumer<AppThemeState>(
         builder: (context, appThemeState, child) {
           String currentTheme = appThemeState.currentTheme;
@@ -30,6 +31,7 @@ class TaskViewContainer extends StatelessWidget {
           return Consumer<UserState>(
             builder: (context, userState, child) {
               return Container(
+                margin: const EdgeInsets.symmetric(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
