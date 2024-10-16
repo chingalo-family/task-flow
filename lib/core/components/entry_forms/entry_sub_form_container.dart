@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:task_manager/core/components/input_fields/input_field_container.dart';
+import 'package:task_manager/core/components/entry_input_fields/input_field_container.dart';
+import 'package:task_manager/core/components/entry_input_fields/models/input_field.dart';
 import 'package:task_manager/models/form_section.dart';
-import 'package:task_manager/models/input_field.dart';
+import 'package:flutter/material.dart';
 
 class EntrySubFormContainer extends StatelessWidget {
   const EntrySubFormContainer({
-    Key? key,
+    super.key,
     required this.subSections,
     required this.dataObject,
     required this.mandatoryFieldObject,
@@ -15,7 +15,7 @@ class EntrySubFormContainer extends StatelessWidget {
     this.hiddenFields,
     this.hiddenSections,
     this.unFilledMandatoryFields,
-  }) : super(key: key);
+  });
 
   final List<FormSection>? subSections;
   final Function? onInputValueChange;
@@ -26,21 +26,6 @@ class EntrySubFormContainer extends StatelessWidget {
   final Map hiddenInputFieldOptions;
   final bool isEditableMode;
   final List? unFilledMandatoryFields;
-
-  void setFieldErrors() {
-    if (unFilledMandatoryFields != null &&
-        unFilledMandatoryFields!.isNotEmpty) {
-      for (var section in subSections!) {
-        for (var inputField in section.inputFields!) {
-          if (unFilledMandatoryFields!.contains(inputField.id)) {
-            inputField.hasError = true;
-          } else {
-            inputField.hasError = false;
-          }
-        }
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +132,7 @@ class EntrySubFormContainer extends StatelessWidget {
                       mandatoryFieldObject: mandatoryFieldObject,
                       onInputValueChange: onInputValueChange,
                       unFilledMandatoryFields: unFilledMandatoryFields,
-                    ),
+                    )
                   ],
                 ),
               ),
@@ -155,5 +140,20 @@ class EntrySubFormContainer extends StatelessWidget {
           )
           .toList(),
     );
+  }
+
+  void setFieldErrors() {
+    if (unFilledMandatoryFields != null &&
+        unFilledMandatoryFields!.isNotEmpty) {
+      for (var section in subSections!) {
+        for (var inputField in section.inputFields!) {
+          if (unFilledMandatoryFields!.contains(inputField.id)) {
+            inputField.hasError = true;
+          } else {
+            inputField.hasError = false;
+          }
+        }
+      }
+    }
   }
 }

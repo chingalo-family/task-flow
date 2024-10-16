@@ -4,13 +4,11 @@ import 'package:task_manager/core/components/material_card.dart';
 
 class TaskSummaryContainer extends StatelessWidget {
   const TaskSummaryContainer({
-    Key? key,
-    required this.textColor,
+    super.key,
     required this.currentTask,
     this.onTapCurrentTask,
-  }) : super(key: key);
+  });
 
-  final Color textColor;
   final Task currentTask;
   final VoidCallback? onTapCurrentTask;
 
@@ -41,7 +39,6 @@ class TaskSummaryContainer extends StatelessWidget {
                             currentTask.title!,
                             style: const TextStyle().copyWith(
                               fontSize: 20.0,
-                              color: textColor,
                             ),
                           ),
                         ),
@@ -54,7 +51,6 @@ class TaskSummaryContainer extends StatelessWidget {
                             child: Text(
                               currentTask.description!,
                               style: const TextStyle().copyWith(
-                                color: textColor,
                                 fontSize: 14.0,
                               ),
                             ),

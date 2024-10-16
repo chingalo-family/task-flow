@@ -5,7 +5,6 @@ import 'package:task_manager/app_state/user_state/user_state.dart';
 import 'package:task_manager/core/components/line_separator.dart';
 import 'package:task_manager/core/components/material_card.dart';
 import 'package:task_manager/core/constants/app_contant.dart';
-import 'package:task_manager/core/services/theme_service.dart';
 import 'package:task_manager/core/services/user_service.dart';
 import 'package:task_manager/core/utils/app_util.dart';
 import 'package:task_manager/models/user.dart';
@@ -14,16 +13,14 @@ import 'package:task_manager/modules/user/sub_module/user_group_module/user_grou
 
 class UserProfileContainer extends StatelessWidget {
   const UserProfileContainer({
-    Key? key,
+    super.key,
     required this.size,
-    required this.currentTheme,
     required this.usernameIcon,
     required this.user,
     required this.userGroups,
-  }) : super(key: key);
+  });
 
   final Size size;
-  final String currentTheme;
   final String usernameIcon;
   final User user;
   final List<UserGroup> userGroups;
@@ -44,11 +41,7 @@ class UserProfileContainer extends StatelessWidget {
           ),
           child: Text(
             title,
-            style: const TextStyle().copyWith(
-              color: currentTheme == ThemeServices.darkTheme
-                  ? AppContant.darkTextColor
-                  : AppContant.ligthTextColor,
-            ),
+            style: const TextStyle().copyWith(),
           ),
         ),
       ),
@@ -96,15 +89,10 @@ class UserProfileContainer extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: size.height * 0.05,
-            backgroundColor: currentTheme == ThemeServices.darkTheme
-                ? AppContant.darkThemeColor
-                : AppContant.darkTextColor,
+            backgroundColor: AppContant.defaultAppColor.withOpacity(0.3),
             child: Text(
               usernameIcon,
               style: const TextStyle().copyWith(
-                color: currentTheme == ThemeServices.darkTheme
-                    ? AppContant.darkTextColor
-                    : AppContant.ligthTextColor,
                 fontSize: 20.0,
               ),
             ),
@@ -117,9 +105,6 @@ class UserProfileContainer extends StatelessWidget {
             child: Text(
               user.fullName,
               style: const TextStyle().copyWith(
-                color: currentTheme == ThemeServices.darkTheme
-                    ? AppContant.darkTextColor
-                    : AppContant.ligthTextColor,
                 fontSize: 20.0,
               ),
             ),
@@ -131,11 +116,7 @@ class UserProfileContainer extends StatelessWidget {
             ),
             child: Text(
               user.email!,
-              style: const TextStyle().copyWith(
-                color: currentTheme == ThemeServices.darkTheme
-                    ? AppContant.darkTextColor
-                    : AppContant.ligthTextColor,
-              ),
+              style: const TextStyle().copyWith(),
             ),
           ),
           Container(
@@ -165,22 +146,14 @@ class UserProfileContainer extends StatelessWidget {
               horizontal: 20.0,
             ),
             child: LineSeparator(
-              color: (currentTheme == ThemeServices.darkTheme
-                      ? AppContant.darkTextColor
-                      : AppContant.ligthTextColor)
-                  .withOpacity(0.5),
+              color: AppContant.defaultAppColor.withOpacity(0.5),
             ),
           ),
           Container(
             margin:
                 const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
             child: ListTile(
-              textColor: currentTheme == ThemeServices.darkTheme
-                  ? AppContant.darkTextColor
-                  : AppContant.ligthTextColor,
-              iconColor: currentTheme == ThemeServices.darkTheme
-                  ? AppContant.darkTextColor
-                  : AppContant.ligthTextColor,
+              iconColor: AppContant.defaultAppColor,
               title: Text('Assinged Groups ${userGroups.length}'),
               trailing: const Icon(
                 Icons.arrow_forward_ios,

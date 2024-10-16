@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-import 'package:task_manager/app_state/app_theme_state/app_theme_state.dart';
 import 'package:task_manager/app_state/task_state/task_state.dart';
 import 'package:task_manager/core/constants/app_contant.dart';
-import 'package:task_manager/core/services/theme_service.dart';
-import 'package:task_manager/core/utils/app_util.dart';
+import 'package:task_manager/core/utils/app_modal_util.dart';
 import 'package:task_manager/models/form_section.dart';
 import 'package:task_manager/models/sub_task.dart';
 import 'package:task_manager/models/task.dart';
@@ -18,38 +16,36 @@ import 'package:task_manager/modules/task_manager/sub_module/components/sub_task
 
 class SubTaskContainer extends StatefulWidget {
   const SubTaskContainer({
-    Key? key,
-    required this.textColor,
+    super.key,
     required this.currentTask,
     required this.currentUser,
-  }) : super(key: key);
+  });
 
-  final Color textColor;
   final Task currentTask;
   final User currentUser;
 
   @override
-  _SubTaskContainerState createState() => _SubTaskContainerState();
+  State<SubTaskContainer> createState() => _SubTaskContainerState();
 }
 
 class _SubTaskContainerState extends State<SubTaskContainer> {
+  final double initialHeightRatio = 0.45;
   onEditTodoTask(
     BuildContext context,
     SubTask subTask,
   ) async {
     SubTaskFormStateHelper.updateFormState(
         context, subTask, !subTask.isCompleted!);
-    String currentTheme =
-        Provider.of<AppThemeState>(context, listen: false).currentTheme;
-    Color textColor = currentTheme == ThemeServices.darkTheme
-        ? AppContant.darkTextColor
-        : AppContant.ligthTextColor;
     final List<FormSection> subTaskFormSections =
-        SubTaskForm.getFormSections(textColor);
+        SubTaskForm.getFormSections(AppContant.defaultAppColor);
     Widget modal = SubTaskFormContainer(
       subTaskFormSections: subTaskFormSections,
     );
-    await AppUtil.showPopUpModal(context, modal, false);
+    await AppModalUtil.showActionSheetModal(
+      context: context,
+      actionSheetContainer: modal,
+      initialHeightRatio: initialHeightRatio,
+    );
   }
 
   onDeleteTodoTask(
@@ -59,7 +55,11 @@ class _SubTaskContainerState extends State<SubTaskContainer> {
     Widget modal = DeleteSubTaskConfirmation(
       subTask: subTask,
     );
-    await AppUtil.showPopUpModal(context, modal, false);
+    await AppModalUtil.showActionSheetModal(
+      context: context,
+      actionSheetContainer: modal,
+      initialHeightRatio: initialHeightRatio,
+    );
   }
 
   onUpdateTodoTaskStatus(
@@ -90,7 +90,6 @@ class _SubTaskContainerState extends State<SubTaskContainer> {
               "${widget.currentTask.title}'s list of tasks",
               style: const TextStyle().copyWith(
                 fontSize: 18.0,
-                color: widget.textColor,
               ),
             ),
           ),
@@ -105,7 +104,6 @@ class _SubTaskContainerState extends State<SubTaskContainer> {
                         vertical: 5.0,
                       ),
                       child: SubTaskCard(
-                        textColor: widget.textColor,
                         subTask: subTask,
                         onEdit: () => onEditTodoTask(context, subTask),
                         onDelete: () => onDeleteTodoTask(context, subTask),

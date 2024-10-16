@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/core/components/entry_forms/entry_sub_form_container.dart';
-import 'package:task_manager/core/components/input_fields/input_field_container.dart';
+import 'package:task_manager/core/components/entry_input_fields/input_field_container.dart';
+import 'package:task_manager/core/components/entry_input_fields/models/input_field.dart';
 import 'package:task_manager/core/components/line_separator.dart';
 import 'package:task_manager/core/components/material_card.dart';
 import 'package:task_manager/models/form_section.dart';
-import 'package:task_manager/models/input_field.dart';
 
 class EntryFormContainer extends StatelessWidget {
   const EntryFormContainer({
-    Key? key,
+    super.key,
     required this.formSections,
     required this.dataObject,
     required this.mandatoryFieldObject,
@@ -19,7 +19,7 @@ class EntryFormContainer extends StatelessWidget {
     this.elevation = 1.0,
     this.hiddenInputFieldOptions,
     this.unFilledMandatoryFields,
-  }) : super(key: key);
+  });
 
   final List<FormSection>? formSections;
   final Function? onInputValueChange;
@@ -33,8 +33,7 @@ class EntryFormContainer extends StatelessWidget {
   final List? unFilledMandatoryFields;
 
   void setFieldErrors() {
-    if (unFilledMandatoryFields != null &&
-        unFilledMandatoryFields!.isNotEmpty) {
+    if (unFilledMandatoryFields != null) {
       for (var section in formSections!) {
         for (var inputField in section.inputFields!) {
           if (unFilledMandatoryFields!.contains(inputField.id)) {
@@ -50,133 +49,131 @@ class EntryFormContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     setFieldErrors();
-    return Container(
-        margin: const EdgeInsets.symmetric(),
-        child: Column(
-          children: formSections!
-              .map(
-                (FormSection formSection) => Visibility(
-                  visible: hiddenSections == null ||
-                      '${hiddenSections![formSection.id]}'.trim() != 'true',
-                  child: Container(
-                    margin: const EdgeInsets.only(bottom: 10.0),
-                    child: MaterialCard(
-                      elevation: elevation,
-                      body: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 10.0),
-                        decoration: BoxDecoration(
-                            border: Border(
-                              left: BorderSide(
-                                  color: formSection.borderColor!, width: 8.0),
-                            ),
-                            color: formSection.backgroundColor),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Visibility(
-                              visible: formSection.name != '',
-                              child: Container(
-                                padding: const EdgeInsets.all(10.0),
-                                margin: const EdgeInsets.only(left: 5.0),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                        child: Text(
-                                      formSection.name,
-                                      style: const TextStyle().copyWith(
-                                          color: formSection.color,
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.bold),
-                                    ))
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Visibility(
-                              visible: formSection.description != '',
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 15.0, horizontal: 10.0),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        formSection.description!,
-                                        style: const TextStyle().copyWith(
-                                            color: formSection.color,
-                                            fontSize: 14.0,
-                                            fontStyle: FontStyle.italic,
-                                            fontWeight: FontWeight.normal),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Visibility(
-                              visible: formSection.name != '',
-                              child: LineSeparator(
-                                color: formSection.color.withOpacity(0.1),
-                              ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 5.0, horizontal: 10.0),
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0, horizontal: 10.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: formSection.inputFields!
-                                    .map(
-                                      (InputField inputField) => Visibility(
-                                        visible: hiddenFields == null ||
-                                            '${hiddenFields![inputField.id]}'
-                                                    .trim() !=
-                                                'true',
-                                        child: Container(
-                                          margin: const EdgeInsets.only(
-                                            top: 10.0,
-                                          ),
-                                          child: InputFieldContainer(
-                                            hiddenFields: hiddenFields,
-                                            inputField: inputField,
-                                            hiddenInputFieldOptions:
-                                                hiddenInputFieldOptions ?? {},
-                                            isEditableMode: isEditableMode,
-                                            mandatoryFieldObject: isEditableMode
-                                                ? mandatoryFieldObject
-                                                : {},
-                                            dataObject: dataObject,
-                                            onInputValueChange: (String id,
-                                                    dynamic value) =>
-                                                onInputValueChange!(id, value),
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                    .toList(),
-                              ),
-                            ),
-                            EntrySubFormContainer(
-                              hiddenFields: hiddenFields ?? {},
-                              hiddenSections: hiddenSections ?? {},
-                              hiddenInputFieldOptions:
-                                  hiddenInputFieldOptions ?? {},
-                              subSections: formSection.subSections,
-                              dataObject: dataObject,
-                              isEditableMode: isEditableMode,
-                              mandatoryFieldObject: mandatoryFieldObject,
-                              onInputValueChange: onInputValueChange,
-                              unFilledMandatoryFields: unFilledMandatoryFields,
-                            )
-                          ],
+    return Column(
+      children: formSections!
+          .map(
+            (FormSection formSection) => Visibility(
+              visible: hiddenSections == null ||
+                  '${hiddenSections![formSection.id]}'.trim() != 'true',
+              child: Container(
+                margin: const EdgeInsets.only(bottom: 10.0),
+                child: MaterialCard(
+                  elevation: elevation,
+                  body: Container(
+                    margin: const EdgeInsets.symmetric(vertical: 10.0),
+                    decoration: BoxDecoration(
+                        border: Border(
+                          left: BorderSide(
+                              color: formSection.borderColor!, width: 8.0),
                         ),
-                      ),
+                        color: formSection.backgroundColor),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Visibility(
+                          visible: formSection.name != '',
+                          child: Container(
+                            padding: const EdgeInsets.all(10.0),
+                            margin: const EdgeInsets.only(left: 5.0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                    child: Text(
+                                  formSection.name,
+                                  style: const TextStyle().copyWith(
+                                      color: formSection.color,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold),
+                                ))
+                              ],
+                            ),
+                          ),
+                        ),
+                        Visibility(
+                          visible: formSection.description != '',
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 15.0, horizontal: 10.0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    formSection.description!,
+                                    style: const TextStyle().copyWith(
+                                        color: formSection.color,
+                                        fontSize: 14.0,
+                                        fontStyle: FontStyle.italic,
+                                        fontWeight: FontWeight.normal),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        Visibility(
+                          visible: formSection.name != '',
+                          child: LineSeparator(
+                            color: formSection.color.withOpacity(0.1),
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 5.0, horizontal: 10.0),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 10.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: formSection.inputFields!
+                                .map(
+                                  (InputField inputField) => Visibility(
+                                    visible: hiddenFields == null ||
+                                        '${hiddenFields![inputField.id]}'
+                                                .trim() !=
+                                            'true',
+                                    child: Container(
+                                      margin: const EdgeInsets.only(
+                                        top: 10.0,
+                                      ),
+                                      child: InputFieldContainer(
+                                        hiddenFields: hiddenFields,
+                                        inputField: inputField,
+                                        hiddenInputFieldOptions:
+                                            hiddenInputFieldOptions ?? {},
+                                        isEditableMode: isEditableMode,
+                                        mandatoryFieldObject: isEditableMode
+                                            ? mandatoryFieldObject
+                                            : {},
+                                        dataObject: dataObject,
+                                        onInputValueChange:
+                                            (String id, dynamic value) =>
+                                                onInputValueChange!(id, value),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                        EntrySubFormContainer(
+                          hiddenFields: hiddenFields ?? {},
+                          hiddenSections: hiddenSections ?? {},
+                          hiddenInputFieldOptions:
+                              hiddenInputFieldOptions ?? {},
+                          subSections: formSection.subSections,
+                          dataObject: dataObject,
+                          isEditableMode: isEditableMode,
+                          mandatoryFieldObject: mandatoryFieldObject,
+                          onInputValueChange: onInputValueChange,
+                          unFilledMandatoryFields: unFilledMandatoryFields,
+                        )
+                      ],
                     ),
                   ),
                 ),
-              )
-              .toList(),
-        ));
+              ),
+            ),
+          )
+          .toList(),
+    );
   }
 }

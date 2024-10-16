@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/core/components/material_card.dart';
 import 'package:task_manager/core/constants/app_contant.dart';
-import 'package:task_manager/core/services/theme_service.dart';
 import 'package:task_manager/models/user_group.dart';
 
 class UserGroupListContainer extends StatelessWidget {
   const UserGroupListContainer({
-    Key? key,
-    required this.currentTheme,
+    super.key,
     required this.userGroup,
     this.onAddUser,
-  }) : super(key: key);
+  });
 
-  final String currentTheme;
   final UserGroup userGroup;
   final VoidCallback? onAddUser;
 
@@ -25,12 +22,7 @@ class UserGroupListContainer extends StatelessWidget {
       child: Card(
         child: ListTile(
           isThreeLine: true,
-          iconColor: currentTheme == ThemeServices.darkTheme
-              ? AppContant.darkTextColor
-              : AppContant.ligthTextColor,
-          textColor: currentTheme == ThemeServices.darkTheme
-              ? AppContant.darkTextColor
-              : AppContant.ligthTextColor,
+          iconColor: AppContant.defaultAppColor.withOpacity(0.5),
           title: Text(
             userGroup.name,
           ),

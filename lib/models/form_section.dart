@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/core/components/entry_input_fields/models/input_field.dart';
 import 'package:task_manager/core/utils/app_util.dart';
-import 'package:task_manager/models/input_field.dart';
 
 class FormSection {
   String? id;

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CircularProcessLoader extends StatelessWidget {
-  const CircularProcessLoader({Key? key, this.color, this.size})
-      : super(key: key);
+  const CircularProcessLoader({super.key, this.color, this.size});
   final Color? color;
   final double? size;
 

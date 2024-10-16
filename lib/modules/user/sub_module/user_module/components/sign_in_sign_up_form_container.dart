@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:task_manager/app_state/app_theme_state/app_theme_state.dart';
 import 'package:task_manager/app_state/user_state/sign_in_sign_up_form_state.dart';
 import 'package:task_manager/app_state/user_state/user_group_state.dart';
 import 'package:task_manager/app_state/user_state/user_state.dart';
-import 'package:task_manager/core/constants/app_contant.dart';
-import 'package:task_manager/core/services/theme_service.dart';
 import 'package:task_manager/core/services/user_group_service.dart';
 import 'package:task_manager/models/user.dart';
 import 'package:task_manager/models/user_group.dart';
@@ -14,8 +11,8 @@ import 'package:task_manager/modules/user/sub_module/user_module/components/sign
 
 class SignInSignUpFormContainer extends StatefulWidget {
   const SignInSignUpFormContainer({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   _SignInSignUpFormContainerState createState() =>
@@ -50,84 +47,72 @@ class _SignInSignUpFormContainerState extends State<SignInSignUpFormContainer> {
       margin: const EdgeInsets.symmetric(
         vertical: 10.0,
       ),
-      child: Consumer<AppThemeState>(
-        builder: (context, appThemeState, child) {
-          String currentTheme = appThemeState.currentTheme;
-          Color textColor = currentTheme == ThemeServices.darkTheme
-              ? AppContant.darkTextColor
-              : AppContant.ligthTextColor;
-          return SizedBox(
-            width: double.infinity,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  child: _showSignInForm
-                      ? SignInForm(
-                          currentTheme: currentTheme,
-                          onFormReady: () => {
-                            setState(() {
-                              _isFormContentSet = true;
-                            })
-                          },
-                          onSuccessLogin: (User user) =>
-                              onSuccessLoginOrSignUp(context, user),
-                        )
-                      : SignUpForm(
-                          onFormReady: () => {
-                            setState(() {
-                              _isFormContentSet = true;
-                            })
-                          },
-                          onSuccessSignUp: (User user) =>
-                              onSuccessLoginOrSignUp(context, user),
-                          currentTheme: currentTheme,
+      child: SizedBox(
+        width: double.infinity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              child: _showSignInForm
+                  ? SignInForm(
+                      onFormReady: () => {
+                        setState(() {
+                          _isFormContentSet = true;
+                        })
+                      },
+                      onSuccessLogin: (User user) =>
+                          onSuccessLoginOrSignUp(context, user),
+                    )
+                  : SignUpForm(
+                      onFormReady: () => {
+                        setState(() {
+                          _isFormContentSet = true;
+                        })
+                      },
+                      onSuccessSignUp: (User user) =>
+                          onSuccessLoginOrSignUp(context, user),
+                    ),
+            ),
+            Visibility(
+              visible: _isFormContentSet,
+              child: GestureDetector(
+                onTap: onChangeFormState,
+                child: Container(
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 10.0,
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10.0,
+                  ),
+                  alignment: Alignment.center,
+                  child: RichText(
+                    text: TextSpan(
+                      text: '',
+                      children: [
+                        TextSpan(
+                          text: _showSignInForm
+                              ? "Don't have account?"
+                              : 'Already have an account?',
+                          style: const TextStyle().copyWith(
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.normal,
+                            fontSize: 12.0,
+                          ),
                         ),
-                ),
-                Visibility(
-                  visible: _isFormContentSet,
-                  child: GestureDetector(
-                    onTap: onChangeFormState,
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(
-                        vertical: 10.0,
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 10.0,
-                      ),
-                      alignment: Alignment.center,
-                      child: RichText(
-                        text: TextSpan(
-                          text: '',
-                          children: [
-                            TextSpan(
-                              text: _showSignInForm
-                                  ? "Don't have account?"
-                                  : 'Already have an account?',
-                              style: const TextStyle().copyWith(
-                                fontStyle: FontStyle.italic,
-                                fontWeight: FontWeight.normal,
-                                fontSize: 12.0,
-                                color: textColor.withOpacity(0.5),
-                              ),
-                            ),
-                            TextSpan(
-                              text: _showSignInForm ? ' Sign up' : ' Log in',
-                              style: const TextStyle().copyWith(
-                                color: textColor,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
+                        TextSpan(
+                          text: _showSignInForm ? ' Sign up' : ' Log in',
+                          style: const TextStyle().copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
-                )
-              ],
-            ),
-          );
-        },
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

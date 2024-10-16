@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:task_manager/app_state/app_theme_state/app_theme_state.dart';
 import 'package:task_manager/app_state/user_state/user_state.dart';
 import 'package:task_manager/core/components/app_bar_container.dart';
 import 'package:task_manager/core/constants/app_contant.dart';
-import 'package:task_manager/core/services/theme_service.dart';
-import 'package:task_manager/core/utils/app_util.dart';
+import 'package:task_manager/core/utils/app_modal_util.dart';
 import 'package:task_manager/models/form_section.dart';
 import 'package:task_manager/models/task.dart';
 import 'package:task_manager/models/user.dart';
@@ -17,42 +15,43 @@ import 'package:task_manager/modules/task_manager/models/task_form.dart';
 import 'package:task_manager/modules/user/user_action_sheet.dart';
 
 class TaskMangerHome extends StatelessWidget {
-  const TaskMangerHome({Key? key}) : super(key: key);
+  const TaskMangerHome({super.key});
 
   onAddTodo(
     BuildContext context,
     User? currentUser,
   ) async {
+    double initialHeightRatio = 0.45;
     Task task = Task(title: '', description: '');
     task.assignedTo =
         currentUser != null ? currentUser.id : AppContant.defaultUserId;
     task.createdBy = currentUser != null ? currentUser.fullName : '';
     TaskFormStateHelper.updateFormState(context, task, true);
-    String currentTheme =
-        Provider.of<AppThemeState>(context, listen: false).currentTheme;
-    Color textColor = currentTheme == ThemeServices.darkTheme
-        ? AppContant.darkTextColor
-        : AppContant.ligthTextColor;
+
     final List<FormSection> taskFormSections =
-        TaskForm.getFormSections(textColor);
+        TaskForm.getFormSections(AppContant.defaultAppColor);
     Widget modal = TaskFormContainer(
       taskFormSections: taskFormSections,
       subTasks: task.subTasks,
     );
-    await AppUtil.showPopUpModal(context, modal, false);
+    AppModalUtil.showActionSheetModal(
+      context: context,
+      actionSheetContainer: modal,
+      initialHeightRatio: initialHeightRatio,
+    );
   }
 
   onOpenUserActionSheet(BuildContext context) async {
     User? user = Provider.of<UserState>(context, listen: false).currrentUser;
     double initialHeightRatio = 0.45;
     bool isLogin = user.isLogin;
-    AppUtil.showActionSheetModal(
-      context: context,
+    AppModalUtil.showActionSheetModal(
       initialHeightRatio: initialHeightRatio,
       maxHeightRatio: isLogin ? initialHeightRatio : 0,
-      containerBody: UserActionSheet(
+      actionSheetContainer: UserActionSheet(
         initialHeightRatio: initialHeightRatio,
       ),
+      context: context,
     );
   }
 

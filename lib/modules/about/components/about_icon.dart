@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class AboutIcon extends StatelessWidget {
   const AboutIcon({
-    Key? key,
+    super.key,
     required this.size,
-  }) : super(key: key);
+  });
 
   final Size size;
 

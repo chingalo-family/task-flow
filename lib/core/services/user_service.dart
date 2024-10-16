@@ -12,7 +12,7 @@ class UserService {
   Future<bool> isUserAccountExist({
     required String dhisUsername,
   }) async {
-    bool _isUserAccountExist = false;
+    bool isUserAccountExist = false;
     try {
       var url = 'api/users.json';
       var queryParameters = {
@@ -28,14 +28,14 @@ class UserService {
       if (response.statusCode == 200) {
         var body = json.decode(response.body);
         List users = body['users'] ?? [];
-        _isUserAccountExist = users.isNotEmpty;
+        isUserAccountExist = users.isNotEmpty;
       } else {
         throw 'Failed to check existance of account';
       }
     } catch (error) {
       rethrow;
     }
-    return _isUserAccountExist;
+    return isUserAccountExist;
   }
 
   Future createOrUpdateDhis2UserAccount({

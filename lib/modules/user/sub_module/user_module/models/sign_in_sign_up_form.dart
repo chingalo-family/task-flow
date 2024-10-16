@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/core/components/entry_input_fields/models/input_field.dart';
+import 'package:task_manager/core/components/entry_input_fields/models/input_field_option.dart';
 import 'package:task_manager/models/form_section.dart';
-import 'package:task_manager/models/input_field.dart';
-import 'package:task_manager/models/input_field_option.dart';
 
 class SignInSignUpForm {
   static List<FormSection> getSignInFormSections(Color textColor) {
@@ -23,7 +23,7 @@ class SignInSignUpForm {
             valueType: 'TEXT',
             inputColor: textColor,
             labelColor: textColor,
-            isPassowrdField: true,
+            isPasswordField: true,
           ),
         ],
       ),
@@ -92,7 +92,7 @@ class SignInSignUpForm {
             valueType: 'TEXT',
             inputColor: textColor,
             labelColor: textColor,
-            isPassowrdField: true,
+            isPasswordField: true,
           ),
         ],
       ),

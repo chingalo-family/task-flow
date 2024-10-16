@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:task_manager/app_state/app_theme_state/app_theme_state.dart';
 import 'package:task_manager/app_state/task_state/task_state.dart';
-import 'package:task_manager/core/constants/app_contant.dart';
-import 'package:task_manager/core/services/theme_service.dart';
 import 'package:task_manager/core/utils/app_util.dart';
 import 'package:task_manager/models/sub_task.dart';
 
 class DeleteSubTaskConfirmation extends StatelessWidget {
   const DeleteSubTaskConfirmation({
-    Key? key,
+    super.key,
     required this.subTask,
-  }) : super(key: key);
+  });
 
   final SubTask subTask;
 
@@ -37,24 +34,15 @@ class DeleteSubTaskConfirmation extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.symmetric(),
-            child: Consumer<AppThemeState>(
-              builder: (context, appThemeState, child) {
-                String currentTheme = appThemeState.currentTheme;
-                Color textColor = currentTheme == ThemeServices.darkTheme
-                    ? AppContant.darkTextColor
-                    : AppContant.ligthTextColor;
-                return Container(
-                  margin: const EdgeInsets.symmetric(),
-                  child: Text(
-                    "Are you sure you want to delete '${subTask.title}' task?",
-                    style: const TextStyle().copyWith(
-                      color: textColor,
-                      fontSize: 15.0,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                );
-              },
+            child: Container(
+              margin: const EdgeInsets.symmetric(),
+              child: Text(
+                "Are you sure you want to delete '${subTask.title}' task?",
+                style: const TextStyle().copyWith(
+                  fontSize: 15.0,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
             ),
           ),
           Container(

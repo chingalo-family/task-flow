@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/core/components/input_fields/true_only_input_field_container.dart';
+import 'package:task_manager/core/components/entry_input_fields/models/input_field.dart';
+import 'package:task_manager/core/components/entry_input_fields/true_only_input_field_container.dart';
 import 'package:task_manager/core/components/material_card.dart';
-import 'package:task_manager/models/input_field.dart';
 import 'package:task_manager/models/sub_task.dart';
 
 class SubTaskCard extends StatefulWidget {
   const SubTaskCard({
-    Key? key,
-    required this.textColor,
+    super.key,
     required this.subTask,
     this.onDelete,
     this.onEdit,
     this.onUpdateTodoTaskStatus,
-  }) : super(key: key);
+  });
 
-  final Color textColor;
   final SubTask subTask;
 
   final VoidCallback? onDelete;
@@ -22,7 +20,7 @@ class SubTaskCard extends StatefulWidget {
   final Function? onUpdateTodoTaskStatus;
 
   @override
-  _SubTaskCardState createState() => _SubTaskCardState();
+  State<SubTaskCard> createState() => _SubTaskCardState();
 }
 
 class _SubTaskCardState extends State<SubTaskCard> {
@@ -81,28 +79,23 @@ class _SubTaskCardState extends State<SubTaskCard> {
                         ? TextDecoration.lineThrough
                         : null,
                     fontSize: 14.0,
-                    color: widget.textColor,
                   ),
                 ),
               ),
               Container(
                 margin: const EdgeInsets.symmetric(),
                 child: InkWell(
+                  onTap: widget.onEdit,
                   child: _buildIcon(
                     Icons.edit,
-                    widget.textColor,
                   ),
-                  onTap: widget.onEdit,
                 ),
               ),
               Container(
                 margin: const EdgeInsets.symmetric(),
                 child: InkWell(
-                  child: _buildIcon(
-                    Icons.delete,
-                    widget.textColor,
-                  ),
                   onTap: widget.onDelete,
+                  child: _buildIcon(Icons.delete),
                 ),
               ),
             ],
@@ -114,13 +107,11 @@ class _SubTaskCardState extends State<SubTaskCard> {
 
   Widget _buildIcon(
     IconData icon,
-    Color color,
   ) {
     return Container(
       padding: const EdgeInsets.all(5),
       child: Icon(
         icon,
-        color: color.withOpacity(0.6),
         size: 20,
       ),
     );

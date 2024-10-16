@@ -3,10 +3,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class FormFieldInputIcon extends StatelessWidget {
   const FormFieldInputIcon({
-    Key? key,
+    super.key,
     this.svgIcon,
     this.backGroundColor,
-  }) : super(key: key);
+  });
 
   final String? svgIcon;
   final Color? backGroundColor;
