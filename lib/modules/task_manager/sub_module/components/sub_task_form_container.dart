@@ -5,14 +5,15 @@ import 'package:task_manager/app_state/task_state/sub_task_form_state.dart';
 import 'package:task_manager/app_state/task_state/task_state.dart';
 import 'package:task_manager/core/components/entry_forms/entry_form_container.dart';
 import 'package:task_manager/core/utils/app_util.dart';
+import 'package:task_manager/core/utils/entry_form_util.dart';
 import 'package:task_manager/models/form_section.dart';
 import 'package:task_manager/models/sub_task.dart';
 
 class SubTaskFormContainer extends StatelessWidget {
   const SubTaskFormContainer({
-    Key? key,
+    super.key,
     required this.subTaskFormSections,
-  }) : super(key: key);
+  });
 
   final List<FormSection> subTaskFormSections;
 
@@ -29,8 +30,12 @@ class SubTaskFormContainer extends StatelessWidget {
       List mandatoryFields = mandatoryFieldObject.keys.toList();
       Map dataObject =
           Provider.of<SubTaskFormState>(context, listen: false).formState;
-      bool isMandatoryFieldsSet =
-          AppUtil.hasAllMandatoryFieldsFilled(mandatoryFields, dataObject);
+      bool isMandatoryFieldsSet = EntryFormUtil.hasAllMandatoryFieldsFilled(
+        mandatoryFields,
+        dataObject,
+        checkBoxInputFields: [],
+        hiddenFields: const {},
+      );
       if (isMandatoryFieldsSet) {
         Provider.of<TaskState>(context, listen: false)
             .addSubTask(SubTask.fromMap(dataObject));

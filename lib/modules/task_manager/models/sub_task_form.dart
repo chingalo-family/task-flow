@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/core/components/entry_input_fields/models/input_field.dart';
 import 'package:task_manager/models/form_section.dart';
-import 'package:task_manager/models/input_field.dart';
 
 class SubTaskForm {
   static List<FormSection> getFormSections(Color textColor) {

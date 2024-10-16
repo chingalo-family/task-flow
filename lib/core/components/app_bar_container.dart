@@ -3,7 +3,7 @@ import 'package:task_manager/core/components/app_pop_up_menu.dart';
 
 class AppBarContainer extends StatelessWidget {
   const AppBarContainer({
-    Key? key,
+    super.key,
     this.isAboutPage,
     this.isViewChartVisible,
     this.isAddVisible,
@@ -17,7 +17,7 @@ class AppBarContainer extends StatelessWidget {
     this.onEdit,
     this.onDelete,
     this.onOpenUserActionSheet,
-  }) : super(key: key);
+  });
 
   final String title;
   final bool? isAboutPage;

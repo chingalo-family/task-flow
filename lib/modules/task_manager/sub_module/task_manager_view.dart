@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:task_manager/app_state/app_theme_state/app_theme_state.dart';
 import 'package:task_manager/app_state/task_state/task_state.dart';
 import 'package:task_manager/app_state/user_state/user_state.dart';
 import 'package:task_manager/core/components/app_bar_container.dart';
 import 'package:task_manager/core/constants/app_contant.dart';
-import 'package:task_manager/core/services/theme_service.dart';
-import 'package:task_manager/core/utils/app_util.dart';
+import 'package:task_manager/core/utils/app_modal_util.dart';
 import 'package:task_manager/models/form_section.dart';
 import 'package:task_manager/models/sub_task.dart';
 import 'package:task_manager/models/task.dart';
@@ -22,7 +20,9 @@ import 'package:task_manager/modules/task_manager/sub_module/components/todo_vie
 import 'package:task_manager/modules/user/user_action_sheet.dart';
 
 class TaskMangerView extends StatelessWidget {
-  const TaskMangerView({Key? key}) : super(key: key);
+  const TaskMangerView({super.key});
+
+  final double initialHeightRatio = 0.45;
 
   onAddSubTask(
     BuildContext context,
@@ -36,17 +36,17 @@ class TaskMangerView extends StatelessWidget {
     subTask.createdBy = currentUser.isLogin ? currentUser.fullName : '';
     SubTaskFormStateHelper.updateFormState(
         context, subTask, !subTask.isCompleted!);
-    String currentTheme =
-        Provider.of<AppThemeState>(context, listen: false).currentTheme;
-    Color textColor = currentTheme == ThemeServices.darkTheme
-        ? AppContant.darkTextColor
-        : AppContant.ligthTextColor;
     final List<FormSection> subTaskFormSections =
-        SubTaskForm.getFormSections(textColor);
+        SubTaskForm.getFormSections(AppContant.defaultAppColor);
     Widget modal = SubTaskFormContainer(
       subTaskFormSections: subTaskFormSections,
     );
-    await AppUtil.showPopUpModal(context, modal, false);
+    double initialHeightRatio = 0.45;
+    AppModalUtil.showActionSheetModal(
+      context: context,
+      actionSheetContainer: modal,
+      initialHeightRatio: initialHeightRatio,
+    );
   }
 
   onEditTask(BuildContext context, Task currentTask) async {
@@ -56,43 +56,39 @@ class TaskMangerView extends StatelessWidget {
       currentTask,
       isEditableMode,
     );
-    String currentTheme =
-        Provider.of<AppThemeState>(context, listen: false).currentTheme;
-    Color textColor = currentTheme == ThemeServices.darkTheme
-        ? AppContant.darkTextColor
-        : AppContant.ligthTextColor;
     final List<FormSection> taskFormSections =
-        TaskForm.getFormSections(textColor);
+        TaskForm.getFormSections(AppContant.defaultAppColor);
     Widget modal = TaskFormContainer(
       taskFormSections: taskFormSections,
       subTasks: currentTask.subTasks,
     );
-    await AppUtil.showPopUpModal(context, modal, false);
+    await AppModalUtil.showActionSheetModal(
+      context: context,
+      actionSheetContainer: modal,
+      initialHeightRatio: initialHeightRatio,
+    );
   }
 
   onDeleteTask(BuildContext context, Task currentTask) async {
     Widget modal = DeleteTaskConfirmation(
       currentTask: currentTask,
     );
-    bool hasTodoDeleted = await AppUtil.showPopUpModal(context, modal, false);
-    try {
-      if (hasTodoDeleted) {
-        Navigator.of(context).pop();
-      }
-    } catch (error) {
-      print(error.toString());
-    }
+    await AppModalUtil.showActionSheetModal(
+      context: context,
+      actionSheetContainer: modal,
+      initialHeightRatio: initialHeightRatio,
+    );
   }
 
   onOpenUserActionSheet(BuildContext context) async {
     User? user = Provider.of<UserState>(context, listen: false).currrentUser;
     double initialHeightRatio = 0.45;
     bool isLogin = user.isLogin;
-    AppUtil.showActionSheetModal(
+    AppModalUtil.showActionSheetModal(
       context: context,
       initialHeightRatio: initialHeightRatio,
       maxHeightRatio: isLogin ? initialHeightRatio : 0,
-      containerBody: UserActionSheet(
+      actionSheetContainer: UserActionSheet(
         initialHeightRatio: initialHeightRatio,
       ),
     );
@@ -108,40 +104,41 @@ class TaskMangerView extends StatelessWidget {
       builder: (context, userState, child) {
         return Consumer<TaskState>(
           builder: (context, todoState, child) {
-            Task currentTask = todoState.currentTask!;
-            return SafeArea(
-              child: Scaffold(
-                appBar: PreferredSize(
-                  preferredSize: const Size.fromHeight(AppContant.appBarHeight),
-                  child: AppBarContainer(
-                    title: currentTask.title!,
-                    isAboutPage: false,
-                    isAddVisible: true,
-                    isViewChartVisible: true,
-                    isDeleteVisible: true,
-                    isEditVisible: true,
-                    isUserVisible: false,
-                    onOpenUserActionSheet: () => onOpenUserActionSheet(context),
-                    onAdd: () => onAddSubTask(
-                        context, currentTask, userState.currrentUser),
-                    onEdit: () => onEditTask(context, currentTask),
-                    onDelete: () => onDeleteTask(context, currentTask),
-                    onOpenChart: () =>
-                        onOpenTodoChartSummary(context, currentTask),
-                  ),
+            Task? currentTask = todoState.currentTask;
+            return Scaffold(
+              appBar: PreferredSize(
+                preferredSize: const Size.fromHeight(AppContant.appBarHeight),
+                child: AppBarContainer(
+                  title: currentTask?.title ?? '',
+                  isAboutPage: false,
+                  isAddVisible: true,
+                  isViewChartVisible: true,
+                  isDeleteVisible: true,
+                  isEditVisible: true,
+                  isUserVisible: false,
+                  onOpenUserActionSheet: () => onOpenUserActionSheet(context),
+                  onAdd: () => onAddSubTask(
+                      context, currentTask!, userState.currrentUser),
+                  onEdit: () => onEditTask(context, currentTask!),
+                  onDelete: () => onDeleteTask(context, currentTask!),
+                  onOpenChart: () =>
+                      onOpenTodoChartSummary(context, currentTask!),
                 ),
-                body: SingleChildScrollView(
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 10.0,
-                      vertical: 10.0,
-                    ),
-                    child: TaskViewContainer(
-                      currentTask: currentTask,
-                      onTapCurrentTask: () => onEditTask(context, currentTask),
-                    ),
-                  ),
-                ),
+              ),
+              body: SingleChildScrollView(
+                child: currentTask != null
+                    ? Container(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 10.0,
+                          vertical: 10.0,
+                        ),
+                        child: TaskViewContainer(
+                          currentTask: currentTask,
+                          onTapCurrentTask: () =>
+                              onEditTask(context, currentTask),
+                        ),
+                      )
+                    : Container(),
               ),
             );
           },

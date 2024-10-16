@@ -6,23 +6,20 @@ import 'package:task_manager/app_state/user_state/sign_in_sign_up_form_state.dar
 import 'package:task_manager/core/components/circular_process_loader.dart';
 import 'package:task_manager/core/components/entry_forms/entry_form_container.dart';
 import 'package:task_manager/core/components/material_card.dart';
-import 'package:task_manager/core/constants/app_contant.dart';
-import 'package:task_manager/core/services/theme_service.dart';
 import 'package:task_manager/core/services/user_service.dart';
 import 'package:task_manager/core/utils/app_util.dart';
+import 'package:task_manager/core/utils/entry_form_util.dart';
 import 'package:task_manager/models/form_section.dart';
 import 'package:task_manager/models/user.dart';
 import 'package:task_manager/modules/user/sub_module/user_module/models/sign_in_sign_up_form.dart';
 
 class SignUpForm extends StatefulWidget {
   const SignUpForm({
-    Key? key,
-    required this.currentTheme,
+    super.key,
     required this.onSuccessSignUp,
     required this.onFormReady,
-  }) : super(key: key);
+  });
 
-  final String currentTheme;
   final VoidCallback onFormReady;
   final Function onSuccessSignUp;
 
@@ -58,9 +55,6 @@ class _SignUpFormState extends State<SignUpForm> {
   }
 
   void setFormMetadata() {
-    textColor = widget.currentTheme == ThemeServices.darkTheme
-        ? AppContant.darkTextColor
-        : AppContant.ligthTextColor;
     formSections = SignInSignUpForm.getSignUpFormSections(textColor!);
     mandatoryFieldObject['fullName'] = true;
     mandatoryFieldObject['username'] = true;
@@ -83,7 +77,7 @@ class _SignUpFormState extends State<SignUpForm> {
         phoneNumber: dataObject['phoneNumber'] ?? '',
         email: dataObject['email'] ?? '',
       );
-      if (user.email!.isNotEmpty && !AppUtil.isEmailValid(user.email!)) {
+      if (user.email!.isNotEmpty && !EntryFormUtil.isEmailValid(user.email!)) {
         AppUtil.showToastMessage(
           message: '${user.email!} is not valid email',
         );

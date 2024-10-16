@@ -15,10 +15,9 @@ class AppPopUpMenuItem {
   static List<AppPopUpMenuItem> getPopUpMenuItems() {
     return [
       AppPopUpMenuItem(
-          id: 'dark', name: 'Switch to Dark', icon: Icons.brightness_2),
-      AppPopUpMenuItem(
-          id: 'light', name: 'Switch to light', icon: Icons.brightness_low),
-      AppPopUpMenuItem(id: 'about', name: 'About', icon: Icons.info)
+          id: 'about',
+          name: 'About',
+          icon: Icons.info), //TODO add module for the app
     ];
   }
 }

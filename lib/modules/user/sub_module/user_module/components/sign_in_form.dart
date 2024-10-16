@@ -6,8 +6,6 @@ import 'package:task_manager/app_state/user_state/sign_in_sign_up_form_state.dar
 import 'package:task_manager/core/components/circular_process_loader.dart';
 import 'package:task_manager/core/components/entry_forms/entry_form_container.dart';
 import 'package:task_manager/core/components/material_card.dart';
-import 'package:task_manager/core/constants/app_contant.dart';
-import 'package:task_manager/core/services/theme_service.dart';
 import 'package:task_manager/core/services/user_group_service.dart';
 import 'package:task_manager/core/services/user_service.dart';
 import 'package:task_manager/core/utils/app_util.dart';
@@ -18,13 +16,11 @@ import 'package:task_manager/modules/user/sub_module/user_module/models/sign_in_
 
 class SignInForm extends StatefulWidget {
   const SignInForm({
-    Key? key,
-    required this.currentTheme,
+    super.key,
     required this.onSuccessLogin,
     required this.onFormReady,
-  }) : super(key: key);
+  });
 
-  final String currentTheme;
   final Function onSuccessLogin;
   final VoidCallback onFormReady;
 
@@ -68,9 +64,6 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   void setFormMetadata() {
-    textColor = widget.currentTheme == ThemeServices.darkTheme
-        ? AppContant.darkTextColor
-        : AppContant.ligthTextColor;
     formSections = SignInSignUpForm.getSignInFormSections(textColor!);
     mandatoryFieldObject['username'] = true;
     mandatoryFieldObject['password'] = true;

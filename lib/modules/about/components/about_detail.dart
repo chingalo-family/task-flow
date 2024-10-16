@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 
 class AboutDetail extends StatelessWidget {
   const AboutDetail({
-    Key? key,
-    required this.textColor,
+    super.key,
     required this.value,
-  }) : super(key: key);
+  });
 
-  final Color textColor;
   final String value;
 
   @override
@@ -21,7 +19,6 @@ class AboutDetail extends StatelessWidget {
             value,
             style: const TextStyle().copyWith(
               fontSize: 12.0,
-              color: textColor,
             ),
           ),
         ],

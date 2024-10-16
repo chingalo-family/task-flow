@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 
 class EntryFormSaveButton extends StatelessWidget {
   const EntryFormSaveButton(
-      {Key? key,
+      {super.key,
       this.width = double.infinity,
       required this.label,
       required this.labelColor,
@@ -17,8 +17,7 @@ class EntryFormSaveButton extends StatelessWidget {
       this.onPressButton,
       this.svgIconPath,
       this.svgIconHeight = 20.0,
-      this.svgIconWidth = 20.0})
-      : super(key: key);
+      this.svgIconWidth = 20.0});
 
   final String label;
   final Color labelColor;

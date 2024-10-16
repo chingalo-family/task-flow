@@ -6,7 +6,7 @@ import 'package:task_manager/modules/task_manager/components/task_list.dart';
 import 'package:task_manager/modules/task_manager/sub_module/task_manager_view.dart';
 
 class TaskListContainer extends StatelessWidget {
-  const TaskListContainer({Key? key}) : super(key: key);
+  const TaskListContainer({super.key});
 
   onSelectTask(BuildContext context, Task task) {
     Provider.of<TaskState>(context, listen: false).setCurrentTodo(task);

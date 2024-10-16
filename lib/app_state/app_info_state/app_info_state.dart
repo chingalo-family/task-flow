@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:task_manager/core/constants/app_info_reference.dart';
-import 'package:new_version/new_version.dart';
 
 class AppInfoState with ChangeNotifier {
   String? _currentAppName;
@@ -17,15 +16,6 @@ class AppInfoState with ChangeNotifier {
     _currentAppId = AppInfoReference.androidId;
     _currentAppName = AppInfoReference.currentAppName;
     _currentAppVersion = AppInfoReference.currentAppVersion;
-    try {
-      final newVersion = NewVersion(
-        androidId: AppInfoReference.androidId,
-      );
-      final status = await newVersion.getVersionStatus();
-      _canUpdate = status!.canUpdate;
-      //@TODO adding modal in case of need for app update
-      _currentAppVersion = status.localVersion;
-    } catch (error) {}
     notifyListeners();
   }
 }

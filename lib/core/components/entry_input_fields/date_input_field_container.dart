@@ -1,21 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/core/components/input_fields/input_checked_icon.dart';
+import 'package:task_manager/core/components/entry_input_fields/models/input_field.dart';
 import 'package:task_manager/core/utils/app_util.dart';
-import 'package:task_manager/models/input_field.dart';
 
+// `DateInputFieldContainer` is a class for the date input field container
 class DateInputFieldContainer extends StatefulWidget {
+  // `InputField` is the input field metadata for the date input field container
+  final InputField inputField;
+
+  // `Function` callback called when input values had changed
+  final Function onInputValueChange;
+
+  // `String` value for the date input field
+  final String? inputValue;
+
+  //
+  // this is the default constructor for the `DateInputFieldContainer`
+  // the constructor accepts `InputField` metadata, `String` value and a callback `Function` that is called when the value changed
+  //
   const DateInputFieldContainer({
-    Key? key,
+    super.key,
     required this.inputField,
     required this.onInputValueChange,
     this.inputValue,
-  }) : super(key: key);
-  final InputField inputField;
-  final Function onInputValueChange;
-  final String? inputValue;
+  });
 
   @override
-  _DateInputFieldContainerState createState() =>
+  State<DateInputFieldContainer> createState() =>
       _DateInputFieldContainerState();
 }
 
@@ -38,16 +48,17 @@ class _DateInputFieldContainerState extends State<DateInputFieldContainer> {
     super.didUpdateWidget(widget);
     if (oldWidget.inputValue != widget.inputValue) {
       if (widget.inputValue == null || widget.inputValue == '') {
-        resetDate();
+        resetDate(null);
+      } else {
+        resetDate(widget.inputValue);
       }
     }
   }
 
-  resetDate() {
-    setState(() {
-      _date = null;
-      dateController = TextEditingController(text: _date);
-    });
+  resetDate(dynamic value) {
+    _date = value;
+    dateController = TextEditingController(text: _date);
+    setState(() {});
   }
 
   DateTime getDateFromGivenYear(int year,
@@ -62,16 +73,18 @@ class _DateInputFieldContainerState extends State<DateInputFieldContainer> {
 
   void onOpenDateSelection(BuildContext context) async {
     int limit = 200;
-    int minAgeInYear = widget.inputField.minAgeInYear ?? limit;
-    int maxAgeInYear = widget.inputField.maxAgeInYear ?? -limit;
-    DateTime lastDate = getDateFromGivenYear(
-        widget.inputField.minAgeInYear != null ? minAgeInYear : -limit);
-    DateTime firstDate = getDateFromGivenYear(
-        widget.inputField.maxAgeInYear != null ? maxAgeInYear : limit,
-        numberOfMonth: widget.inputField.numberOfMonth != null
-            ? widget.inputField.numberOfMonth! + 1
-            : 0,
-        numberOfDays: 1);
+    int minYear = widget.inputField.minYear ?? limit;
+    int maxYear = widget.inputField.maxYear ?? -limit;
+    DateTime lastDate = widget.inputField.maxDate ??
+        getDateFromGivenYear(
+            widget.inputField.maxYear != null ? maxYear : -limit);
+    DateTime firstDate = widget.inputField.minDate ??
+        getDateFromGivenYear(
+            widget.inputField.minYear != null ? minYear : limit,
+            numberOfMonth: widget.inputField.numberOfMonth != null
+                ? widget.inputField.numberOfMonth! + 1
+                : 0,
+            numberOfDays: 1);
     DateTime currentDate = DateTime.now();
     int numberOfYearBetweenCurrentAndMaxDate = currentDate.year - lastDate.year;
     _date = _date ??
@@ -92,8 +105,10 @@ class _DateInputFieldContainerState extends State<DateInputFieldContainer> {
       context: context,
       fieldLabelText: widget.inputField.name,
       initialDate: AppUtil.getDateIntoDateTimeFormat(_date!),
-      firstDate:
-          widget.inputField.disablePastPeriod! ? DateTime.now() : firstDate,
+      firstDate: widget.inputField.disablePastPeriod! &&
+              widget.inputField.minDate == null
+          ? DateTime.now()
+          : firstDate,
       confirmText: 'Ok',
       cancelText: 'Cancel',
       lastDate: widget.inputField.allowFuturePeriod! ||
@@ -129,16 +144,13 @@ class _DateInputFieldContainerState extends State<DateInputFieldContainer> {
                 : onOpenDateSelection(context),
             readOnly: true,
             textInputAction: TextInputAction.done,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               border: InputBorder.none,
+              hintText: widget.inputField.hint,
               errorText: null,
             ),
           ),
         ),
-        InputCheckedIcon(
-          showTickedIcon: _date != null && _date != '',
-          color: widget.inputField.inputColor,
-        )
       ],
     );
   }
