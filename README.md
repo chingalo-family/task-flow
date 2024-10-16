@@ -1,5 +1,16 @@
-# chingalo todo app
+# task_manager
 
-## Configuration of Dhis2 connections on the app
+A new Flutter project.
 
-Create the file under in `lib/core/constants/dhis2_connection.dart` with contents similar to those in `lib/core/constants/dhis2_connection.example.dart`
+## Getting Started
+
+This project is a starting point for a Flutter application.
+
+A few resources to get you started if this is your first Flutter project:
+
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
