@@ -1,21 +1,29 @@
-import 'package:flutter/foundation.dart';
-import 'package:task_manager/core/constants/app_info_reference.dart';
+import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
-class AppInfoState with ChangeNotifier {
-  String? _currentAppName;
-  String? _currentAppVersion;
-  String? _currentAppId;
-  bool? _canUpdate;
+class AppInfoState extends ChangeNotifier {
+  bool _loading = true;
+  String _appName = '';
+  String _packageName = '';
+  String _version = '';
 
-  String get currentAppName => _currentAppName ?? '';
-  bool get canUpdate => _canUpdate ?? false;
-  String get currentAppVersion => _currentAppVersion ?? '';
-  String get currentAppId => _currentAppId ?? '';
+  String get appName => _appName;
+  String get packageName => _packageName;
+  String get version => _version;
+  bool get loading => _loading;
 
-  void setCurrentAppInfo() async {
-    _currentAppId = AppInfoReference.androidId;
-    _currentAppName = AppInfoReference.currentAppName;
-    _currentAppVersion = AppInfoReference.currentAppVersion;
+  void initiatizeAppInfo() async {
+    _loading = true;
+    notifyListeners();
+    try {
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      _packageName = packageInfo.packageName;
+      _appName = packageInfo.appName;
+      _version = packageInfo.version;
+    } catch (e) {
+      //
+    }
+    _loading = false;
     notifyListeners();
   }
 }
