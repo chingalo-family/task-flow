@@ -17,17 +17,8 @@ class UserService {
   final _offline = UserOfflineProvider();
   final _prefs = PreferenceService();
 
-  Future<User?> login(
-    String username,
-    String password, {
-    String baseUrl = '',
-  }) async {
-    baseUrl = baseUrl.isEmpty ? Dhis2Connection.baseUrl : baseUrl;
-    final dhis = Dhis2HttpService(
-      username: username,
-      password: password,
-      baseUri: Uri.parse(baseUrl),
-    );
+  Future<User?> login(String username, String password) async {
+    final dhis = Dhis2HttpService(username: username, password: password);
     final res = await dhis.httpGet(
       '/api/me.json?fields=id,username,displayName,email,phone,userGroups,organisationUnits',
     );
@@ -68,19 +59,19 @@ class UserService {
     String newPassword, {
     String baseUrl = '',
   }) async {
+    var url = 'api/me/changePassword';
     baseUrl = baseUrl.isEmpty ? Dhis2Connection.baseUrl : baseUrl;
     final cur = await getCurrentUser();
     if (cur == null) return false;
     final dhis = Dhis2HttpService(
       username: cur.username,
       password: oldPassword,
-      baseUri: Uri.parse(baseUrl),
     );
-    final res = await dhis.httpPost(
-      '/api/me/changePassword',
-      body: {'password': newPassword},
+    var response = await dhis.httpPut(
+      url,
+      json.encode({'oldPassword': oldPassword, 'newPassword': newPassword}),
     );
-    if (res.statusCode == 200 || res.statusCode == 204) {
+    if (response.statusCode == 200 || response.statusCode == 204) {
       cur.password = newPassword;
       await _offline.addOrUpdateUser(cur);
       return true;
