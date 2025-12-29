@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:task_manager/core/constants/dhis2_connection.dart';
 import 'package:task_manager/core/models/user.dart';
 import 'package:task_manager/core/offline_db/user_offline_provider/user_offline_provider.dart';
+import 'package:task_manager/core/utils/entry_form_util.dart';
 
 import 'dhis2_http_service.dart';
 import 'preference_service.dart';
@@ -16,6 +17,37 @@ class UserService {
 
   final _offline = UserOfflineProvider();
   final _prefs = PreferenceService();
+
+  Future<User?> signUpUser({
+    required String username,
+    required String password,
+    required String email,
+    required String firstName,
+    required String surname,
+    required String phoneNumber,
+  }) async {
+    var url = 'api/users';
+    User? user;
+    final dhis = Dhis2HttpService(
+      username: Dhis2Connection.username,
+      password: Dhis2Connection.password,
+    );
+    var payload = EntryFormUtil.getUserAccountPayload(
+      username: username,
+      password: password,
+      email: email,
+      firstName: firstName,
+      surname: surname,
+      phoneNumber: phoneNumber,
+    );
+    var response = await dhis.httpPost(url, json.encode(payload));
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      user = await login(username, password);
+    } else {
+      throw ('Failed to sign up user, kindly reach out to support.');
+    }
+    return user;
+  }
 
   Future<User?> login(String username, String password) async {
     final dhis = Dhis2HttpService(username: username, password: password);
