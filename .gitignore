@@ -43,3 +43,8 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+
+# default contants for the app
+lib/core/constants/dhis2_connection.dart
+lib/core/constants/email_connection.dart
