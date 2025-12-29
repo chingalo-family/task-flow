@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:task_manager/core/constants/dhis2_connection.dart';
+import 'package:task_manager/core/models/user.dart';
+import 'package:task_manager/core/offline_db/user_offline_provider/user_offline_provider.dart';
+
 import 'dhis2_http_service.dart';
 import 'preference_service.dart';
-import '../models/user.dart';
-import '../offline_db/user_offline_provider/user_offline_provider.dart';
 
 class UserService {
   static const _kCurrentUserKey = 'current_user_id';
@@ -15,12 +17,12 @@ class UserService {
   final _offline = UserOfflineProvider();
   final _prefs = PreferenceService();
 
-  /// Attempt login against DHIS2-style endpoint. baseUrl should be the server root (e.g. https://play.dhis2.org/2.36.3)
   Future<User?> login(
     String username,
     String password, {
     String baseUrl = '',
   }) async {
+    baseUrl = baseUrl.isEmpty ? Dhis2Connection.baseUrl : baseUrl;
     final dhis = Dhis2HttpService(
       username: username,
       password: password,
@@ -66,6 +68,7 @@ class UserService {
     String newPassword, {
     String baseUrl = '',
   }) async {
+    baseUrl = baseUrl.isEmpty ? Dhis2Connection.baseUrl : baseUrl;
     final cur = await getCurrentUser();
     if (cur == null) return false;
     final dhis = Dhis2HttpService(

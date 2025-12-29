@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:task_manager/app_state/app_info_state/app_info_state.dart';
 import 'package:task_manager/core/components/circular_process_loader.dart';
 import 'package:task_manager/core/constants/app_constant.dart';
-import 'package:task_manager/modules/home/home.dart';
+import 'package:task_manager/modules/login/login_page.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
@@ -30,7 +30,7 @@ class _SplashState extends State<Splash> {
     Timer(const Duration(milliseconds: 200), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => Home()),
+        MaterialPageRoute(builder: (_) => LoginPage()),
       );
     });
   }

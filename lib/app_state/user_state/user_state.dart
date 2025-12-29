@@ -18,7 +18,7 @@ class UserState extends ChangeNotifier {
   Future<bool> signIn(
     String username,
     String password, {
-    String baseUrl = 'http://localhost:8080',
+    String baseUrl = '',
   }) async {
     final user = await _service.login(username, password, baseUrl: baseUrl);
     if (user != null) {
