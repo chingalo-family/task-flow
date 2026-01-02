@@ -107,91 +107,113 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final isSmallScreen = size.height < 600;
+    
     return Scaffold(
       backgroundColor: AppConstant.darkBackground,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppConstant.spacing32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Spacer(),
-
-              // Animated Logo
-              FadeTransition(
-                opacity: _fadeAnimation,
-                child: ScaleTransition(
-                  scale: _scaleAnimation,
-                  child: const AppLogo(size: 120),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight,
                 ),
-              ),
-
-              SizedBox(height: AppConstant.spacing16),
-
-              // Tagline
-              FadeTransition(
-                opacity: _fadeAnimation,
-                child: Text(
-                  'Collaborate. Achieve.',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: AppConstant.textSecondary,
-                    fontSize: 18,
-                    letterSpacing: 0.5,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppConstant.spacing24,
+                    vertical: isSmallScreen ? AppConstant.spacing16 : AppConstant.spacing32,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(height: isSmallScreen ? AppConstant.spacing32 : AppConstant.spacing64),
 
-              const Spacer(),
-
-              // Loading Progress
-              Column(
-                children: [
-                  SizedBox(
-                    width: 200,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: LinearProgressIndicator(
-                        value: _progress,
-                        backgroundColor: AppConstant.cardBackground,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          AppConstant.primaryBlue,
+                      // Animated Logo
+                      FadeTransition(
+                        opacity: _fadeAnimation,
+                        child: ScaleTransition(
+                          scale: _scaleAnimation,
+                          child: AppLogo(size: isSmallScreen ? 80 : 120),
                         ),
-                        minHeight: 4,
                       ),
-                    ),
+
+                      SizedBox(height: AppConstant.spacing12),
+
+                      // Tagline
+                      FadeTransition(
+                        opacity: _fadeAnimation,
+                        child: Text(
+                          'Collaborate. Achieve.',
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: AppConstant.textSecondary,
+                            fontSize: isSmallScreen ? 14 : 18,
+                            letterSpacing: 0.5,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+
+                      SizedBox(height: isSmallScreen ? AppConstant.spacing48 : AppConstant.spacing64),
+
+                      // Loading Progress
+                      Column(
+                        children: [
+                          SizedBox(
+                            width: size.width * 0.5,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: LinearProgressIndicator(
+                                value: _progress,
+                                backgroundColor: AppConstant.cardBackground,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  AppConstant.primaryBlue,
+                                ),
+                                minHeight: 4,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: AppConstant.spacing16),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: AppConstant.spacing16),
+                            child: Text(
+                              'INITIALIZING WORKSPACE...',
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                fontSize: isSmallScreen ? 10 : 12,
+                                letterSpacing: 1.5,
+                                color: AppConstant.textSecondary.withValues(alpha: 0.6),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(height: isSmallScreen ? AppConstant.spacing32 : AppConstant.spacing48),
+
+                      // Version
+                      Consumer<AppInfoState>(
+                        builder: (context, appInfo, _) {
+                          return Text(
+                            'V ${appInfo.version.toUpperCase()} • EARLY ACCESS',
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontSize: isSmallScreen ? 9 : 11,
+                              letterSpacing: 1.2,
+                              color: AppConstant.textSecondary.withValues(alpha: 0.4),
+                            ),
+                            textAlign: TextAlign.center,
+                          );
+                        },
+                      ),
+
+                      SizedBox(height: AppConstant.spacing16),
+                    ],
                   ),
-                  SizedBox(height: AppConstant.spacing16),
-                  Text(
-                    'INITIALIZING WORKSPACE...',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontSize: 12,
-                      letterSpacing: 1.5,
-                      color: AppConstant.textSecondary.withValues(alpha: 0.6),
-                    ),
-                  ),
-                ],
+                ),
               ),
-
-              SizedBox(height: AppConstant.spacing32),
-
-              // Version
-              Consumer<AppInfoState>(
-                builder: (context, appInfo, _) {
-                  return Text(
-                    'V ${appInfo.version.toUpperCase()} • EARLY ACCESS',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontSize: 11,
-                      letterSpacing: 1.2,
-                      color: AppConstant.textSecondary.withValues(alpha: 0.4),
-                    ),
-                  );
-                },
-              ),
-
-              SizedBox(height: AppConstant.spacing16),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

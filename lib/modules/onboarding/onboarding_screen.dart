@@ -56,6 +56,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final isSmallScreen = size.height < 650;
+    final isTinyScreen = size.height < 550;
+    
     return Scaffold(
       backgroundColor: AppConstant.darkBackground,
       body: SafeArea(
@@ -63,7 +67,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           children: [
             // Header with Skip button
             Padding(
-              padding: EdgeInsets.all(AppConstant.spacing16),
+              padding: EdgeInsets.symmetric(
+                horizontal: AppConstant.spacing16,
+                vertical: AppConstant.spacing12,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -72,13 +79,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       Icon(
                         Icons.layers_rounded,
                         color: AppConstant.primaryBlue,
-                        size: 24,
+                        size: isSmallScreen ? 20 : 24,
                       ),
                       SizedBox(width: AppConstant.spacing8),
                       Text(
                         'TaskFlow',
                         style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontSize: 18,
+                          fontSize: isSmallScreen ? 16 : 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -87,11 +94,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   if (_currentPage < _pages.length - 1)
                     TextButton(
                       onPressed: _completeOnboarding,
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppConstant.spacing12,
+                          vertical: AppConstant.spacing8,
+                        ),
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
                       child: Text(
                         'Skip',
                         style: TextStyle(
                           color: AppConstant.primaryBlue,
-                          fontSize: 16,
+                          fontSize: isSmallScreen ? 14 : 16,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -112,37 +127,53 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 itemCount: _pages.length,
                 itemBuilder: (context, index) {
                   final page = _pages[index];
-                  return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: AppConstant.spacing24),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Illustration
-                        OnboardingIllustration(type: page.icon),
-                        
-                        SizedBox(height: AppConstant.spacing32),
-                        
-                        // Title
-                        Text(
-                          page.title,
-                          style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                            fontSize: 28,
+                  return SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isTinyScreen ? AppConstant.spacing16 : AppConstant.spacing24,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(height: isTinyScreen ? AppConstant.spacing16 : AppConstant.spacing32),
+                          
+                          // Illustration
+                          SizedBox(
+                            height: isTinyScreen ? 200 : (isSmallScreen ? 250 : 300),
+                            child: OnboardingIllustration(type: page.icon),
                           ),
-                          textAlign: TextAlign.center,
-                        ),
-                        
-                        SizedBox(height: AppConstant.spacing16),
-                        
-                        // Description
-                        Text(
-                          page.description,
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: AppConstant.textSecondary,
-                            height: 1.5,
+                          
+                          SizedBox(height: isTinyScreen ? AppConstant.spacing16 : AppConstant.spacing24),
+                          
+                          // Title
+                          Text(
+                            page.title,
+                            style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                              fontSize: isTinyScreen ? 20 : (isSmallScreen ? 24 : 28),
+                            ),
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
+                          
+                          SizedBox(height: isTinyScreen ? AppConstant.spacing8 : AppConstant.spacing12),
+                          
+                          // Description
+                          Text(
+                            page.description,
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              color: AppConstant.textSecondary,
+                              fontSize: isTinyScreen ? 13 : (isSmallScreen ? 14 : 16),
+                              height: 1.5,
+                            ),
+                            textAlign: TextAlign.center,
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          
+                          SizedBox(height: isTinyScreen ? AppConstant.spacing16 : AppConstant.spacing24),
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -151,8 +182,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
             // Bottom section with indicators and button
             Padding(
-              padding: EdgeInsets.all(AppConstant.spacing32),
+              padding: EdgeInsets.all(isTinyScreen ? AppConstant.spacing16 : AppConstant.spacing24),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   // Page indicators
                   PageIndicator(
@@ -160,12 +192,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     pageCount: _pages.length,
                   ),
                   
-                  SizedBox(height: AppConstant.spacing32),
+                  SizedBox(height: isTinyScreen ? AppConstant.spacing16 : AppConstant.spacing24),
                   
                   // Next/Get Started button
                   SizedBox(
                     width: double.infinity,
-                    height: 56,
+                    height: isTinyScreen ? 48 : 56,
                     child: ElevatedButton(
                       onPressed: _nextPage,
                       style: ElevatedButton.styleFrom(
@@ -176,22 +208,26 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            _pages[_currentPage].isLastPage
-                                ? 'Get Started'
-                                : 'Next',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
+                          Flexible(
+                            child: Text(
+                              _pages[_currentPage].isLastPage
+                                  ? 'Get Started'
+                                  : 'Next',
+                              style: TextStyle(
+                                fontSize: isSmallScreen ? 14 : 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           SizedBox(width: AppConstant.spacing8),
                           Icon(
                             Icons.arrow_forward,
                             color: Colors.white,
-                            size: 20,
+                            size: isSmallScreen ? 18 : 20,
                           ),
                         ],
                       ),
@@ -200,14 +236,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   
                   // Log in link for last page
                   if (_pages[_currentPage].isLastPage) ...[
-                    SizedBox(height: AppConstant.spacing16),
+                    SizedBox(height: isTinyScreen ? AppConstant.spacing8 : AppConstant.spacing12),
                     TextButton(
                       onPressed: _completeOnboarding,
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.symmetric(
+                          vertical: AppConstant.spacing8,
+                        ),
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
                       child: Text(
                         'Log in',
                         style: TextStyle(
                           color: AppConstant.textPrimary,
-                          fontSize: 16,
+                          fontSize: isSmallScreen ? 14 : 16,
                         ),
                       ),
                     ),
