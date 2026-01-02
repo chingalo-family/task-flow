@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_flow/app_state/app_info_state/app_info_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/modules/splash/components/app_logo.dart';
+import 'package:task_flow/modules/onboarding/onboarding_screen.dart';
 import 'package:task_flow/modules/login/login_page.dart';
 import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/modules/home/home.dart';
@@ -59,20 +61,33 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
       final userState = Provider.of<UserState>(context, listen: false);
       await userState.initialize();
       
+      // Check onboarding status
+      final prefs = await SharedPreferences.getInstance();
+      final onboardingComplete = prefs.getBool('onboarding_complete') ?? false;
+      
       await Future.delayed(const Duration(milliseconds: 500));
       
       if (mounted) {
-        _redirectToPages(userState);
+        _redirectToPages(userState, onboardingComplete);
       }
     });
   }
 
-  void _redirectToPages(UserState userState) {
+  void _redirectToPages(UserState userState, bool onboardingComplete) {
+    Widget destination;
+    
+    if (!onboardingComplete) {
+      destination = const OnboardingScreen();
+    } else if (userState.isAuthenticated) {
+      destination = const Home();
+    } else {
+      destination = const LoginPage();
+    }
+    
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            userState.isAuthenticated ? const Home() : const LoginPage(),
+        pageBuilder: (context, animation, secondaryAnimation) => destination,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },
