@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/core/constants/email_connection.dart';
-import 'package:task_manager/core/models/email_notification.dart';
-import 'package:task_manager/core/services/email_service.dart';
-import 'package:task_manager/core/utils/app_util.dart';
-import 'package:task_manager/modules/login/components/modern_signup_form.dart';
+import 'package:task_flow/core/constants/email_connection.dart';
+import 'package:task_flow/core/models/email_notification.dart';
+import 'package:task_flow/core/services/email_service.dart';
+import 'package:task_flow/core/utils/app_util.dart';
+import 'package:task_flow/modules/login/components/modern_signup_form.dart';
 
 class UserAccountRequestForm extends StatefulWidget {
   const UserAccountRequestForm({super.key});
@@ -15,11 +15,12 @@ class UserAccountRequestForm extends StatefulWidget {
 class _UserAccountRequestFormState extends State<UserAccountRequestForm> {
   bool _isSaving = false;
 
-  void onSignup(
+  void onSignUp(
     String firstName,
     String surname,
     String email,
     String phoneNumber,
+    String password,
   ) async {
     String fullName = '$firstName $surname';
     if (AppUtil.isEmailValid(email)) {
@@ -212,7 +213,7 @@ class _UserAccountRequestFormState extends State<UserAccountRequestForm> {
               ),
             ),
             const SizedBox(height: 10),
-            ModernSignupForm(onSignup: onSignup, isSaving: _isSaving),
+            ModernSignupForm(isSaving: _isSaving, onSignUp: onSignUp),
           ],
         ),
       ),

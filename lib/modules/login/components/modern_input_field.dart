@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_flow/core/constants/app_constant.dart';
 
 class ModernInputField extends StatelessWidget {
   final TextEditingController controller;
@@ -26,22 +27,25 @@ class ModernInputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF2A2A2A),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.withValues(alpha: 0.1), width: 1),
+        color: AppConstant.cardBackground,
+        borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+        border: Border.all(
+          color: AppConstant.textSecondary.withValues(alpha: 0.1),
+          width: 1,
+        ),
       ),
       child: TextFormField(
         controller: controller,
         enabled: enabled,
         obscureText: obscureText,
         keyboardType: keyboardType,
-        style: const TextStyle(color: Colors.white, fontSize: 16),
+        style: TextStyle(color: AppConstant.textPrimary, fontSize: 16),
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: TextStyle(color: Colors.grey[400], fontSize: 16),
+          hintStyle: TextStyle(color: AppConstant.textSecondary, fontSize: 16),
           prefixIcon: Padding(
             padding: const EdgeInsets.only(left: 20, right: 12),
-            child: Icon(icon, color: Colors.grey[400], size: 22),
+            child: Icon(icon, color: AppConstant.textSecondary, size: 22),
           ),
           prefixIconConstraints: const BoxConstraints(
             minWidth: 0,

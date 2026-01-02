@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/core/constants/app_constant.dart';
+import 'package:task_flow/core/constants/app_constant.dart';
 
 class ModernPrimaryButton extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -14,7 +14,7 @@ class ModernPrimaryButton extends StatelessWidget {
     required this.child,
     this.loading = false,
     this.height = 56,
-    this.borderRadius = 16,
+    this.borderRadius = 12,
   });
 
   @override
@@ -25,15 +25,17 @@ class ModernPrimaryButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: loading ? null : onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppConstant.defaultColor,
-          disabledBackgroundColor: AppConstant.defaultColor.withOpacity(0.5),
+          backgroundColor: AppConstant.primaryBlue,
+          disabledBackgroundColor: AppConstant.primaryBlue.withValues(
+            alpha: 0.5,
+          ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),
           ),
           elevation: 0,
         ),
         child: loading
-            ? const SizedBox(
+            ? SizedBox(
                 height: 20,
                 width: 20,
                 child: CircularProgressIndicator(

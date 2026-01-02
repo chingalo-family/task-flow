@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:task_manager/core/models/user.dart';
-import 'package:task_manager/core/entities/user_entity.dart';
-import 'package:task_manager/core/services/db_service.dart';
-import 'package:task_manager/objectbox.g.dart';
+import 'package:task_flow/core/models/user.dart';
+import 'package:task_flow/core/entities/user_entity.dart';
+import 'package:task_flow/core/services/db_service.dart';
+import 'package:task_flow/objectbox.g.dart';
 
 class UserOfflineProvider {
   UserOfflineProvider._();
@@ -13,12 +13,14 @@ class UserOfflineProvider {
   Future<List<dynamic>> getUsers() async {
     await DBService().init();
     final box = DBService().userBox;
+    if (box == null) return [];
     return box.getAll().map(_toUser).toList();
   }
 
   Future<User?> getUserById(String apiUserId) async {
     await DBService().init();
     final box = DBService().userBox;
+    if (box == null) return null;
     final q = box
         .query(
           UserEntity_.apiUserId.equals(apiUserId) as Condition<UserEntity>?,
@@ -32,6 +34,7 @@ class UserOfflineProvider {
   Future<void> addOrUpdateUser(User user) async {
     await DBService().init();
     final box = DBService().userBox;
+    if (box == null) return;
     final existing = box
         .query(UserEntity_.apiUserId.equals(user.id) as Condition<UserEntity>?)
         .build()
@@ -58,6 +61,7 @@ class UserOfflineProvider {
   Future<void> deleteUser(String apiUserId) async {
     await DBService().init();
     final box = DBService().userBox;
+    if (box == null) return;
     final q = box
         .query(
           UserEntity_.apiUserId.equals(apiUserId) as Condition<UserEntity>?,
