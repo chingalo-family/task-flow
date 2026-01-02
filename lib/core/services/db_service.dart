@@ -10,40 +10,46 @@ class DBService {
   static final DBService _instance = DBService._();
   factory DBService() => _instance;
 
-  late final Store _store;
+  Store? _store;
   Box<UserEntity>? _userBox;
 
   bool _opened = false;
+  bool get isAvailable => _opened;
 
   Future<void> init() async {
     if (_opened) return;
-    final dir = await getApplicationDocumentsDirectory();
-    _store = openStore(directory: dir.path);
-    _userBox = Box<UserEntity>(_store);
-    _opened = true;
-  }
-
-  Box<UserEntity> get userBox {
-    if (!_opened || _userBox == null) {
-      throw StateError(
-        'DBService not initialized. Call DBService().init() first.',
-      );
+    
+    try {
+      final dir = await getApplicationDocumentsDirectory();
+      _store = openStore(directory: dir.path);
+      _userBox = Box<UserEntity>(_store!);
+      _opened = true;
+    } catch (e) {
+      print('Failed to initialize ObjectBox: $e');
+      _opened = false;
+      _store = null;
+      _userBox = null;
+      rethrow;
     }
-    return _userBox!;
   }
 
-  Store get store {
+  Box<UserEntity>? get userBox {
+    if (!_opened || _userBox == null) {
+      return null;
+    }
+    return _userBox;
+  }
+
+  Store? get store {
     if (!_opened) {
-      throw StateError(
-        'DBService not initialized. Call DBService().init() first.',
-      );
+      return null;
     }
     return _store;
   }
 
   void close() {
-    if (_opened) {
-      _store.close();
+    if (_opened && _store != null) {
+      _store!.close();
       _opened = false;
     }
   }
