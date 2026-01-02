@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:task_flow/app_state/app_info_state/app_info_state.dart';
 import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/modules/login/login_page.dart';
@@ -183,14 +184,18 @@ class SettingsPage extends StatelessWidget {
                   ),
                   
                   SizedBox(height: AppConstant.spacing32),
-                  Center(
-                    child: Text(
-                      'Task Flow v1.0.4',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppConstant.textSecondary.withOpacity(0.5),
-                        fontSize: 12,
-                      ),
-                    ),
+                  Consumer<AppInfoState>(
+                    builder: (context, appInfo, _) {
+                      return Center(
+                        child: Text(
+                          'Task Flow v${appInfo.version}',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: AppConstant.textSecondary.withOpacity(0.5),
+                            fontSize: 12,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                   SizedBox(height: AppConstant.spacing32),
                 ]),

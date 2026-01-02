@@ -173,13 +173,17 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
               SizedBox(height: AppConstant.spacing32),
               
               // Version
-              Text(
-                'V 1.0.4 • EARLY ACCESS',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontSize: 11,
-                  letterSpacing: 1.2,
-                  color: AppConstant.textSecondary.withOpacity(0.4),
-                ),
+              Consumer<AppInfoState>(
+                builder: (context, appInfo, _) {
+                  return Text(
+                    'V ${appInfo.version.toUpperCase()} • EARLY ACCESS',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontSize: 11,
+                      letterSpacing: 1.2,
+                      color: AppConstant.textSecondary.withOpacity(0.4),
+                    ),
+                  );
+                },
               ),
               
               SizedBox(height: AppConstant.spacing16),
