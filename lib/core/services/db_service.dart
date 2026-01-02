@@ -18,10 +18,10 @@ class DBService {
 
   Future<void> init() async {
     if (_opened) return;
-    
+
     try {
       final dir = await getApplicationDocumentsDirectory();
-      _store = openStore(directory: dir.path);
+      _store = await openStore(directory: dir.path);
       _userBox = Box<UserEntity>(_store!);
       _opened = true;
     } catch (e) {
