@@ -5,6 +5,9 @@ import 'package:task_flow/app_state/task_state/task_state.dart';
 import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/modules/tasks/tasks_page.dart';
+import 'package:task_flow/modules/teams/teams_page.dart';
+import 'package:task_flow/modules/notifications/notifications_page.dart';
+import 'package:task_flow/modules/settings/settings_page.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -18,9 +21,9 @@ class _HomeState extends State<Home> {
 
   final List<Widget> _pages = [
     const TasksPage(),
-    const Center(child: Text('Teams', style: TextStyle(fontSize: 24))),
-    const Center(child: Text('Notifications', style: TextStyle(fontSize: 24))),
-    const Center(child: Text('Settings', style: TextStyle(fontSize: 24))),
+    const TeamsPage(),
+    const NotificationsPage(),
+    const SettingsPage(),
   ];
 
   @override

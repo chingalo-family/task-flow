@@ -5,7 +5,6 @@ import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/modules/tasks/components/task_card.dart';
 import 'package:task_flow/modules/tasks/components/task_stats.dart';
-import 'package:task_flow/modules/login/login_page.dart';
 
 class TasksPage extends StatefulWidget {
   const TasksPage({super.key});
@@ -21,42 +20,6 @@ class _TasksPageState extends State<TasksPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<TaskState>(context, listen: false).initialize();
     });
-  }
-
-  void _showLogoutDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: AppConstant.cardBackground,
-          title: Text('Logout', style: TextStyle(color: AppConstant.textPrimary)),
-          content: Text(
-            'Are you sure you want to logout?',
-            style: TextStyle(color: AppConstant.textSecondary),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () async {
-                final userState = Provider.of<UserState>(context, listen: false);
-                await userState.logout();
-                if (mounted) {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (_) => const LoginPage()),
-                    (route) => false,
-                  );
-                }
-              },
-              child: Text('Logout', style: TextStyle(color: AppConstant.errorRed)),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
@@ -98,12 +61,6 @@ class _TasksPageState extends State<TasksPage> {
                       ),
                     ],
                   ),
-                  actions: [
-                    IconButton(
-                      icon: Icon(Icons.logout, color: AppConstant.textSecondary),
-                      onPressed: _showLogoutDialog,
-                    ),
-                  ],
                 ),
 
                 // Header with greeting
