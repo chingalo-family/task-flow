@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/team_state/team_state.dart';
+import 'package:task_flow/app_state/user_list_state/user_list_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/modules/teams/components/team_card.dart';
+import 'package:task_flow/modules/teams/pages/team_detail_page.dart';
 
 class TeamsPage extends StatefulWidget {
   const TeamsPage({super.key});
@@ -17,6 +19,7 @@ class _TeamsPageState extends State<TeamsPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<TeamState>(context, listen: false).initialize();
+      Provider.of<UserListState>(context, listen: false).initialize();
     });
   }
 

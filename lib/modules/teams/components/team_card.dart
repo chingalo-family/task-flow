@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/models/models.dart';
+import 'package:task_flow/modules/teams/pages/team_detail_page.dart';
 
 class TeamCard extends StatelessWidget {
   final Team team;
@@ -19,7 +20,12 @@ class TeamCard extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(AppConstant.borderRadius16),
           onTap: () {
-            // TODO: Navigate to team detail
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TeamDetailPage(team: team),
+              ),
+            );
           },
           child: Padding(
             padding: EdgeInsets.all(AppConstant.spacing16),
