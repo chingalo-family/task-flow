@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:task_manager/core/constants/dhis2_connection.dart';
 import 'package:task_manager/core/models/user.dart';
 import 'package:task_manager/core/offline_db/user_offline_provider/user_offline_provider.dart';
+import 'package:task_manager/core/utils/entry_form_util.dart';
 
 import 'dhis2_http_service.dart';
 import 'preference_service.dart';
@@ -17,17 +18,39 @@ class UserService {
   final _offline = UserOfflineProvider();
   final _prefs = PreferenceService();
 
-  Future<User?> login(
-    String username,
-    String password, {
-    String baseUrl = '',
+  Future<User?> signUpUser({
+    required String username,
+    required String password,
+    required String email,
+    required String firstName,
+    required String surname,
+    required String phoneNumber,
   }) async {
-    baseUrl = baseUrl.isEmpty ? Dhis2Connection.baseUrl : baseUrl;
+    var url = 'api/users';
+    User? user;
     final dhis = Dhis2HttpService(
+      username: Dhis2Connection.username,
+      password: Dhis2Connection.password,
+    );
+    var payload = EntryFormUtil.getUserAccountPayload(
       username: username,
       password: password,
-      baseUri: Uri.parse(baseUrl),
+      email: email,
+      firstName: firstName,
+      surname: surname,
+      phoneNumber: phoneNumber,
     );
+    var response = await dhis.httpPost(url, json.encode(payload));
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      user = await login(username, password);
+    } else {
+      throw ('Failed to sign up user, kindly reach out to support.');
+    }
+    return user;
+  }
+
+  Future<User?> login(String username, String password) async {
+    final dhis = Dhis2HttpService(username: username, password: password);
     final res = await dhis.httpGet(
       '/api/me.json?fields=id,username,displayName,email,phone,userGroups,organisationUnits',
     );
@@ -68,19 +91,19 @@ class UserService {
     String newPassword, {
     String baseUrl = '',
   }) async {
+    var url = 'api/me/changePassword';
     baseUrl = baseUrl.isEmpty ? Dhis2Connection.baseUrl : baseUrl;
     final cur = await getCurrentUser();
     if (cur == null) return false;
     final dhis = Dhis2HttpService(
       username: cur.username,
       password: oldPassword,
-      baseUri: Uri.parse(baseUrl),
     );
-    final res = await dhis.httpPost(
-      '/api/me/changePassword',
-      body: {'password': newPassword},
+    var response = await dhis.httpPut(
+      url,
+      json.encode({'oldPassword': oldPassword, 'newPassword': newPassword}),
     );
-    if (res.statusCode == 200 || res.statusCode == 204) {
+    if (response.statusCode == 200 || response.statusCode == 204) {
       cur.password = newPassword;
       await _offline.addOrUpdateUser(cur);
       return true;

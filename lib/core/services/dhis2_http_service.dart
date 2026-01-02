@@ -1,47 +1,63 @@
-import 'dart:convert';
-
 import 'package:http/http.dart' as http;
+import 'package:task_manager/core/services/http_service.dart';
 
 class Dhis2HttpService {
-  final String username;
-  final String password;
-  final Uri baseUri;
+  HttpService? httpService;
 
-  Dhis2HttpService({
-    required this.username,
-    required this.password,
-    required this.baseUri,
-  });
+  Dhis2HttpService({required String username, required String password}) {
+    httpService = HttpService(username: username, password: password);
+  }
 
-  Map<String, String> _authHeaders() {
-    final creds = base64.encode(utf8.encode('$username:$password'));
-    return {
-      'Authorization': 'Basic $creds',
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
+  Future<http.Response> httpPost(
+    String url,
+    body, {
+    Map<String, dynamic>? queryParameters,
+  }) async {
+    return await httpService!.httpPost(
+      url,
+      body,
+      queryParameters: queryParameters,
+    );
+  }
+
+  Future<http.Response> httpPut(
+    String url,
+    body, {
+    Map<String, dynamic>? queryParameters,
+  }) async {
+    return await httpService!.httpPut(
+      url,
+      body,
+      queryParameters: queryParameters,
+    );
+  }
+
+  Future<http.Response> httpDelete(
+    String url, {
+    Map<String, dynamic>? queryParameters,
+  }) async {
+    return await httpService!.httpDelete(url, queryParameters: queryParameters);
+  }
+
+  Future<http.Response> httpGet(
+    String url, {
+    Map<String, dynamic>? queryParameters,
+  }) async {
+    return await httpService!.httpGet(url, queryParameters: queryParameters);
+  }
+
+  Future<http.Response> httpGetPagination(
+    String url,
+    Map<String, dynamic> queryParameters,
+  ) async {
+    Map<String, String?> dataQueryParameters = {
+      'totalPages': 'true',
+      'pageSize': '1',
+      'fields': 'none',
     };
-  }
-
-  Future<http.Response> httpGet(String path) async {
-    final uri = baseUri.resolve(path);
-    return http.get(uri, headers: _authHeaders());
-  }
-
-  Future<http.Response> httpPost(String path, {Object? body}) async {
-    final uri = baseUri.resolve(path);
-    return http.post(
-      uri,
-      headers: _authHeaders(),
-      body: body == null ? null : jsonEncode(body),
-    );
-  }
-
-  Future<http.Response> httpPut(String path, {Object? body}) async {
-    final uri = baseUri.resolve(path);
-    return http.put(
-      uri,
-      headers: _authHeaders(),
-      body: body == null ? null : jsonEncode(body),
-    );
+    if (queryParameters.keys.isNotEmpty) {
+      dataQueryParameters.addAll(queryParameters as Map<String, String?>);
+    }
+    return await httpService!.httpGetPagination(url, dataQueryParameters);
   }
 }
