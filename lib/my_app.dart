@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/app_info_state/app_info_state.dart';
 import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/app_state/task_state/task_state.dart';
+import 'package:task_flow/app_state/team_state/team_state.dart';
+import 'package:task_flow/app_state/notification_state/notification_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/modules/splash/splash.dart';
 
@@ -15,6 +17,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AppInfoState()),
         ChangeNotifierProvider(create: (_) => UserState()),
         ChangeNotifierProvider(create: (_) => TaskState()),
+        ChangeNotifierProvider(create: (_) => TeamState()),
+        ChangeNotifierProvider(create: (_) => NotificationState()),
       ],
       child: MaterialApp(
         title: 'Task Flow',
