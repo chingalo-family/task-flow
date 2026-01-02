@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_manager/app_state/app_info_state/app_info_state.dart';
+import 'package:task_manager/app_state/user_state/user_state.dart';
 import 'package:task_manager/core/constants/app_constant.dart';
 import 'package:task_manager/modules/splash/splash.dart';
 
@@ -9,7 +10,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => AppInfoState())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => AppInfoState()),
+        ChangeNotifierProvider(create: (_) => UserState()),
+      ],
       child: MaterialApp(
         title: 'Task Manager Application',
         debugShowCheckedModeBanner: false,

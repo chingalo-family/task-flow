@@ -15,12 +15,8 @@ class UserState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> signIn(
-    String username,
-    String password, {
-    String baseUrl = '',
-  }) async {
-    final user = await _service.login(username, password, baseUrl: baseUrl);
+  Future<bool> signIn(String username, String password) async {
+    final user = await _service.login(username, password);
     if (user != null) {
       _currentUser = user;
       notifyListeners();

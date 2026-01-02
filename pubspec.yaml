@@ -20,6 +20,7 @@ dependencies:
   http: ^1.6.0
   objectbox: ^1.0.0
   flutter_secure_storage: ^8.0.0
+  fluttertoast: ^9.0.0
 
 dev_dependencies:
   flutter_test:

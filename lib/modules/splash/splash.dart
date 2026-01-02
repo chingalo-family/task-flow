@@ -6,6 +6,8 @@ import 'package:task_manager/app_state/app_info_state/app_info_state.dart';
 import 'package:task_manager/core/components/circular_process_loader.dart';
 import 'package:task_manager/core/constants/app_constant.dart';
 import 'package:task_manager/modules/login/login_page.dart';
+import 'package:task_manager/app_state/user_state/user_state.dart';
+import 'package:task_manager/modules/home/home.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
@@ -20,19 +22,27 @@ class _SplashState extends State<Splash> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       Provider.of<AppInfoState>(context, listen: false).initiatizeAppInfo();
-      Timer(const Duration(milliseconds: 100), () {
-        _redictectToHomePage();
+      // Wait for UserState to initialize and check auth
+      final userState = Provider.of<UserState>(context, listen: false);
+      await userState.initialize();
+      Future.delayed(const Duration(milliseconds: 200), () {
+        _redirectToPages(userState);
       });
     });
   }
 
-  void _redictectToHomePage() {
-    Timer(const Duration(milliseconds: 200), () {
+  void _redirectToPages(UserState userState) {
+    if (userState.isAuthenticated) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => LoginPage()),
+        MaterialPageRoute(builder: (_) => const Home()),
       );
-    });
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginPage()),
+      );
+    }
   }
 
   @override
