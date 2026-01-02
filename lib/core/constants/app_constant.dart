@@ -23,6 +23,8 @@ class AppConstant {
   static const double spacing20 = 20.0;
   static const double spacing24 = 24.0;
   static const double spacing32 = 32.0;
+  static const double spacing48 = 48.0;
+  static const double spacing64 = 64.0;
 
   // Border Radius
   static const double borderRadius8 = 8.0;
