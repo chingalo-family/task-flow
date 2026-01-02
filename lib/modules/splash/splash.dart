@@ -109,7 +109,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final isSmallScreen = size.height < 600;
-    
+
     return Scaffold(
       backgroundColor: AppConstant.darkBackground,
       body: SafeArea(
@@ -119,16 +119,23 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
               child: ConstrainedBox(
                 constraints: BoxConstraints(
                   minHeight: constraints.maxHeight,
+                  minWidth: constraints.maxWidth,
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: AppConstant.spacing24,
-                    vertical: isSmallScreen ? AppConstant.spacing16 : AppConstant.spacing32,
+                    vertical: isSmallScreen
+                        ? AppConstant.spacing16
+                        : AppConstant.spacing32,
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(height: isSmallScreen ? AppConstant.spacing32 : AppConstant.spacing64),
+                      SizedBox(
+                        height: isSmallScreen
+                            ? AppConstant.spacing32
+                            : AppConstant.spacing64,
+                      ),
 
                       // Animated Logo
                       FadeTransition(
@@ -146,19 +153,26 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
                         opacity: _fadeAnimation,
                         child: Text(
                           'Collaborate. Achieve.',
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: AppConstant.textSecondary,
-                            fontSize: isSmallScreen ? 14 : 18,
-                            letterSpacing: 0.5,
-                          ),
+                          style: Theme.of(context).textTheme.bodyLarge
+                              ?.copyWith(
+                                color: AppConstant.textSecondary,
+                                fontSize: isSmallScreen ? 14 : 18,
+                                letterSpacing: 0.5,
+                              ),
                           textAlign: TextAlign.center,
                         ),
                       ),
 
-                      SizedBox(height: isSmallScreen ? AppConstant.spacing48 : AppConstant.spacing64),
+                      SizedBox(
+                        height: isSmallScreen
+                            ? AppConstant.spacing48
+                            : AppConstant.spacing64,
+                      ),
 
                       // Loading Progress
                       Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(
                             width: size.width * 0.5,
@@ -176,32 +190,44 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
                           ),
                           SizedBox(height: AppConstant.spacing16),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: AppConstant.spacing16),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: AppConstant.spacing16,
+                            ),
                             child: Text(
                               'INITIALIZING WORKSPACE...',
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                fontSize: isSmallScreen ? 10 : 12,
-                                letterSpacing: 1.5,
-                                color: AppConstant.textSecondary.withValues(alpha: 0.6),
-                              ),
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(
+                                    fontSize: isSmallScreen ? 10 : 12,
+                                    letterSpacing: 1.5,
+                                    color: AppConstant.textSecondary.withValues(
+                                      alpha: 0.6,
+                                    ),
+                                  ),
                               textAlign: TextAlign.center,
                             ),
                           ),
                         ],
                       ),
 
-                      SizedBox(height: isSmallScreen ? AppConstant.spacing32 : AppConstant.spacing48),
+                      SizedBox(
+                        height: isSmallScreen
+                            ? AppConstant.spacing32
+                            : AppConstant.spacing48,
+                      ),
 
                       // Version
                       Consumer<AppInfoState>(
                         builder: (context, appInfo, _) {
                           return Text(
                             'V ${appInfo.version.toUpperCase()} • EARLY ACCESS',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontSize: isSmallScreen ? 9 : 11,
-                              letterSpacing: 1.2,
-                              color: AppConstant.textSecondary.withValues(alpha: 0.4),
-                            ),
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  fontSize: isSmallScreen ? 9 : 11,
+                                  letterSpacing: 1.2,
+                                  color: AppConstant.textSecondary.withValues(
+                                    alpha: 0.4,
+                                  ),
+                                ),
                             textAlign: TextAlign.center,
                           );
                         },
