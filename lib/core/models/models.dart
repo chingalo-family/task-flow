@@ -15,7 +15,7 @@ export 'notification/notification.dart';
 
 // User
 export 'user.dart';
-export 'user_entity.dart';
+export '../entities/user_entity.dart';
 
 // Email Notification
 export 'email_notification.dart';
