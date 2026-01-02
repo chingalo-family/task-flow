@@ -10,6 +10,9 @@ class InputField extends StatelessWidget {
   final TextInputType keyboardType;
   final bool enabled;
   final Widget? suffixIcon;
+  final int? maxLines;
+  final String? labelText;
+  final void Function(String)? onChanged;
 
   const InputField({
     super.key,
@@ -21,6 +24,9 @@ class InputField extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.enabled = true,
     this.suffixIcon,
+    this.maxLines,
+    this.labelText,
+    this.onChanged,
   });
 
   @override
@@ -39,12 +45,17 @@ class InputField extends StatelessWidget {
         enabled: enabled,
         obscureText: obscureText,
         keyboardType: keyboardType,
+        maxLines: maxLines ?? (obscureText ? 1 : null),
+        minLines: 1,
+        onChanged: onChanged,
         style: TextStyle(color: AppConstant.textPrimary, fontSize: 16),
         decoration: InputDecoration(
+          labelText: labelText,
+          labelStyle: TextStyle(color: AppConstant.textSecondary, fontSize: 14),
           hintText: hintText,
           hintStyle: TextStyle(color: AppConstant.textSecondary, fontSize: 16),
           prefixIcon: Padding(
-            padding: const EdgeInsets.only(left: 20, right: 12),
+            padding: EdgeInsets.only(left: 20, right: 12, top: maxLines != null && maxLines! > 1 ? 12 : 0),
             child: Icon(icon, color: AppConstant.textSecondary, size: 22),
           ),
           prefixIconConstraints: const BoxConstraints(
@@ -53,9 +64,9 @@ class InputField extends StatelessWidget {
           ),
           suffixIcon: suffixIcon,
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
+          contentPadding: EdgeInsets.symmetric(
             horizontal: 0,
-            vertical: 18,
+            vertical: maxLines != null && maxLines! > 1 ? 16 : 18,
           ),
         ),
         validator: validator,

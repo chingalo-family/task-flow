@@ -4,6 +4,7 @@ import 'package:task_flow/app_state/team_state/team_state.dart';
 import 'package:task_flow/app_state/user_list_state/user_list_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/models/models.dart';
+import 'package:task_flow/core/components/components.dart';
 
 class AddMemberDialog extends StatefulWidget {
   final Team team;
@@ -58,30 +59,15 @@ class _AddMemberDialogState extends State<AddMemberDialog> {
               ],
             ),
             SizedBox(height: AppConstant.defaultPadding),
-            TextField(
+            InputField(
               controller: _searchController,
+              hintText: 'Search users...',
+              icon: Icons.search,
               onChanged: (value) {
                 setState(() {
                   _searchQuery = value;
                 });
               },
-              style: TextStyle(color: AppConstant.textPrimary),
-              decoration: InputDecoration(
-                hintText: 'Search users...',
-                hintStyle: TextStyle(color: AppConstant.textSecondary),
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: AppConstant.textSecondary,
-                ),
-                filled: true,
-                fillColor: AppConstant.darkBackground,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                    AppConstant.borderRadius12,
-                  ),
-                  borderSide: BorderSide.none,
-                ),
-              ),
             ),
             SizedBox(height: AppConstant.defaultPadding),
             if (_selectedUserIds.isNotEmpty)

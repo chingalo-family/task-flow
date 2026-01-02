@@ -5,6 +5,7 @@ import 'package:task_flow/app_state/team_state/team_state.dart';
 import 'package:task_flow/app_state/user_list_state/user_list_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/models/models.dart';
+import 'package:task_flow/core/components/components.dart';
 
 class AddTaskDialog extends StatefulWidget {
   final Team team;
@@ -72,21 +73,10 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                 SizedBox(height: AppConstant.defaultPadding),
 
                 // Title
-                TextFormField(
+                InputField(
                   controller: _titleController,
-                  style: TextStyle(color: AppConstant.textPrimary),
-                  decoration: InputDecoration(
-                    labelText: 'Task Title',
-                    hintText: 'Enter task title',
-                    filled: true,
-                    fillColor: AppConstant.darkBackground,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(
-                        AppConstant.borderRadius12,
-                      ),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
+                  hintText: 'Enter task title',
+                  icon: Icons.title,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'Please enter a task title';
@@ -97,22 +87,13 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                 SizedBox(height: 16),
 
                 // Description
-                TextFormField(
+                InputField(
                   controller: _descriptionController,
-                  style: TextStyle(color: AppConstant.textPrimary),
+                  hintText: 'Enter task description',
+                  icon: Icons.description,
+                  labelText: 'Description (Optional)',
+                  keyboardType: TextInputType.multiline,
                   maxLines: 3,
-                  decoration: InputDecoration(
-                    labelText: 'Description (Optional)',
-                    hintText: 'Enter task description',
-                    filled: true,
-                    fillColor: AppConstant.darkBackground,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(
-                        AppConstant.borderRadius12,
-                      ),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
                 ),
                 SizedBox(height: 16),
 

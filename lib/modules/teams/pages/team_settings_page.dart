@@ -4,6 +4,7 @@ import 'package:task_flow/app_state/team_state/team_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/models/models.dart';
 import 'package:task_flow/core/utils/utils.dart';
+import 'package:task_flow/core/components/components.dart';
 
 class TeamSettingsPage extends StatefulWidget {
   final String teamId;
@@ -173,27 +174,11 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextField(
+                  InputField(
                     controller: nameController,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      labelText: 'Status Name',
-                      labelStyle: const TextStyle(
-                        color: AppConstant.textSecondary,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: AppConstant.cardBackground,
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: AppConstant.primaryBlue,
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
+                    hintText: 'Enter status name',
+                    icon: Icons.label,
+                    labelText: 'Status Name',
                   ),
                   const SizedBox(height: 20),
                   const Text(
@@ -330,27 +315,11 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextField(
+                  InputField(
                     controller: nameController,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      labelText: 'Status Name',
-                      labelStyle: const TextStyle(
-                        color: AppConstant.textSecondary,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: AppConstant.cardBackground,
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: AppConstant.primaryBlue,
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
+                    hintText: 'Enter status name',
+                    icon: Icons.label,
+                    labelText: 'Status Name',
                   ),
                   const SizedBox(height: 20),
                   const Text(
