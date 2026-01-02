@@ -4,7 +4,6 @@ import 'package:task_flow/app_state/team_state/team_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/models/models.dart';
 import 'package:task_flow/core/utils/utils.dart';
-import 'package:task_flow/core/components/components.dart';
 import 'package:task_flow/modules/teams/components/add_status_container.dart';
 import 'package:task_flow/modules/teams/components/edit_status_container.dart';
 
@@ -174,7 +173,7 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
       );
 
       await teamState.addTaskStatus(team.id, newStatus);
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Status added successfully')),
@@ -203,7 +202,7 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
       );
 
       await teamState.updateTaskStatus(team.id, status.id, updatedStatus);
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Status updated successfully')),

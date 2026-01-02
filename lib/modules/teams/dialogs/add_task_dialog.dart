@@ -40,223 +40,220 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
         child: Form(
           key: _formKey,
           child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'Add Task to ${widget.team.name}',
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Add Task to ${widget.team.name}',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppConstant.textPrimary,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: Icon(Icons.close, color: AppConstant.textSecondary),
+                  ),
+                ],
+              ),
+              SizedBox(height: AppConstant.defaultPadding),
+
+              // Title
+              InputField(
+                controller: _titleController,
+                hintText: 'Enter task title',
+                icon: Icons.title,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Please enter a task title';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 16),
+
+              // Description
+              InputField(
+                controller: _descriptionController,
+                hintText: 'Enter task description',
+                icon: Icons.description,
+                labelText: 'Description (Optional)',
+                keyboardType: TextInputType.multiline,
+                maxLines: 3,
+              ),
+              SizedBox(height: 16),
+
+              // Priority
+              Text(
+                'Priority',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: AppConstant.textPrimary,
+                ),
+              ),
+              SizedBox(height: 8),
+              Row(
+                children: [
+                  _buildPriorityChip('high', 'High', AppConstant.errorRed),
+                  SizedBox(width: 8),
+                  _buildPriorityChip(
+                    'medium',
+                    'Medium',
+                    AppConstant.warningOrange,
+                  ),
+                  SizedBox(width: 8),
+                  _buildPriorityChip('low', 'Low', AppConstant.successGreen),
+                ],
+              ),
+              SizedBox(height: 16),
+
+              // Assign to team member
+              Consumer<UserListState>(
+                builder: (context, userListState, child) {
+                  final teamMembers = userListState.getUsersByIds(
+                    widget.team.memberIds ?? [],
+                  );
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Assign To (Optional)',
                         style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
                           color: AppConstant.textPrimary,
                         ),
                       ),
-                    ),
-                    IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: Icon(Icons.close, color: AppConstant.textSecondary),
-                    ),
-                  ],
-                ),
-                SizedBox(height: AppConstant.defaultPadding),
-
-                // Title
-                InputField(
-                  controller: _titleController,
-                  hintText: 'Enter task title',
-                  icon: Icons.title,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Please enter a task title';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 16),
-
-                // Description
-                InputField(
-                  controller: _descriptionController,
-                  hintText: 'Enter task description',
-                  icon: Icons.description,
-                  labelText: 'Description (Optional)',
-                  keyboardType: TextInputType.multiline,
-                  maxLines: 3,
-                ),
-                SizedBox(height: 16),
-
-                // Priority
-                Text(
-                  'Priority',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: AppConstant.textPrimary,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Row(
-                  children: [
-                    _buildPriorityChip('high', 'High', AppConstant.errorRed),
-                    SizedBox(width: 8),
-                    _buildPriorityChip(
-                      'medium',
-                      'Medium',
-                      AppConstant.warningOrange,
-                    ),
-                    SizedBox(width: 8),
-                    _buildPriorityChip('low', 'Low', AppConstant.successGreen),
-                  ],
-                ),
-                SizedBox(height: 16),
-
-                // Assign to team member
-                Consumer<UserListState>(
-                  builder: (context, userListState, child) {
-                    final teamMembers = userListState.getUsersByIds(
-                      widget.team.memberIds ?? [],
-                    );
-
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Assign To (Optional)',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: AppConstant.textPrimary,
+                      SizedBox(height: 8),
+                      DropdownButtonFormField<String?>(
+                        initialValue: _assignedToUserId,
+                        dropdownColor: AppConstant.cardBackground,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: AppConstant.darkBackground,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(
+                              AppConstant.borderRadius12,
+                            ),
+                            borderSide: BorderSide.none,
                           ),
                         ),
-                        SizedBox(height: 8),
-                        DropdownButtonFormField<String?>(
-                          initialValue: _assignedToUserId,
-                          dropdownColor: AppConstant.cardBackground,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: AppConstant.darkBackground,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                AppConstant.borderRadius12,
+                        hint: Text(
+                          'Select team member',
+                          style: TextStyle(color: AppConstant.textSecondary),
+                        ),
+                        items: [
+                          DropdownMenuItem<String?>(
+                            value: null,
+                            child: Text(
+                              'Unassigned',
+                              style: TextStyle(
+                                color: AppConstant.textSecondary,
                               ),
-                              borderSide: BorderSide.none,
                             ),
                           ),
-                          hint: Text(
-                            'Select team member',
-                            style: TextStyle(color: AppConstant.textSecondary),
-                          ),
-                          items: [
-                            DropdownMenuItem<String?>(
-                              value: null,
+                          ...teamMembers.map((member) {
+                            return DropdownMenuItem<String>(
+                              value: member.id,
                               child: Text(
-                                'Unassigned',
+                                member.fullName ?? member.username,
                                 style: TextStyle(
-                                  color: AppConstant.textSecondary,
+                                  color: AppConstant.textPrimary,
                                 ),
                               ),
-                            ),
-                            ...teamMembers.map((member) {
-                              return DropdownMenuItem<String>(
-                                value: member.id,
-                                child: Text(
-                                  member.fullName ?? member.username,
-                                  style: TextStyle(
-                                    color: AppConstant.textPrimary,
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                          ],
-                          onChanged: (value) {
-                            setState(() {
-                              _assignedToUserId = value;
-                            });
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                ),
-                SizedBox(height: 16),
-
-                // Due Date
-                InkWell(
-                  onTap: _selectDueDate,
-                  borderRadius: BorderRadius.circular(
-                    AppConstant.borderRadius12,
-                  ),
-                  child: Container(
-                    padding: EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: AppConstant.darkBackground,
-                      borderRadius: BorderRadius.circular(
-                        AppConstant.borderRadius12,
+                            );
+                          }).toList(),
+                        ],
+                        onChanged: (value) {
+                          setState(() {
+                            _assignedToUserId = value;
+                          });
+                        },
                       ),
+                    ],
+                  );
+                },
+              ),
+              SizedBox(height: 16),
+
+              // Due Date
+              InkWell(
+                onTap: _selectDueDate,
+                borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                child: Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: AppConstant.darkBackground,
+                    borderRadius: BorderRadius.circular(
+                      AppConstant.borderRadius12,
                     ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.calendar_today,
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.calendar_today,
+                        color: AppConstant.textSecondary,
+                      ),
+                      SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          _dueDate == null
+                              ? 'Set Due Date (Optional)'
+                              : 'Due: ${_dueDate!.day}/${_dueDate!.month}/${_dueDate!.year}',
+                          style: TextStyle(
+                            color: _dueDate == null
+                                ? AppConstant.textSecondary
+                                : AppConstant.textPrimary,
+                          ),
+                        ),
+                      ),
+                      if (_dueDate != null)
+                        IconButton(
+                          onPressed: () => setState(() => _dueDate = null),
+                          icon: Icon(Icons.clear, size: 20),
                           color: AppConstant.textSecondary,
                         ),
-                        SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            _dueDate == null
-                                ? 'Set Due Date (Optional)'
-                                : 'Due: ${_dueDate!.day}/${_dueDate!.month}/${_dueDate!.year}',
-                            style: TextStyle(
-                              color: _dueDate == null
-                                  ? AppConstant.textSecondary
-                                  : AppConstant.textPrimary,
-                            ),
-                          ),
-                        ),
-                        if (_dueDate != null)
-                          IconButton(
-                            onPressed: () => setState(() => _dueDate = null),
-                            icon: Icon(Icons.clear, size: 20),
-                            color: AppConstant.textSecondary,
-                          ),
-                      ],
-                    ),
+                    ],
                   ),
                 ),
-                SizedBox(height: AppConstant.defaultPadding * 1.5),
+              ),
+              SizedBox(height: AppConstant.defaultPadding * 1.5),
 
-                // Buttons
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => Navigator.pop(context),
-                        style: OutlinedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(vertical: 16),
-                          side: BorderSide(color: AppConstant.textSecondary),
-                        ),
-                        child: Text('Cancel'),
+              // Buttons
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: OutlinedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        side: BorderSide(color: AppConstant.textSecondary),
                       ),
+                      child: Text('Cancel'),
                     ),
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: _createTask,
-                        style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(vertical: 16),
-                          backgroundColor: AppConstant.primaryBlue,
-                          foregroundColor: Colors.white,
-                        ),
-                        child: Text('Create Task'),
+                  ),
+                  SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: _createTask,
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        backgroundColor: AppConstant.primaryBlue,
+                        foregroundColor: Colors.white,
                       ),
+                      child: Text('Create Task'),
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),

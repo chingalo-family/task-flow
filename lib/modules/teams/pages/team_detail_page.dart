@@ -377,7 +377,7 @@ class _TeamDetailPageState extends State<TeamDetailPage>
       maxHeightRatio: 0.85,
       initialHeightRatio: 0.85,
     );
-    
+
     if (result == true && mounted) {
       final memberCount = team.memberIds?.length ?? 0;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -395,7 +395,7 @@ class _TeamDetailPageState extends State<TeamDetailPage>
       maxHeightRatio: 0.85,
       initialHeightRatio: 0.85,
     );
-    
+
     if (result == true && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Task created successfully')),
