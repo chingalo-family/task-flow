@@ -5,6 +5,7 @@ import 'package:task_flow/app_state/team_state/team_state.dart';
 import 'package:task_flow/app_state/user_list_state/user_list_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/models/models.dart';
+import 'package:task_flow/core/utils/utils.dart';
 import 'package:task_flow/modules/tasks/components/task_card.dart';
 import 'package:task_flow/modules/teams/dialogs/add_member_dialog.dart';
 import 'package:task_flow/modules/teams/dialogs/add_task_dialog.dart';
@@ -369,18 +370,37 @@ class _TeamDetailPageState extends State<TeamDetailPage>
     );
   }
 
-  void _showAddMemberDialog(BuildContext context, Team team) {
-    showDialog(
+  void _showAddMemberDialog(BuildContext context, Team team) async {
+    final result = await AppModalUtil.showActionSheetModal(
       context: context,
-      builder: (context) => AddMemberDialog(team: team),
+      actionSheetContainer: AddMemberDialog(team: team),
+      maxHeightRatio: 0.85,
+      initialHeightRatio: 0.85,
     );
+    
+    if (result == true && mounted) {
+      final memberCount = team.memberIds?.length ?? 0;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Members added successfully. Total: $memberCount'),
+        ),
+      );
+    }
   }
 
-  void _showAddTaskDialog(BuildContext context, Team team) {
-    showDialog(
+  void _showAddTaskDialog(BuildContext context, Team team) async {
+    final result = await AppModalUtil.showActionSheetModal(
       context: context,
-      builder: (context) => AddTaskDialog(team: team),
+      actionSheetContainer: AddTaskDialog(team: team),
+      maxHeightRatio: 0.85,
+      initialHeightRatio: 0.85,
     );
+    
+    if (result == true && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Task created successfully')),
+      );
+    }
   }
 
   void _removeMember(BuildContext context, Team team, User member) {

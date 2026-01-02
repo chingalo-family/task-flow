@@ -28,16 +28,9 @@ class _AddMemberDialogState extends State<AddMemberDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      backgroundColor: AppConstant.cardBackground,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppConstant.borderRadius16),
-      ),
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.9,
-        height: MediaQuery.of(context).size.height * 0.7,
-        padding: EdgeInsets.all(AppConstant.defaultPadding),
-        child: Column(
+    return Container(
+      padding: EdgeInsets.all(AppConstant.defaultPadding),
+      child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
@@ -257,14 +250,7 @@ class _AddMemberDialogState extends State<AddMemberDialog> {
     }
 
     if (mounted) {
-      Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            '${_selectedUserIds.length} member${_selectedUserIds.length > 1 ? 's' : ''} added successfully',
-          ),
-        ),
-      );
+      Navigator.pop(context, true); // Return true to indicate success
     }
   }
 }

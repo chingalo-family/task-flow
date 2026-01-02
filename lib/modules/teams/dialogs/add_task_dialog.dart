@@ -34,21 +34,12 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      backgroundColor: AppConstant.cardBackground,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppConstant.borderRadius16),
-      ),
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.9,
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.8,
-        ),
-        padding: EdgeInsets.all(AppConstant.defaultPadding),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
+    return Container(
+      padding: EdgeInsets.all(AppConstant.defaultPadding),
+      child: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -362,10 +353,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
     await teamState.addTaskToTeam(widget.team.id, newTask.id);
 
     if (mounted) {
-      Navigator.pop(context);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Task created successfully')));
+      Navigator.pop(context, true); // Return true to indicate success
     }
   }
 }

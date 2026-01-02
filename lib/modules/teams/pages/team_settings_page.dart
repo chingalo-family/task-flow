@@ -5,6 +5,8 @@ import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/models/models.dart';
 import 'package:task_flow/core/utils/utils.dart';
 import 'package:task_flow/core/components/components.dart';
+import 'package:task_flow/modules/teams/components/add_status_container.dart';
+import 'package:task_flow/modules/teams/components/edit_status_container.dart';
 
 class TeamSettingsPage extends StatefulWidget {
   final String teamId;
@@ -155,140 +157,30 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
     BuildContext context,
     TeamState teamState,
     Team team,
-  ) {
-    final nameController = TextEditingController();
-    Color selectedColor = const Color(0xFF2E90FA);
-
-    showDialog(
+  ) async {
+    final result = await AppModalUtil.showActionSheetModal(
       context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setState) {
-          return AlertDialog(
-            backgroundColor: AppConstant.cardBackground,
-            title: const Text(
-              'Add Task Status',
-              style: TextStyle(color: Colors.white),
-            ),
-            content: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  InputField(
-                    controller: nameController,
-                    hintText: 'Enter status name',
-                    icon: Icons.label,
-                    labelText: 'Status Name',
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Select Color',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Wrap(
-                    spacing: 12,
-                    runSpacing: 12,
-                    children: [
-                      _colorOption(
-                        const Color(0xFF2E90FA),
-                        selectedColor,
-                        setState,
-                        (color) => selectedColor = color,
-                      ),
-                      _colorOption(
-                        const Color(0xFF10B981),
-                        selectedColor,
-                        setState,
-                        (color) => selectedColor = color,
-                      ),
-                      _colorOption(
-                        const Color(0xFFF59E0B),
-                        selectedColor,
-                        setState,
-                        (color) => selectedColor = color,
-                      ),
-                      _colorOption(
-                        const Color(0xFFEF4444),
-                        selectedColor,
-                        setState,
-                        (color) => selectedColor = color,
-                      ),
-                      _colorOption(
-                        const Color(0xFF8B5CF6),
-                        selectedColor,
-                        setState,
-                        (color) => selectedColor = color,
-                      ),
-                      _colorOption(
-                        const Color(0xFFEC4899),
-                        selectedColor,
-                        setState,
-                        (color) => selectedColor = color,
-                      ),
-                      _colorOption(
-                        const Color(0xFF6B7280),
-                        selectedColor,
-                        setState,
-                        (color) => selectedColor = color,
-                      ),
-                      _colorOption(
-                        const Color(0xFF14B8A6),
-                        selectedColor,
-                        setState,
-                        (color) => selectedColor = color,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text(
-                  'Cancel',
-                  style: TextStyle(color: AppConstant.textSecondary),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  if (nameController.text.trim().isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Please enter a status name'),
-                      ),
-                    );
-                    return;
-                  }
-
-                  final newStatus = TaskStatus(
-                    id: DateTime.now().millisecondsSinceEpoch.toString(),
-                    name: nameController.text.trim(),
-                    color: selectedColor,
-                    order: team.taskStatuses.length,
-                  );
-
-                  await teamState.addTaskStatus(team.id, newStatus);
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Status added successfully')),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppConstant.primaryBlue,
-                ),
-                child: const Text('Add'),
-              ),
-            ],
-          );
-        },
-      ),
+      actionSheetContainer: const AddStatusContainer(),
+      maxHeightRatio: 0.7,
+      initialHeightRatio: 0.7,
     );
+
+    if (result != null && result is Map<String, dynamic>) {
+      final newStatus = TaskStatus(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        name: result['name'],
+        color: result['color'],
+        order: team.taskStatuses.length,
+      );
+
+      await teamState.addTaskStatus(team.id, newStatus);
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Status added successfully')),
+        );
+      }
+    }
   }
 
   void _showEditStatusDialog(
@@ -296,173 +188,28 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
     TeamState teamState,
     Team team,
     TaskStatus status,
-  ) {
-    final nameController = TextEditingController(text: status.name);
-    Color selectedColor = status.color;
-
-    showDialog(
+  ) async {
+    final result = await AppModalUtil.showActionSheetModal(
       context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setState) {
-          return AlertDialog(
-            backgroundColor: AppConstant.cardBackground,
-            title: const Text(
-              'Edit Task Status',
-              style: TextStyle(color: Colors.white),
-            ),
-            content: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  InputField(
-                    controller: nameController,
-                    hintText: 'Enter status name',
-                    icon: Icons.label,
-                    labelText: 'Status Name',
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Select Color',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Wrap(
-                    spacing: 12,
-                    runSpacing: 12,
-                    children: [
-                      _colorOption(
-                        const Color(0xFF2E90FA),
-                        selectedColor,
-                        setState,
-                        (color) => selectedColor = color,
-                      ),
-                      _colorOption(
-                        const Color(0xFF10B981),
-                        selectedColor,
-                        setState,
-                        (color) => selectedColor = color,
-                      ),
-                      _colorOption(
-                        const Color(0xFFF59E0B),
-                        selectedColor,
-                        setState,
-                        (color) => selectedColor = color,
-                      ),
-                      _colorOption(
-                        const Color(0xFFEF4444),
-                        selectedColor,
-                        setState,
-                        (color) => selectedColor = color,
-                      ),
-                      _colorOption(
-                        const Color(0xFF8B5CF6),
-                        selectedColor,
-                        setState,
-                        (color) => selectedColor = color,
-                      ),
-                      _colorOption(
-                        const Color(0xFFEC4899),
-                        selectedColor,
-                        setState,
-                        (color) => selectedColor = color,
-                      ),
-                      _colorOption(
-                        const Color(0xFF6B7280),
-                        selectedColor,
-                        setState,
-                        (color) => selectedColor = color,
-                      ),
-                      _colorOption(
-                        const Color(0xFF14B8A6),
-                        selectedColor,
-                        setState,
-                        (color) => selectedColor = color,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text(
-                  'Cancel',
-                  style: TextStyle(color: AppConstant.textSecondary),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  if (nameController.text.trim().isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Please enter a status name'),
-                      ),
-                    );
-                    return;
-                  }
-
-                  final updatedStatus = status.copyWith(
-                    name: nameController.text.trim(),
-                    color: selectedColor,
-                  );
-
-                  await teamState.updateTaskStatus(
-                    team.id,
-                    status.id,
-                    updatedStatus,
-                  );
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Status updated successfully'),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppConstant.primaryBlue,
-                ),
-                child: const Text('Update'),
-              ),
-            ],
-          );
-        },
-      ),
+      actionSheetContainer: EditStatusContainer(status: status),
+      maxHeightRatio: 0.7,
+      initialHeightRatio: 0.7,
     );
-  }
 
-  Widget _colorOption(
-    Color color,
-    Color selectedColor,
-    void Function(void Function()) setState,
-    void Function(Color) onSelect,
-  ) {
-    final isSelected = color.value == selectedColor.value;
-    return GestureDetector(
-      onTap: () {
-        setState(() => onSelect(color));
-      },
-      child: Container(
-        width: 44,
-        height: 44,
-        decoration: BoxDecoration(
-          color: color,
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: isSelected ? Colors.white : Colors.transparent,
-            width: 3,
-          ),
-        ),
-        child: isSelected
-            ? const Icon(Icons.check, color: Colors.white, size: 24)
-            : null,
-      ),
-    );
+    if (result != null && result is Map<String, dynamic>) {
+      final updatedStatus = status.copyWith(
+        name: result['name'],
+        color: result['color'],
+      );
+
+      await teamState.updateTaskStatus(team.id, status.id, updatedStatus);
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Status updated successfully')),
+        );
+      }
+    }
   }
 
   void _deleteStatus(
