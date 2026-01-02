@@ -10,7 +10,6 @@ class OnboardingIllustration extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 400,
       padding: EdgeInsets.all(AppConstant.spacing32),
       child: _buildIllustration(),
     );

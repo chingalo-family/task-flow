@@ -15,22 +15,26 @@ class OnboardingPage {
     return [
       OnboardingPage(
         title: 'Manage tasks\nefficiently',
-        description: 'Break complex projects into manageable subtasks. Organize your team\'s workflow and stay ahead of deadlines.',
+        description:
+            'Break complex projects into manageable subtasks. Organize your team\'s workflow and stay ahead of deadlines.',
         icon: 'tasks',
       ),
       OnboardingPage(
         title: 'Team Collaboration',
-        description: 'Share tasks, manage projects, and communicate with your team in TaskFlow\'s unified workspace.',
+        description:
+            'Share tasks, manage projects, and communicate with your team in TaskFlow\'s unified workspace.',
         icon: 'team',
       ),
       OnboardingPage(
         title: 'Track Progress',
-        description: 'Monitor task completion, view analytics, and stay on top of your projects with real-time updates.',
+        description:
+            'Monitor task completion, view analytics, and stay on top of your projects with real-time updates.',
         icon: 'progress',
       ),
       OnboardingPage(
         title: 'Master Your Day',
-        description: 'The modern way to manage tasks and subtasks effortlessly.',
+        description:
+            'The modern way to manage tasks and subtasks effortlessly.',
         icon: 'master',
         isLastPage: true,
       ),

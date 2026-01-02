@@ -27,7 +27,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Future<void> _completeOnboarding() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('onboarding_complete', true);
-    
+
     if (mounted) {
       Navigator.pushReplacement(
         context,
@@ -59,7 +59,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     final size = MediaQuery.of(context).size;
     final isSmallScreen = size.height < 650;
     final isTinyScreen = size.height < 550;
-    
+
     return Scaffold(
       backgroundColor: AppConstant.darkBackground,
       body: SafeArea(
@@ -84,10 +84,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       SizedBox(width: AppConstant.spacing8),
                       Text(
                         'TaskFlow',
-                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontSize: isSmallScreen ? 16 : 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context).textTheme.headlineMedium
+                            ?.copyWith(
+                              fontSize: isSmallScreen ? 16 : 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                     ],
                   ),
@@ -130,48 +131,60 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   return SingleChildScrollView(
                     child: Padding(
                       padding: EdgeInsets.symmetric(
-                        horizontal: isTinyScreen ? AppConstant.spacing16 : AppConstant.spacing24,
+                        horizontal: isTinyScreen
+                            ? AppConstant.spacing16
+                            : AppConstant.spacing24,
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(height: isTinyScreen ? AppConstant.spacing16 : AppConstant.spacing32),
-                          
-                          // Illustration
                           SizedBox(
-                            height: isTinyScreen ? 200 : (isSmallScreen ? 250 : 300),
-                            child: OnboardingIllustration(type: page.icon),
+                            height: isTinyScreen
+                                ? AppConstant.spacing16
+                                : AppConstant.spacing32,
                           ),
-                          
-                          SizedBox(height: isTinyScreen ? AppConstant.spacing16 : AppConstant.spacing24),
-                          
-                          // Title
+                          OnboardingIllustration(type: page.icon),
+                          SizedBox(
+                            height: isTinyScreen
+                                ? AppConstant.spacing16
+                                : AppConstant.spacing24,
+                          ),
                           Text(
                             page.title,
-                            style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                              fontSize: isTinyScreen ? 20 : (isSmallScreen ? 24 : 28),
-                            ),
+                            style: Theme.of(context).textTheme.headlineLarge
+                                ?.copyWith(
+                                  fontSize: isTinyScreen
+                                      ? 20
+                                      : (isSmallScreen ? 24 : 28),
+                                ),
                             textAlign: TextAlign.center,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          
-                          SizedBox(height: isTinyScreen ? AppConstant.spacing8 : AppConstant.spacing12),
-                          
-                          // Description
+                          SizedBox(
+                            height: isTinyScreen
+                                ? AppConstant.spacing8
+                                : AppConstant.spacing12,
+                          ),
                           Text(
                             page.description,
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: AppConstant.textSecondary,
-                              fontSize: isTinyScreen ? 13 : (isSmallScreen ? 14 : 16),
-                              height: 1.5,
-                            ),
+                            style: Theme.of(context).textTheme.bodyLarge
+                                ?.copyWith(
+                                  color: AppConstant.textSecondary,
+                                  fontSize: isTinyScreen
+                                      ? 13
+                                      : (isSmallScreen ? 14 : 16),
+                                  height: 1.5,
+                                ),
                             textAlign: TextAlign.center,
                             maxLines: 4,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          
-                          SizedBox(height: isTinyScreen ? AppConstant.spacing16 : AppConstant.spacing24),
+                          SizedBox(
+                            height: isTinyScreen
+                                ? AppConstant.spacing16
+                                : AppConstant.spacing24,
+                          ),
                         ],
                       ),
                     ),
@@ -182,7 +195,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
             // Bottom section with indicators and button
             Padding(
-              padding: EdgeInsets.all(isTinyScreen ? AppConstant.spacing16 : AppConstant.spacing24),
+              padding: EdgeInsets.all(
+                isTinyScreen ? AppConstant.spacing16 : AppConstant.spacing24,
+              ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -191,9 +206,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     currentPage: _currentPage,
                     pageCount: _pages.length,
                   ),
-                  
-                  SizedBox(height: isTinyScreen ? AppConstant.spacing16 : AppConstant.spacing24),
-                  
+
+                  SizedBox(
+                    height: isTinyScreen
+                        ? AppConstant.spacing16
+                        : AppConstant.spacing24,
+                  ),
+
                   // Next/Get Started button
                   SizedBox(
                     width: double.infinity,
@@ -203,7 +222,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppConstant.primaryBlue,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                          borderRadius: BorderRadius.circular(
+                            AppConstant.borderRadius12,
+                          ),
                         ),
                       ),
                       child: Row(
@@ -233,10 +254,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ),
                     ),
                   ),
-                  
+
                   // Log in link for last page
                   if (_pages[_currentPage].isLastPage) ...[
-                    SizedBox(height: isTinyScreen ? AppConstant.spacing8 : AppConstant.spacing12),
+                    SizedBox(
+                      height: isTinyScreen
+                          ? AppConstant.spacing8
+                          : AppConstant.spacing12,
+                    ),
                     TextButton(
                       onPressed: _completeOnboarding,
                       style: TextButton.styleFrom(

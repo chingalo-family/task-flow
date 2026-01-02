@@ -28,8 +28,6 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
   void initState() {
     print("Splash Init State");
     super.initState();
-
-    // Animation setup
     _controller = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
@@ -49,27 +47,19 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       Provider.of<AppInfoState>(context, listen: false).initiatizeAppInfo();
-
-      // Simulate loading progress
-      for (int i = 0; i <= 100; i += 5) {
-        await Future.delayed(const Duration(milliseconds: 30));
+      for (int count = 0; count <= 100; count += 5) {
+        await Future.delayed(const Duration(milliseconds: 50));
         if (mounted) {
           setState(() {
-            _progress = i / 100;
+            _progress = count / 100;
           });
         }
       }
-
-      // Wait for UserState to initialize and check auth
       final userState = Provider.of<UserState>(context, listen: false);
       await userState.initialize();
-
-      // Check onboarding status
       final prefs = await SharedPreferences.getInstance();
       final onboardingComplete = prefs.getBool('onboarding_complete') ?? false;
-
       await Future.delayed(const Duration(milliseconds: 500));
-
       if (mounted) {
         _redirectToPages(userState, onboardingComplete);
       }
@@ -94,7 +84,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },
-        transitionDuration: const Duration(milliseconds: 500),
+        transitionDuration: const Duration(milliseconds: 100),
       ),
     );
   }
