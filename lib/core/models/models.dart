@@ -1,0 +1,18 @@
+// Core models export file
+// This file provides a single import point for all core models
+
+// Task
+export 'task/task.dart';
+
+// Team
+export 'team/team.dart';
+
+// Notification
+export 'notification/notification.dart';
+
+// User
+export 'user.dart';
+export 'user_entity.dart';
+
+// Email Notification
+export 'email_notification.dart';
