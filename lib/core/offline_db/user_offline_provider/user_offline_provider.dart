@@ -13,12 +13,14 @@ class UserOfflineProvider {
   Future<List<dynamic>> getUsers() async {
     await DBService().init();
     final box = DBService().userBox;
+    if (box == null) return [];
     return box.getAll().map(_toUser).toList();
   }
 
   Future<User?> getUserById(String apiUserId) async {
     await DBService().init();
     final box = DBService().userBox;
+    if (box == null) return null;
     final q = box
         .query(
           UserEntity_.apiUserId.equals(apiUserId) as Condition<UserEntity>?,
@@ -32,6 +34,7 @@ class UserOfflineProvider {
   Future<void> addOrUpdateUser(User user) async {
     await DBService().init();
     final box = DBService().userBox;
+    if (box == null) return;
     final existing = box
         .query(UserEntity_.apiUserId.equals(user.id) as Condition<UserEntity>?)
         .build()
@@ -58,6 +61,7 @@ class UserOfflineProvider {
   Future<void> deleteUser(String apiUserId) async {
     await DBService().init();
     final box = DBService().userBox;
+    if (box == null) return;
     final q = box
         .query(
           UserEntity_.apiUserId.equals(apiUserId) as Condition<UserEntity>?,
