@@ -1,3 +1,5 @@
+import 'task_status/task_status.dart';
+
 class Team {
   final String id;
   final String name;
@@ -6,6 +8,7 @@ class Team {
   final int memberCount;
   final List<String>? memberIds;
   final List<String>? taskIds; // List of task IDs belonging to this team
+  final List<TaskStatus>? customTaskStatuses; // Custom task statuses for this team
   final String? createdByUserId;
   final String? createdByUsername;
   final DateTime createdAt;
@@ -19,12 +22,17 @@ class Team {
     this.memberCount = 0,
     this.memberIds,
     this.taskIds,
+    this.customTaskStatuses,
     this.createdByUserId,
     this.createdByUsername,
     DateTime? createdAt,
     DateTime? updatedAt,
   })  : createdAt = createdAt ?? DateTime.now(),
         updatedAt = updatedAt ?? DateTime.now();
+
+  // Get task statuses (custom or default)
+  List<TaskStatus> get taskStatuses =>
+      customTaskStatuses ?? TaskStatus.getDefaultStatuses();
 
   Team copyWith({
     String? id,
@@ -34,6 +42,7 @@ class Team {
     int? memberCount,
     List<String>? memberIds,
     List<String>? taskIds,
+    List<TaskStatus>? customTaskStatuses,
     String? createdByUserId,
     String? createdByUsername,
     DateTime? createdAt,
@@ -47,6 +56,7 @@ class Team {
       memberCount: memberCount ?? this.memberCount,
       memberIds: memberIds ?? this.memberIds,
       taskIds: taskIds ?? this.taskIds,
+      customTaskStatuses: customTaskStatuses ?? this.customTaskStatuses,
       createdByUserId: createdByUserId ?? this.createdByUserId,
       createdByUsername: createdByUsername ?? this.createdByUsername,
       createdAt: createdAt ?? this.createdAt,

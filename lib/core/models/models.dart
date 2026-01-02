@@ -7,6 +7,9 @@ export 'task/task.dart';
 // Team
 export 'team/team.dart';
 
+// Task Status
+export 'task_status/task_status.dart';
+
 // Notification
 export 'notification/notification.dart';
 

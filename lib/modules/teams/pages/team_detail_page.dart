@@ -8,6 +8,7 @@ import 'package:task_flow/core/models/models.dart';
 import 'package:task_flow/modules/tasks/components/task_card.dart';
 import 'package:task_flow/modules/teams/dialogs/add_member_dialog.dart';
 import 'package:task_flow/modules/teams/dialogs/add_task_dialog.dart';
+import 'package:task_flow/modules/teams/pages/team_settings_page.dart';
 
 class TeamDetailPage extends StatefulWidget {
   final Team team;
@@ -25,7 +26,7 @@ class _TeamDetailPageState extends State<TeamDetailPage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -51,6 +52,7 @@ class _TeamDetailPageState extends State<TeamDetailPage>
             Tab(text: 'Overview'),
             Tab(text: 'Members'),
             Tab(text: 'Tasks'),
+            Tab(text: 'Settings'),
           ],
         ),
       ),
@@ -60,6 +62,7 @@ class _TeamDetailPageState extends State<TeamDetailPage>
           _buildOverviewTab(team),
           _buildMembersTab(team),
           _buildTasksTab(team),
+          _buildSettingsTab(team),
         ],
       ),
     );
@@ -376,6 +379,106 @@ class _TeamDetailPageState extends State<TeamDetailPage>
             child: Text('Remove', style: TextStyle(color: AppConstant.errorRed)),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSettingsTab(Team team) {
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(AppConstant.defaultPadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Team Settings',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: AppConstant.textPrimary,
+            ),
+          ),
+          SizedBox(height: AppConstant.defaultPadding),
+          
+          // Task Statuses Card
+          _buildSettingsCard(
+            title: 'Task Statuses',
+            subtitle: 'Customize task statuses for this team',
+            icon: Icons.check_circle_outline,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TeamSettingsPage(teamId: team.id),
+                ),
+              );
+            },
+          ),
+          
+          SizedBox(height: AppConstant.defaultPadding),
+          
+          // Preview current statuses
+          Text(
+            'Current Statuses (${team.taskStatuses.length})',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: AppConstant.textPrimary,
+            ),
+          ),
+          SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: team.taskStatuses.map((status) {
+              return Chip(
+                avatar: CircleAvatar(
+                  backgroundColor: status.color,
+                  radius: 8,
+                ),
+                label: Text(status.name),
+                backgroundColor: AppConstant.cardDark,
+                labelStyle: TextStyle(color: AppConstant.textPrimary, fontSize: 12),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSettingsCard({
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return Card(
+      color: AppConstant.cardDark,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: ListTile(
+        leading: Container(
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: AppConstant.primaryBlue.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(icon, color: AppConstant.primaryBlue),
+        ),
+        title: Text(
+          title,
+          style: TextStyle(
+            color: AppConstant.textPrimary,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        subtitle: Text(
+          subtitle,
+          style: TextStyle(color: AppConstant.textSecondary, fontSize: 12),
+        ),
+        trailing: Icon(Icons.chevron_right, color: AppConstant.textSecondary),
+        onTap: onTap,
       ),
     );
   }

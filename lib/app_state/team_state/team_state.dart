@@ -155,4 +155,63 @@ class TeamState extends ChangeNotifier {
       await updateTeam(updatedTeam);
     }
   }
+
+  Future<void> addTaskStatus(String teamId, TaskStatus status) async {
+    final team = getTeamById(teamId);
+    if (team != null) {
+      final statuses = List<TaskStatus>.from(team.taskStatuses);
+      statuses.add(status);
+      final updatedTeam = team.copyWith(
+        customTaskStatuses: statuses,
+        updatedAt: DateTime.now(),
+      );
+      await updateTeam(updatedTeam);
+    }
+  }
+
+  Future<void> updateTaskStatus(
+      String teamId, String statusId, TaskStatus updatedStatus) async {
+    final team = getTeamById(teamId);
+    if (team != null) {
+      final statuses = List<TaskStatus>.from(team.taskStatuses);
+      final index = statuses.indexWhere((s) => s.id == statusId);
+      if (index != -1) {
+        statuses[index] = updatedStatus;
+        final updatedTeam = team.copyWith(
+          customTaskStatuses: statuses,
+          updatedAt: DateTime.now(),
+        );
+        await updateTeam(updatedTeam);
+      }
+    }
+  }
+
+  Future<void> deleteTaskStatus(String teamId, String statusId) async {
+    final team = getTeamById(teamId);
+    if (team != null) {
+      final statuses = List<TaskStatus>.from(team.taskStatuses);
+      // Don't allow deleting default statuses
+      final statusToDelete = statuses.firstWhere((s) => s.id == statusId);
+      if (!statusToDelete.isDefault) {
+        statuses.removeWhere((s) => s.id == statusId);
+        final updatedTeam = team.copyWith(
+          customTaskStatuses: statuses,
+          updatedAt: DateTime.now(),
+        );
+        await updateTeam(updatedTeam);
+      }
+    }
+  }
+
+  Future<void> reorderTaskStatuses(
+      String teamId, List<TaskStatus> reorderedStatuses) async {
+    final team = getTeamById(teamId);
+    if (team != null) {
+      final updatedTeam = team.copyWith(
+        customTaskStatuses: reorderedStatuses,
+        updatedAt: DateTime.now(),
+      );
+      await updateTeam(updatedTeam);
+    }
+  }
 }
