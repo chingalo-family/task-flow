@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:task_flow/app_state/app_info_state/app_info_state.dart';
-import 'package:task_flow/app_state/task_state/task_state.dart';
-import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/modules/tasks/tasks_page.dart';
 import 'package:task_flow/modules/teams/teams_page.dart';
@@ -35,7 +31,7 @@ class _HomeState extends State<Home> {
           color: AppConstant.cardBackground,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 10,
               offset: Offset(0, -5),
             ),
@@ -77,7 +73,7 @@ class _HomeState extends State<Home> {
         ),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppConstant.primaryBlue.withOpacity(0.1)
+              ? AppConstant.primaryBlue.withValues(alpha: 0.1)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
         ),

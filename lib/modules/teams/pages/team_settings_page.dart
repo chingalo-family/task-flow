@@ -8,10 +8,7 @@ import 'package:task_flow/core/utils/utils.dart';
 class TeamSettingsPage extends StatefulWidget {
   final String teamId;
 
-  const TeamSettingsPage({
-    super.key,
-    required this.teamId,
-  });
+  const TeamSettingsPage({super.key, required this.teamId});
 
   @override
   State<TeamSettingsPage> createState() => _TeamSettingsPageState();
@@ -21,10 +18,10 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppConstant.backgroundDark,
+      backgroundColor: AppConstant.darkBackground,
       appBar: AppBar(
         title: const Text('Team Settings'),
-        backgroundColor: AppConstant.backgroundDark,
+        backgroundColor: AppConstant.darkBackground,
         elevation: 0,
       ),
       body: Consumer<TeamState>(
@@ -36,9 +33,7 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
 
           return ListView(
             padding: const EdgeInsets.all(16),
-            children: [
-              _buildTaskStatusesSection(context, teamState, team),
-            ],
+            children: [_buildTaskStatusesSection(context, teamState, team)],
           );
         },
       ),
@@ -46,7 +41,10 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
   }
 
   Widget _buildTaskStatusesSection(
-      BuildContext context, TeamState teamState, Team team) {
+    BuildContext context,
+    TeamState teamState,
+    Team team,
+  ) {
     final statuses = team.taskStatuses;
 
     return Column(
@@ -86,10 +84,14 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
     );
   }
 
-  Widget _buildStatusCard(BuildContext context, TeamState teamState, Team team,
-      TaskStatus status) {
+  Widget _buildStatusCard(
+    BuildContext context,
+    TeamState teamState,
+    Team team,
+    TaskStatus status,
+  ) {
     return Card(
-      color: AppConstant.cardDark,
+      color: AppConstant.cardBackground,
       margin: const EdgeInsets.only(bottom: 12),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
@@ -98,14 +100,10 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: status.color.withOpacity(0.2),
+            color: status.color.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(
-            Icons.circle,
-            color: status.color,
-            size: 20,
-          ),
+          child: Icon(Icons.circle, color: status.color, size: 20),
         ),
         title: Text(
           status.name,
@@ -117,7 +115,10 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
         subtitle: status.isDefault
             ? const Text(
                 'Default status',
-                style: TextStyle(color: AppConstant.textSecondary, fontSize: 12),
+                style: TextStyle(
+                  color: AppConstant.textSecondary,
+                  fontSize: 12,
+                ),
               )
             : null,
         trailing: status.isDefault
@@ -126,14 +127,20 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.edit,
-                        color: AppConstant.primaryBlue, size: 20),
+                    icon: const Icon(
+                      Icons.edit,
+                      color: AppConstant.primaryBlue,
+                      size: 20,
+                    ),
                     onPressed: () =>
                         _showEditStatusDialog(context, teamState, team, status),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.delete,
-                        color: AppConstant.errorColor, size: 20),
+                    icon: const Icon(
+                      Icons.delete,
+                      color: AppConstant.errorRed,
+                      size: 20,
+                    ),
                     onPressed: () =>
                         _deleteStatus(context, teamState, team, status),
                   ),
@@ -144,7 +151,10 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
   }
 
   void _showAddStatusDialog(
-      BuildContext context, TeamState teamState, Team team) {
+    BuildContext context,
+    TeamState teamState,
+    Team team,
+  ) {
     final nameController = TextEditingController();
     Color selectedColor = const Color(0xFF2E90FA);
 
@@ -153,9 +163,11 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
       builder: (context) => StatefulBuilder(
         builder: (context, setState) {
           return AlertDialog(
-            backgroundColor: AppConstant.cardDark,
-            title: const Text('Add Task Status',
-                style: TextStyle(color: Colors.white)),
+            backgroundColor: AppConstant.cardBackground,
+            title: const Text(
+              'Add Task Status',
+              style: TextStyle(color: Colors.white),
+            ),
             content: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -166,13 +178,19 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
                     style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Status Name',
-                      labelStyle: const TextStyle(color: AppConstant.textSecondary),
+                      labelStyle: const TextStyle(
+                        color: AppConstant.textSecondary,
+                      ),
                       enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: AppConstant.borderColor),
+                        borderSide: const BorderSide(
+                          color: AppConstant.cardBackground,
+                        ),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: AppConstant.primaryBlue),
+                        borderSide: const BorderSide(
+                          color: AppConstant.primaryBlue,
+                        ),
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
@@ -191,14 +209,54 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
                     spacing: 12,
                     runSpacing: 12,
                     children: [
-                      _colorOption(const Color(0xFF2E90FA), selectedColor, setState, (c) => selectedColor = c),
-                      _colorOption(const Color(0xFF10B981), selectedColor, setState, (c) => selectedColor = c),
-                      _colorOption(const Color(0xFFF59E0B), selectedColor, setState, (c) => selectedColor = c),
-                      _colorOption(const Color(0xFFEF4444), selectedColor, setState, (c) => selectedColor = c),
-                      _colorOption(const Color(0xFF8B5CF6), selectedColor, setState, (c) => selectedColor = c),
-                      _colorOption(const Color(0xFFEC4899), selectedColor, setState, (c) => selectedColor = c),
-                      _colorOption(const Color(0xFF6B7280), selectedColor, setState, (c) => selectedColor = c),
-                      _colorOption(const Color(0xFF14B8A6), selectedColor, setState, (c) => selectedColor = c),
+                      _colorOption(
+                        const Color(0xFF2E90FA),
+                        selectedColor,
+                        setState,
+                        (color) => selectedColor = color,
+                      ),
+                      _colorOption(
+                        const Color(0xFF10B981),
+                        selectedColor,
+                        setState,
+                        (color) => selectedColor = color,
+                      ),
+                      _colorOption(
+                        const Color(0xFFF59E0B),
+                        selectedColor,
+                        setState,
+                        (color) => selectedColor = color,
+                      ),
+                      _colorOption(
+                        const Color(0xFFEF4444),
+                        selectedColor,
+                        setState,
+                        (color) => selectedColor = color,
+                      ),
+                      _colorOption(
+                        const Color(0xFF8B5CF6),
+                        selectedColor,
+                        setState,
+                        (color) => selectedColor = color,
+                      ),
+                      _colorOption(
+                        const Color(0xFFEC4899),
+                        selectedColor,
+                        setState,
+                        (color) => selectedColor = color,
+                      ),
+                      _colorOption(
+                        const Color(0xFF6B7280),
+                        selectedColor,
+                        setState,
+                        (color) => selectedColor = color,
+                      ),
+                      _colorOption(
+                        const Color(0xFF14B8A6),
+                        selectedColor,
+                        setState,
+                        (color) => selectedColor = color,
+                      ),
                     ],
                   ),
                 ],
@@ -207,14 +265,18 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel',
-                    style: TextStyle(color: AppConstant.textSecondary)),
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(color: AppConstant.textSecondary),
+                ),
               ),
               ElevatedButton(
                 onPressed: () async {
                   if (nameController.text.trim().isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Please enter a status name')),
+                      const SnackBar(
+                        content: Text('Please enter a status name'),
+                      ),
                     );
                     return;
                   }
@@ -244,8 +306,12 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
     );
   }
 
-  void _showEditStatusDialog(BuildContext context, TeamState teamState,
-      Team team, TaskStatus status) {
+  void _showEditStatusDialog(
+    BuildContext context,
+    TeamState teamState,
+    Team team,
+    TaskStatus status,
+  ) {
     final nameController = TextEditingController(text: status.name);
     Color selectedColor = status.color;
 
@@ -254,9 +320,11 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
       builder: (context) => StatefulBuilder(
         builder: (context, setState) {
           return AlertDialog(
-            backgroundColor: AppConstant.cardDark,
-            title: const Text('Edit Task Status',
-                style: TextStyle(color: Colors.white)),
+            backgroundColor: AppConstant.cardBackground,
+            title: const Text(
+              'Edit Task Status',
+              style: TextStyle(color: Colors.white),
+            ),
             content: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -267,13 +335,19 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
                     style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Status Name',
-                      labelStyle: const TextStyle(color: AppConstant.textSecondary),
+                      labelStyle: const TextStyle(
+                        color: AppConstant.textSecondary,
+                      ),
                       enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: AppConstant.borderColor),
+                        borderSide: const BorderSide(
+                          color: AppConstant.cardBackground,
+                        ),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: AppConstant.primaryBlue),
+                        borderSide: const BorderSide(
+                          color: AppConstant.primaryBlue,
+                        ),
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
@@ -292,14 +366,54 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
                     spacing: 12,
                     runSpacing: 12,
                     children: [
-                      _colorOption(const Color(0xFF2E90FA), selectedColor, setState, (c) => selectedColor = c),
-                      _colorOption(const Color(0xFF10B981), selectedColor, setState, (c) => selectedColor = c),
-                      _colorOption(const Color(0xFFF59E0B), selectedColor, setState, (c) => selectedColor = c),
-                      _colorOption(const Color(0xFFEF4444), selectedColor, setState, (c) => selectedColor = c),
-                      _colorOption(const Color(0xFF8B5CF6), selectedColor, setState, (c) => selectedColor = c),
-                      _colorOption(const Color(0xFFEC4899), selectedColor, setState, (c) => selectedColor = c),
-                      _colorOption(const Color(0xFF6B7280), selectedColor, setState, (c) => selectedColor = c),
-                      _colorOption(const Color(0xFF14B8A6), selectedColor, setState, (c) => selectedColor = c),
+                      _colorOption(
+                        const Color(0xFF2E90FA),
+                        selectedColor,
+                        setState,
+                        (color) => selectedColor = color,
+                      ),
+                      _colorOption(
+                        const Color(0xFF10B981),
+                        selectedColor,
+                        setState,
+                        (color) => selectedColor = color,
+                      ),
+                      _colorOption(
+                        const Color(0xFFF59E0B),
+                        selectedColor,
+                        setState,
+                        (color) => selectedColor = color,
+                      ),
+                      _colorOption(
+                        const Color(0xFFEF4444),
+                        selectedColor,
+                        setState,
+                        (color) => selectedColor = color,
+                      ),
+                      _colorOption(
+                        const Color(0xFF8B5CF6),
+                        selectedColor,
+                        setState,
+                        (color) => selectedColor = color,
+                      ),
+                      _colorOption(
+                        const Color(0xFFEC4899),
+                        selectedColor,
+                        setState,
+                        (color) => selectedColor = color,
+                      ),
+                      _colorOption(
+                        const Color(0xFF6B7280),
+                        selectedColor,
+                        setState,
+                        (color) => selectedColor = color,
+                      ),
+                      _colorOption(
+                        const Color(0xFF14B8A6),
+                        selectedColor,
+                        setState,
+                        (color) => selectedColor = color,
+                      ),
                     ],
                   ),
                 ],
@@ -308,14 +422,18 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel',
-                    style: TextStyle(color: AppConstant.textSecondary)),
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(color: AppConstant.textSecondary),
+                ),
               ),
               ElevatedButton(
                 onPressed: () async {
                   if (nameController.text.trim().isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Please enter a status name')),
+                      const SnackBar(
+                        content: Text('Please enter a status name'),
+                      ),
                     );
                     return;
                   }
@@ -326,10 +444,15 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
                   );
 
                   await teamState.updateTaskStatus(
-                      team.id, status.id, updatedStatus);
+                    team.id,
+                    status.id,
+                    updatedStatus,
+                  );
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Status updated successfully')),
+                    const SnackBar(
+                      content: Text('Status updated successfully'),
+                    ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -344,8 +467,12 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
     );
   }
 
-  Widget _colorOption(Color color, Color selectedColor,
-      void Function(void Function()) setState, void Function(Color) onSelect) {
+  Widget _colorOption(
+    Color color,
+    Color selectedColor,
+    void Function(void Function()) setState,
+    void Function(Color) onSelect,
+  ) {
     final isSelected = color.value == selectedColor.value;
     return GestureDetector(
       onTap: () {
@@ -369,8 +496,12 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
     );
   }
 
-  void _deleteStatus(BuildContext context, TeamState teamState, Team team,
-      TaskStatus status) {
+  void _deleteStatus(
+    BuildContext context,
+    TeamState teamState,
+    Team team,
+    TaskStatus status,
+  ) {
     DialogUtils.showConfirmationDialog(
       context: context,
       title: 'Delete Status',

@@ -62,9 +62,7 @@ class TaskStats extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppConstant.cardBackground,
         borderRadius: BorderRadius.circular(AppConstant.borderRadius16),
-        border: Border.all(
-          color: color.withOpacity(0.2),
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,11 +70,7 @@ class TaskStats extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(
-                icon,
-                color: color,
-                size: 20,
-              ),
+              Icon(icon, color: color, size: 20),
               Text(
                 value,
                 style: TextStyle(
@@ -90,9 +84,9 @@ class TaskStats extends StatelessWidget {
           SizedBox(height: AppConstant.spacing8),
           Text(
             label,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontSize: 12,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(fontSize: 12),
           ),
         ],
       ),

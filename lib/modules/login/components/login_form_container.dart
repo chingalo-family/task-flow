@@ -76,7 +76,13 @@ class _LoginFormContainerState extends State<LoginFormContainer> {
     }
   }
 
-  void onSignUp(String username, String email, String password) async {
+  void onSignUp(
+    String firstName,
+    String surname,
+    String email,
+    String phoneNumber,
+    String password,
+  ) async {
     try {
       setState(() {
         isSaving = true;
@@ -86,12 +92,12 @@ class _LoginFormContainerState extends State<LoginFormContainer> {
       AppUtil.showToastMessage(
         message: 'Account created successfully! Please log in.',
       );
-      
+
       // Switch to login mode
       if (widget.onToggleAuthMode != null) {
         widget.onToggleAuthMode!();
       }
-      
+
       setState(() {
         isSaving = false;
       });
@@ -105,7 +111,7 @@ class _LoginFormContainerState extends State<LoginFormContainer> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: Column(
         children: [
@@ -114,8 +120,8 @@ class _LoginFormContainerState extends State<LoginFormContainer> {
             child: widget.showSignUp
                 ? ModernSignupForm(
                     key: ValueKey('signup'),
-                    onSignUp: onSignUp,
                     isSaving: isSaving,
+                    onSignUp: onSignUp,
                   )
                 : ModernLoginForm(
                     key: ValueKey('login'),
@@ -124,9 +130,9 @@ class _LoginFormContainerState extends State<LoginFormContainer> {
                     initialUsername: currentUser?.username,
                   ),
           ),
-          
+
           SizedBox(height: AppConstant.spacing24),
-          
+
           // Toggle between sign in and sign up
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

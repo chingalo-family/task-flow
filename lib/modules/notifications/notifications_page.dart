@@ -109,14 +109,17 @@ class _NotificationsPageState extends State<NotificationsPage> {
                               Icon(
                                 Icons.notifications_none,
                                 size: 80,
-                                color: AppConstant.textSecondary.withOpacity(0.3),
+                                color: AppConstant.textSecondary.withValues(
+                                  alpha: 0.3,
+                                ),
                               ),
                               SizedBox(height: AppConstant.spacing16),
                               Text(
                                 'No notifications',
-                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  color: AppConstant.textSecondary,
-                                ),
+                                style: Theme.of(context).textTheme.bodyLarge
+                                    ?.copyWith(
+                                      color: AppConstant.textSecondary,
+                                    ),
                               ),
                               SizedBox(height: AppConstant.spacing8),
                               Text(
@@ -133,10 +136,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         sliver: SliverList(
                           delegate: SliverChildBuilderDelegate(
                             (context, index) {
-                              final notification = notificationState.notifications[index];
+                              final notification =
+                                  notificationState.notifications[index];
                               return Padding(
-                                padding: EdgeInsets.only(bottom: AppConstant.spacing8),
-                                child: NotificationCard(notification: notification),
+                                padding: EdgeInsets.only(
+                                  bottom: AppConstant.spacing8,
+                                ),
+                                child: NotificationCard(
+                                  notification: notification,
+                                ),
                               );
                             },
                             childCount: notificationState.notifications.length,

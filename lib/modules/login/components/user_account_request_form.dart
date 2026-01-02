@@ -15,11 +15,12 @@ class UserAccountRequestForm extends StatefulWidget {
 class _UserAccountRequestFormState extends State<UserAccountRequestForm> {
   bool _isSaving = false;
 
-  void onSignup(
+  void onSignUp(
     String firstName,
     String surname,
     String email,
     String phoneNumber,
+    String password,
   ) async {
     String fullName = '$firstName $surname';
     if (AppUtil.isEmailValid(email)) {
@@ -212,7 +213,7 @@ class _UserAccountRequestFormState extends State<UserAccountRequestForm> {
               ),
             ),
             const SizedBox(height: 10),
-            ModernSignupForm(onSignup: onSignup, isSaving: _isSaving),
+            ModernSignupForm(isSaving: _isSaving, onSignUp: onSignUp),
           ],
         ),
       ),

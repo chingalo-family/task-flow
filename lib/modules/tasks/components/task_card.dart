@@ -26,7 +26,7 @@ class TaskCard extends StatelessWidget {
     if (date == null) return '';
     final now = DateTime.now();
     final difference = date.difference(now);
-    
+
     if (difference.inDays == 0) {
       return 'Today';
     } else if (difference.inDays == 1) {
@@ -43,14 +43,14 @@ class TaskCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final taskState = Provider.of<TaskState>(context, listen: false);
-    
+
     return Container(
       decoration: BoxDecoration(
         color: AppConstant.cardBackground,
         borderRadius: BorderRadius.circular(AppConstant.borderRadius16),
         border: Border.all(
           color: task.isOverdue
-              ? AppConstant.errorRed.withOpacity(0.3)
+              ? AppConstant.errorRed.withValues(alpha: 0.3)
               : Colors.transparent,
         ),
       ),
@@ -84,7 +84,9 @@ class TaskCard extends StatelessWidget {
                           border: Border.all(
                             color: task.isCompleted
                                 ? AppConstant.primaryBlue
-                                : AppConstant.textSecondary.withOpacity(0.3),
+                                : AppConstant.textSecondary.withValues(
+                                    alpha: 0.3,
+                                  ),
                             width: 2,
                           ),
                         ),
@@ -116,7 +118,7 @@ class TaskCard extends StatelessWidget {
                         vertical: AppConstant.spacing4,
                       ),
                       decoration: BoxDecoration(
-                        color: _getPriorityColor().withOpacity(0.1),
+                        color: _getPriorityColor().withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
@@ -132,7 +134,8 @@ class TaskCard extends StatelessWidget {
                 ),
 
                 // Description
-                if (task.description != null && task.description!.isNotEmpty) ...[
+                if (task.description != null &&
+                    task.description!.isNotEmpty) ...[
                   SizedBox(height: AppConstant.spacing8),
                   Padding(
                     padding: EdgeInsets.only(left: 36),
@@ -158,17 +161,18 @@ class TaskCard extends StatelessWidget {
                           children: [
                             Text(
                               'Progress',
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                fontSize: 12,
-                              ),
+                              style: Theme.of(
+                                context,
+                              ).textTheme.bodyMedium?.copyWith(fontSize: 12),
                             ),
                             Text(
                               '${task.progress}%',
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: AppConstant.primaryBlue,
-                              ),
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppConstant.primaryBlue,
+                                  ),
                             ),
                           ],
                         ),
@@ -177,8 +181,11 @@ class TaskCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(4),
                           child: LinearProgressIndicator(
                             value: task.progress / 100,
-                            backgroundColor: AppConstant.textSecondary.withOpacity(0.2),
-                            valueColor: AlwaysStoppedAnimation(AppConstant.primaryBlue),
+                            backgroundColor: AppConstant.textSecondary
+                                .withValues(alpha: 0.2),
+                            valueColor: AlwaysStoppedAnimation(
+                              AppConstant.primaryBlue,
+                            ),
                             minHeight: 6,
                           ),
                         ),
@@ -224,7 +231,9 @@ class TaskCard extends StatelessWidget {
                                   vertical: 2,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: AppConstant.primaryBlue.withOpacity(0.1),
+                                  color: AppConstant.primaryBlue.withValues(
+                                    alpha: 0.1,
+                                  ),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: Text(

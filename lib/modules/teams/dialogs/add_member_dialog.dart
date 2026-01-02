@@ -69,11 +69,16 @@ class _AddMemberDialogState extends State<AddMemberDialog> {
               decoration: InputDecoration(
                 hintText: 'Search users...',
                 hintStyle: TextStyle(color: AppConstant.textSecondary),
-                prefixIcon: Icon(Icons.search, color: AppConstant.textSecondary),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: AppConstant.textSecondary,
+                ),
                 filled: true,
                 fillColor: AppConstant.darkBackground,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                  borderRadius: BorderRadius.circular(
+                    AppConstant.borderRadius12,
+                  ),
                   borderSide: BorderSide.none,
                 ),
               ),
@@ -84,9 +89,13 @@ class _AddMemberDialogState extends State<AddMemberDialog> {
                 padding: EdgeInsets.all(12),
                 margin: EdgeInsets.only(bottom: AppConstant.defaultPadding),
                 decoration: BoxDecoration(
-                  color: AppConstant.primaryBlue.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(AppConstant.borderRadius8),
-                  border: Border.all(color: AppConstant.primaryBlue.withOpacity(0.3)),
+                  color: AppConstant.primaryBlue.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(
+                    AppConstant.borderRadius8,
+                  ),
+                  border: Border.all(
+                    color: AppConstant.primaryBlue.withValues(alpha: 0.3),
+                  ),
                 ),
                 child: Text(
                   '${_selectedUserIds.length} user${_selectedUserIds.length > 1 ? 's' : ''} selected',
@@ -113,7 +122,9 @@ class _AddMemberDialogState extends State<AddMemberDialog> {
                           Icon(
                             Icons.person_search,
                             size: 64,
-                            color: AppConstant.textSecondary.withOpacity(0.5),
+                            color: AppConstant.textSecondary.withValues(
+                              alpha: 0.5,
+                            ),
                           ),
                           SizedBox(height: AppConstant.defaultPadding),
                           Text(
@@ -147,14 +158,18 @@ class _AddMemberDialogState extends State<AddMemberDialog> {
                             }
                           });
                         },
-                        borderRadius: BorderRadius.circular(AppConstant.borderRadius8),
+                        borderRadius: BorderRadius.circular(
+                          AppConstant.borderRadius8,
+                        ),
                         child: Container(
                           padding: EdgeInsets.all(12),
                           decoration: BoxDecoration(
                             color: isSelected
-                                ? AppConstant.primaryBlue.withOpacity(0.1)
+                                ? AppConstant.primaryBlue.withValues(alpha: 0.1)
                                 : AppConstant.darkBackground,
-                            borderRadius: BorderRadius.circular(AppConstant.borderRadius8),
+                            borderRadius: BorderRadius.circular(
+                              AppConstant.borderRadius8,
+                            ),
                             border: Border.all(
                               color: isSelected
                                   ? AppConstant.primaryBlue
@@ -250,7 +265,7 @@ class _AddMemberDialogState extends State<AddMemberDialog> {
 
   void _addMembers() async {
     final teamState = context.read<TeamState>();
-    
+
     for (final userId in _selectedUserIds) {
       await teamState.addMemberToTeam(widget.team.id, userId);
     }

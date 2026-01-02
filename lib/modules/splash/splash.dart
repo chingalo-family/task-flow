@@ -26,27 +26,30 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
 
   @override
   void initState() {
+    print("Splash Init State");
     super.initState();
-    
+
     // Animation setup
     _controller = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
-    
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeIn),
-    );
-    
-    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOutBack),
-    );
-    
+
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
+
+    _scaleAnimation = Tween<double>(
+      begin: 0.8,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
+
     _controller.forward();
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       Provider.of<AppInfoState>(context, listen: false).initiatizeAppInfo();
-      
+
       // Simulate loading progress
       for (int i = 0; i <= 100; i += 5) {
         await Future.delayed(const Duration(milliseconds: 30));
@@ -56,17 +59,17 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
           });
         }
       }
-      
+
       // Wait for UserState to initialize and check auth
       final userState = Provider.of<UserState>(context, listen: false);
       await userState.initialize();
-      
+
       // Check onboarding status
       final prefs = await SharedPreferences.getInstance();
       final onboardingComplete = prefs.getBool('onboarding_complete') ?? false;
-      
+
       await Future.delayed(const Duration(milliseconds: 500));
-      
+
       if (mounted) {
         _redirectToPages(userState, onboardingComplete);
       }
@@ -75,7 +78,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
 
   void _redirectToPages(UserState userState, bool onboardingComplete) {
     Widget destination;
-    
+
     if (!onboardingComplete) {
       destination = const OnboardingScreen();
     } else if (userState.isAuthenticated) {
@@ -83,7 +86,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     } else {
       destination = const LoginPage();
     }
-    
+
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
@@ -113,7 +116,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Spacer(),
-              
+
               // Animated Logo
               FadeTransition(
                 opacity: _fadeAnimation,
@@ -122,9 +125,9 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
                   child: const AppLogo(size: 120),
                 ),
               ),
-              
+
               SizedBox(height: AppConstant.spacing16),
-              
+
               // Tagline
               FadeTransition(
                 opacity: _fadeAnimation,
@@ -138,9 +141,9 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
                   textAlign: TextAlign.center,
                 ),
               ),
-              
+
               const Spacer(),
-              
+
               // Loading Progress
               Column(
                 children: [
@@ -164,14 +167,14 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontSize: 12,
                       letterSpacing: 1.5,
-                      color: AppConstant.textSecondary.withOpacity(0.6),
+                      color: AppConstant.textSecondary.withValues(alpha: 0.6),
                     ),
                   ),
                 ],
               ),
-              
+
               SizedBox(height: AppConstant.spacing32),
-              
+
               // Version
               Consumer<AppInfoState>(
                 builder: (context, appInfo, _) {
@@ -180,12 +183,12 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontSize: 11,
                       letterSpacing: 1.2,
-                      color: AppConstant.textSecondary.withOpacity(0.4),
+                      color: AppConstant.textSecondary.withValues(alpha: 0.4),
                     ),
                   );
                 },
               ),
-              
+
               SizedBox(height: AppConstant.spacing16),
             ],
           ),

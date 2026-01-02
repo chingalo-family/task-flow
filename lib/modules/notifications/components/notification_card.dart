@@ -45,8 +45,11 @@ class NotificationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final notificationState = Provider.of<NotificationState>(context, listen: false);
-    
+    final notificationState = Provider.of<NotificationState>(
+      context,
+      listen: false,
+    );
+
     return Dismissible(
       key: Key(notification.id),
       direction: DismissDirection.endToStart,
@@ -57,11 +60,7 @@ class NotificationCard extends StatelessWidget {
         ),
         alignment: Alignment.centerRight,
         padding: EdgeInsets.only(right: AppConstant.spacing16),
-        child: Icon(
-          Icons.delete_outline,
-          color: Colors.white,
-          size: 24,
-        ),
+        child: Icon(Icons.delete_outline, color: Colors.white, size: 24),
       ),
       onDismissed: (direction) {
         notificationState.deleteNotification(notification.id);
@@ -70,12 +69,12 @@ class NotificationCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: notification.isRead
               ? AppConstant.cardBackground
-              : AppConstant.cardBackground.withOpacity(0.8),
+              : AppConstant.cardBackground.withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
           border: Border.all(
             color: notification.isRead
                 ? Colors.transparent
-                : AppConstant.primaryBlue.withOpacity(0.3),
+                : AppConstant.primaryBlue.withValues(alpha: 0.3),
             width: 1,
           ),
         ),
@@ -99,7 +98,7 @@ class NotificationCard extends StatelessWidget {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: _getNotificationColor().withOpacity(0.1),
+                      color: _getNotificationColor().withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(
@@ -108,9 +107,9 @@ class NotificationCard extends StatelessWidget {
                       size: 20,
                     ),
                   ),
-                  
+
                   SizedBox(width: AppConstant.spacing12),
-                  
+
                   // Content
                   Expanded(
                     child: Column(
@@ -121,11 +120,12 @@ class NotificationCard extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 notification.title,
-                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  fontWeight: notification.isRead
-                                      ? FontWeight.normal
-                                      : FontWeight.w600,
-                                ),
+                                style: Theme.of(context).textTheme.bodyLarge
+                                    ?.copyWith(
+                                      fontWeight: notification.isRead
+                                          ? FontWeight.normal
+                                          : FontWeight.w600,
+                                    ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -143,8 +143,9 @@ class NotificationCard extends StatelessWidget {
                             ],
                           ],
                         ),
-                        
-                        if (notification.body != null && notification.body!.isNotEmpty) ...[
+
+                        if (notification.body != null &&
+                            notification.body!.isNotEmpty) ...[
                           SizedBox(height: 4),
                           Text(
                             notification.body!,
@@ -153,15 +154,18 @@ class NotificationCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ],
-                        
+
                         SizedBox(height: 8),
-                        
+
                         Text(
                           notification.getTimeAgo(),
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontSize: 12,
-                            color: AppConstant.textSecondary.withOpacity(0.7),
-                          ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                fontSize: 12,
+                                color: AppConstant.textSecondary.withValues(
+                                  alpha: 0.7,
+                                ),
+                              ),
                         ),
                       ],
                     ),

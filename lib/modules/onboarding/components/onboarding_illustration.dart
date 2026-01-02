@@ -4,10 +4,7 @@ import 'package:task_flow/core/constants/app_constant.dart';
 class OnboardingIllustration extends StatelessWidget {
   final String type;
 
-  const OnboardingIllustration({
-    super.key,
-    required this.type,
-  });
+  const OnboardingIllustration({super.key, required this.type});
 
   @override
   Widget build(BuildContext context) {
@@ -47,11 +44,7 @@ class OnboardingIllustration extends StatelessWidget {
           // Folder icon with progress
           Row(
             children: [
-              Icon(
-                Icons.folder,
-                color: AppConstant.primaryBlue,
-                size: 40,
-              ),
+              Icon(Icons.folder, color: AppConstant.primaryBlue, size: 40),
               SizedBox(width: AppConstant.spacing16),
               Expanded(
                 child: Column(
@@ -60,7 +53,7 @@ class OnboardingIllustration extends StatelessWidget {
                     Container(
                       height: 12,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.3),
+                        color: Colors.white.withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(6),
                       ),
                     ),
@@ -69,7 +62,7 @@ class OnboardingIllustration extends StatelessWidget {
                       height: 12,
                       width: 100,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(6),
                       ),
                     ),
@@ -78,7 +71,9 @@ class OnboardingIllustration extends StatelessWidget {
               ),
               CircularProgressIndicator(
                 value: 0.75,
-                backgroundColor: AppConstant.textSecondary.withOpacity(0.2),
+                backgroundColor: AppConstant.textSecondary.withValues(
+                  alpha: 0.2,
+                ),
                 valueColor: AlwaysStoppedAnimation(AppConstant.primaryBlue),
               ),
             ],
@@ -114,12 +109,12 @@ class OnboardingIllustration extends StatelessWidget {
       padding: EdgeInsets.all(AppConstant.spacing16),
       decoration: BoxDecoration(
         color: checked
-            ? AppConstant.primaryBlue.withOpacity(0.1)
-            : Colors.black.withOpacity(0.2),
+            ? AppConstant.primaryBlue.withValues(alpha: 0.1)
+            : Colors.black.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
         border: Border.all(
           color: checked
-              ? AppConstant.primaryBlue.withOpacity(0.3)
+              ? AppConstant.primaryBlue.withValues(alpha: 0.3)
               : Colors.transparent,
         ),
       ),
@@ -134,7 +129,7 @@ class OnboardingIllustration extends StatelessWidget {
               border: Border.all(
                 color: checked
                     ? AppConstant.primaryBlue
-                    : AppConstant.textSecondary.withOpacity(0.3),
+                    : AppConstant.textSecondary.withValues(alpha: 0.3),
                 width: 2,
               ),
             ),
@@ -150,7 +145,7 @@ class OnboardingIllustration extends StatelessWidget {
                 Container(
                   height: 12,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(checked ? 0.5 : 0.7),
+                    color: Colors.white.withValues(alpha: checked ? 0.5 : 0.7),
                     borderRadius: BorderRadius.circular(6),
                   ),
                 ),
@@ -173,7 +168,7 @@ class OnboardingIllustration extends StatelessWidget {
                         child: Container(
                           height: 4,
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(2),
                           ),
                         ),
@@ -201,17 +196,13 @@ class OnboardingIllustration extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(
-                Icons.people,
-                color: AppConstant.primaryBlue,
-                size: 32,
-              ),
+              Icon(Icons.people, color: AppConstant.primaryBlue, size: 32),
               SizedBox(width: AppConstant.spacing12),
               Expanded(
                 child: Container(
                   height: 12,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.3),
+                    color: Colors.white.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(6),
                   ),
                 ),
@@ -222,7 +213,7 @@ class OnboardingIllustration extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(AppConstant.spacing16),
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.black.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
             ),
             child: Column(
@@ -260,7 +251,7 @@ class OnboardingIllustration extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(AppConstant.spacing12),
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.black.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
             ),
             child: Row(
@@ -278,7 +269,7 @@ class OnboardingIllustration extends StatelessWidget {
                   child: Container(
                     height: 10,
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.3),
+                      color: Colors.white.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(5),
                     ),
                   ),
@@ -293,7 +284,7 @@ class OnboardingIllustration extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 12),
                   decoration: BoxDecoration(
-                    color: AppConstant.primaryBlue.withOpacity(0.2),
+                    color: AppConstant.primaryBlue.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
@@ -308,14 +299,10 @@ class OnboardingIllustration extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 12),
                   decoration: BoxDecoration(
-                    color: Colors.green.withOpacity(0.2),
+                    color: Colors.green.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(
-                    Icons.chat_bubble,
-                    color: Colors.green,
-                    size: 24,
-                  ),
+                  child: Icon(Icons.chat_bubble, color: Colors.green, size: 24),
                 ),
               ),
             ],
@@ -329,10 +316,7 @@ class OnboardingIllustration extends StatelessWidget {
     return Container(
       width: 36,
       height: 36,
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-      ),
+      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
       child: Center(
         child: Text(
           initials,
@@ -366,7 +350,9 @@ class OnboardingIllustration extends StatelessWidget {
                 child: CircularProgressIndicator(
                   value: 0.65,
                   strokeWidth: 12,
-                  backgroundColor: AppConstant.textSecondary.withOpacity(0.2),
+                  backgroundColor: AppConstant.textSecondary.withValues(
+                    alpha: 0.2,
+                  ),
                   valueColor: AlwaysStoppedAnimation(AppConstant.primaryBlue),
                 ),
               ),
@@ -413,9 +399,9 @@ class OnboardingIllustration extends StatelessWidget {
         vertical: AppConstant.spacing12,
       ),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Column(
         children: [
@@ -430,10 +416,7 @@ class OnboardingIllustration extends StatelessWidget {
           SizedBox(height: 4),
           Text(
             label,
-            style: TextStyle(
-              fontSize: 12,
-              color: AppConstant.textSecondary,
-            ),
+            style: TextStyle(fontSize: 12, color: AppConstant.textSecondary),
           ),
         ],
       ),
@@ -448,7 +431,7 @@ class OnboardingIllustration extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: [
             AppConstant.cardBackground,
-            AppConstant.cardBackground.withOpacity(0.8),
+            AppConstant.cardBackground.withValues(alpha: 0.8),
           ],
         ),
         borderRadius: BorderRadius.circular(AppConstant.borderRadius24),
@@ -461,7 +444,7 @@ class OnboardingIllustration extends StatelessWidget {
           Icon(
             Icons.laptop_mac,
             size: 80,
-            color: AppConstant.primaryBlue.withOpacity(0.7),
+            color: AppConstant.primaryBlue.withValues(alpha: 0.7),
           ),
           SizedBox(height: AppConstant.spacing24),
           // Floating task card
@@ -471,10 +454,10 @@ class OnboardingIllustration extends StatelessWidget {
               width: 140,
               padding: EdgeInsets.all(AppConstant.spacing12),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
                 border: Border.all(
-                  color: AppConstant.primaryBlue.withOpacity(0.3),
+                  color: AppConstant.primaryBlue.withValues(alpha: 0.3),
                   width: 2,
                 ),
               ),
@@ -482,13 +465,17 @@ class OnboardingIllustration extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.check_circle, color: AppConstant.primaryBlue, size: 16),
+                      Icon(
+                        Icons.check_circle,
+                        color: AppConstant.primaryBlue,
+                        size: 16,
+                      ),
                       SizedBox(width: 8),
                       Expanded(
                         child: Container(
                           height: 8,
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.5),
+                            color: Colors.white.withValues(alpha: 0.5),
                             borderRadius: BorderRadius.circular(4),
                           ),
                         ),
@@ -498,13 +485,17 @@ class OnboardingIllustration extends StatelessWidget {
                   SizedBox(height: 8),
                   Row(
                     children: [
-                      Icon(Icons.check_circle, color: AppConstant.primaryBlue, size: 16),
+                      Icon(
+                        Icons.check_circle,
+                        color: AppConstant.primaryBlue,
+                        size: 16,
+                      ),
                       SizedBox(width: 8),
                       Expanded(
                         child: Container(
                           height: 8,
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.5),
+                            color: Colors.white.withValues(alpha: 0.5),
                             borderRadius: BorderRadius.circular(4),
                           ),
                         ),
@@ -522,7 +513,7 @@ class OnboardingIllustration extends StatelessWidget {
             child: Icon(
               Icons.edit,
               size: 32,
-              color: AppConstant.textSecondary.withOpacity(0.5),
+              color: AppConstant.textSecondary.withValues(alpha: 0.5),
             ),
           ),
         ],

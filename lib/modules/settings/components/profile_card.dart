@@ -6,11 +6,7 @@ class ProfileCard extends StatelessWidget {
   final User? user;
   final VoidCallback? onEditTap;
 
-  const ProfileCard({
-    super.key,
-    required this.user,
-    this.onEditTap,
-  });
+  const ProfileCard({super.key, required this.user, this.onEditTap});
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +22,10 @@ class ProfileCard extends StatelessWidget {
             radius: 32,
             backgroundColor: AppConstant.primaryBlue,
             child: Text(
-              (user?.fullName?.substring(0, 1) ?? 
-               user?.username?.substring(0, 1) ?? 
-               'U').toUpperCase(),
+              (user?.fullName?.substring(0, 1) ??
+                      user?.username.substring(0, 1) ??
+                      'U')
+                  .toUpperCase(),
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -57,11 +54,7 @@ class ProfileCard extends StatelessWidget {
             ),
           ),
           IconButton(
-            icon: Icon(
-              Icons.edit,
-              color: AppConstant.textSecondary,
-              size: 20,
-            ),
+            icon: Icon(Icons.edit, color: AppConstant.textSecondary, size: 20),
             onPressed: onEditTap,
           ),
         ],

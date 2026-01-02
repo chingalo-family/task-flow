@@ -25,9 +25,9 @@ class User {
     return User(
       id: json['id']?.toString() ?? '',
       username: json['username'] ?? '',
-      fullName: json['displayName'] ?? json['name'] ?? null,
-      email: json['email'] ?? null,
-      phoneNumber: json['phone'] ?? null,
+      fullName: json['displayName'] ?? json['name'] ?? '',
+      email: json['email'] ?? '',
+      phoneNumber: json['phone'] ?? '',
       userGroups: (json['userGroups'] as List?)
           ?.map((e) => e.toString())
           .toList(),

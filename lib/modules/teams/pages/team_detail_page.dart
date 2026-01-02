@@ -74,9 +74,17 @@ class _TeamDetailPageState extends State<TeamDetailPage>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildStatCard('Total Members', team.memberCount.toString(), Icons.people),
+          _buildStatCard(
+            'Total Members',
+            team.memberCount.toString(),
+            Icons.people,
+          ),
           SizedBox(height: AppConstant.defaultPadding),
-          _buildStatCard('Active Tasks', (team.taskIds?.length ?? 0).toString(), Icons.task_alt),
+          _buildStatCard(
+            'Active Tasks',
+            (team.taskIds?.length ?? 0).toString(),
+            Icons.task_alt,
+          ),
           SizedBox(height: AppConstant.defaultPadding * 2),
           Text(
             'Description',
@@ -112,7 +120,7 @@ class _TeamDetailPageState extends State<TeamDetailPage>
           Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppConstant.primaryBlue.withOpacity(0.1),
+              color: AppConstant.primaryBlue.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(AppConstant.borderRadius8),
             ),
             child: Icon(icon, color: AppConstant.primaryBlue, size: 24),
@@ -171,7 +179,10 @@ class _TeamDetailPageState extends State<TeamDetailPage>
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppConstant.primaryBlue,
                       foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
                     ),
                   ),
                 ],
@@ -186,7 +197,9 @@ class _TeamDetailPageState extends State<TeamDetailPage>
                           Icon(
                             Icons.people_outline,
                             size: 64,
-                            color: AppConstant.textSecondary.withOpacity(0.5),
+                            color: AppConstant.textSecondary.withValues(
+                              alpha: 0.5,
+                            ),
                           ),
                           SizedBox(height: AppConstant.defaultPadding),
                           Text(
@@ -200,9 +213,12 @@ class _TeamDetailPageState extends State<TeamDetailPage>
                       ),
                     )
                   : ListView.separated(
-                      padding: EdgeInsets.symmetric(horizontal: AppConstant.defaultPadding),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppConstant.defaultPadding,
+                      ),
                       itemCount: members.length,
-                      separatorBuilder: (context, index) => SizedBox(height: 12),
+                      separatorBuilder: (context, index) =>
+                          SizedBox(height: 12),
                       itemBuilder: (context, index) {
                         final member = members[index];
                         return _buildMemberCard(context, team, member);
@@ -228,7 +244,9 @@ class _TeamDetailPageState extends State<TeamDetailPage>
             radius: 24,
             backgroundColor: AppConstant.primaryBlue,
             child: Text(
-              (member.fullName ?? member.username).substring(0, 1).toUpperCase(),
+              (member.fullName ?? member.username)
+                  .substring(0, 1)
+                  .toUpperCase(),
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18,
@@ -262,7 +280,10 @@ class _TeamDetailPageState extends State<TeamDetailPage>
           ),
           IconButton(
             onPressed: () => _removeMember(context, team, member),
-            icon: Icon(Icons.remove_circle_outline, color: AppConstant.errorRed),
+            icon: Icon(
+              Icons.remove_circle_outline,
+              color: AppConstant.errorRed,
+            ),
           ),
         ],
       ),
@@ -296,7 +317,10 @@ class _TeamDetailPageState extends State<TeamDetailPage>
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppConstant.primaryBlue,
                       foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
                     ),
                   ),
                 ],
@@ -311,7 +335,9 @@ class _TeamDetailPageState extends State<TeamDetailPage>
                           Icon(
                             Icons.task_outlined,
                             size: 64,
-                            color: AppConstant.textSecondary.withOpacity(0.5),
+                            color: AppConstant.textSecondary.withValues(
+                              alpha: 0.5,
+                            ),
                           ),
                           SizedBox(height: AppConstant.defaultPadding),
                           Text(
@@ -325,9 +351,12 @@ class _TeamDetailPageState extends State<TeamDetailPage>
                       ),
                     )
                   : ListView.separated(
-                      padding: EdgeInsets.symmetric(horizontal: AppConstant.defaultPadding),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppConstant.defaultPadding,
+                      ),
                       itemCount: tasks.length,
-                      separatorBuilder: (context, index) => SizedBox(height: 12),
+                      separatorBuilder: (context, index) =>
+                          SizedBox(height: 12),
                       itemBuilder: (context, index) {
                         final task = tasks[index];
                         return TaskCard(task: task);
@@ -370,13 +399,19 @@ class _TeamDetailPageState extends State<TeamDetailPage>
           ),
           TextButton(
             onPressed: () {
-              context.read<TeamState>().removeMemberFromTeam(team.id, member.id);
+              context.read<TeamState>().removeMemberFromTeam(
+                team.id,
+                member.id,
+              );
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Member removed successfully')),
               );
             },
-            child: Text('Remove', style: TextStyle(color: AppConstant.errorRed)),
+            child: Text(
+              'Remove',
+              style: TextStyle(color: AppConstant.errorRed),
+            ),
           ),
         ],
       ),
@@ -398,7 +433,7 @@ class _TeamDetailPageState extends State<TeamDetailPage>
             ),
           ),
           SizedBox(height: AppConstant.defaultPadding),
-          
+
           // Task Statuses Card
           _buildSettingsCard(
             title: 'Task Statuses',
@@ -413,9 +448,9 @@ class _TeamDetailPageState extends State<TeamDetailPage>
               );
             },
           ),
-          
+
           SizedBox(height: AppConstant.defaultPadding),
-          
+
           // Preview current statuses
           Text(
             'Current Statuses (${team.taskStatuses.length})',
@@ -431,13 +466,13 @@ class _TeamDetailPageState extends State<TeamDetailPage>
             runSpacing: 8,
             children: team.taskStatuses.map((status) {
               return Chip(
-                avatar: CircleAvatar(
-                  backgroundColor: status.color,
-                  radius: 8,
-                ),
+                avatar: CircleAvatar(backgroundColor: status.color, radius: 8),
                 label: Text(status.name),
-                backgroundColor: AppConstant.cardDark,
-                labelStyle: TextStyle(color: AppConstant.textPrimary, fontSize: 12),
+                backgroundColor: AppConstant.cardBackground,
+                labelStyle: TextStyle(
+                  color: AppConstant.textPrimary,
+                  fontSize: 12,
+                ),
               );
             }).toList(),
           ),
@@ -453,15 +488,13 @@ class _TeamDetailPageState extends State<TeamDetailPage>
     required VoidCallback onTap,
   }) {
     return Card(
-      color: AppConstant.cardDark,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      color: AppConstant.cardBackground,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
         leading: Container(
           padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: AppConstant.primaryBlue.withOpacity(0.1),
+            color: AppConstant.primaryBlue.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(icon, color: AppConstant.primaryBlue),

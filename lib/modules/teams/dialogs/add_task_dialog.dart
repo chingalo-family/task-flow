@@ -19,7 +19,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
-  
+
   String _priority = 'medium';
   String? _assignedToUserId;
   DateTime? _dueDate;
@@ -70,7 +70,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                   ],
                 ),
                 SizedBox(height: AppConstant.defaultPadding),
-                
+
                 // Title
                 TextFormField(
                   controller: _titleController,
@@ -81,7 +81,9 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                     filled: true,
                     fillColor: AppConstant.darkBackground,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                      borderRadius: BorderRadius.circular(
+                        AppConstant.borderRadius12,
+                      ),
                       borderSide: BorderSide.none,
                     ),
                   ),
@@ -93,7 +95,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                   },
                 ),
                 SizedBox(height: 16),
-                
+
                 // Description
                 TextFormField(
                   controller: _descriptionController,
@@ -105,13 +107,15 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                     filled: true,
                     fillColor: AppConstant.darkBackground,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                      borderRadius: BorderRadius.circular(
+                        AppConstant.borderRadius12,
+                      ),
                       borderSide: BorderSide.none,
                     ),
                   ),
                 ),
                 SizedBox(height: 16),
-                
+
                 // Priority
                 Text(
                   'Priority',
@@ -126,18 +130,24 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                   children: [
                     _buildPriorityChip('high', 'High', AppConstant.errorRed),
                     SizedBox(width: 8),
-                    _buildPriorityChip('medium', 'Medium', AppConstant.warningOrange),
+                    _buildPriorityChip(
+                      'medium',
+                      'Medium',
+                      AppConstant.warningOrange,
+                    ),
                     SizedBox(width: 8),
                     _buildPriorityChip('low', 'Low', AppConstant.successGreen),
                   ],
                 ),
                 SizedBox(height: 16),
-                
+
                 // Assign to team member
                 Consumer<UserListState>(
                   builder: (context, userListState, child) {
-                    final teamMembers = userListState.getUsersByIds(widget.team.memberIds ?? []);
-                    
+                    final teamMembers = userListState.getUsersByIds(
+                      widget.team.memberIds ?? [],
+                    );
+
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -151,13 +161,15 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                         ),
                         SizedBox(height: 8),
                         DropdownButtonFormField<String?>(
-                          value: _assignedToUserId,
+                          initialValue: _assignedToUserId,
                           dropdownColor: AppConstant.cardBackground,
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: AppConstant.darkBackground,
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                              borderRadius: BorderRadius.circular(
+                                AppConstant.borderRadius12,
+                              ),
                               borderSide: BorderSide.none,
                             ),
                           ),
@@ -168,14 +180,21 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                           items: [
                             DropdownMenuItem<String?>(
                               value: null,
-                              child: Text('Unassigned', style: TextStyle(color: AppConstant.textSecondary)),
+                              child: Text(
+                                'Unassigned',
+                                style: TextStyle(
+                                  color: AppConstant.textSecondary,
+                                ),
+                              ),
                             ),
                             ...teamMembers.map((member) {
                               return DropdownMenuItem<String>(
                                 value: member.id,
                                 child: Text(
                                   member.fullName ?? member.username,
-                                  style: TextStyle(color: AppConstant.textPrimary),
+                                  style: TextStyle(
+                                    color: AppConstant.textPrimary,
+                                  ),
                                 ),
                               );
                             }).toList(),
@@ -191,20 +210,27 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                   },
                 ),
                 SizedBox(height: 16),
-                
+
                 // Due Date
                 InkWell(
                   onTap: _selectDueDate,
-                  borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                  borderRadius: BorderRadius.circular(
+                    AppConstant.borderRadius12,
+                  ),
                   child: Container(
                     padding: EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: AppConstant.darkBackground,
-                      borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                      borderRadius: BorderRadius.circular(
+                        AppConstant.borderRadius12,
+                      ),
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.calendar_today, color: AppConstant.textSecondary),
+                        Icon(
+                          Icons.calendar_today,
+                          color: AppConstant.textSecondary,
+                        ),
                         SizedBox(width: 12),
                         Expanded(
                           child: Text(
@@ -229,7 +255,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                   ),
                 ),
                 SizedBox(height: AppConstant.defaultPadding * 1.5),
-                
+
                 // Buttons
                 Row(
                   children: [
@@ -274,7 +300,9 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: isSelected ? color.withOpacity(0.2) : AppConstant.darkBackground,
+            color: isSelected
+                ? color.withValues(alpha: 0.2)
+                : AppConstant.darkBackground,
             borderRadius: BorderRadius.circular(AppConstant.borderRadius8),
             border: Border.all(
               color: isSelected ? color : Colors.transparent,
@@ -354,9 +382,9 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
 
     if (mounted) {
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Task created successfully')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Task created successfully')));
     }
   }
 }

@@ -40,7 +40,7 @@ class TeamCard extends StatelessWidget {
                       width: 48,
                       height: 48,
                       decoration: BoxDecoration(
-                        color: AppConstant.primaryBlue.withOpacity(0.1),
+                        color: AppConstant.primaryBlue.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(
@@ -56,19 +56,20 @@ class TeamCard extends StatelessWidget {
                         children: [
                           Text(
                             team.name,
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                            ),
+                            style: Theme.of(context).textTheme.bodyLarge
+                                ?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                           SizedBox(height: 4),
                           Text(
                             '${team.memberCount} ${team.memberCount == 1 ? 'member' : 'members'}',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontSize: 12,
-                            ),
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodyMedium?.copyWith(fontSize: 12),
                           ),
                         ],
                       ),
@@ -82,7 +83,8 @@ class TeamCard extends StatelessWidget {
                 ),
 
                 // Description
-                if (team.description != null && team.description!.isNotEmpty) ...[
+                if (team.description != null &&
+                    team.description!.isNotEmpty) ...[
                   SizedBox(height: AppConstant.spacing12),
                   Text(
                     team.description!,
@@ -102,7 +104,8 @@ class TeamCard extends StatelessWidget {
                         final index = team.memberIds!.indexOf(memberId);
                         return Container(
                           margin: EdgeInsets.only(
-                            right: index < 4 && index < team.memberIds!.length - 1
+                            right:
+                                index < 4 && index < team.memberIds!.length - 1
                                 ? 8
                                 : 0,
                           ),
@@ -120,13 +123,15 @@ class TeamCard extends StatelessWidget {
                           ),
                         );
                       }).toList(),
-                      
+
                       // Show +N if there are more members
                       if (team.memberCount > 5) ...[
                         SizedBox(width: 8),
                         CircleAvatar(
                           radius: 16,
-                          backgroundColor: AppConstant.textSecondary.withOpacity(0.2),
+                          backgroundColor: AppConstant.textSecondary.withValues(
+                            alpha: 0.2,
+                          ),
                           child: Text(
                             '+${team.memberCount - 5}',
                             style: TextStyle(

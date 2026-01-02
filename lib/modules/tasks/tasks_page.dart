@@ -90,9 +90,7 @@ class _TasksPageState extends State<TasksPage> {
                 ),
 
                 // Task Stats
-                SliverToBoxAdapter(
-                  child: TaskStats(),
-                ),
+                SliverToBoxAdapter(child: TaskStats()),
 
                 // Filters
                 SliverToBoxAdapter(
@@ -104,7 +102,11 @@ class _TasksPageState extends State<TasksPage> {
                         children: [
                           _buildFilterChip('All', 'all', taskState),
                           _buildFilterChip('Pending', 'pending', taskState),
-                          _buildFilterChip('In Progress', 'in_progress', taskState),
+                          _buildFilterChip(
+                            'In Progress',
+                            'in_progress',
+                            taskState,
+                          ),
                           _buildFilterChip('Completed', 'completed', taskState),
                         ],
                       ),
@@ -122,14 +124,17 @@ class _TasksPageState extends State<TasksPage> {
                               Icon(
                                 Icons.task_alt,
                                 size: 80,
-                                color: AppConstant.textSecondary.withOpacity(0.3),
+                                color: AppConstant.textSecondary.withValues(
+                                  alpha: 0.3,
+                                ),
                               ),
                               SizedBox(height: AppConstant.spacing16),
                               Text(
                                 'No tasks found',
-                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  color: AppConstant.textSecondary,
-                                ),
+                                style: Theme.of(context).textTheme.bodyLarge
+                                    ?.copyWith(
+                                      color: AppConstant.textSecondary,
+                                    ),
                               ),
                             ],
                           ),
@@ -138,16 +143,18 @@ class _TasksPageState extends State<TasksPage> {
                     : SliverPadding(
                         padding: EdgeInsets.all(AppConstant.spacing16),
                         sliver: SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                              final task = taskState.tasks[index];
-                              return Padding(
-                                padding: EdgeInsets.only(bottom: AppConstant.spacing12),
-                                child: TaskCard(task: task),
-                              );
-                            },
-                            childCount: taskState.tasks.length,
-                          ),
+                          delegate: SliverChildBuilderDelegate((
+                            context,
+                            index,
+                          ) {
+                            final task = taskState.tasks[index];
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                bottom: AppConstant.spacing12,
+                              ),
+                              child: TaskCard(task: task),
+                            );
+                          }, childCount: taskState.tasks.length),
                         ),
                       ),
               ],
@@ -176,15 +183,17 @@ class _TasksPageState extends State<TasksPage> {
           taskState.setFilterStatus(value);
         },
         backgroundColor: AppConstant.cardBackground,
-        selectedColor: AppConstant.primaryBlue.withOpacity(0.2),
+        selectedColor: AppConstant.primaryBlue.withValues(alpha: 0.2),
         labelStyle: TextStyle(
-          color: isSelected ? AppConstant.primaryBlue : AppConstant.textSecondary,
+          color: isSelected
+              ? AppConstant.primaryBlue
+              : AppConstant.textSecondary,
           fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
         ),
         side: BorderSide(
           color: isSelected
               ? AppConstant.primaryBlue
-              : AppConstant.textSecondary.withOpacity(0.2),
+              : AppConstant.textSecondary.withValues(alpha: 0.2),
         ),
       ),
     );

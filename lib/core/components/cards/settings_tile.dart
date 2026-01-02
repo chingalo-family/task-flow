@@ -32,7 +32,9 @@ class SettingsTile extends StatelessWidget {
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: (iconColor ?? AppConstant.primaryBlue).withOpacity(0.1),
+            color: (iconColor ?? AppConstant.primaryBlue).withValues(
+              alpha: 0.1,
+            ),
             borderRadius: BorderRadius.circular(AppConstant.borderRadius8),
           ),
           child: Icon(
@@ -58,11 +60,9 @@ class SettingsTile extends StatelessWidget {
                 ),
               )
             : null,
-        trailing: trailing ??
-            Icon(
-              Icons.chevron_right,
-              color: AppConstant.textSecondary,
-            ),
+        trailing:
+            trailing ??
+            Icon(Icons.chevron_right, color: AppConstant.textSecondary),
       ),
     );
   }

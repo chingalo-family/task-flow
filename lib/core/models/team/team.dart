@@ -1,4 +1,4 @@
-import 'task_status/task_status.dart';
+import 'package:task_flow/core/models/task_status/task_status.dart';
 
 class Team {
   final String id;
@@ -8,7 +8,8 @@ class Team {
   final int memberCount;
   final List<String>? memberIds;
   final List<String>? taskIds; // List of task IDs belonging to this team
-  final List<TaskStatus>? customTaskStatuses; // Custom task statuses for this team
+  final List<TaskStatus>?
+  customTaskStatuses; // Custom task statuses for this team
   final String? createdByUserId;
   final String? createdByUsername;
   final DateTime createdAt;
@@ -27,8 +28,8 @@ class Team {
     this.createdByUsername,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   // Get task statuses (custom or default)
   List<TaskStatus> get taskStatuses =>

@@ -10,16 +10,14 @@ class DialogUtils {
     String confirmText = 'Confirm',
     String cancelText = 'Cancel',
     Color? confirmColor,
+    required Future<Null> Function() onConfirm,
   }) async {
     final result = await showDialog<bool>(
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           backgroundColor: AppConstant.cardBackground,
-          title: Text(
-            title,
-            style: TextStyle(color: AppConstant.textPrimary),
-          ),
+          title: Text(title, style: TextStyle(color: AppConstant.textPrimary)),
           content: Text(
             message,
             style: TextStyle(color: AppConstant.textSecondary),
@@ -33,9 +31,7 @@ class DialogUtils {
               onPressed: () => Navigator.pop(dialogContext, true),
               child: Text(
                 confirmText,
-                style: TextStyle(
-                  color: confirmColor ?? AppConstant.errorRed,
-                ),
+                style: TextStyle(color: confirmColor ?? AppConstant.errorRed),
               ),
             ),
           ],
@@ -57,10 +53,7 @@ class DialogUtils {
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           backgroundColor: AppConstant.cardBackground,
-          title: Text(
-            title,
-            style: TextStyle(color: AppConstant.textPrimary),
-          ),
+          title: Text(title, style: TextStyle(color: AppConstant.textPrimary)),
           content: Text(
             message,
             style: TextStyle(color: AppConstant.textSecondary),

@@ -4,12 +4,8 @@ import 'package:task_flow/core/constants/app_constant.dart';
 class AppLogo extends StatelessWidget {
   final double size;
   final bool showText;
-  
-  const AppLogo({
-    super.key,
-    this.size = 120,
-    this.showText = true,
-  });
+
+  const AppLogo({super.key, this.size = 120, this.showText = true});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +21,7 @@ class AppLogo extends StatelessWidget {
             borderRadius: BorderRadius.circular(size * 0.25),
             boxShadow: [
               BoxShadow(
-                color: AppConstant.primaryBlue.withOpacity(0.3),
+                color: AppConstant.primaryBlue.withValues(alpha: 0.3),
                 blurRadius: 20,
                 offset: Offset(0, 10),
               ),

@@ -5,16 +5,13 @@ class SectionHeader extends StatelessWidget {
   final String title;
   final EdgeInsetsGeometry? padding;
 
-  const SectionHeader({
-    super.key,
-    required this.title,
-    this.padding,
-  });
+  const SectionHeader({super.key, required this.title, this.padding});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: padding ??
+      padding:
+          padding ??
           EdgeInsets.only(
             left: AppConstant.spacing8,
             top: AppConstant.spacing16,
@@ -23,7 +20,7 @@ class SectionHeader extends StatelessWidget {
       child: Text(
         title.toUpperCase(),
         style: TextStyle(
-          color: AppConstant.textSecondary.withOpacity(0.7),
+          color: AppConstant.textSecondary.withValues(alpha: 0.7),
           fontSize: 12,
           fontWeight: FontWeight.w600,
           letterSpacing: 1.2,

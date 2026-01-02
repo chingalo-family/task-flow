@@ -1,11 +1,9 @@
-import 'package:flutter/material.dart';
-
 class TimeUtils {
   /// Convert DateTime to a human-readable "time ago" format
   static String getTimeAgo(DateTime dateTime) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
-    
+
     if (difference.inDays > 7) {
       return '${(difference.inDays / 7).floor()}w ago';
     } else if (difference.inDays > 0) {

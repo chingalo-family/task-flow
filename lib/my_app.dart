@@ -33,10 +33,9 @@ class MyApp extends StatelessWidget {
             primary: AppConstant.primaryBlue,
             secondary: AppConstant.primaryBlue,
             surface: AppConstant.cardBackground,
-            background: AppConstant.darkBackground,
             error: AppConstant.errorRed,
           ),
-          cardTheme: CardTheme(
+          cardTheme: CardThemeData(
             color: AppConstant.cardBackground,
             elevation: 0,
             shape: RoundedRectangleBorder(
@@ -64,10 +63,7 @@ class MyApp extends StatelessWidget {
               fontWeight: FontWeight.w600,
               color: AppConstant.textPrimary,
             ),
-            bodyLarge: TextStyle(
-              fontSize: 16,
-              color: AppConstant.textPrimary,
-            ),
+            bodyLarge: TextStyle(fontSize: 16, color: AppConstant.textPrimary),
             bodyMedium: TextStyle(
               fontSize: 14,
               color: AppConstant.textSecondary,

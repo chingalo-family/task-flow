@@ -25,7 +25,7 @@ class UserState extends ChangeNotifier {
     return false;
   }
 
-  Future<void> signOut() async {
+  Future<void> logout() async {
     await _service.logout();
     _currentUser = null;
     notifyListeners();

@@ -12,24 +12,23 @@ class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
   Future<void> _handleLogout(BuildContext context) async {
-    final confirmed = await DialogUtils.showConfirmationDialog(
+    await DialogUtils.showConfirmationDialog(
       context: context,
       title: 'Logout',
       message: 'Are you sure you want to logout?',
       confirmText: 'Logout',
+      onConfirm: () async {
+        final userState = Provider.of<UserState>(context, listen: false);
+        await userState.logout();
+        if (context.mounted) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (_) => const LoginPage()),
+            (route) => false,
+          );
+        }
+      },
     );
-
-    if (confirmed && context.mounted) {
-      final userState = Provider.of<UserState>(context, listen: false);
-      await userState.logout();
-      if (context.mounted) {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (_) => const LoginPage()),
-          (route) => false,
-        );
-      }
-    }
   }
 
   @override
@@ -46,10 +45,7 @@ class SettingsPage extends StatelessWidget {
               elevation: 0,
               title: Text(
                 'Settings',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
 
@@ -91,7 +87,7 @@ class SettingsPage extends StatelessWidget {
                     subtitle: 'Theme and display settings',
                     onTap: () {},
                   ),
-                  
+
                   SectionHeader(title: 'SUPPORT'),
                   SettingsTile(
                     icon: Icons.help_outline,
@@ -106,7 +102,7 @@ class SettingsPage extends StatelessWidget {
                     subtitle: 'App version and information',
                     onTap: () {},
                   ),
-                  
+
                   SectionHeader(title: 'ACCOUNT'),
                   SettingsTile(
                     icon: Icons.logout,
@@ -115,17 +111,20 @@ class SettingsPage extends StatelessWidget {
                     iconColor: AppConstant.errorRed,
                     onTap: () => _handleLogout(context),
                   ),
-                  
+
                   SizedBox(height: AppConstant.spacing32),
                   Consumer<AppInfoState>(
                     builder: (context, appInfo, _) {
                       return Center(
                         child: Text(
                           'Task Flow v${appInfo.version}',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: AppConstant.textSecondary.withOpacity(0.5),
-                            fontSize: 12,
-                          ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: AppConstant.textSecondary.withValues(
+                                  alpha: 0.5,
+                                ),
+                                fontSize: 12,
+                              ),
                         ),
                       );
                     },

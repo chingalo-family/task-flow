@@ -13,186 +13,835 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 import 'package:objectbox/internal.dart'; // generated code can access "internal" functionality
 import 'package:objectbox/objectbox.dart';
 
+import 'core/entities/notification_entity.dart';
+import 'core/entities/task_entity.dart';
+import 'core/entities/team_entity.dart';
+import 'core/entities/user_entity.dart' as entities;
 import 'core/models/user_entity.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
 
 final _entities = <ModelEntity>[
   ModelEntity(
-      id: const IdUid(1, 772303950422415881),
-      name: 'UserEntity',
-      lastPropertyId: const IdUid(12, 135041333198133376),
-      flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 1525211519435609053),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 7051138316127784068),
-            name: 'apiUserId',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(3, 6404071738839563443),
-            name: 'username',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(4, 2402715980082797518),
-            name: 'fullName',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(5, 1989123902742884831),
-            name: 'password',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(6, 8025562844652251580),
-            name: 'email',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(7, 1483887975921106131),
-            name: 'phoneNumber',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(8, 836196098256066830),
-            name: 'userGroupsJson',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(9, 4360288102706087886),
-            name: 'userOrgUnitIdsJson',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(10, 9082837829193722667),
-            name: 'isLogin',
-            type: 1,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(11, 2112599267384852441),
-            name: 'createdAt',
-            type: 10,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(12, 135041333198133376),
-            name: 'updatedAt',
-            type: 10,
-            flags: 0)
-      ],
-      relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[])
+    id: const IdUid(1, 772303950422415881),
+    name: 'UserEntity',
+    lastPropertyId: const IdUid(12, 135041333198133376),
+    flags: 0,
+    properties: <ModelProperty>[
+      ModelProperty(
+        id: const IdUid(1, 1525211519435609053),
+        name: 'id',
+        type: 6,
+        flags: 1,
+      ),
+      ModelProperty(
+        id: const IdUid(2, 7051138316127784068),
+        name: 'apiUserId',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(3, 6404071738839563443),
+        name: 'username',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(4, 2402715980082797518),
+        name: 'fullName',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(5, 1989123902742884831),
+        name: 'password',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(6, 8025562844652251580),
+        name: 'email',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(7, 1483887975921106131),
+        name: 'phoneNumber',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(8, 836196098256066830),
+        name: 'userGroupsJson',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(9, 4360288102706087886),
+        name: 'userOrgUnitIdsJson',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(10, 9082837829193722667),
+        name: 'isLogin',
+        type: 1,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(11, 2112599267384852441),
+        name: 'createdAt',
+        type: 10,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(12, 135041333198133376),
+        name: 'updatedAt',
+        type: 10,
+        flags: 0,
+      ),
+    ],
+    relations: <ModelRelation>[],
+    backlinks: <ModelBacklink>[],
+  ),
+  ModelEntity(
+    id: const IdUid(2, 614660561691660408),
+    name: 'NotificationEntity',
+    lastPropertyId: const IdUid(13, 1049038385883546181),
+    flags: 0,
+    properties: <ModelProperty>[
+      ModelProperty(
+        id: const IdUid(1, 8254734781835588472),
+        name: 'id',
+        type: 6,
+        flags: 1,
+      ),
+      ModelProperty(
+        id: const IdUid(2, 147813581869063538),
+        name: 'notificationId',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(3, 6531379092925573587),
+        name: 'title',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(4, 6321885893034312839),
+        name: 'body',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(5, 3683634050326075010),
+        name: 'type',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(6, 199258760478824042),
+        name: 'isRead',
+        type: 1,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(7, 5900849718058338),
+        name: 'relatedEntityId',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(8, 6243593963600987893),
+        name: 'relatedEntityType',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(9, 243286664669834715),
+        name: 'actorUserId',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(10, 8244282929213007453),
+        name: 'actorUsername',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(11, 1901217508343952063),
+        name: 'actorAvatarUrl',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(12, 6107301804069805780),
+        name: 'createdAt',
+        type: 10,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(13, 1049038385883546181),
+        name: 'isSynced',
+        type: 1,
+        flags: 0,
+      ),
+    ],
+    relations: <ModelRelation>[],
+    backlinks: <ModelBacklink>[],
+  ),
+  ModelEntity(
+    id: const IdUid(3, 636520496469286108),
+    name: 'TaskEntity',
+    lastPropertyId: const IdUid(18, 7617994320264726487),
+    flags: 0,
+    properties: <ModelProperty>[
+      ModelProperty(
+        id: const IdUid(1, 3960293065232813672),
+        name: 'id',
+        type: 6,
+        flags: 1,
+      ),
+      ModelProperty(
+        id: const IdUid(2, 796404430768788961),
+        name: 'taskId',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(3, 7942440886971976073),
+        name: 'title',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(4, 6980630822084538123),
+        name: 'description',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(5, 2735632824927333940),
+        name: 'status',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(6, 4447753324190728148),
+        name: 'priority',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(7, 103390021624249662),
+        name: 'assignedToUserId',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(8, 1980092744313681671),
+        name: 'assignedToUsername',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(9, 4694781489134782213),
+        name: 'dueDate',
+        type: 10,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(10, 4816753784983392056),
+        name: 'completedAt',
+        type: 10,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(11, 8697813631308840942),
+        name: 'projectId',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(12, 1540955089240229173),
+        name: 'projectName',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(13, 8269989544298135620),
+        name: 'tagsJson',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(14, 7435249371995302165),
+        name: 'attachmentsJson',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(15, 3790149430168849655),
+        name: 'progress',
+        type: 6,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(16, 7478973536312850089),
+        name: 'isSynced',
+        type: 1,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(17, 7859719176504303709),
+        name: 'createdAt',
+        type: 10,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(18, 7617994320264726487),
+        name: 'updatedAt',
+        type: 10,
+        flags: 0,
+      ),
+    ],
+    relations: <ModelRelation>[],
+    backlinks: <ModelBacklink>[],
+  ),
+  ModelEntity(
+    id: const IdUid(4, 8634427917478567143),
+    name: 'TeamEntity',
+    lastPropertyId: const IdUid(12, 6555534071892076546),
+    flags: 0,
+    properties: <ModelProperty>[
+      ModelProperty(
+        id: const IdUid(1, 4755454378011354988),
+        name: 'id',
+        type: 6,
+        flags: 1,
+      ),
+      ModelProperty(
+        id: const IdUid(2, 6046622711719698281),
+        name: 'teamId',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(3, 5172081056315198200),
+        name: 'name',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(4, 9069387595676232939),
+        name: 'description',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(5, 7534465306864814411),
+        name: 'avatarUrl',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(6, 8317316129997791116),
+        name: 'memberCount',
+        type: 6,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(7, 8780119160444460291),
+        name: 'createdByUserId',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(8, 3972177163213076799),
+        name: 'createdByUsername',
+        type: 9,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(9, 2025820226576621978),
+        name: 'createdAt',
+        type: 10,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(10, 5115795330784668216),
+        name: 'updatedAt',
+        type: 10,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(11, 7948209602236517186),
+        name: 'isSynced',
+        type: 1,
+        flags: 0,
+      ),
+      ModelProperty(
+        id: const IdUid(12, 6555534071892076546),
+        name: 'memberIdsJson',
+        type: 9,
+        flags: 0,
+      ),
+    ],
+    relations: <ModelRelation>[],
+    backlinks: <ModelBacklink>[],
+  ),
 ];
 
 /// Open an ObjectBox store with the model declared in this file.
-Store openStore(
-        {String? directory,
-        int? maxDBSizeInKB,
-        int? fileMode,
-        int? maxReaders,
-        bool queriesCaseSensitiveDefault = true,
-        String? macosApplicationGroup}) =>
-    Store(getObjectBoxModel(),
-        directory: directory,
-        maxDBSizeInKB: maxDBSizeInKB,
-        fileMode: fileMode,
-        maxReaders: maxReaders,
-        queriesCaseSensitiveDefault: queriesCaseSensitiveDefault,
-        macosApplicationGroup: macosApplicationGroup);
+Store openStore({
+  String? directory,
+  int? maxDBSizeInKB,
+  int? fileMode,
+  int? maxReaders,
+  bool queriesCaseSensitiveDefault = true,
+  String? macosApplicationGroup,
+}) => Store(
+  getObjectBoxModel(),
+  directory: directory,
+  maxDBSizeInKB: maxDBSizeInKB,
+  fileMode: fileMode,
+  maxReaders: maxReaders,
+  queriesCaseSensitiveDefault: queriesCaseSensitiveDefault,
+  macosApplicationGroup: macosApplicationGroup,
+);
 
 /// ObjectBox model definition, pass it to [Store] - Store(getObjectBoxModel())
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
-      entities: _entities,
-      lastEntityId: const IdUid(1, 772303950422415881),
-      lastIndexId: const IdUid(0, 0),
-      lastRelationId: const IdUid(0, 0),
-      lastSequenceId: const IdUid(0, 0),
-      retiredEntityUids: const [],
-      retiredIndexUids: const [],
-      retiredPropertyUids: const [],
-      retiredRelationUids: const [],
-      modelVersion: 5,
-      modelVersionParserMinimum: 5,
-      version: 1);
+    entities: _entities,
+    lastEntityId: const IdUid(4, 8634427917478567143),
+    lastIndexId: const IdUid(0, 0),
+    lastRelationId: const IdUid(0, 0),
+    lastSequenceId: const IdUid(0, 0),
+    retiredEntityUids: const [],
+    retiredIndexUids: const [],
+    retiredPropertyUids: const [],
+    retiredRelationUids: const [],
+    modelVersion: 5,
+    modelVersionParserMinimum: 5,
+    version: 1,
+  );
 
   final bindings = <Type, EntityDefinition>{
-    UserEntity: EntityDefinition<UserEntity>(
-        model: _entities[0],
-        toOneRelations: (UserEntity object) => [],
-        toManyRelations: (UserEntity object) => {},
-        getId: (UserEntity object) => object.id,
-        setId: (UserEntity object, int id) {
-          object.id = id;
-        },
-        objectToFB: (UserEntity object, fb.Builder fbb) {
-          final apiUserIdOffset = fbb.writeString(object.apiUserId);
-          final usernameOffset = fbb.writeString(object.username);
-          final fullNameOffset = object.fullName == null
-              ? null
-              : fbb.writeString(object.fullName!);
-          final passwordOffset = object.password == null
-              ? null
-              : fbb.writeString(object.password!);
-          final emailOffset =
-              object.email == null ? null : fbb.writeString(object.email!);
-          final phoneNumberOffset = object.phoneNumber == null
-              ? null
-              : fbb.writeString(object.phoneNumber!);
-          final userGroupsJsonOffset = object.userGroupsJson == null
-              ? null
-              : fbb.writeString(object.userGroupsJson!);
-          final userOrgUnitIdsJsonOffset = object.userOrgUnitIdsJson == null
-              ? null
-              : fbb.writeString(object.userOrgUnitIdsJson!);
-          fbb.startTable(13);
-          fbb.addInt64(0, object.id);
-          fbb.addOffset(1, apiUserIdOffset);
-          fbb.addOffset(2, usernameOffset);
-          fbb.addOffset(3, fullNameOffset);
-          fbb.addOffset(4, passwordOffset);
-          fbb.addOffset(5, emailOffset);
-          fbb.addOffset(6, phoneNumberOffset);
-          fbb.addOffset(7, userGroupsJsonOffset);
-          fbb.addOffset(8, userOrgUnitIdsJsonOffset);
-          fbb.addBool(9, object.isLogin);
-          fbb.addInt64(10, object.createdAt.millisecondsSinceEpoch);
-          fbb.addInt64(11, object.updatedAt.millisecondsSinceEpoch);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
+    entities.UserEntity: EntityDefinition<entities.UserEntity>(
+      model: _entities[0],
+      toOneRelations: (entities.UserEntity object) => [],
+      toManyRelations: (entities.UserEntity object) => {},
+      getId: (entities.UserEntity object) => object.id,
+      setId: (entities.UserEntity object, int id) {
+        object.id = id;
+      },
+      objectToFB: (entities.UserEntity object, fb.Builder fbb) {
+        final apiUserIdOffset = fbb.writeString(object.apiUserId);
+        final usernameOffset = fbb.writeString(object.username);
+        final fullNameOffset = object.fullName == null
+            ? null
+            : fbb.writeString(object.fullName!);
+        final passwordOffset = object.password == null
+            ? null
+            : fbb.writeString(object.password!);
+        final emailOffset = object.email == null
+            ? null
+            : fbb.writeString(object.email!);
+        final phoneNumberOffset = object.phoneNumber == null
+            ? null
+            : fbb.writeString(object.phoneNumber!);
+        final userGroupsJsonOffset = object.userGroupsJson == null
+            ? null
+            : fbb.writeString(object.userGroupsJson!);
+        final userOrgUnitIdsJsonOffset = object.userOrgUnitIdsJson == null
+            ? null
+            : fbb.writeString(object.userOrgUnitIdsJson!);
+        fbb.startTable(13);
+        fbb.addInt64(0, object.id);
+        fbb.addOffset(1, apiUserIdOffset);
+        fbb.addOffset(2, usernameOffset);
+        fbb.addOffset(3, fullNameOffset);
+        fbb.addOffset(4, passwordOffset);
+        fbb.addOffset(5, emailOffset);
+        fbb.addOffset(6, phoneNumberOffset);
+        fbb.addOffset(7, userGroupsJsonOffset);
+        fbb.addOffset(8, userOrgUnitIdsJsonOffset);
+        fbb.addBool(9, object.isLogin);
+        fbb.addInt64(10, object.createdAt.millisecondsSinceEpoch);
+        fbb.addInt64(11, object.updatedAt.millisecondsSinceEpoch);
+        fbb.finish(fbb.endTable());
+        return object.id;
+      },
+      objectFromFB: (Store store, ByteData fbData) {
+        final buffer = fb.BufferContext(fbData);
+        final rootOffset = buffer.derefObject(0);
 
-          final object = UserEntity(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
-              apiUserId: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 6, ''),
-              username: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 8, ''),
-              fullName: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 10),
-              password: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 12),
-              email: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 14),
-              phoneNumber: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 16),
-              userGroupsJson: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 18),
-              userOrgUnitIdsJson: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 20),
-              isLogin: const fb.BoolReader().vTableGet(buffer, rootOffset, 22, false),
-              createdAt: DateTime.fromMillisecondsSinceEpoch(const fb.Int64Reader().vTableGet(buffer, rootOffset, 24, 0)),
-              updatedAt: DateTime.fromMillisecondsSinceEpoch(const fb.Int64Reader().vTableGet(buffer, rootOffset, 26, 0)));
+        final object = entities.UserEntity(
+          id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+          apiUserId: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGet(buffer, rootOffset, 6, ''),
+          username: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGet(buffer, rootOffset, 8, ''),
+          fullName: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGetNullable(buffer, rootOffset, 10),
+          password: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGetNullable(buffer, rootOffset, 12),
+          email: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGetNullable(buffer, rootOffset, 14),
+          phoneNumber: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGetNullable(buffer, rootOffset, 16),
+          userGroupsJson: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGetNullable(buffer, rootOffset, 18),
+          userOrgUnitIdsJson: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGetNullable(buffer, rootOffset, 20),
+          isLogin: const fb.BoolReader().vTableGet(
+            buffer,
+            rootOffset,
+            22,
+            false,
+          ),
+          createdAt: DateTime.fromMillisecondsSinceEpoch(
+            const fb.Int64Reader().vTableGet(buffer, rootOffset, 24, 0),
+          ),
+          updatedAt: DateTime.fromMillisecondsSinceEpoch(
+            const fb.Int64Reader().vTableGet(buffer, rootOffset, 26, 0),
+          ),
+        );
 
-          return object;
-        })
+        return object;
+      },
+    ),
+    NotificationEntity: EntityDefinition<NotificationEntity>(
+      model: _entities[1],
+      toOneRelations: (NotificationEntity object) => [],
+      toManyRelations: (NotificationEntity object) => {},
+      getId: (NotificationEntity object) => object.id,
+      setId: (NotificationEntity object, int id) {
+        object.id = id;
+      },
+      objectToFB: (NotificationEntity object, fb.Builder fbb) {
+        final notificationIdOffset = fbb.writeString(object.notificationId);
+        final titleOffset = fbb.writeString(object.title);
+        final bodyOffset = object.body == null
+            ? null
+            : fbb.writeString(object.body!);
+        final typeOffset = fbb.writeString(object.type);
+        final relatedEntityIdOffset = object.relatedEntityId == null
+            ? null
+            : fbb.writeString(object.relatedEntityId!);
+        final relatedEntityTypeOffset = object.relatedEntityType == null
+            ? null
+            : fbb.writeString(object.relatedEntityType!);
+        final actorUserIdOffset = object.actorUserId == null
+            ? null
+            : fbb.writeString(object.actorUserId!);
+        final actorUsernameOffset = object.actorUsername == null
+            ? null
+            : fbb.writeString(object.actorUsername!);
+        final actorAvatarUrlOffset = object.actorAvatarUrl == null
+            ? null
+            : fbb.writeString(object.actorAvatarUrl!);
+        fbb.startTable(14);
+        fbb.addInt64(0, object.id);
+        fbb.addOffset(1, notificationIdOffset);
+        fbb.addOffset(2, titleOffset);
+        fbb.addOffset(3, bodyOffset);
+        fbb.addOffset(4, typeOffset);
+        fbb.addBool(5, object.isRead);
+        fbb.addOffset(6, relatedEntityIdOffset);
+        fbb.addOffset(7, relatedEntityTypeOffset);
+        fbb.addOffset(8, actorUserIdOffset);
+        fbb.addOffset(9, actorUsernameOffset);
+        fbb.addOffset(10, actorAvatarUrlOffset);
+        fbb.addInt64(11, object.createdAt.millisecondsSinceEpoch);
+        fbb.addBool(12, object.isSynced);
+        fbb.finish(fbb.endTable());
+        return object.id;
+      },
+      objectFromFB: (Store store, ByteData fbData) {
+        final buffer = fb.BufferContext(fbData);
+        final rootOffset = buffer.derefObject(0);
+
+        final object = NotificationEntity(
+          id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+          notificationId: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGet(buffer, rootOffset, 6, ''),
+          title: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGet(buffer, rootOffset, 8, ''),
+          body: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGetNullable(buffer, rootOffset, 10),
+          type: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGet(buffer, rootOffset, 12, ''),
+          isRead: const fb.BoolReader().vTableGet(
+            buffer,
+            rootOffset,
+            14,
+            false,
+          ),
+          relatedEntityId: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGetNullable(buffer, rootOffset, 16),
+          relatedEntityType: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGetNullable(buffer, rootOffset, 18),
+          actorUserId: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGetNullable(buffer, rootOffset, 20),
+          actorUsername: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGetNullable(buffer, rootOffset, 22),
+          actorAvatarUrl: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGetNullable(buffer, rootOffset, 24),
+          createdAt: DateTime.fromMillisecondsSinceEpoch(
+            const fb.Int64Reader().vTableGet(buffer, rootOffset, 26, 0),
+          ),
+          isSynced: const fb.BoolReader().vTableGet(
+            buffer,
+            rootOffset,
+            28,
+            false,
+          ),
+        );
+
+        return object;
+      },
+    ),
+    TaskEntity: EntityDefinition<TaskEntity>(
+      model: _entities[2],
+      toOneRelations: (TaskEntity object) => [],
+      toManyRelations: (TaskEntity object) => {},
+      getId: (TaskEntity object) => object.id,
+      setId: (TaskEntity object, int id) {
+        object.id = id;
+      },
+      objectToFB: (TaskEntity object, fb.Builder fbb) {
+        final taskIdOffset = fbb.writeString(object.taskId);
+        final titleOffset = fbb.writeString(object.title);
+        final descriptionOffset = object.description == null
+            ? null
+            : fbb.writeString(object.description!);
+        final statusOffset = fbb.writeString(object.status);
+        final priorityOffset = fbb.writeString(object.priority);
+        final assignedToUserIdOffset = object.assignedToUserId == null
+            ? null
+            : fbb.writeString(object.assignedToUserId!);
+        final assignedToUsernameOffset = object.assignedToUsername == null
+            ? null
+            : fbb.writeString(object.assignedToUsername!);
+        final projectIdOffset = object.projectId == null
+            ? null
+            : fbb.writeString(object.projectId!);
+        final projectNameOffset = object.projectName == null
+            ? null
+            : fbb.writeString(object.projectName!);
+        final tagsJsonOffset = object.tagsJson == null
+            ? null
+            : fbb.writeString(object.tagsJson!);
+        final attachmentsJsonOffset = object.attachmentsJson == null
+            ? null
+            : fbb.writeString(object.attachmentsJson!);
+        fbb.startTable(19);
+        fbb.addInt64(0, object.id);
+        fbb.addOffset(1, taskIdOffset);
+        fbb.addOffset(2, titleOffset);
+        fbb.addOffset(3, descriptionOffset);
+        fbb.addOffset(4, statusOffset);
+        fbb.addOffset(5, priorityOffset);
+        fbb.addOffset(6, assignedToUserIdOffset);
+        fbb.addOffset(7, assignedToUsernameOffset);
+        fbb.addInt64(8, object.dueDate?.millisecondsSinceEpoch);
+        fbb.addInt64(9, object.completedAt?.millisecondsSinceEpoch);
+        fbb.addOffset(10, projectIdOffset);
+        fbb.addOffset(11, projectNameOffset);
+        fbb.addOffset(12, tagsJsonOffset);
+        fbb.addOffset(13, attachmentsJsonOffset);
+        fbb.addInt64(14, object.progress);
+        fbb.addBool(15, object.isSynced);
+        fbb.addInt64(16, object.createdAt.millisecondsSinceEpoch);
+        fbb.addInt64(17, object.updatedAt.millisecondsSinceEpoch);
+        fbb.finish(fbb.endTable());
+        return object.id;
+      },
+      objectFromFB: (Store store, ByteData fbData) {
+        final buffer = fb.BufferContext(fbData);
+        final rootOffset = buffer.derefObject(0);
+        final dueDateValue = const fb.Int64Reader().vTableGetNullable(
+          buffer,
+          rootOffset,
+          20,
+        );
+        final completedAtValue = const fb.Int64Reader().vTableGetNullable(
+          buffer,
+          rootOffset,
+          22,
+        );
+        final object = TaskEntity(
+          id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+          taskId: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGet(buffer, rootOffset, 6, ''),
+          title: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGet(buffer, rootOffset, 8, ''),
+          description: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGetNullable(buffer, rootOffset, 10),
+          status: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGet(buffer, rootOffset, 12, ''),
+          priority: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGet(buffer, rootOffset, 14, ''),
+          assignedToUserId: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGetNullable(buffer, rootOffset, 16),
+          assignedToUsername: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGetNullable(buffer, rootOffset, 18),
+          dueDate: dueDateValue == null
+              ? null
+              : DateTime.fromMillisecondsSinceEpoch(dueDateValue),
+          completedAt: completedAtValue == null
+              ? null
+              : DateTime.fromMillisecondsSinceEpoch(completedAtValue),
+          projectId: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGetNullable(buffer, rootOffset, 24),
+          projectName: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGetNullable(buffer, rootOffset, 26),
+          tagsJson: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGetNullable(buffer, rootOffset, 28),
+          attachmentsJson: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGetNullable(buffer, rootOffset, 30),
+          progress: const fb.Int64Reader().vTableGet(buffer, rootOffset, 32, 0),
+          isSynced: const fb.BoolReader().vTableGet(
+            buffer,
+            rootOffset,
+            34,
+            false,
+          ),
+          createdAt: DateTime.fromMillisecondsSinceEpoch(
+            const fb.Int64Reader().vTableGet(buffer, rootOffset, 36, 0),
+          ),
+          updatedAt: DateTime.fromMillisecondsSinceEpoch(
+            const fb.Int64Reader().vTableGet(buffer, rootOffset, 38, 0),
+          ),
+        );
+
+        return object;
+      },
+    ),
+    TeamEntity: EntityDefinition<TeamEntity>(
+      model: _entities[3],
+      toOneRelations: (TeamEntity object) => [],
+      toManyRelations: (TeamEntity object) => {},
+      getId: (TeamEntity object) => object.id,
+      setId: (TeamEntity object, int id) {
+        object.id = id;
+      },
+      objectToFB: (TeamEntity object, fb.Builder fbb) {
+        final teamIdOffset = fbb.writeString(object.teamId);
+        final nameOffset = fbb.writeString(object.name);
+        final descriptionOffset = object.description == null
+            ? null
+            : fbb.writeString(object.description!);
+        final avatarUrlOffset = object.avatarUrl == null
+            ? null
+            : fbb.writeString(object.avatarUrl!);
+        final createdByUserIdOffset = object.createdByUserId == null
+            ? null
+            : fbb.writeString(object.createdByUserId!);
+        final createdByUsernameOffset = object.createdByUsername == null
+            ? null
+            : fbb.writeString(object.createdByUsername!);
+        final memberIdsJsonOffset = object.memberIdsJson == null
+            ? null
+            : fbb.writeString(object.memberIdsJson!);
+        fbb.startTable(13);
+        fbb.addInt64(0, object.id);
+        fbb.addOffset(1, teamIdOffset);
+        fbb.addOffset(2, nameOffset);
+        fbb.addOffset(3, descriptionOffset);
+        fbb.addOffset(4, avatarUrlOffset);
+        fbb.addInt64(5, object.memberCount);
+        fbb.addOffset(6, createdByUserIdOffset);
+        fbb.addOffset(7, createdByUsernameOffset);
+        fbb.addInt64(8, object.createdAt.millisecondsSinceEpoch);
+        fbb.addInt64(9, object.updatedAt.millisecondsSinceEpoch);
+        fbb.addBool(10, object.isSynced);
+        fbb.addOffset(11, memberIdsJsonOffset);
+        fbb.finish(fbb.endTable());
+        return object.id;
+      },
+      objectFromFB: (Store store, ByteData fbData) {
+        final buffer = fb.BufferContext(fbData);
+        final rootOffset = buffer.derefObject(0);
+
+        final object = TeamEntity(
+          id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+          teamId: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGet(buffer, rootOffset, 6, ''),
+          name: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGet(buffer, rootOffset, 8, ''),
+          description: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGetNullable(buffer, rootOffset, 10),
+          avatarUrl: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGetNullable(buffer, rootOffset, 12),
+          memberCount: const fb.Int64Reader().vTableGet(
+            buffer,
+            rootOffset,
+            14,
+            0,
+          ),
+          createdByUserId: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGetNullable(buffer, rootOffset, 16),
+          createdByUsername: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGetNullable(buffer, rootOffset, 18),
+          createdAt: DateTime.fromMillisecondsSinceEpoch(
+            const fb.Int64Reader().vTableGet(buffer, rootOffset, 20, 0),
+          ),
+          updatedAt: DateTime.fromMillisecondsSinceEpoch(
+            const fb.Int64Reader().vTableGet(buffer, rootOffset, 22, 0),
+          ),
+          isSynced: const fb.BoolReader().vTableGet(
+            buffer,
+            rootOffset,
+            24,
+            false,
+          ),
+          memberIdsJson: const fb.StringReader(
+            asciiOptimization: true,
+          ).vTableGetNullable(buffer, rootOffset, 26),
+        );
+
+        return object;
+      },
+    ),
   };
 
   return ModelDefinition(model, bindings);
@@ -200,51 +849,287 @@ ModelDefinition getObjectBoxModel() {
 
 /// [UserEntity] entity fields to define ObjectBox queries.
 class UserEntity_ {
-  /// see [UserEntity.id]
-  static final id =
-      QueryIntegerProperty<UserEntity>(_entities[0].properties[0]);
+  /// see [entities.UserEntity.id]
+  static final id = QueryIntegerProperty<entities.UserEntity>(
+    _entities[0].properties[0],
+  );
 
-  /// see [UserEntity.apiUserId]
-  static final apiUserId =
-      QueryStringProperty<UserEntity>(_entities[0].properties[1]);
+  /// see [entities.UserEntity.apiUserId]
+  static final apiUserId = QueryStringProperty<entities.UserEntity>(
+    _entities[0].properties[1],
+  );
 
-  /// see [UserEntity.username]
-  static final username =
-      QueryStringProperty<UserEntity>(_entities[0].properties[2]);
+  /// see [entities.UserEntity.username]
+  static final username = QueryStringProperty<entities.UserEntity>(
+    _entities[0].properties[2],
+  );
 
-  /// see [UserEntity.fullName]
-  static final fullName =
-      QueryStringProperty<UserEntity>(_entities[0].properties[3]);
+  /// see [entities.UserEntity.fullName]
+  static final fullName = QueryStringProperty<entities.UserEntity>(
+    _entities[0].properties[3],
+  );
 
-  /// see [UserEntity.password]
-  static final password =
-      QueryStringProperty<UserEntity>(_entities[0].properties[4]);
+  /// see [entities.UserEntity.password]
+  static final password = QueryStringProperty<entities.UserEntity>(
+    _entities[0].properties[4],
+  );
 
-  /// see [UserEntity.email]
-  static final email =
-      QueryStringProperty<UserEntity>(_entities[0].properties[5]);
+  /// see [entities.UserEntity.email]
+  static final email = QueryStringProperty<entities.UserEntity>(
+    _entities[0].properties[5],
+  );
 
-  /// see [UserEntity.phoneNumber]
-  static final phoneNumber =
-      QueryStringProperty<UserEntity>(_entities[0].properties[6]);
+  /// see [entities.UserEntity.phoneNumber]
+  static final phoneNumber = QueryStringProperty<entities.UserEntity>(
+    _entities[0].properties[6],
+  );
 
-  /// see [UserEntity.userGroupsJson]
-  static final userGroupsJson =
-      QueryStringProperty<UserEntity>(_entities[0].properties[7]);
+  /// see [entities.UserEntity.userGroupsJson]
+  static final userGroupsJson = QueryStringProperty<entities.UserEntity>(
+    _entities[0].properties[7],
+  );
 
-  /// see [UserEntity.userOrgUnitIdsJson]
-  static final userOrgUnitIdsJson =
-      QueryStringProperty<UserEntity>(_entities[0].properties[8]);
+  /// see [entities.UserEntity.userOrgUnitIdsJson]
+  static final userOrgUnitIdsJson = QueryStringProperty<entities.UserEntity>(
+    _entities[0].properties[8],
+  );
 
-  /// see [UserEntity.isLogin]
-  static final isLogin =
-      QueryBooleanProperty<UserEntity>(_entities[0].properties[9]);
+  /// see [entities.UserEntity.isLogin]
+  static final isLogin = QueryBooleanProperty<entities.UserEntity>(
+    _entities[0].properties[9],
+  );
 
-  /// see [UserEntity.createdAt]
-  static final createdAt =
-      QueryIntegerProperty<UserEntity>(_entities[0].properties[10]);
+  /// see [entities.UserEntity.createdAt]
+  static final createdAt = QueryIntegerProperty<entities.UserEntity>(
+    _entities[0].properties[10],
+  );
 
-  /// see [UserEntity.updatedAt]
-  static final updatedAt =
-      QueryIntegerProperty<UserEntity>(_entities[0].properties[11]);
+  /// see [entities.UserEntity.updatedAt]
+  static final updatedAt = QueryIntegerProperty<entities.UserEntity>(
+    _entities[0].properties[11],
+  );
+}
+
+/// [NotificationEntity] entity fields to define ObjectBox queries.
+class NotificationEntity_ {
+  /// see [NotificationEntity.id]
+  static final id = QueryIntegerProperty<NotificationEntity>(
+    _entities[1].properties[0],
+  );
+
+  /// see [NotificationEntity.notificationId]
+  static final notificationId = QueryStringProperty<NotificationEntity>(
+    _entities[1].properties[1],
+  );
+
+  /// see [NotificationEntity.title]
+  static final title = QueryStringProperty<NotificationEntity>(
+    _entities[1].properties[2],
+  );
+
+  /// see [NotificationEntity.body]
+  static final body = QueryStringProperty<NotificationEntity>(
+    _entities[1].properties[3],
+  );
+
+  /// see [NotificationEntity.type]
+  static final type = QueryStringProperty<NotificationEntity>(
+    _entities[1].properties[4],
+  );
+
+  /// see [NotificationEntity.isRead]
+  static final isRead = QueryBooleanProperty<NotificationEntity>(
+    _entities[1].properties[5],
+  );
+
+  /// see [NotificationEntity.relatedEntityId]
+  static final relatedEntityId = QueryStringProperty<NotificationEntity>(
+    _entities[1].properties[6],
+  );
+
+  /// see [NotificationEntity.relatedEntityType]
+  static final relatedEntityType = QueryStringProperty<NotificationEntity>(
+    _entities[1].properties[7],
+  );
+
+  /// see [NotificationEntity.actorUserId]
+  static final actorUserId = QueryStringProperty<NotificationEntity>(
+    _entities[1].properties[8],
+  );
+
+  /// see [NotificationEntity.actorUsername]
+  static final actorUsername = QueryStringProperty<NotificationEntity>(
+    _entities[1].properties[9],
+  );
+
+  /// see [NotificationEntity.actorAvatarUrl]
+  static final actorAvatarUrl = QueryStringProperty<NotificationEntity>(
+    _entities[1].properties[10],
+  );
+
+  /// see [NotificationEntity.createdAt]
+  static final createdAt = QueryIntegerProperty<NotificationEntity>(
+    _entities[1].properties[11],
+  );
+
+  /// see [NotificationEntity.isSynced]
+  static final isSynced = QueryBooleanProperty<NotificationEntity>(
+    _entities[1].properties[12],
+  );
+}
+
+/// [TaskEntity] entity fields to define ObjectBox queries.
+class TaskEntity_ {
+  /// see [TaskEntity.id]
+  static final id = QueryIntegerProperty<TaskEntity>(
+    _entities[2].properties[0],
+  );
+
+  /// see [TaskEntity.taskId]
+  static final taskId = QueryStringProperty<TaskEntity>(
+    _entities[2].properties[1],
+  );
+
+  /// see [TaskEntity.title]
+  static final title = QueryStringProperty<TaskEntity>(
+    _entities[2].properties[2],
+  );
+
+  /// see [TaskEntity.description]
+  static final description = QueryStringProperty<TaskEntity>(
+    _entities[2].properties[3],
+  );
+
+  /// see [TaskEntity.status]
+  static final status = QueryStringProperty<TaskEntity>(
+    _entities[2].properties[4],
+  );
+
+  /// see [TaskEntity.priority]
+  static final priority = QueryStringProperty<TaskEntity>(
+    _entities[2].properties[5],
+  );
+
+  /// see [TaskEntity.assignedToUserId]
+  static final assignedToUserId = QueryStringProperty<TaskEntity>(
+    _entities[2].properties[6],
+  );
+
+  /// see [TaskEntity.assignedToUsername]
+  static final assignedToUsername = QueryStringProperty<TaskEntity>(
+    _entities[2].properties[7],
+  );
+
+  /// see [TaskEntity.dueDate]
+  static final dueDate = QueryIntegerProperty<TaskEntity>(
+    _entities[2].properties[8],
+  );
+
+  /// see [TaskEntity.completedAt]
+  static final completedAt = QueryIntegerProperty<TaskEntity>(
+    _entities[2].properties[9],
+  );
+
+  /// see [TaskEntity.projectId]
+  static final projectId = QueryStringProperty<TaskEntity>(
+    _entities[2].properties[10],
+  );
+
+  /// see [TaskEntity.projectName]
+  static final projectName = QueryStringProperty<TaskEntity>(
+    _entities[2].properties[11],
+  );
+
+  /// see [TaskEntity.tagsJson]
+  static final tagsJson = QueryStringProperty<TaskEntity>(
+    _entities[2].properties[12],
+  );
+
+  /// see [TaskEntity.attachmentsJson]
+  static final attachmentsJson = QueryStringProperty<TaskEntity>(
+    _entities[2].properties[13],
+  );
+
+  /// see [TaskEntity.progress]
+  static final progress = QueryIntegerProperty<TaskEntity>(
+    _entities[2].properties[14],
+  );
+
+  /// see [TaskEntity.isSynced]
+  static final isSynced = QueryBooleanProperty<TaskEntity>(
+    _entities[2].properties[15],
+  );
+
+  /// see [TaskEntity.createdAt]
+  static final createdAt = QueryIntegerProperty<TaskEntity>(
+    _entities[2].properties[16],
+  );
+
+  /// see [TaskEntity.updatedAt]
+  static final updatedAt = QueryIntegerProperty<TaskEntity>(
+    _entities[2].properties[17],
+  );
+}
+
+/// [TeamEntity] entity fields to define ObjectBox queries.
+class TeamEntity_ {
+  /// see [TeamEntity.id]
+  static final id = QueryIntegerProperty<TeamEntity>(
+    _entities[3].properties[0],
+  );
+
+  /// see [TeamEntity.teamId]
+  static final teamId = QueryStringProperty<TeamEntity>(
+    _entities[3].properties[1],
+  );
+
+  /// see [TeamEntity.name]
+  static final name = QueryStringProperty<TeamEntity>(
+    _entities[3].properties[2],
+  );
+
+  /// see [TeamEntity.description]
+  static final description = QueryStringProperty<TeamEntity>(
+    _entities[3].properties[3],
+  );
+
+  /// see [TeamEntity.avatarUrl]
+  static final avatarUrl = QueryStringProperty<TeamEntity>(
+    _entities[3].properties[4],
+  );
+
+  /// see [TeamEntity.memberCount]
+  static final memberCount = QueryIntegerProperty<TeamEntity>(
+    _entities[3].properties[5],
+  );
+
+  /// see [TeamEntity.createdByUserId]
+  static final createdByUserId = QueryStringProperty<TeamEntity>(
+    _entities[3].properties[6],
+  );
+
+  /// see [TeamEntity.createdByUsername]
+  static final createdByUsername = QueryStringProperty<TeamEntity>(
+    _entities[3].properties[7],
+  );
+
+  /// see [TeamEntity.createdAt]
+  static final createdAt = QueryIntegerProperty<TeamEntity>(
+    _entities[3].properties[8],
+  );
+
+  /// see [TeamEntity.updatedAt]
+  static final updatedAt = QueryIntegerProperty<TeamEntity>(
+    _entities[3].properties[9],
+  );
+
+  /// see [TeamEntity.isSynced]
+  static final isSynced = QueryBooleanProperty<TeamEntity>(
+    _entities[3].properties[10],
+  );
+
+  /// see [TeamEntity.memberIdsJson]
+  static final memberIdsJson = QueryStringProperty<TeamEntity>(
+    _entities[3].properties[11],
+  );
 }

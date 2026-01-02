@@ -4,7 +4,6 @@ import 'package:task_flow/app_state/team_state/team_state.dart';
 import 'package:task_flow/app_state/user_list_state/user_list_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/modules/teams/components/team_card.dart';
-import 'package:task_flow/modules/teams/pages/team_detail_page.dart';
 
 class TeamsPage extends StatefulWidget {
   const TeamsPage({super.key});
@@ -95,14 +94,17 @@ class _TeamsPageState extends State<TeamsPage> {
                               Icon(
                                 Icons.people_outline,
                                 size: 80,
-                                color: AppConstant.textSecondary.withOpacity(0.3),
+                                color: AppConstant.textSecondary.withValues(
+                                  alpha: 0.3,
+                                ),
                               ),
                               SizedBox(height: AppConstant.spacing16),
                               Text(
                                 'No teams yet',
-                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  color: AppConstant.textSecondary,
-                                ),
+                                style: Theme.of(context).textTheme.bodyLarge
+                                    ?.copyWith(
+                                      color: AppConstant.textSecondary,
+                                    ),
                               ),
                               SizedBox(height: AppConstant.spacing8),
                               Text(
@@ -117,16 +119,18 @@ class _TeamsPageState extends State<TeamsPage> {
                     : SliverPadding(
                         padding: EdgeInsets.all(AppConstant.spacing16),
                         sliver: SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                              final team = teamState.teams[index];
-                              return Padding(
-                                padding: EdgeInsets.only(bottom: AppConstant.spacing12),
-                                child: TeamCard(team: team),
-                              );
-                            },
-                            childCount: teamState.teams.length,
-                          ),
+                          delegate: SliverChildBuilderDelegate((
+                            context,
+                            index,
+                          ) {
+                            final team = teamState.teams[index];
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                bottom: AppConstant.spacing12,
+                              ),
+                              child: TeamCard(team: team),
+                            );
+                          }, childCount: teamState.teams.length),
                         ),
                       ),
               ],
