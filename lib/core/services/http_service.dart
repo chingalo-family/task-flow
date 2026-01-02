@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:task_manager/core/constants/dhis2_connection.dart';
+import 'package:task_flow/core/constants/dhis2_connection.dart';
 
 class HttpService {
   final String? username;

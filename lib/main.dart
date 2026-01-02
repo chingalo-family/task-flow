@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/my_app.dart';
+import 'package:task_flow/my_app.dart';
 
-import 'package:task_manager/core/services/db_service.dart';
+import 'package:task_flow/core/services/db_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

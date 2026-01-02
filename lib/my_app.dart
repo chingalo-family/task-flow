@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:task_manager/app_state/app_info_state/app_info_state.dart';
-import 'package:task_manager/app_state/user_state/user_state.dart';
-import 'package:task_manager/core/constants/app_constant.dart';
-import 'package:task_manager/modules/splash/splash.dart';
+import 'package:task_flow/app_state/app_info_state/app_info_state.dart';
+import 'package:task_flow/app_state/user_state/user_state.dart';
+import 'package:task_flow/core/constants/app_constant.dart';
+import 'package:task_flow/modules/splash/splash.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => UserState()),
       ],
       child: MaterialApp(
-        title: 'Task Manager Application',
+        title: 'Task Flow',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(

@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:task_manager/core/models/user.dart';
-import 'package:task_manager/core/entities/user_entity.dart';
-import 'package:task_manager/core/services/db_service.dart';
-import 'package:task_manager/objectbox.g.dart';
+import 'package:task_flow/core/models/user.dart';
+import 'package:task_flow/core/entities/user_entity.dart';
+import 'package:task_flow/core/services/db_service.dart';
+import 'package:task_flow/objectbox.g.dart';
 
 class UserOfflineProvider {
   UserOfflineProvider._();

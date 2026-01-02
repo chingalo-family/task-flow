@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/core/utils/app_util.dart';
-import 'package:task_manager/modules/login/components/modern_input_field.dart';
-import 'package:task_manager/modules/login/components/modern_primary_button.dart';
+import 'package:task_flow/core/utils/app_util.dart';
+import 'package:task_flow/modules/login/components/modern_input_field.dart';
+import 'package:task_flow/modules/login/components/modern_primary_button.dart';
 
 class ModernSignupForm extends StatefulWidget {
   final Function(

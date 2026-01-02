@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:task_manager/app_state/app_info_state/app_info_state.dart';
+import 'package:task_flow/app_state/app_info_state/app_info_state.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});

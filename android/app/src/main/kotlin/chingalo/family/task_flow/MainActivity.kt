@@ -1,4 +1,4 @@
-package chingalo.family.task_manager
+package chingalo.family.task_flow
 
 import io.flutter.embedding.android.FlutterActivity
 

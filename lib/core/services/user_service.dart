@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:task_manager/core/constants/dhis2_connection.dart';
-import 'package:task_manager/core/models/user.dart';
-import 'package:task_manager/core/offline_db/user_offline_provider/user_offline_provider.dart';
-import 'package:task_manager/core/utils/entry_form_util.dart';
+import 'package:task_flow/core/constants/dhis2_connection.dart';
+import 'package:task_flow/core/models/user.dart';
+import 'package:task_flow/core/offline_db/user_offline_provider/user_offline_provider.dart';
+import 'package:task_flow/core/utils/entry_form_util.dart';
 
 import 'dhis2_http_service.dart';
 import 'preference_service.dart';

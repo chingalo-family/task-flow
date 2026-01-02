@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
-import 'package:task_manager/core/services/preference_service.dart';
+import 'package:task_flow/core/services/preference_service.dart';
 
 class AppUtil {
   static bool isPasswordValid(String password) {

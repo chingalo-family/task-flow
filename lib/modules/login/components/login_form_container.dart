@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/core/models/user.dart';
-import 'package:task_manager/core/services/user_service.dart';
-import 'package:task_manager/core/utils/app_util.dart';
-import 'package:task_manager/modules/login/components/modern_login_form.dart';
+import 'package:task_flow/core/models/user.dart';
+import 'package:task_flow/core/services/user_service.dart';
+import 'package:task_flow/core/utils/app_util.dart';
+import 'package:task_flow/modules/login/components/modern_login_form.dart';
 
 class LoginFormContainer extends StatefulWidget {
   const LoginFormContainer({super.key, required this.onSuccessLogin});

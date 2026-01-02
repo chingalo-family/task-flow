@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
-import 'package:task_manager/core/constants/email_connection.dart';
-import 'package:task_manager/core/models/email_notification.dart';
+import 'package:task_flow/core/constants/email_connection.dart';
+import 'package:task_flow/core/models/email_notification.dart';
 
 class EmailService {
   static Future<void> sendEmail({
