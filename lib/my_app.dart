@@ -18,10 +18,73 @@ class MyApp extends StatelessWidget {
         title: 'Task Flow',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: AppConstant.defaultColor,
-          ),
           useMaterial3: true,
+          brightness: Brightness.dark,
+          scaffoldBackgroundColor: AppConstant.darkBackground,
+          colorScheme: ColorScheme.dark(
+            primary: AppConstant.primaryBlue,
+            secondary: AppConstant.primaryBlue,
+            surface: AppConstant.cardBackground,
+            background: AppConstant.darkBackground,
+            error: AppConstant.errorRed,
+          ),
+          cardTheme: CardTheme(
+            color: AppConstant.cardBackground,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppConstant.borderRadius16),
+            ),
+          ),
+          appBarTheme: AppBarTheme(
+            backgroundColor: AppConstant.darkBackground,
+            elevation: 0,
+            centerTitle: true,
+            titleTextStyle: TextStyle(
+              color: AppConstant.textPrimary,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          textTheme: TextTheme(
+            headlineLarge: TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+              color: AppConstant.textPrimary,
+            ),
+            headlineMedium: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+              color: AppConstant.textPrimary,
+            ),
+            bodyLarge: TextStyle(
+              fontSize: 16,
+              color: AppConstant.textPrimary,
+            ),
+            bodyMedium: TextStyle(
+              fontSize: 14,
+              color: AppConstant.textSecondary,
+            ),
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppConstant.primaryBlue,
+              foregroundColor: Colors.white,
+              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+              ),
+              elevation: 0,
+            ),
+          ),
+          inputDecorationTheme: InputDecorationTheme(
+            filled: true,
+            fillColor: AppConstant.cardBackground,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+              borderSide: BorderSide.none,
+            ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          ),
         ),
         home: Splash(),
       ),

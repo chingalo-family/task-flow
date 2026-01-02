@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/app_info_state/app_info_state.dart';
-import 'package:task_flow/core/components/circular_process_loader.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
+import 'package:task_flow/modules/splash/components/app_logo.dart';
 import 'package:task_flow/modules/login/login_page.dart';
 import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/modules/home/home.dart';
@@ -16,44 +16,159 @@ class Splash extends StatefulWidget {
   State<Splash> createState() => _SplashState();
 }
 
-class _SplashState extends State<Splash> {
+class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<double> _scaleAnimation;
+  double _progress = 0.0;
+
   @override
   void initState() {
     super.initState();
+    
+    // Animation setup
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
+    
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeIn),
+    );
+    
+    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOutBack),
+    );
+    
+    _controller.forward();
+    
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       Provider.of<AppInfoState>(context, listen: false).initiatizeAppInfo();
+      
+      // Simulate loading progress
+      for (int i = 0; i <= 100; i += 5) {
+        await Future.delayed(const Duration(milliseconds: 30));
+        if (mounted) {
+          setState(() {
+            _progress = i / 100;
+          });
+        }
+      }
+      
       // Wait for UserState to initialize and check auth
       final userState = Provider.of<UserState>(context, listen: false);
       await userState.initialize();
-      Future.delayed(const Duration(milliseconds: 200), () {
+      
+      await Future.delayed(const Duration(milliseconds: 500));
+      
+      if (mounted) {
         _redirectToPages(userState);
-      });
+      }
     });
   }
 
   void _redirectToPages(UserState userState) {
-    if (userState.isAuthenticated) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const Home()),
-      );
-    } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const LoginPage()),
-      );
-    }
+    Navigator.pushReplacement(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            userState.isAuthenticated ? const Home() : const LoginPage(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+        transitionDuration: const Duration(milliseconds: 500),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        color: Theme.of(context).colorScheme.primary,
-        child: const Center(
-          child: CircularProcessLoader(
-            color: AppConstant.defaultColor,
-            size: 3,
+      backgroundColor: AppConstant.darkBackground,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(AppConstant.spacing32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Spacer(),
+              
+              // Animated Logo
+              FadeTransition(
+                opacity: _fadeAnimation,
+                child: ScaleTransition(
+                  scale: _scaleAnimation,
+                  child: const AppLogo(size: 120),
+                ),
+              ),
+              
+              SizedBox(height: AppConstant.spacing16),
+              
+              // Tagline
+              FadeTransition(
+                opacity: _fadeAnimation,
+                child: Text(
+                  'Collaborate. Achieve.',
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: AppConstant.textSecondary,
+                    fontSize: 18,
+                    letterSpacing: 0.5,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              
+              const Spacer(),
+              
+              // Loading Progress
+              Column(
+                children: [
+                  SizedBox(
+                    width: 200,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: LinearProgressIndicator(
+                        value: _progress,
+                        backgroundColor: AppConstant.cardBackground,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          AppConstant.primaryBlue,
+                        ),
+                        minHeight: 4,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: AppConstant.spacing16),
+                  Text(
+                    'INITIALIZING WORKSPACE...',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontSize: 12,
+                      letterSpacing: 1.5,
+                      color: AppConstant.textSecondary.withOpacity(0.6),
+                    ),
+                  ),
+                ],
+              ),
+              
+              SizedBox(height: AppConstant.spacing32),
+              
+              // Version
+              Text(
+                'V 1.0.4 • EARLY ACCESS',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontSize: 11,
+                  letterSpacing: 1.2,
+                  color: AppConstant.textSecondary.withOpacity(0.4),
+                ),
+              ),
+              
+              SizedBox(height: AppConstant.spacing16),
+            ],
           ),
         ),
       ),
