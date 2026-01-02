@@ -5,6 +5,7 @@ class Team {
   final String? avatarUrl;
   final int memberCount;
   final List<String>? memberIds;
+  final List<String>? taskIds; // List of task IDs belonging to this team
   final String? createdByUserId;
   final String? createdByUsername;
   final DateTime createdAt;
@@ -17,6 +18,7 @@ class Team {
     this.avatarUrl,
     this.memberCount = 0,
     this.memberIds,
+    this.taskIds,
     this.createdByUserId,
     this.createdByUsername,
     DateTime? createdAt,
@@ -31,6 +33,7 @@ class Team {
     String? avatarUrl,
     int? memberCount,
     List<String>? memberIds,
+    List<String>? taskIds,
     String? createdByUserId,
     String? createdByUsername,
     DateTime? createdAt,
@@ -43,6 +46,7 @@ class Team {
       avatarUrl: avatarUrl ?? this.avatarUrl,
       memberCount: memberCount ?? this.memberCount,
       memberIds: memberIds ?? this.memberIds,
+      taskIds: taskIds ?? this.taskIds,
       createdByUserId: createdByUserId ?? this.createdByUserId,
       createdByUsername: createdByUsername ?? this.createdByUsername,
       createdAt: createdAt ?? this.createdAt,

@@ -6,6 +6,8 @@ class Task {
   final String priority;
   final String? assignedToUserId;
   final String? assignedToUsername;
+  final String? teamId; // Team this task belongs to
+  final String? teamName;
   final DateTime? dueDate;
   final DateTime? completedAt;
   final String? projectId;
@@ -24,6 +26,8 @@ class Task {
     this.priority = 'medium',
     this.assignedToUserId,
     this.assignedToUsername,
+    this.teamId,
+    this.teamName,
     this.dueDate,
     this.completedAt,
     this.projectId,
@@ -44,6 +48,8 @@ class Task {
     String? priority,
     String? assignedToUserId,
     String? assignedToUsername,
+    String? teamId,
+    String? teamName,
     DateTime? dueDate,
     DateTime? completedAt,
     String? projectId,
@@ -62,6 +68,8 @@ class Task {
       priority: priority ?? this.priority,
       assignedToUserId: assignedToUserId ?? this.assignedToUserId,
       assignedToUsername: assignedToUsername ?? this.assignedToUsername,
+      teamId: teamId ?? this.teamId,
+      teamName: teamName ?? this.teamName,
       dueDate: dueDate ?? this.dueDate,
       completedAt: completedAt ?? this.completedAt,
       projectId: projectId ?? this.projectId,

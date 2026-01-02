@@ -7,12 +7,15 @@ class TaskState extends ChangeNotifier {
   String _filterStatus = 'all'; // 'all', 'pending', 'in_progress', 'completed'
   String _filterPriority = 'all'; // 'all', 'high', 'medium', 'low'
   String _sortBy = 'dueDate'; // 'dueDate', 'priority', 'createdAt'
+  String? _filterTeamId; // Filter tasks by team
 
   List<Task> get tasks => _getFilteredTasks();
+  List<Task> get allTasks => _tasks;
   bool get loading => _loading;
   String get filterStatus => _filterStatus;
   String get filterPriority => _filterPriority;
   String get sortBy => _sortBy;
+  String? get filterTeamId => _filterTeamId;
 
   int get totalTasks => _tasks.length;
   int get completedTasks => _tasks.where((t) => t.isCompleted).length;
@@ -49,6 +52,10 @@ class TaskState extends ChangeNotifier {
         dueDate: now.add(Duration(days: 2)),
         progress: 65,
         tags: ['proposal', 'urgent'],
+        teamId: '1',
+        teamName: 'Product Team',
+        assignedToUserId: 'user2',
+        assignedToUsername: 'Jane Smith',
       ),
       Task(
         id: '2',
@@ -59,6 +66,8 @@ class TaskState extends ChangeNotifier {
         dueDate: now.add(Duration(days: 5)),
         progress: 0,
         tags: ['review'],
+        teamId: '1',
+        teamName: 'Product Team',
       ),
       Task(
         id: '3',
@@ -69,6 +78,8 @@ class TaskState extends ChangeNotifier {
         completedAt: now.subtract(Duration(days: 1)),
         progress: 100,
         tags: ['docs'],
+        teamId: '2',
+        teamName: 'Design Squad',
       ),
       Task(
         id: '4',
@@ -79,6 +90,10 @@ class TaskState extends ChangeNotifier {
         dueDate: now.add(Duration(days: 1)),
         progress: 40,
         tags: ['bugs', 'urgent'],
+        teamId: '3',
+        teamName: 'Engineering',
+        assignedToUserId: 'user1',
+        assignedToUsername: 'John Doe',
       ),
       Task(
         id: '5',
@@ -89,12 +104,19 @@ class TaskState extends ChangeNotifier {
         dueDate: now.add(Duration(days: 7)),
         progress: 0,
         tags: ['meeting'],
+        teamId: '4',
+        teamName: 'Marketing',
       ),
     ];
   }
 
   List<Task> _getFilteredTasks() {
     var filtered = List<Task>.from(_tasks);
+
+    // Filter by team
+    if (_filterTeamId != null) {
+      filtered = filtered.where((task) => task.teamId == _filterTeamId).toList();
+    }
 
     // Filter by status
     if (_filterStatus != 'all') {
@@ -127,6 +149,10 @@ class TaskState extends ChangeNotifier {
     return filtered;
   }
 
+  List<Task> getTasksByTeamId(String teamId) {
+    return _tasks.where((task) => task.teamId == teamId).toList();
+  }
+
   void setFilterStatus(String status) {
     _filterStatus = status;
     notifyListeners();
@@ -139,6 +165,11 @@ class TaskState extends ChangeNotifier {
 
   void setSortBy(String sortBy) {
     _sortBy = sortBy;
+    notifyListeners();
+  }
+
+  void setFilterTeamId(String? teamId) {
+    _filterTeamId = teamId;
     notifyListeners();
   }
 

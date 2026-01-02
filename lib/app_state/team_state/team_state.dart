@@ -36,6 +36,7 @@ class TeamState extends ChangeNotifier {
         description: 'Building amazing features for our users',
         memberCount: 8,
         memberIds: ['user1', 'user2', 'user3', 'user4', 'user5', 'user6', 'user7', 'user8'],
+        taskIds: ['1', '2'],
         createdAt: now.subtract(Duration(days: 30)),
       ),
       Team(
@@ -44,6 +45,7 @@ class TeamState extends ChangeNotifier {
         description: 'Crafting beautiful experiences',
         memberCount: 5,
         memberIds: ['user1', 'user9', 'user10', 'user11', 'user12'],
+        taskIds: ['3'],
         createdAt: now.subtract(Duration(days: 20)),
       ),
       Team(
@@ -52,6 +54,7 @@ class TeamState extends ChangeNotifier {
         description: 'Code, deploy, repeat',
         memberCount: 12,
         memberIds: ['user1', 'user2', 'user13', 'user14', 'user15'],
+        taskIds: ['4'],
         createdAt: now.subtract(Duration(days: 15)),
       ),
       Team(
@@ -60,6 +63,7 @@ class TeamState extends ChangeNotifier {
         description: 'Spreading the word',
         memberCount: 6,
         memberIds: ['user16', 'user17', 'user18'],
+        taskIds: ['5'],
         createdAt: now.subtract(Duration(days: 10)),
       ),
     ];
@@ -84,5 +88,71 @@ class TeamState extends ChangeNotifier {
     _teams.removeWhere((t) => t.id == teamId);
     // TODO: Delete from ObjectBox
     notifyListeners();
+  }
+
+  Team? getTeamById(String teamId) {
+    try {
+      return _teams.firstWhere((t) => t.id == teamId);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<void> addMemberToTeam(String teamId, String userId) async {
+    final team = getTeamById(teamId);
+    if (team != null) {
+      final memberIds = List<String>.from(team.memberIds ?? []);
+      if (!memberIds.contains(userId)) {
+        memberIds.add(userId);
+        final updatedTeam = team.copyWith(
+          memberIds: memberIds,
+          memberCount: memberIds.length,
+          updatedAt: DateTime.now(),
+        );
+        await updateTeam(updatedTeam);
+      }
+    }
+  }
+
+  Future<void> removeMemberFromTeam(String teamId, String userId) async {
+    final team = getTeamById(teamId);
+    if (team != null) {
+      final memberIds = List<String>.from(team.memberIds ?? []);
+      memberIds.remove(userId);
+      final updatedTeam = team.copyWith(
+        memberIds: memberIds,
+        memberCount: memberIds.length,
+        updatedAt: DateTime.now(),
+      );
+      await updateTeam(updatedTeam);
+    }
+  }
+
+  Future<void> addTaskToTeam(String teamId, String taskId) async {
+    final team = getTeamById(teamId);
+    if (team != null) {
+      final taskIds = List<String>.from(team.taskIds ?? []);
+      if (!taskIds.contains(taskId)) {
+        taskIds.add(taskId);
+        final updatedTeam = team.copyWith(
+          taskIds: taskIds,
+          updatedAt: DateTime.now(),
+        );
+        await updateTeam(updatedTeam);
+      }
+    }
+  }
+
+  Future<void> removeTaskFromTeam(String teamId, String taskId) async {
+    final team = getTeamById(teamId);
+    if (team != null) {
+      final taskIds = List<String>.from(team.taskIds ?? []);
+      taskIds.remove(taskId);
+      final updatedTeam = team.copyWith(
+        taskIds: taskIds,
+        updatedAt: DateTime.now(),
+      );
+      await updateTeam(updatedTeam);
+    }
   }
 }
