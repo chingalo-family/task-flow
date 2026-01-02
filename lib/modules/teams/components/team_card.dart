@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
-import 'package:task_flow/modules/teams/models/team.dart';
+import 'package:task_flow/core/models/models.dart';
 
 class TeamCard extends StatelessWidget {
   final Team team;

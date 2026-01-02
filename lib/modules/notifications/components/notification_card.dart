@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/notification_state/notification_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
-import 'package:task_flow/modules/notifications/models/notification.dart' as app_notif;
+import 'package:task_flow/core/models/models.dart' as app_notif;
 
 class NotificationCard extends StatelessWidget {
   final app_notif.Notification notification;

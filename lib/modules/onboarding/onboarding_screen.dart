@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
+import 'package:task_flow/core/components/components.dart';
 import 'package:task_flow/modules/login/login_page.dart';
 import 'package:task_flow/modules/onboarding/components/onboarding_illustration.dart';
-import 'package:task_flow/modules/onboarding/components/page_indicator.dart';
 import 'package:task_flow/modules/onboarding/models/onboarding_page.dart';
 
 class OnboardingScreen extends StatefulWidget {

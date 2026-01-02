@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/task_state/task_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
-import 'package:task_flow/modules/tasks/models/task.dart';
+import 'package:task_flow/core/models/models.dart';
 
 class TaskCard extends StatelessWidget {
   final Task task;

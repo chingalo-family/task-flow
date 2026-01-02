@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_flow/modules/teams/models/team.dart';
+import 'package:task_flow/core/models/models.dart';
 
 class TeamState extends ChangeNotifier {
   List<Team> _teams = [];

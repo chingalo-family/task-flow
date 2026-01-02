@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_flow/modules/notifications/models/notification.dart' as app_notif;
+import 'package:task_flow/core/models/models.dart' as app_notif;
 
 class NotificationState extends ChangeNotifier {
   List<app_notif.Notification> _notifications = [];

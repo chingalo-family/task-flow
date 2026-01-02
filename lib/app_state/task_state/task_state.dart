@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_flow/modules/tasks/models/task.dart';
+import 'package:task_flow/core/models/models.dart';
 
 class TaskState extends ChangeNotifier {
   List<Task> _tasks = [];
