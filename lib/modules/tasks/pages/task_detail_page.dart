@@ -737,7 +737,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                   final subtasks = List<Subtask>.from(_task.subtasks ?? []);
                   subtasks.add(
                     Subtask(
-                      id: DateTime.now().millisecondsSinceEpoch.toString(),
+                      id: '${DateTime.now().millisecondsSinceEpoch}_${subtasks.length}',
                       title: titleController.text.trim(),
                       isCompleted: false,
                     ),

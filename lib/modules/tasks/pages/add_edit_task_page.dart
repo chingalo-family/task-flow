@@ -290,7 +290,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                     fontSize: 14,
                   ),
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(left: 40),
+                  contentPadding: EdgeInsets.only(left: AppConstant.spacing32),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -912,7 +912,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                             ? AppConstant.primaryBlue
                             : AppConstant.textSecondary.withValues(alpha: 0.3),
                         child: Text(
-                          'U${userId.length > 4 ? userId.substring(userId.length - 1) : userId}',
+                          userId.length > 0 ? userId.substring(0, 1).toUpperCase() : 'U',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 12,
