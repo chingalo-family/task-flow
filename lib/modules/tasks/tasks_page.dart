@@ -160,64 +160,68 @@ class _TasksPageState extends State<TasksPage> {
                   ),
                 ),
 
-                // Daily Progress Card
+                // My Progress Card
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: AppConstant.spacing24,
                       vertical: AppConstant.spacing16,
                     ),
-                    child: Container(
-                      padding: EdgeInsets.all(AppConstant.spacing20),
-                      decoration: BoxDecoration(
-                        color: AppConstant.cardBackground,
-                        borderRadius: BorderRadius.circular(
-                          AppConstant.borderRadius16,
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Consumer<UserState>(
+                      builder: (context, userState, _) {
+                        final userId = userState.currentUser?.id ?? '';
+                        final myCompletedCount = taskState.getMyCompletedTasksCount(userId);
+                        final myTotalCount = taskState.getMyTotalTasksCount(userId);
+                        final myProgress = taskState.getMyCompletionProgress(userId);
+
+                        return Container(
+                          padding: EdgeInsets.all(AppConstant.spacing20),
+                          decoration: BoxDecoration(
+                            color: AppConstant.cardBackground,
+                            borderRadius: BorderRadius.circular(
+                              AppConstant.borderRadius16,
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    'Daily Progress',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppConstant.textPrimary,
-                                    ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'My Progress',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppConstant.textPrimary,
+                                        ),
+                                      ),
+                                      SizedBox(height: AppConstant.spacing4),
+                                      Text(
+                                        '$myCompletedCount/$myTotalCount tasks completed',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: AppConstant.textSecondary,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(height: AppConstant.spacing4),
-                                  Text(
-                                    '${taskState.tasksCompletedToday}/${taskState.tasksDueToday} tasks completed',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: AppConstant.textSecondary,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                width: 60,
-                                height: 60,
-                                child: Stack(
-                                  children: [
-                                    SizedBox(
-                                      width: 60,
-                                      height: 60,
-                                      child: CircularProgressIndicator(
-                                        value: taskState.tasksDueToday > 0
-                                            ? taskState.tasksCompletedToday /
-                                                  taskState.tasksDueToday
-                                            : 0,
-                                        strokeWidth: 6,
-                                        backgroundColor: AppConstant
-                                            .textSecondary
+                                  SizedBox(
+                                    width: 60,
+                                    height: 60,
+                                    child: Stack(
+                                      children: [
+                                        SizedBox(
+                                          width: 60,
+                                          height: 60,
+                                          child: CircularProgressIndicator(
+                                            value: myProgress,
+                                            strokeWidth: 6,
+                                            backgroundColor: AppConstant
+                                                .textSecondary
                                             .withValues(alpha: 0.2),
                                         valueColor: AlwaysStoppedAnimation(
                                           AppConstant.primaryBlue,
@@ -226,7 +230,7 @@ class _TasksPageState extends State<TasksPage> {
                                     ),
                                     Center(
                                       child: Text(
-                                        '${taskState.tasksDueToday > 0 ? ((taskState.tasksCompletedToday / taskState.tasksDueToday) * 100).toInt() : 0}%',
+                                        '${(myProgress * 100).toInt()}%',
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
@@ -243,10 +247,7 @@ class _TasksPageState extends State<TasksPage> {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(4),
                             child: LinearProgressIndicator(
-                              value: taskState.tasksDueToday > 0
-                                  ? taskState.tasksCompletedToday /
-                                        taskState.tasksDueToday
-                                  : 0,
+                              value: myProgress,
                               backgroundColor: AppConstant.textSecondary
                                   .withValues(alpha: 0.2),
                               valueColor: AlwaysStoppedAnimation(
@@ -256,7 +257,8 @@ class _TasksPageState extends State<TasksPage> {
                             ),
                           ),
                         ],
-                      ),
+                      );
+                      },
                     ),
                   ),
                 ),

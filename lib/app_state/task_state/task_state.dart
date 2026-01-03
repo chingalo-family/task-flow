@@ -50,6 +50,37 @@ class TaskState extends ChangeNotifier {
     }).length;
   }
 
+  /// Get all tasks assigned to a specific user
+  /// Includes both personal tasks and team tasks where the user is assigned
+  List<Task> getMyTasks(String userId) {
+    return _tasks.where((task) {
+      // Check if user is in assignedUserIds
+      if (task.assignedUserIds != null && 
+          task.assignedUserIds!.contains(userId)) {
+        return true;
+      }
+      return false;
+    }).toList();
+  }
+
+  /// Get completed tasks for a specific user
+  int getMyCompletedTasksCount(String userId) {
+    return getMyTasks(userId).where((task) => task.isCompleted).length;
+  }
+
+  /// Get total tasks assigned to a specific user
+  int getMyTotalTasksCount(String userId) {
+    return getMyTasks(userId).length;
+  }
+
+  /// Get completion percentage for a specific user (0.0 to 1.0)
+  double getMyCompletionProgress(String userId) {
+    final myTasks = getMyTasks(userId);
+    if (myTasks.isEmpty) return 0.0;
+    final completed = myTasks.where((task) => task.isCompleted).length;
+    return completed / myTasks.length;
+  }
+
   List<Task> get tasksDueTodayList {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
