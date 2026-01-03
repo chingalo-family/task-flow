@@ -40,16 +40,42 @@ class _HomeState extends State<Home> {
         child: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: AppConstant.spacing16,
-              vertical: AppConstant.spacing8,
+              horizontal: AppConstant.spacing8,
+              vertical: AppConstant.spacing12,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildNavItem(0, Icons.task_alt, 'Tasks'),
-                _buildNavItem(1, Icons.people, 'Teams'),
-                _buildNavItem(2, Icons.notifications, 'Notifications'),
-                _buildNavItem(3, Icons.settings, 'Settings'),
+                _buildNavItem(0, Icons.check_circle_outline, 'My Tasks'),
+                _buildNavItem(1, Icons.people_outline, 'Teams'),
+                // Center Create Button
+                GestureDetector(
+                  onTap: () {
+                    // TODO: Navigate to create task
+                  },
+                  child: Container(
+                    width: 56,
+                    height: 56,
+                    decoration: BoxDecoration(
+                      color: AppConstant.primaryBlue,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppConstant.primaryBlue.withOpacity(0.3),
+                          blurRadius: 12,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.white,
+                      size: 28,
+                    ),
+                  ),
+                ),
+                _buildNavItem(2, Icons.notifications_outlined, 'Alerts'),
+                _buildNavItem(3, Icons.settings_outlined, 'Settings'),
               ],
             ),
           ),
@@ -68,14 +94,8 @@ class _HomeState extends State<Home> {
       },
       child: Container(
         padding: EdgeInsets.symmetric(
-          horizontal: AppConstant.spacing16,
+          horizontal: AppConstant.spacing8,
           vertical: AppConstant.spacing8,
-        ),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? AppConstant.primaryBlue.withValues(alpha: 0.1)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -94,7 +114,7 @@ class _HomeState extends State<Home> {
                 color: isSelected
                     ? AppConstant.primaryBlue
                     : AppConstant.textSecondary,
-                fontSize: 12,
+                fontSize: 11,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
               ),
             ),

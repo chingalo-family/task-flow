@@ -4,7 +4,6 @@ import 'package:task_flow/app_state/task_state/task_state.dart';
 import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/modules/tasks/components/task_card.dart';
-import 'package:task_flow/modules/tasks/components/task_stats.dart';
 
 class TasksPage extends StatefulWidget {
   const TasksPage({super.key});
@@ -22,6 +21,17 @@ class _TasksPageState extends State<TasksPage> {
     });
   }
 
+  String _getGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) {
+      return 'Good Morning';
+    } else if (hour < 17) {
+      return 'Good Afternoon';
+    } else {
+      return 'Good Evening';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,126 +47,333 @@ class _TasksPageState extends State<TasksPage> {
               );
             }
 
+            final focusTasks = taskState.focusTasks.take(2).toList();
+            final upcomingTasks = taskState.upcomingTasks.take(2).toList();
+
             return CustomScrollView(
               slivers: [
-                // App Bar
+                // App Bar with user avatar and search
                 SliverAppBar(
                   floating: true,
                   backgroundColor: AppConstant.darkBackground,
                   elevation: 0,
-                  title: Row(
-                    children: [
-                      Icon(
-                        Icons.layers_rounded,
-                        color: AppConstant.primaryBlue,
-                        size: 24,
-                      ),
-                      SizedBox(width: AppConstant.spacing8),
-                      Text(
-                        'TaskFlow',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+                  leading: Padding(
+                    padding: EdgeInsets.all(AppConstant.spacing8),
+                    child: Consumer<UserState>(
+                      builder: (context, userState, _) {
+                        final user = userState.currentUser;
+                        final initials = user?.fullName != null
+                            ? user!.fullName!.split(' ').map((n) => n[0]).take(2).join()
+                            : user?.username?.substring(0, 1).toUpperCase() ?? 'U';
+                        
+                        return CircleAvatar(
+                          backgroundColor: AppConstant.primaryBlue,
+                          child: Text(
+                            initials,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ),
+                  title: Text(
+                    'My Tasks',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: AppConstant.textPrimary,
+                    ),
+                  ),
+                  actions: [
+                    IconButton(
+                      icon: Icon(Icons.search, color: AppConstant.textPrimary),
+                      onPressed: () {
+                        // TODO: Implement search
+                      },
+                    ),
+                  ],
                 ),
 
-                // Header with greeting
+                // Greeting and task count
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: EdgeInsets.all(AppConstant.spacing24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Consumer<UserState>(
-                          builder: (context, userState, _) {
-                            final user = userState.currentUser;
-                            return Text(
-                              'Hello, ${user?.fullName ?? user?.username ?? "User"}! 👋',
-                              style: Theme.of(context).textTheme.headlineMedium,
-                            );
-                          },
-                        ),
-                        SizedBox(height: AppConstant.spacing8),
-                        Text(
-                          'You have ${taskState.tasks.length} tasks',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ],
+                    padding: EdgeInsets.fromLTRB(
+                      AppConstant.spacing24,
+                      AppConstant.spacing16,
+                      AppConstant.spacing24,
+                      AppConstant.spacing8,
+                    ),
+                    child: Consumer<UserState>(
+                      builder: (context, userState, _) {
+                        final user = userState.currentUser;
+                        final firstName = user?.fullName?.split(' ').first ?? 
+                                         user?.username ?? 'User';
+                        
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${_getGreeting()}, $firstName',
+                              style: TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                color: AppConstant.textPrimary,
+                              ),
+                            ),
+                            SizedBox(height: AppConstant.spacing8),
+                            Text(
+                              'You have ${taskState.tasksDueToday} tasks pending today.',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: AppConstant.textSecondary,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ),
                 ),
 
-                // Task Stats
-                SliverToBoxAdapter(child: TaskStats()),
-
-                // Filters
+                // Daily Progress Card
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: EdgeInsets.all(AppConstant.spacing16),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppConstant.spacing24,
+                      vertical: AppConstant.spacing16,
+                    ),
+                    child: Container(
+                      padding: EdgeInsets.all(AppConstant.spacing20),
+                      decoration: BoxDecoration(
+                        color: AppConstant.cardBackground,
+                        borderRadius: BorderRadius.circular(AppConstant.borderRadius16),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _buildFilterChip('All', 'all', taskState),
-                          _buildFilterChip('Pending', 'pending', taskState),
-                          _buildFilterChip(
-                            'In Progress',
-                            'in_progress',
-                            taskState,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Daily Progress',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppConstant.textPrimary,
+                                    ),
+                                  ),
+                                  SizedBox(height: AppConstant.spacing4),
+                                  Text(
+                                    '${taskState.completedTasks}/${taskState.totalTasks} tasks completed',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: AppConstant.textSecondary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                width: 60,
+                                height: 60,
+                                child: Stack(
+                                  children: [
+                                    SizedBox(
+                                      width: 60,
+                                      height: 60,
+                                      child: CircularProgressIndicator(
+                                        value: taskState.totalTasks > 0
+                                            ? taskState.completedTasks / taskState.totalTasks
+                                            : 0,
+                                        strokeWidth: 6,
+                                        backgroundColor: AppConstant.textSecondary.withOpacity(0.2),
+                                        valueColor: AlwaysStoppedAnimation(AppConstant.primaryBlue),
+                                      ),
+                                    ),
+                                    Center(
+                                      child: Text(
+                                        '${taskState.totalTasks > 0 ? ((taskState.completedTasks / taskState.totalTasks) * 100).toInt() : 0}%',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppConstant.primaryBlue,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                          _buildFilterChip('Completed', 'completed', taskState),
+                          SizedBox(height: AppConstant.spacing16),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(4),
+                            child: LinearProgressIndicator(
+                              value: taskState.totalTasks > 0
+                                  ? taskState.completedTasks / taskState.totalTasks
+                                  : 0,
+                              backgroundColor: AppConstant.textSecondary.withOpacity(0.2),
+                              valueColor: AlwaysStoppedAnimation(AppConstant.primaryBlue),
+                              minHeight: 8,
+                            ),
+                          ),
+                          SizedBox(height: AppConstant.spacing16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  _buildTeamAvatar('A', 0),
+                                  _buildTeamAvatar('B', 1),
+                                  Container(
+                                    width: 32,
+                                    height: 32,
+                                    decoration: BoxDecoration(
+                                      color: AppConstant.primaryBlue.withOpacity(0.2),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        '+${taskState.totalTasks > 3 ? taskState.totalTasks - 3 : 3}',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppConstant.primaryBlue,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  // TODO: Navigate to report
+                                },
+                                child: Text(
+                                  'View Report',
+                                  style: TextStyle(
+                                    color: AppConstant.primaryBlue,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
                   ),
                 ),
 
-                // Task List
-                taskState.tasks.isEmpty
-                    ? SliverFillRemaining(
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.task_alt,
-                                size: 80,
-                                color: AppConstant.textSecondary.withValues(
-                                  alpha: 0.3,
-                                ),
-                              ),
-                              SizedBox(height: AppConstant.spacing16),
-                              Text(
-                                'No tasks found',
-                                style: Theme.of(context).textTheme.bodyLarge
-                                    ?.copyWith(
-                                      color: AppConstant.textSecondary,
-                                    ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
-                    : SliverPadding(
-                        padding: EdgeInsets.all(AppConstant.spacing16),
-                        sliver: SliverList(
-                          delegate: SliverChildBuilderDelegate((
-                            context,
-                            index,
-                          ) {
-                            final task = taskState.tasks[index];
-                            return Padding(
-                              padding: EdgeInsets.only(
-                                bottom: AppConstant.spacing12,
-                              ),
-                              child: TaskCard(task: task),
-                            );
-                          }, childCount: taskState.tasks.length),
+                // Focus Today Section
+                if (focusTasks.isNotEmpty) ...[
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        AppConstant.spacing24,
+                        AppConstant.spacing16,
+                        AppConstant.spacing24,
+                        AppConstant.spacing12,
+                      ),
+                      child: Text(
+                        'Focus Today',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: AppConstant.textPrimary,
                         ),
                       ),
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: EdgeInsets.symmetric(horizontal: AppConstant.spacing24),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          final task = focusTasks[index];
+                          return Padding(
+                            padding: EdgeInsets.only(bottom: AppConstant.spacing12),
+                            child: TaskCard(task: task),
+                          );
+                        },
+                        childCount: focusTasks.length,
+                      ),
+                    ),
+                  ),
+                ],
+
+                // Upcoming Section
+                if (upcomingTasks.isNotEmpty) ...[
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        AppConstant.spacing24,
+                        AppConstant.spacing16,
+                        AppConstant.spacing24,
+                        AppConstant.spacing12,
+                      ),
+                      child: Text(
+                        'Upcoming',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: AppConstant.textPrimary,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: EdgeInsets.fromLTRB(
+                      AppConstant.spacing24,
+                      0,
+                      AppConstant.spacing24,
+                      AppConstant.spacing24,
+                    ),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          final task = upcomingTasks[index];
+                          return Padding(
+                            padding: EdgeInsets.only(bottom: AppConstant.spacing12),
+                            child: TaskCard(task: task),
+                          );
+                        },
+                        childCount: upcomingTasks.length,
+                      ),
+                    ),
+                  ),
+                ],
+
+                // Empty state
+                if (focusTasks.isEmpty && upcomingTasks.isEmpty)
+                  SliverFillRemaining(
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.task_alt,
+                            size: 80,
+                            color: AppConstant.textSecondary.withValues(alpha: 0.3),
+                          ),
+                          SizedBox(height: AppConstant.spacing16),
+                          Text(
+                            'No tasks found',
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  color: AppConstant.textSecondary,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
               ],
             );
           },
@@ -172,28 +389,33 @@ class _TasksPageState extends State<TasksPage> {
     );
   }
 
-  Widget _buildFilterChip(String label, String value, TaskState taskState) {
-    final isSelected = taskState.filterStatus == value;
-    return Padding(
-      padding: EdgeInsets.only(right: AppConstant.spacing8),
-      child: FilterChip(
-        label: Text(label),
-        selected: isSelected,
-        onSelected: (selected) {
-          taskState.setFilterStatus(value);
-        },
-        backgroundColor: AppConstant.cardBackground,
-        selectedColor: AppConstant.primaryBlue.withValues(alpha: 0.2),
-        labelStyle: TextStyle(
-          color: isSelected
-              ? AppConstant.primaryBlue
-              : AppConstant.textSecondary,
-          fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+  Widget _buildTeamAvatar(String initial, int index) {
+    final colors = [
+      Color(0xFFEF4444),
+      Color(0xFF3B82F6),
+      Color(0xFF10B981),
+    ];
+
+    return Container(
+      width: 32,
+      height: 32,
+      margin: EdgeInsets.only(right: 8),
+      decoration: BoxDecoration(
+        color: colors[index % colors.length].withOpacity(0.2),
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: colors[index % colors.length],
+          width: 2,
         ),
-        side: BorderSide(
-          color: isSelected
-              ? AppConstant.primaryBlue
-              : AppConstant.textSecondary.withValues(alpha: 0.2),
+      ),
+      child: Center(
+        child: Text(
+          initial,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            color: colors[index % colors.length],
+          ),
         ),
       ),
     );
