@@ -3,8 +3,10 @@ import 'package:task_flow/core/constants/task_constants.dart';
 
 @Entity()
 class TaskEntity {
+  @Id()
   int id; // ObjectBox id
 
+  @Index()
   String taskId; // API task id
   String title;
   String? description;

@@ -2,8 +2,10 @@ import 'package:objectbox/objectbox.dart';
 
 @Entity()
 class NotificationEntity {
+  @Id()
   int id; // ObjectBox id
 
+  @Index()
   String notificationId; // API notification id
   String title;
   String? body;
@@ -19,6 +21,8 @@ class NotificationEntity {
   
   @Property(type: PropertyType.date)
   DateTime createdAt;
+  
+  String? metadataJson; // Additional metadata stored as JSON
   
   bool isSynced;
 

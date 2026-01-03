@@ -1,22 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:task_flow/core/models/models.dart';
 import 'package:task_flow/core/constants/task_constants.dart';
-import 'package:task_flow/core/entities/task_entity.dart';
-import 'package:task_flow/core/utils/task_entity_mapper.dart';
-import 'package:task_flow/objectbox.g.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as path;
+import 'package:task_flow/core/services/task_service.dart';
 
 class TaskState extends ChangeNotifier {
+  final _service = TaskService();
+  
   List<Task> _tasks = [];
   bool _loading = false;
-  bool _initialized = false; // Thread-safe initialization flag
   String _filterStatus = TaskConstants.defaultFilterStatus;
   String _filterPriority = TaskConstants.defaultFilterPriority;
   String _sortBy = TaskConstants.defaultSortBy;
   String? _filterTeamId; // Filter tasks by team
-  Store? _store;
-  Box<TaskEntity>? _taskBox;
 
   List<Task> get tasks => _getFilteredTasks();
   List<Task> get allTasks => _tasks;
@@ -171,48 +166,16 @@ class TaskState extends ChangeNotifier {
     _loading = true;
     notifyListeners();
 
-    // Initialize ObjectBox
-    await _initializeObjectBox();
-
-    // Load tasks from ObjectBox
+    // Load tasks from service
     await _loadTasks();
 
     _loading = false;
     notifyListeners();
   }
 
-  Future<void> _initializeObjectBox() async {
-    if (_initialized) return; // Already initialized or in progress
-
-    _initialized = true; // Set flag to prevent concurrent initialization
-
-    try {
-      final docsDir = await getApplicationDocumentsDirectory();
-      final storePath = path.join(docsDir.path, 'task-flow-objectbox');
-      _store = await openStore(directory: storePath);
-      _taskBox = _store!.box<TaskEntity>();
-    } catch (e) {
-      debugPrint('Error initializing ObjectBox: $e');
-      _initialized = false; // Reset flag on error
-    }
-  }
-
   Future<void> _loadTasks() async {
-    if (_taskBox == null) {
-      _tasks = [];
-      return;
-    }
-
     try {
-      // Load all task entities from ObjectBox
-      // Note: For large datasets, consider implementing pagination
-      // by using Query with limit() and offset()
-      final entities = _taskBox!.getAll();
-
-      // Convert entities to Task models
-      _tasks = entities
-          .map((entity) => TaskEntityMapper.fromEntity(entity))
-          .toList();
+      _tasks = await _service.getAllTasks();
     } catch (e) {
       debugPrint('Error loading tasks: $e');
       _tasks = [];
@@ -304,73 +267,30 @@ class TaskState extends ChangeNotifier {
   }
 
   Future<void> addTask(Task task) async {
-    _tasks.add(task);
-
-    // Save to ObjectBox
-    if (_taskBox != null) {
-      try {
-        final entity = TaskEntityMapper.toEntity(task);
-        _taskBox!.put(entity);
-      } catch (e) {
-        debugPrint('Error saving task to ObjectBox: $e');
-      }
-    }
-
-    notifyListeners();
-  }
-
-  Future<void> updateTask(Task updatedTask) async {
-    final index = _tasks.indexWhere((task) => task.id == updatedTask.id);
-    if (index != -1) {
-      _tasks[index] = updatedTask;
-
-      // Update in ObjectBox
-      if (_taskBox != null) {
-        try {
-          // Find the entity by taskId
-          final query = _taskBox!
-              .query(TaskEntity_.taskId.equals(updatedTask.id))
-              .build();
-          final entities = query.find();
-          query.close();
-
-          if (entities.isNotEmpty) {
-            final entity = TaskEntityMapper.toEntity(
-              updatedTask,
-              objectBoxId: entities.first.id,
-            );
-            _taskBox!.put(entity);
-          }
-        } catch (e) {
-          debugPrint('Error updating task in ObjectBox: $e');
-        }
-      }
-
+    final createdTask = await _service.createTask(task);
+    if (createdTask != null) {
+      _tasks.add(createdTask);
       notifyListeners();
     }
   }
 
-  Future<void> deleteTask(String taskId) async {
-    _tasks.removeWhere((task) => task.id == taskId);
-
-    // Delete from ObjectBox
-    if (_taskBox != null) {
-      try {
-        final query = _taskBox!
-            .query(TaskEntity_.taskId.equals(taskId))
-            .build();
-        final entities = query.find();
-        query.close();
-
-        for (var entity in entities) {
-          _taskBox!.remove(entity.id);
-        }
-      } catch (e) {
-        debugPrint('Error deleting task from ObjectBox: $e');
+  Future<void> updateTask(Task updatedTask) async {
+    final success = await _service.updateTask(updatedTask);
+    if (success) {
+      final index = _tasks.indexWhere((task) => task.id == updatedTask.id);
+      if (index != -1) {
+        _tasks[index] = updatedTask;
+        notifyListeners();
       }
     }
+  }
 
-    notifyListeners();
+  Future<void> deleteTask(String taskId) async {
+    final success = await _service.deleteTask(taskId);
+    if (success) {
+      _tasks.removeWhere((task) => task.id == taskId);
+      notifyListeners();
+    }
   }
 
   Future<void> toggleTaskStatus(String taskId) async {
@@ -401,36 +321,16 @@ class TaskState extends ChangeNotifier {
         updatedAt: DateTime.now(),
       );
 
-      _tasks[index] = updatedTask;
-
-      // Update in ObjectBox
-      if (_taskBox != null) {
-        try {
-          final query = _taskBox!
-              .query(TaskEntity_.taskId.equals(taskId))
-              .build();
-          final entities = query.find();
-          query.close();
-
-          if (entities.isNotEmpty) {
-            final entity = TaskEntityMapper.toEntity(
-              updatedTask,
-              objectBoxId: entities.first.id,
-            );
-            _taskBox!.put(entity);
-          }
-        } catch (e) {
-          debugPrint('Error updating task status in ObjectBox: $e');
-        }
+      final success = await _service.updateTask(updatedTask);
+      if (success) {
+        _tasks[index] = updatedTask;
+        notifyListeners();
       }
-
-      notifyListeners();
     }
   }
 
   @override
   void dispose() {
-    _store?.close();
     super.dispose();
   }
 }

@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:task_flow/core/models/models.dart' as app_notif;
 import 'package:task_flow/core/services/preference_service.dart';
+import 'package:task_flow/core/services/notification_service.dart';
 
 class NotificationState extends ChangeNotifier {
+  final _service = NotificationService();
+  
   List<app_notif.Notification> _notifications = [];
   bool _loading = false;
   bool _notificationsEnabled = true;
 
   List<app_notif.Notification> get notifications => _notifications;
   List<app_notif.Notification> get unreadNotifications =>
-      _notifications.where((n) => !n.isRead).toList();
+      _notifications.where((n) => n.isRead == false).toList();
   bool get loading => _loading;
   bool get notificationsEnabled => _notificationsEnabled;
 
@@ -23,7 +26,7 @@ class NotificationState extends ChangeNotifier {
     // Load notification preference
     await _loadNotificationPreference();
     
-    // TODO: Load notifications from ObjectBox
+    // Load notifications from database via service
     await _loadNotifications();
     
     _loading = false;
@@ -46,106 +49,70 @@ class NotificationState extends ChangeNotifier {
   }
 
   Future<void> _loadNotifications() async {
-    // TODO: Implement ObjectBox loading
-    // For now, create some sample data
-    _notifications = _generateSampleNotifications();
-  }
-
-  List<app_notif.Notification> _generateSampleNotifications() {
-    final now = DateTime.now();
-    return [
-      app_notif.Notification(
-        id: '1',
-        title: 'New task assigned',
-        body: 'John assigned you to "Complete project proposal"',
-        type: 'task_assigned',
-        isRead: false,
-        actorUsername: 'John Doe',
-        createdAt: now.subtract(Duration(minutes: 5)),
-      ),
-      app_notif.Notification(
-        id: '2',
-        title: 'Team invitation',
-        body: 'You\'ve been invited to join Product Team',
-        type: 'team_invite',
-        isRead: false,
-        actorUsername: 'Sarah Smith',
-        createdAt: now.subtract(Duration(hours: 2)),
-      ),
-      app_notif.Notification(
-        id: '3',
-        title: 'Task completed',
-        body: 'Mike marked "Update documentation" as complete',
-        type: 'task_completed',
-        isRead: true,
-        actorUsername: 'Mike Johnson',
-        createdAt: now.subtract(Duration(hours: 5)),
-      ),
-      app_notif.Notification(
-        id: '4',
-        title: 'Mentioned in comment',
-        body: 'Lisa mentioned you in a comment',
-        type: 'mention',
-        isRead: true,
-        actorUsername: 'Lisa Chen',
-        createdAt: now.subtract(Duration(days: 1)),
-      ),
-      app_notif.Notification(
-        id: '5',
-        title: 'Deadline reminder',
-        body: '"Fix critical bugs" is due tomorrow',
-        type: 'deadline_reminder',
-        isRead: true,
-        createdAt: now.subtract(Duration(days: 2)),
-      ),
-    ];
+    try {
+      _notifications = await _service.getAllNotifications();
+    } catch (e) {
+      debugPrint('Error loading notifications: $e');
+      _notifications = [];
+    }
   }
 
   Future<void> markAsRead(String notificationId) async {
-    final index = _notifications.indexWhere((n) => n.id == notificationId);
-    if (index != -1 && !_notifications[index].isRead) {
-      _notifications[index] = _notifications[index].copyWith(isRead: true);
-      // TODO: Update in ObjectBox
-      notifyListeners();
+    final success = await _service.markAsRead(notificationId);
+    if (success) {
+      final index = _notifications.indexWhere((n) => n.id == notificationId);
+      if (index != -1) {
+        _notifications[index] = _notifications[index].copyWith(isRead: true);
+        notifyListeners();
+      }
     }
   }
 
   Future<void> markAllAsRead() async {
-    for (var i = 0; i < _notifications.length; i++) {
-      if (!_notifications[i].isRead) {
-        _notifications[i] = _notifications[i].copyWith(isRead: true);
+    final success = await _service.markAllAsRead();
+    if (success) {
+      for (var i = 0; i < _notifications.length; i++) {
+        if (_notifications[i].isRead == false) {
+          _notifications[i] = _notifications[i].copyWith(isRead: true);
+        }
       }
+      notifyListeners();
     }
-    // TODO: Update in ObjectBox
-    notifyListeners();
   }
 
   Future<void> deleteNotification(String notificationId) async {
-    _notifications.removeWhere((n) => n.id == notificationId);
-    // TODO: Delete from ObjectBox
-    notifyListeners();
+    final success = await _service.deleteNotification(notificationId);
+    if (success) {
+      _notifications.removeWhere((n) => n.id == notificationId);
+      notifyListeners();
+    }
   }
 
   /// Add a new notification to the list
   /// This is used to dynamically create notifications as events occur
   Future<void> addNotification(app_notif.Notification notification) async {
-    _notifications.insert(0, notification); // Add to the beginning
-    // TODO: Save to ObjectBox
-    notifyListeners();
+    final created = await _service.createNotification(notification);
+    if (created != null) {
+      _notifications.insert(0, created); // Add to the beginning
+      notifyListeners();
+    }
   }
 
   /// Add multiple notifications at once
   Future<void> addNotifications(List<app_notif.Notification> notifications) async {
-    _notifications.insertAll(0, notifications);
-    // TODO: Save to ObjectBox
-    notifyListeners();
+    for (final notification in notifications) {
+      await _service.createNotification(notification);
+    }
+    await _loadNotifications(); // Reload all to ensure proper sorting
   }
 
   /// Clear all notifications
   Future<void> clearAllNotifications() async {
-    _notifications.clear();
-    // TODO: Clear from ObjectBox
-    notifyListeners();
+    final success = await _service.deleteAll();
+    if (success) {
+      _notifications.clear();
+      notifyListeners();
+    }
   }
 
   /// Get notifications by type
@@ -156,7 +123,7 @@ class NotificationState extends ChangeNotifier {
   /// Get unread notifications by type
   List<app_notif.Notification> getUnreadNotificationsByType(String type) {
     return _notifications
-        .where((n) => n.type == type && !n.isRead)
+        .where((n) => n.type == type && n.isRead == false)
         .toList();
   }
 }
