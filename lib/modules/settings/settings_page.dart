@@ -10,6 +10,9 @@ import 'package:task_flow/modules/login/login_page.dart';
 import 'package:task_flow/modules/settings/pages/privacy_policy_page.dart';
 import 'package:task_flow/modules/settings/pages/contact_us_page.dart';
 import 'package:task_flow/modules/settings/components/change_password_form.dart';
+import 'package:task_flow/modules/settings/components/profile_avatar_with_edit.dart';
+import 'package:task_flow/modules/settings/components/info_display_field.dart';
+import 'package:task_flow/modules/settings/components/preference_toggle_item.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -89,127 +92,44 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
 
                     // Profile Avatar with Edit
-                    Center(
-                      child: Stack(
-                        children: [
-                          Consumer<UserState>(
-                            builder: (context, userState, _) {
-                              return CircleAvatar(
-                                radius: 50,
-                                backgroundColor: AppConstant.primaryBlue,
-                                child: Text(
-                                  (userState.currentUser?.fullName?.substring(
-                                            0,
-                                            1,
-                                          ) ??
-                                          userState.currentUser?.username
-                                              .substring(0, 1) ??
-                                          '')
-                                      .toUpperCase(),
-                                  style: TextStyle(
-                                    fontSize: 36,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              );
+                    Consumer<UserState>(
+                      builder: (context, userState, _) {
+                        final initials = (userState.currentUser?.fullName
+                                    ?.substring(0, 1) ??
+                                userState.currentUser?.username.substring(0, 1) ??
+                                '')
+                            .toUpperCase();
+                        return Center(
+                          child: ProfileAvatarWithEdit(
+                            initials: initials,
+                            onEditTap: () {
+                              // TODO: Implement profile picture edit
                             },
                           ),
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: Container(
-                              width: 32,
-                              height: 32,
-                              decoration: BoxDecoration(
-                                color: AppConstant.primaryBlue,
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: AppConstant.darkBackground,
-                                  width: 2,
-                                ),
-                              ),
-                              child: Icon(
-                                Icons.edit,
-                                color: Colors.white,
-                                size: 16,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
                     SizedBox(height: AppConstant.spacing24),
 
                     // Display Name Field
-                    Text(
-                      'Display Name',
-                      style: TextStyle(
-                        color: AppConstant.textPrimary,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(height: AppConstant.spacing8),
                     Consumer<UserState>(
                       builder: (context, userState, _) {
-                        return Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: AppConstant.spacing16,
-                            vertical: AppConstant.spacing16,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppConstant.cardBackground,
-                            borderRadius: BorderRadius.circular(
-                              AppConstant.borderRadius12,
-                            ),
-                          ),
-                          child: Text(
-                            userState.currentUser?.fullName ??
-                                userState.currentUser?.username ??
-                                'User',
-                            style: TextStyle(
-                              color: AppConstant.textPrimary,
-                              fontSize: 16,
-                            ),
-                          ),
+                        return InfoDisplayField(
+                          label: 'Display Name',
+                          value: userState.currentUser?.fullName ??
+                              userState.currentUser?.username ??
+                              'User',
                         );
                       },
                     ),
                     SizedBox(height: AppConstant.spacing16),
 
                     // Email Address Field
-                    Text(
-                      'Email Address',
-                      style: TextStyle(
-                        color: AppConstant.textPrimary,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(height: AppConstant.spacing8),
                     Consumer<UserState>(
                       builder: (context, userState, _) {
-                        return Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: AppConstant.spacing16,
-                            vertical: AppConstant.spacing16,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppConstant.cardBackground,
-                            borderRadius: BorderRadius.circular(
-                              AppConstant.borderRadius12,
-                            ),
-                          ),
-                          child: Text(
-                            userState.currentUser?.email ?? 'No email',
-                            style: TextStyle(
-                              color: AppConstant.textPrimary,
-                              fontSize: 16,
-                            ),
-                          ),
+                        return InfoDisplayField(
+                          label: 'Email Address',
+                          value: userState.currentUser?.email ?? 'No email',
                         );
                       },
                     ),
@@ -244,104 +164,30 @@ class _SettingsPageState extends State<SettingsPage> {
                     // Notifications Toggle
                     Consumer<NotificationState>(
                       builder: (context, notificationState, _) {
-                        return Container(
-                          margin: EdgeInsets.only(bottom: AppConstant.spacing12),
-                          decoration: BoxDecoration(
-                            color: AppConstant.cardBackground,
-                            borderRadius: BorderRadius.circular(
-                              AppConstant.borderRadius12,
-                            ),
-                          ),
-                          child: ListTile(
-                            leading: Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                color: AppConstant.pinkAccent.withValues(
-                                  alpha: 0.1,
-                                ),
-                                borderRadius: BorderRadius.circular(
-                                  AppConstant.borderRadius8,
-                                ),
-                              ),
-                              child: Icon(
-                                Icons.notifications,
-                                color: AppConstant.pinkAccent,
-                                size: 20,
-                              ),
-                            ),
-                            title: Text(
-                              'Notifications',
-                              style: TextStyle(
-                                color: AppConstant.textPrimary,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            trailing: Switch(
-                              value: notificationState.notificationsEnabled,
-                              onChanged: (value) {
-                                notificationState.setNotificationsEnabled(value);
-                              },
-                              activeColor: AppConstant.primaryBlue,
-                            ),
-                          ),
+                        return PreferenceToggleItem(
+                          icon: Icons.notifications,
+                          iconColor: AppConstant.pinkAccent,
+                          title: 'Notifications',
+                          value: notificationState.notificationsEnabled,
+                          onChanged: (value) {
+                            notificationState.setNotificationsEnabled(value);
+                          },
                         );
                       },
                     ),
 
                     // Offline Access Toggle
-                    Container(
-                      margin: EdgeInsets.only(bottom: AppConstant.spacing12),
-                      decoration: BoxDecoration(
-                        color: AppConstant.cardBackground,
-                        borderRadius: BorderRadius.circular(
-                          AppConstant.borderRadius12,
-                        ),
-                      ),
-                      child: ListTile(
-                        leading: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: AppConstant.successGreen.withValues(
-                              alpha: 0.1,
-                            ),
-                            borderRadius: BorderRadius.circular(
-                              AppConstant.borderRadius8,
-                            ),
-                          ),
-                          child: Icon(
-                            Icons.wifi_off,
-                            color: AppConstant.successGreen,
-                            size: 20,
-                          ),
-                        ),
-                        title: Text(
-                          'Offline Access',
-                          style: TextStyle(
-                            color: AppConstant.textPrimary,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        subtitle: Text(
-                          'Sync data automatically',
-                          style: TextStyle(
-                            color: AppConstant.textSecondary,
-                            fontSize: 14,
-                          ),
-                        ),
-                        trailing: Switch(
-                          value: offlineAccessEnabled,
-                          onChanged: (value) {
-                            setState(() {
-                              offlineAccessEnabled = value;
-                            });
-                          },
-                          activeThumbColor: AppConstant.primaryBlue,
-                        ),
-                      ),
+                    PreferenceToggleItem(
+                      icon: Icons.wifi_off,
+                      iconColor: AppConstant.successGreen,
+                      title: 'Offline Access',
+                      subtitle: 'Sync data automatically',
+                      value: offlineAccessEnabled,
+                      onChanged: (value) {
+                        setState(() {
+                          offlineAccessEnabled = value;
+                        });
+                      },
                     ),
 
                     SizedBox(height: AppConstant.spacing32),

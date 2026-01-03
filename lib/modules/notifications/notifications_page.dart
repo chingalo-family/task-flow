@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/notification_state/notification_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/models/models.dart' as app_notif;
-import 'package:task_flow/modules/notifications/components/notification_card.dart';
+import 'package:task_flow/core/utils/notification_filter_utils.dart';
+import 'package:task_flow/modules/notifications/components/filter_chip.dart' as custom_chip;
+import 'package:task_flow/modules/notifications/components/grouped_notification_list.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
@@ -23,52 +25,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
     });
   }
 
-  List<app_notif.Notification> _filterNotifications(
-    List<app_notif.Notification> notifications,
-  ) {
-    switch (selectedFilter) {
-      case 'Unread':
-        return notifications
-            .where((n) => !n.isRead)
-            .toList();
-      case 'Mentions':
-        return notifications
-            .where((n) => n.type == 'mention')
-            .toList();
-      case 'Assigned to Me':
-        return notifications
-            .where((n) => n.type == 'task_assigned')
-            .toList();
-      case 'System':
-        return notifications
-            .where((n) => n.type == 'system' || n.type == 'deadline_reminder')
-            .toList();
-      default:
-        return notifications;
-    }
-  }
-
-  Map<String, List<app_notif.Notification>> _groupNotifications(
-    List<app_notif.Notification> notifications,
-  ) {
-    final Map<String, List<app_notif.Notification>> grouped = {
-      'Recent': [],
-      'Earlier': [],
-    };
-
-    final now = DateTime.now();
-    for (var notification in notifications) {
-      final difference = now.difference(notification.createdAt);
-      if (difference.inHours < 24) {
-        grouped['Recent']!.add(notification);
-      } else {
-        grouped['Earlier']!.add(notification);
-      }
-    }
-
-    return grouped;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,12 +40,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
               );
             }
 
-            final filteredNotifications = _filterNotifications(
+            final filteredNotifications = NotificationFilterUtils
+                .filterNotifications(
               notificationState.notifications,
+              selectedFilter,
             );
-            final groupedNotifications = _groupNotifications(
-              filteredNotifications,
-            );
+            final groupedNotifications = NotificationFilterUtils
+                .groupNotificationsByTime(filteredNotifications);
 
             return CustomScrollView(
               slivers: [
@@ -150,15 +107,39 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
-                          _buildFilterChip('All'),
+                          custom_chip.FilterChip(
+                            label: 'All',
+                            isSelected: selectedFilter == 'All',
+                            onTap: () => setState(() => selectedFilter = 'All'),
+                          ),
                           SizedBox(width: AppConstant.spacing8),
-                          _buildFilterChip('Unread'),
+                          custom_chip.FilterChip(
+                            label: 'Unread',
+                            isSelected: selectedFilter == 'Unread',
+                            onTap: () =>
+                                setState(() => selectedFilter = 'Unread'),
+                          ),
                           SizedBox(width: AppConstant.spacing8),
-                          _buildFilterChip('Mentions'),
+                          custom_chip.FilterChip(
+                            label: 'Mentions',
+                            isSelected: selectedFilter == 'Mentions',
+                            onTap: () =>
+                                setState(() => selectedFilter = 'Mentions'),
+                          ),
                           SizedBox(width: AppConstant.spacing8),
-                          _buildFilterChip('Assigned to Me'),
+                          custom_chip.FilterChip(
+                            label: 'Assigned to Me',
+                            isSelected: selectedFilter == 'Assigned to Me',
+                            onTap: () =>
+                                setState(() => selectedFilter = 'Assigned to Me'),
+                          ),
                           SizedBox(width: AppConstant.spacing8),
-                          _buildFilterChip('System'),
+                          custom_chip.FilterChip(
+                            label: 'System',
+                            isSelected: selectedFilter == 'System',
+                            onTap: () =>
+                                setState(() => selectedFilter = 'System'),
+                          ),
                         ],
                       ),
                     ),
@@ -201,83 +182,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         padding: EdgeInsets.symmetric(
                           horizontal: AppConstant.spacing16,
                         ),
-                        sliver: SliverList(
-                          delegate: SliverChildListDelegate([
-                            // Recent Notifications
-                            if (groupedNotifications['Recent']!.isNotEmpty) ...[
-                              for (var notification in groupedNotifications['Recent']!)
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    bottom: AppConstant.spacing12,
-                                  ),
-                                  child: NotificationCard(
-                                    notification: notification,
-                                  ),
-                                ),
-                            ],
-                            
-                            // Earlier Section
-                            if (groupedNotifications['Earlier']!.isNotEmpty) ...[
-                              SizedBox(height: AppConstant.spacing16),
-                              Padding(
-                                padding: EdgeInsets.only(bottom: AppConstant.spacing16),
-                                child: Text(
-                                  'Earlier',
-                                  style: TextStyle(
-                                    color: AppConstant.textPrimary,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                              for (var notification in groupedNotifications['Earlier']!)
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    bottom: AppConstant.spacing12,
-                                  ),
-                                  child: NotificationCard(
-                                    notification: notification,
-                                  ),
-                                ),
-                            ],
-                            SizedBox(height: AppConstant.spacing24),
-                          ]),
+                        sliver: SliverToBoxAdapter(
+                          child: GroupedNotificationList(
+                            groupedNotifications: groupedNotifications,
+                          ),
                         ),
                       ),
               ],
             );
           },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFilterChip(String label) {
-    final isSelected = selectedFilter == label;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedFilter = label;
-        });
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: AppConstant.spacing16,
-          vertical: AppConstant.spacing8,
-        ),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? AppConstant.primaryBlue
-              : AppConstant.cardBackground,
-          borderRadius: BorderRadius.circular(AppConstant.borderRadius8),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? Colors.white : AppConstant.textSecondary,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
         ),
       ),
     );
