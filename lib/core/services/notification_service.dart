@@ -1,8 +1,9 @@
-import 'package:task_flow/core/models/notification.dart';
+import 'package:task_flow/core/models/notification/notification.dart';
 import 'package:task_flow/core/offline_db/notification_offline_provider/notification_offline_provider.dart';
+import 'package:task_flow/core/utils/utils.dart';
 
 /// Service layer for notification management
-/// 
+///
 /// Handles business logic, validation, and coordinates between state and data layers.
 /// Follows singleton pattern for consistent access across the application.
 class NotificationService {
@@ -13,14 +14,13 @@ class NotificationService {
   final _offline = NotificationOfflineProvider();
 
   /// Create a new notification
-  /// 
+  ///
   /// Auto-generates ID if not provided.
   /// Returns the created notification or null if creation fails.
   Future<Notification?> createNotification(Notification notification) async {
     try {
       // Auto-generate ID if not provided
-      final notificationToSave = notification.id == null ||
-              notification.id!.isEmpty
+      final notificationToSave = notification.id.isEmpty
           ? notification.copyWith(
               id: 'notif_${DateTime.now().millisecondsSinceEpoch}',
             )
@@ -46,17 +46,14 @@ class NotificationService {
   }
 
   /// Get all notifications
-  /// 
+  ///
   /// Returns notifications sorted by creation date (newest first).
   Future<List<Notification>> getAllNotifications() async {
     try {
       final notifications = await _offline.getAllNotifications();
       // Sort by creation date, newest first
       notifications.sort((a, b) {
-        if (a.createdAt == null && b.createdAt == null) return 0;
-        if (a.createdAt == null) return 1;
-        if (b.createdAt == null) return -1;
-        return b.createdAt!.compareTo(a.createdAt!);
+        return b.createdAt.compareTo(a.createdAt);
       });
       return notifications;
     } catch (e) {
@@ -91,7 +88,9 @@ class NotificationService {
   Future<List<Notification>> getUnreadNotifications() async {
     try {
       final notifications = await getAllNotifications();
-      return notifications.where((n) => !(n.isRead ?? false)).toList();
+      return notifications
+          .where((notification) => !(notification.isRead))
+          .toList();
     } catch (e) {
       print('Error getting unread notifications: $e');
       return [];
@@ -102,7 +101,9 @@ class NotificationService {
   Future<List<Notification>> getNotificationsByType(String type) async {
     try {
       final notifications = await getAllNotifications();
-      return notifications.where((n) => n.type == type).toList();
+      return notifications
+          .where((notification) => notification.type == type)
+          .toList();
     } catch (e) {
       print('Error getting notifications by type: $e');
       return [];
@@ -114,7 +115,10 @@ class NotificationService {
     try {
       final notifications = await getAllNotifications();
       return notifications
-          .where((n) => n.type == type && !(n.isRead ?? false))
+          .where(
+            (notification) =>
+                notification.type == type && !(notification.isRead),
+          )
           .toList();
     } catch (e) {
       print('Error getting unread notifications by type: $e');
@@ -141,8 +145,8 @@ class NotificationService {
     try {
       final notifications = await getAllNotifications();
       for (final notification in notifications) {
-        if (!(notification.isRead ?? false)) {
-          await markAsRead(notification.id!);
+        if (!(notification.isRead)) {
+          await markAsRead(notification.id);
         }
       }
       return true;
@@ -181,7 +185,7 @@ class NotificationService {
     required String actorUsername,
   }) async {
     final notification = Notification(
-      id: null, // Will be auto-generated
+      id: AppUtil.getUid(),
       title: 'New Task Assigned',
       body: '$actorUsername assigned you to "$taskTitle"',
       type: 'task_assigned',
@@ -200,7 +204,7 @@ class NotificationService {
     required String actorUsername,
   }) async {
     final notification = Notification(
-      id: null, // Will be auto-generated
+      id: AppUtil.getUid(),
       title: 'Team Invitation',
       body: '$actorUsername invited you to join "$teamName"',
       type: 'team_invite',
@@ -219,7 +223,7 @@ class NotificationService {
     required String actorUsername,
   }) async {
     final notification = Notification(
-      id: null, // Will be auto-generated
+      id: AppUtil.getUid(),
       title: 'Task Completed',
       body: '$actorUsername completed "$taskTitle"',
       type: 'task_completed',

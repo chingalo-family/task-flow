@@ -74,7 +74,7 @@
     },
     {
       "id": "2:614660561691660408",
-      "lastPropertyId": "13:1049038385883546181",
+      "lastPropertyId": "14:3863776433235736798",
       "name": "NotificationEntity",
       "properties": [
         {
@@ -86,7 +86,9 @@
         {
           "id": "2:147813581869063538",
           "name": "notificationId",
-          "type": 9
+          "indexId": "1:2229165379850530037",
+          "type": 9,
+          "flags": 2048
         },
         {
           "id": "3:6531379092925573587",
@@ -142,6 +144,11 @@
           "id": "13:1049038385883546181",
           "name": "isSynced",
           "type": 1
+        },
+        {
+          "id": "14:3863776433235736798",
+          "name": "metadataJson",
+          "type": 9
         }
       ],
       "relations": []
@@ -160,7 +167,9 @@
         {
           "id": "2:796404430768788961",
           "name": "taskId",
-          "type": 9
+          "indexId": "2:2455266859196832607",
+          "type": 9,
+          "flags": 2048
         },
         {
           "id": "3:7942440886971976073",
@@ -346,7 +355,7 @@
     }
   ],
   "lastEntityId": "4:8634427917478567143",
-  "lastIndexId": "0:0",
+  "lastIndexId": "2:2455266859196832607",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,

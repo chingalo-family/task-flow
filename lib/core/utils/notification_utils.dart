@@ -33,6 +33,7 @@ class NotificationUtils {
       createdAt: DateTime.now(),
       relatedEntityId: taskId,
       relatedEntityType: 'task',
+      metadata: {},
     );
   }
 
@@ -61,6 +62,7 @@ class NotificationUtils {
       createdAt: DateTime.now(),
       relatedEntityId: taskId,
       relatedEntityType: 'task',
+      metadata: {},
     );
   }
 
@@ -89,6 +91,7 @@ class NotificationUtils {
       createdAt: DateTime.now(),
       relatedEntityId: teamId,
       relatedEntityType: 'team',
+      metadata: {},
     );
   }
 
@@ -118,6 +121,7 @@ class NotificationUtils {
       createdAt: DateTime.now(),
       relatedEntityId: entityId,
       relatedEntityType: context,
+      metadata: {},
     );
   }
 
@@ -157,6 +161,7 @@ class NotificationUtils {
       createdAt: DateTime.now(),
       relatedEntityId: taskId,
       relatedEntityType: 'task',
+      metadata: {},
     );
   }
 
@@ -187,6 +192,7 @@ class NotificationUtils {
       createdAt: DateTime.now(),
       relatedEntityId: taskId,
       relatedEntityType: 'task',
+      metadata: {},
     );
   }
 
@@ -217,6 +223,7 @@ class NotificationUtils {
       createdAt: DateTime.now(),
       relatedEntityId: taskId,
       relatedEntityType: 'task',
+      metadata: {},
     );
   }
 
@@ -240,6 +247,7 @@ class NotificationUtils {
       type: 'system',
       isRead: false,
       createdAt: DateTime.now(),
+      metadata: {},
     );
   }
 
@@ -272,6 +280,7 @@ class NotificationUtils {
       createdAt: DateTime.now(),
       relatedEntityId: relatedEntityId,
       relatedEntityType: relatedEntityType,
+      metadata: {},
     );
   }
 

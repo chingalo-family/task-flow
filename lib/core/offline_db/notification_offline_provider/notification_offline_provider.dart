@@ -1,11 +1,12 @@
 import 'dart:convert';
 
 import 'package:task_flow/core/entities/notification_entity.dart';
-import 'package:task_flow/core/models/notification.dart';
+import 'package:task_flow/core/models/notification/notification.dart';
 import 'package:task_flow/core/services/db_service.dart';
+import 'package:task_flow/objectbox.g.dart';
 
 /// Offline provider for notification persistence
-/// 
+///
 /// Handles all ObjectBox database operations for notifications.
 /// Follows singleton pattern for efficient database access.
 class NotificationOfflineProvider {
@@ -26,10 +27,9 @@ class NotificationOfflineProvider {
       final entity = _toEntity(notification);
 
       // Check if notification already exists
-      if (notification.id != null && notification.id!.isNotEmpty) {
+      if (notification.id.isNotEmpty) {
         final existingQuery = box
-            .query(NotificationEntity_.notificationId
-                .equals(notification.id!))
+            .query(NotificationEntity_.notificationId.equals(notification.id!))
             .build();
         final existing = existingQuery.findFirst();
         existingQuery.close();
@@ -55,8 +55,9 @@ class NotificationOfflineProvider {
       final box = store.box<NotificationEntity>();
 
       final query = box
-          .query(NotificationEntity_.apiNotificationId
-              .equals(apiNotificationId))
+          .query(
+            NotificationEntity_.apiNotificationId.equals(apiNotificationId),
+          )
           .build();
       final entity = query.findFirst();
       query.close();
@@ -92,8 +93,9 @@ class NotificationOfflineProvider {
       final box = store.box<NotificationEntity>();
 
       final query = box
-          .query(NotificationEntity_.apiNotificationId
-              .equals(apiNotificationId))
+          .query(
+            NotificationEntity_.apiNotificationId.equals(apiNotificationId),
+          )
           .build();
       final entity = query.findFirst();
       query.close();
@@ -137,7 +139,8 @@ class NotificationOfflineProvider {
     if (entity.metadataJson != null && entity.metadataJson!.isNotEmpty) {
       try {
         metadata = Map<String, dynamic>.from(
-            jsonDecode(entity.metadataJson!) as Map);
+          jsonDecode(entity.metadataJson!) as Map,
+        );
       } catch (e) {
         print('Error parsing metadata JSON: $e');
       }

@@ -107,7 +107,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(2, 614660561691660408),
     name: 'NotificationEntity',
-    lastPropertyId: const obx_int.IdUid(13, 1049038385883546181),
+    lastPropertyId: const obx_int.IdUid(14, 3863776433235736798),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -120,7 +120,8 @@ final _entities = <obx_int.ModelEntity>[
         id: const obx_int.IdUid(2, 147813581869063538),
         name: 'notificationId',
         type: 9,
-        flags: 0,
+        flags: 2048,
+        indexId: const obx_int.IdUid(1, 2229165379850530037),
       ),
       obx_int.ModelProperty(
         id: const obx_int.IdUid(3, 6531379092925573587),
@@ -188,6 +189,12 @@ final _entities = <obx_int.ModelEntity>[
         type: 1,
         flags: 0,
       ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(14, 3863776433235736798),
+        name: 'metadataJson',
+        type: 9,
+        flags: 0,
+      ),
     ],
     relations: <obx_int.ModelRelation>[],
     backlinks: <obx_int.ModelBacklink>[],
@@ -208,7 +215,8 @@ final _entities = <obx_int.ModelEntity>[
         id: const obx_int.IdUid(2, 796404430768788961),
         name: 'taskId',
         type: 9,
-        flags: 0,
+        flags: 2048,
+        indexId: const obx_int.IdUid(2, 2455266859196832607),
       ),
       obx_int.ModelProperty(
         id: const obx_int.IdUid(3, 7942440886971976073),
@@ -474,7 +482,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
     generatorVersion: obx_int.GeneratorVersion.v2025_12_16,
     entities: _entities,
     lastEntityId: const obx_int.IdUid(4, 8634427917478567143),
-    lastIndexId: const obx_int.IdUid(0, 0),
+    lastIndexId: const obx_int.IdUid(2, 2455266859196832607),
     lastRelationId: const obx_int.IdUid(0, 0),
     lastSequenceId: const obx_int.IdUid(0, 0),
     retiredEntityUids: const [],
@@ -625,7 +633,10 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final actorAvatarUrlOffset = object.actorAvatarUrl == null
             ? null
             : fbb.writeString(object.actorAvatarUrl!);
-        fbb.startTable(14);
+        final metadataJsonOffset = object.metadataJson == null
+            ? null
+            : fbb.writeString(object.metadataJson!);
+        fbb.startTable(15);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, notificationIdOffset);
         fbb.addOffset(2, titleOffset);
@@ -639,6 +650,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
         fbb.addOffset(10, actorAvatarUrlOffset);
         fbb.addInt64(11, object.createdAt.millisecondsSinceEpoch);
         fbb.addBool(12, object.isSynced);
+        fbb.addOffset(13, metadataJsonOffset);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -693,21 +705,25 @@ obx_int.ModelDefinition getObjectBoxModel() {
           28,
           false,
         );
-        final object = NotificationEntity(
-          id: idParam,
-          notificationId: notificationIdParam,
-          title: titleParam,
-          body: bodyParam,
-          type: typeParam,
-          isRead: isReadParam,
-          relatedEntityId: relatedEntityIdParam,
-          relatedEntityType: relatedEntityTypeParam,
-          actorUserId: actorUserIdParam,
-          actorUsername: actorUsernameParam,
-          actorAvatarUrl: actorAvatarUrlParam,
-          createdAt: createdAtParam,
-          isSynced: isSyncedParam,
-        );
+        final object =
+            NotificationEntity(
+                id: idParam,
+                notificationId: notificationIdParam,
+                title: titleParam,
+                body: bodyParam,
+                type: typeParam,
+                isRead: isReadParam,
+                relatedEntityId: relatedEntityIdParam,
+                relatedEntityType: relatedEntityTypeParam,
+                actorUserId: actorUserIdParam,
+                actorUsername: actorUsernameParam,
+                actorAvatarUrl: actorAvatarUrlParam,
+                createdAt: createdAtParam,
+                isSynced: isSyncedParam,
+              )
+              ..metadataJson = const fb.StringReader(
+                asciiOptimization: true,
+              ).vTableGetNullable(buffer, rootOffset, 30);
 
         return object;
       },
@@ -1156,6 +1172,11 @@ class NotificationEntity_ {
   /// See [NotificationEntity.isSynced].
   static final isSynced = obx.QueryBooleanProperty<NotificationEntity>(
     _entities[1].properties[12],
+  );
+
+  /// See [NotificationEntity.metadataJson].
+  static final metadataJson = obx.QueryStringProperty<NotificationEntity>(
+    _entities[1].properties[13],
   );
 }
 
