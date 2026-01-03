@@ -433,8 +433,8 @@ class OnboardingIllustration extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Color(0xFF5A7C8C),
-            Color(0xFF4A6C7C),
+            AppConstant.illustrationTeal,
+            AppConstant.illustrationTealDark,
           ],
         ),
         borderRadius: BorderRadius.circular(AppConstant.borderRadius24),
@@ -501,7 +501,7 @@ class OnboardingIllustration extends StatelessWidget {
                   color: Colors.white.withValues(alpha: 0.95),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: Color(0xFFD4A574),
+                    color: AppConstant.illustrationBeige,
                     width: 3,
                   ),
                 ),
@@ -606,7 +606,7 @@ class OnboardingIllustration extends StatelessWidget {
             width: 180,
             height: 180,
             decoration: BoxDecoration(
-              color: Color(0xFF2C3E50).withValues(alpha: 0.6),
+              color: AppConstant.illustrationGray.withValues(alpha: 0.6),
               borderRadius: BorderRadius.circular(AppConstant.borderRadius24),
               border: Border.all(
                 color: Colors.white.withValues(alpha: 0.1),
@@ -629,7 +629,7 @@ class OnboardingIllustration extends StatelessWidget {
               width: 50,
               height: 50,
               decoration: BoxDecoration(
-                color: Color(0xFF2ECC71),
+                color: AppConstant.illustrationGreen,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: AppConstant.cardBackground,
@@ -655,8 +655,8 @@ class OnboardingIllustration extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Color(0xFF5A9E9E),
-            Color(0xFF4A8E8E),
+            AppConstant.illustrationCyan,
+            AppConstant.illustrationCyanDark,
           ],
         ),
         borderRadius: BorderRadius.circular(AppConstant.borderRadius24),
@@ -732,10 +732,10 @@ class OnboardingIllustration extends StatelessWidget {
       width: 80,
       height: 14,
       decoration: BoxDecoration(
-        color: Color(0xFFD4A574),
+        color: AppConstant.illustrationBeige,
         borderRadius: BorderRadius.circular(40),
         border: Border.all(
-          color: Color(0xFFB8956A),
+          color: AppConstant.illustrationBeigeOutline,
           width: 1,
         ),
       ),
