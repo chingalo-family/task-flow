@@ -27,6 +27,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
     List<app_notif.Notification> notifications,
   ) {
     switch (selectedFilter) {
+      case 'Unread':
+        return notifications
+            .where((n) => !n.isRead)
+            .toList();
       case 'Mentions':
         return notifications
             .where((n) => n.type == 'mention')
@@ -147,6 +151,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       child: Row(
                         children: [
                           _buildFilterChip('All'),
+                          SizedBox(width: AppConstant.spacing8),
+                          _buildFilterChip('Unread'),
                           SizedBox(width: AppConstant.spacing8),
                           _buildFilterChip('Mentions'),
                           SizedBox(width: AppConstant.spacing8),

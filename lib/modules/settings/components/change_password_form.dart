@@ -102,6 +102,65 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
     }
   }
 
+  Widget _buildPasswordField({
+    required TextEditingController controller,
+    required String hintText,
+    required bool obscureText,
+    required VoidCallback onToggleVisibility,
+    required String? Function(String?) validator,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppConstant.cardBackground,
+        borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+        border: Border.all(
+          color: AppConstant.textSecondary.withValues(alpha: 0.1),
+          width: 1,
+        ),
+      ),
+      child: TextFormField(
+        controller: controller,
+        obscureText: obscureText,
+        style: TextStyle(color: AppConstant.textPrimary, fontSize: 16),
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: TextStyle(color: AppConstant.textSecondary, fontSize: 16),
+          prefixIcon: Padding(
+            padding: const EdgeInsets.only(left: 20, right: 12),
+            child: Icon(
+              Icons.lock_outline_rounded,
+              color: AppConstant.textSecondary,
+              size: 22,
+            ),
+          ),
+          prefixIconConstraints: const BoxConstraints(
+            minWidth: 0,
+            minHeight: 0,
+          ),
+          suffixIcon: Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: IconButton(
+              icon: Icon(
+                obscureText
+                    ? Icons.visibility_outlined
+                    : Icons.visibility_off_outlined,
+                color: AppConstant.textSecondary,
+                size: 22,
+              ),
+              onPressed: onToggleVisibility,
+            ),
+          ),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 0,
+            vertical: 18,
+          ),
+        ),
+        validator: validator,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -161,80 +220,44 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
               SizedBox(height: AppConstant.spacing32),
 
               // Current Password Field
-              InputField(
+              _buildPasswordField(
                 controller: _currentPasswordController,
-                hintText: 'Enter current password',
-                icon: Icons.lock_outline,
-                labelText: 'Current Password',
+                hintText: 'Current Password',
                 obscureText: _obscureCurrentPassword,
+                onToggleVisibility: () {
+                  setState(() {
+                    _obscureCurrentPassword = !_obscureCurrentPassword;
+                  });
+                },
                 validator: _validateCurrentPassword,
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscureCurrentPassword
-                        ? Icons.visibility_outlined
-                        : Icons.visibility_off_outlined,
-                    color: AppConstant.textSecondary,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _obscureCurrentPassword = !_obscureCurrentPassword;
-                    });
-                  },
-                ),
               ),
               SizedBox(height: AppConstant.spacing16),
 
               // New Password Field
-              InputField(
+              _buildPasswordField(
                 controller: _newPasswordController,
-                hintText: 'Enter new password',
-                icon: Icons.lock_outline,
-                labelText: 'New Password',
+                hintText: 'New Password',
                 obscureText: _obscureNewPassword,
-                validator: _validateNewPassword,
-                onChanged: (value) {
-                  // Trigger validation on confirm password field
-                  if (_confirmPasswordController.text.isNotEmpty) {
-                    _formKey.currentState?.validate();
-                  }
+                onToggleVisibility: () {
+                  setState(() {
+                    _obscureNewPassword = !_obscureNewPassword;
+                  });
                 },
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscureNewPassword
-                        ? Icons.visibility_outlined
-                        : Icons.visibility_off_outlined,
-                    color: AppConstant.textSecondary,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _obscureNewPassword = !_obscureNewPassword;
-                    });
-                  },
-                ),
+                validator: _validateNewPassword,
               ),
               SizedBox(height: AppConstant.spacing16),
 
               // Confirm Password Field
-              InputField(
+              _buildPasswordField(
                 controller: _confirmPasswordController,
-                hintText: 'Re-enter new password',
-                icon: Icons.lock_outline,
-                labelText: 'Confirm New Password',
+                hintText: 'Confirm New Password',
                 obscureText: _obscureConfirmPassword,
+                onToggleVisibility: () {
+                  setState(() {
+                    _obscureConfirmPassword = !_obscureConfirmPassword;
+                  });
+                },
                 validator: _validateConfirmPassword,
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscureConfirmPassword
-                        ? Icons.visibility_outlined
-                        : Icons.visibility_off_outlined,
-                    color: AppConstant.textSecondary,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _obscureConfirmPassword = !_obscureConfirmPassword;
-                    });
-                  },
-                ),
               ),
               SizedBox(height: AppConstant.spacing32),
 

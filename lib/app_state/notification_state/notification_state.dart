@@ -125,4 +125,38 @@ class NotificationState extends ChangeNotifier {
     // TODO: Delete from ObjectBox
     notifyListeners();
   }
+
+  /// Add a new notification to the list
+  /// This is used to dynamically create notifications as events occur
+  Future<void> addNotification(app_notif.Notification notification) async {
+    _notifications.insert(0, notification); // Add to the beginning
+    // TODO: Save to ObjectBox
+    notifyListeners();
+  }
+
+  /// Add multiple notifications at once
+  Future<void> addNotifications(List<app_notif.Notification> notifications) async {
+    _notifications.insertAll(0, notifications);
+    // TODO: Save to ObjectBox
+    notifyListeners();
+  }
+
+  /// Clear all notifications
+  Future<void> clearAllNotifications() async {
+    _notifications.clear();
+    // TODO: Clear from ObjectBox
+    notifyListeners();
+  }
+
+  /// Get notifications by type
+  List<app_notif.Notification> getNotificationsByType(String type) {
+    return _notifications.where((n) => n.type == type).toList();
+  }
+
+  /// Get unread notifications by type
+  List<app_notif.Notification> getUnreadNotificationsByType(String type) {
+    return _notifications
+        .where((n) => n.type == type && !n.isRead)
+        .toList();
+  }
 }
