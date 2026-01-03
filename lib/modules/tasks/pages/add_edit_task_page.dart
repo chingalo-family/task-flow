@@ -75,8 +75,8 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
     final date = await showDatePicker(
       context: context,
       initialDate: _selectedDueDate ?? DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(Duration(days: 365)),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
@@ -169,11 +169,12 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
 
       if (widget.task == null) {
         taskState.addTask(task);
+        Navigator.pop(context);
       } else {
         taskState.updateTask(task);
+        // Navigate back to task module home after updating
+        Navigator.popUntil(context, (route) => route.isFirst);
       }
-
-      Navigator.pop(context);
     }
   }
 
