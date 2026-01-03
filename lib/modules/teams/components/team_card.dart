@@ -224,8 +224,9 @@ class TeamCard extends StatelessWidget {
       Color(0xFF10B981), // Green
       Color(0xFF94A3B8), // Gray
     ];
-    final index = int.tryParse(teamId) ?? 0;
-    return colors[index % colors.length];
+    // Use hash code for reliable color assignment with any string ID
+    final hash = teamId.hashCode.abs();
+    return colors[hash % colors.length];
   }
 
   IconData _getTeamIcon(String teamName) {

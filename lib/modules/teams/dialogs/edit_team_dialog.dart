@@ -119,6 +119,7 @@ class _EditTeamDialogState extends State<EditTeamDialog> {
               InputField(
                 controller: _nameController,
                 hintText: 'e.g. Marketing Squad',
+                icon: Icons.group,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return 'Please enter a team name';
