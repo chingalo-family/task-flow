@@ -1081,7 +1081,7 @@ class _UserPickerContainerState extends State<_UserPickerContainer> {
             ),
           ),
           SizedBox(height: AppConstant.spacing16),
-          ...widget.team.memberIds!.map((userId) {
+          ...(widget.team.memberIds ?? []).map((userId) {
             final isSelected = _localSelectedAssignees.contains(userId);
             final userState = Provider.of<UserState>(context, listen: false);
             final isCurrentUser =
@@ -1093,7 +1093,7 @@ class _UserPickerContainerState extends State<_UserPickerContainer> {
                     ? AppConstant.primaryBlue
                     : AppConstant.textSecondary.withValues(alpha: 0.3),
                 child: Text(
-                  userId.length > 0 ? userId.substring(0, 1).toUpperCase() : 'U',
+                  userId.isEmpty ? 'U' : userId.substring(0, 1).toUpperCase(),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 12,
