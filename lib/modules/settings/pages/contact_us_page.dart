@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:task_flow/app_state/app_info_state/app_info_state.dart';
+import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
-import 'package:task_flow/core/components/components.dart';
+import 'package:task_flow/core/constants/email_connection.dart';
+import 'package:task_flow/core/models/email_notification.dart';
+import 'package:task_flow/core/services/email_service.dart';
+import 'package:task_flow/core/services/email_templates.dart';
 import 'package:task_flow/core/utils/utils.dart';
+import 'package:task_flow/modules/login/components/modern_input_field.dart';
+import 'package:task_flow/modules/login/components/modern_primary_button.dart';
 
 class ContactUsPage extends StatefulWidget {
   const ContactUsPage({super.key});
@@ -14,6 +22,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
   String selectedCategory = 'Bug Report';
   final TextEditingController _subjectController = TextEditingController();
   final TextEditingController _messageController = TextEditingController();
+  bool _isSending = false;
 
   @override
   void dispose() {
@@ -22,10 +31,82 @@ class _ContactUsPageState extends State<ContactUsPage> {
     super.dispose();
   }
 
-  void _sendMessage() {
-    // TODO: Implement email sending functionality
-    AppUtil.showToastMessage(message: 'Message sent successfully!');
-    Navigator.pop(context);
+  Future<void> _sendMessage() async {
+    // Validate form
+    if (_subjectController.text.trim().isEmpty) {
+      AppUtil.showToastMessage(message: 'Please enter a subject');
+      return;
+    }
+
+    if (_messageController.text.trim().isEmpty) {
+      AppUtil.showToastMessage(message: 'Please enter a message');
+      return;
+    }
+
+    setState(() {
+      _isSending = true;
+    });
+
+    try {
+      final userState = Provider.of<UserState>(context, listen: false);
+      final appInfoState = Provider.of<AppInfoState>(context, listen: false);
+      
+      final userEmail = userState.currentUser?.email ?? 'unknown@example.com';
+      final userName = userState.currentUser?.fullName ?? 
+                       userState.currentUser?.username ?? 
+                       'User';
+
+      // Create HTML email using template
+      final htmlBody = EmailTemplates.getContactFormEmail(
+        category: selectedCategory,
+        subject: _subjectController.text.trim(),
+        message: _messageController.text.trim(),
+        senderEmail: userEmail,
+        appName: appInfoState.appName,
+        currentAppVersion: appInfoState.version,
+      );
+
+      // Create plain text version
+      final textBody = '''
+Contact Form Submission
+
+Category: $selectedCategory
+Subject: ${_subjectController.text.trim()}
+
+Message:
+${_messageController.text.trim()}
+
+Reply to: $userEmail
+Sent by: $userName
+      ''';
+
+      // Send email to admins
+      final emailNotification = EmailNotification(
+        recipients: EmailConnection.adminEmails,
+        subject: '[$selectedCategory] ${_subjectController.text.trim()}',
+        htmlBody: htmlBody,
+        textBody: textBody,
+      );
+
+      await EmailService.sendEmail(emailNotification: emailNotification);
+
+      if (mounted) {
+        AppUtil.showToastMessage(message: 'Message sent successfully!');
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        AppUtil.showToastMessage(
+          message: 'Failed to send message. Please try again.',
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSending = false;
+        });
+      }
+    }
   }
 
   @override
@@ -83,34 +164,72 @@ class _ContactUsPageState extends State<ContactUsPage> {
                     SizedBox(width: AppConstant.spacing8),
                     _buildCategoryChip('Feature Request', Icons.lightbulb_outline),
                     SizedBox(width: AppConstant.spacing8),
+                    _buildCategoryChip('General Inquiry', Icons.help_outline),
+                    SizedBox(width: AppConstant.spacing8),
+                    _buildCategoryChip('Account Issue', Icons.account_circle_outlined),
+                    SizedBox(width: AppConstant.spacing8),
                     _buildCategoryChip('Billing', Icons.payment),
+                    SizedBox(width: AppConstant.spacing8),
+                    _buildCategoryChip('Feedback', Icons.feedback_outlined),
                   ],
                 ),
               ),
               SizedBox(height: AppConstant.spacing24),
 
               // Subject Field
-              InputField(
+              ModernInputField(
                 controller: _subjectController,
                 hintText: 'Brief summary of the issue',
                 icon: Icons.subject,
-                labelText: 'Subject',
               ),
-              SizedBox(height: AppConstant.spacing24),
+              SizedBox(height: AppConstant.spacing16),
 
               // Message Field
-              InputField(
-                controller: _messageController,
-                hintText: 'Describe your issue or feedback in detail...',
-                icon: Icons.message_outlined,
-                labelText: 'Message',
-                maxLines: 8,
+              Container(
+                decoration: BoxDecoration(
+                  color: AppConstant.cardBackground,
+                  borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                  border: Border.all(
+                    color: AppConstant.textSecondary.withValues(alpha: 0.1),
+                    width: 1,
+                  ),
+                ),
+                child: TextFormField(
+                  controller: _messageController,
+                  maxLines: 8,
+                  style: TextStyle(color: AppConstant.textPrimary, fontSize: 16),
+                  decoration: InputDecoration(
+                    hintText: 'Describe your issue or feedback in detail...',
+                    hintStyle: TextStyle(
+                      color: AppConstant.textSecondary,
+                      fontSize: 16,
+                    ),
+                    prefixIcon: Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 12, top: 12),
+                      child: Icon(
+                        Icons.message_outlined,
+                        color: AppConstant.textSecondary,
+                        size: 22,
+                      ),
+                    ),
+                    prefixIconConstraints: const BoxConstraints(
+                      minWidth: 0,
+                      minHeight: 0,
+                    ),
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 0,
+                      vertical: 18,
+                    ),
+                  ),
+                ),
               ),
               SizedBox(height: AppConstant.spacing32),
 
               // Send Button
-              PrimaryButton(
-                onPressed: _sendMessage,
+              ModernPrimaryButton(
+                onPressed: _isSending ? null : _sendMessage,
+                loading: _isSending,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
