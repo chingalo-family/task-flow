@@ -505,129 +505,160 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                       ),
                     ),
                     SizedBox(height: AppConstant.spacing20),
-                    ...(_task.subtasks ?? []).asMap().entries.map((entry) {
-                      final index = entry.key;
-                      final subtask = entry.value;
-                      return Padding(
-                        padding: EdgeInsets.only(bottom: AppConstant.spacing12),
-                        child: Row(
+                    // Show empty state if no subtasks
+                    if (_task.subtasks == null || _task.subtasks!.isEmpty)
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          vertical: AppConstant.spacing24,
+                        ),
+                        child: Column(
                           children: [
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  final updatedSubtasks = List<Subtask>.from(
-                                    _task.subtasks!,
-                                  );
-                                  updatedSubtasks[index] = subtask.copyWith(
-                                    isCompleted: !subtask.isCompleted,
-                                  );
-                                  _task = _task.copyWith(
-                                    subtasks: updatedSubtasks,
-                                  );
-                                  taskState.updateTask(_task);
-                                });
-                              },
-                              child: Container(
-                                width: 24,
-                                height: 24,
-                                decoration: BoxDecoration(
-                                  color: subtask.isCompleted
-                                      ? AppConstant.primaryBlue
-                                      : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(6),
-                                  border: Border.all(
-                                    color: subtask.isCompleted
-                                        ? AppConstant.primaryBlue
-                                        : AppConstant.textSecondary.withValues(
-                                            alpha: 0.3,
-                                          ),
-                                    width: 2,
-                                  ),
-                                ),
-                                child: subtask.isCompleted
-                                    ? Icon(
-                                        Icons.check,
-                                        size: 16,
-                                        color: Colors.white,
-                                      )
-                                    : null,
+                            Icon(
+                              Icons.checklist,
+                              size: 48,
+                              color: AppConstant.textSecondary.withValues(
+                                alpha: 0.3,
                               ),
                             ),
-                            SizedBox(width: AppConstant.spacing12),
-                            Expanded(
-                              child: Text(
-                                subtask.title,
-                                style: TextStyle(
-                                  color: subtask.isCompleted
-                                      ? AppConstant.textSecondary
-                                      : AppConstant.textPrimary,
-                                  fontSize: 14,
-                                  decoration: subtask.isCompleted
-                                      ? TextDecoration.lineThrough
+                            SizedBox(height: AppConstant.spacing12),
+                            Text(
+                              'No subtasks yet',
+                              style: TextStyle(
+                                color: AppConstant.textSecondary,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    else
+                      ...(_task.subtasks!).asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final subtask = entry.value;
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: AppConstant.spacing12),
+                          child: Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  final taskState = Provider.of<TaskState>(
+                                    context,
+                                    listen: false,
+                                  );
+                                  setState(() {
+                                    final updatedSubtasks = List<Subtask>.from(
+                                      _task.subtasks!,
+                                    );
+                                    updatedSubtasks[index] = subtask.copyWith(
+                                      isCompleted: !subtask.isCompleted,
+                                    );
+                                    _task = _task.copyWith(
+                                      subtasks: updatedSubtasks,
+                                    );
+                                    taskState.updateTask(_task);
+                                  });
+                                },
+                                child: Container(
+                                  width: 24,
+                                  height: 24,
+                                  decoration: BoxDecoration(
+                                    color: subtask.isCompleted
+                                        ? AppConstant.primaryBlue
+                                        : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(6),
+                                    border: Border.all(
+                                      color: subtask.isCompleted
+                                          ? AppConstant.primaryBlue
+                                          : AppConstant.textSecondary.withValues(
+                                              alpha: 0.3,
+                                            ),
+                                      width: 2,
+                                    ),
+                                  ),
+                                  child: subtask.isCompleted
+                                      ? Icon(
+                                          Icons.check,
+                                          size: 16,
+                                          color: Colors.white,
+                                        )
                                       : null,
                                 ),
                               ),
-                            ),
-                            if (!_task.isCompleted)
-                              PopupMenuButton<String>(
-                                icon: Icon(
-                                  Icons.more_vert,
-                                  size: 18,
-                                  color: AppConstant.textSecondary,
-                                ),
-                                color: AppConstant.cardBackground,
-                                onSelected: (value) {
-                                  if (value == 'edit') {
-                                    _showEditSubtaskDialog(subtask, index);
-                                  } else if (value == 'delete') {
-                                    _deleteSubtask(index);
-                                  }
-                                },
-                                itemBuilder: (context) => [
-                                  PopupMenuItem(
-                                    value: 'edit',
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.edit,
-                                          size: 18,
-                                          color: AppConstant.primaryBlue,
-                                        ),
-                                        SizedBox(width: 8),
-                                        Text(
-                                          'Edit',
-                                          style: TextStyle(
-                                            color: AppConstant.textPrimary,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                              SizedBox(width: AppConstant.spacing12),
+                              Expanded(
+                                child: Text(
+                                  subtask.title,
+                                  style: TextStyle(
+                                    color: subtask.isCompleted
+                                        ? AppConstant.textSecondary
+                                        : AppConstant.textPrimary,
+                                    fontSize: 14,
+                                    decoration: subtask.isCompleted
+                                        ? TextDecoration.lineThrough
+                                        : null,
                                   ),
-                                  PopupMenuItem(
-                                    value: 'delete',
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.delete,
-                                          size: 18,
-                                          color: AppConstant.errorRed,
-                                        ),
-                                        SizedBox(width: 8),
-                                        Text(
-                                          'Delete',
-                                          style: TextStyle(
+                                ),
+                              ),
+                              if (!_task.isCompleted)
+                                PopupMenuButton<String>(
+                                  icon: Icon(
+                                    Icons.more_vert,
+                                    size: 18,
+                                    color: AppConstant.textSecondary,
+                                  ),
+                                  color: AppConstant.cardBackground,
+                                  onSelected: (value) {
+                                    if (value == 'edit') {
+                                      _showEditSubtaskDialog(subtask, index);
+                                    } else if (value == 'delete') {
+                                      _deleteSubtask(index);
+                                    }
+                                  },
+                                  itemBuilder: (context) => [
+                                    PopupMenuItem(
+                                      value: 'edit',
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.edit,
+                                            size: 18,
+                                            color: AppConstant.primaryBlue,
+                                          ),
+                                          SizedBox(width: 8),
+                                          Text(
+                                            'Edit',
+                                            style: TextStyle(
+                                              color: AppConstant.textPrimary,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    PopupMenuItem(
+                                      value: 'delete',
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.delete,
+                                            size: 18,
                                             color: AppConstant.errorRed,
                                           ),
-                                        ),
-                                      ],
+                                          SizedBox(width: 8),
+                                          Text(
+                                            'Delete',
+                                            style: TextStyle(
+                                              color: AppConstant.errorRed,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                          ],
-                        ),
-                      );
-                    }),
+                                  ],
+                                ),
+                            ],
+                          ),
+                        );
+                      }),
                     SizedBox(height: AppConstant.spacing8),
                     if (!_task.isCompleted)
                       GestureDetector(
@@ -895,11 +926,12 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                             isCompleted: false,
                           ),
                         );
-                        setState(() {
+                        Navigator.pop(context);
+                        // Update parent widget state after dialog closes
+                        this.setState(() {
                           _task = _task.copyWith(subtasks: subtasks);
                           taskState.updateTask(_task);
                         });
-                        Navigator.pop(context);
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -1025,11 +1057,12 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                         subtasks[index] = subtask.copyWith(
                           title: titleController.text.trim(),
                         );
-                        setState(() {
+                        Navigator.pop(context);
+                        // Update parent widget state after dialog closes
+                        this.setState(() {
                           _task = _task.copyWith(subtasks: subtasks);
                           taskState.updateTask(_task);
                         });
-                        Navigator.pop(context);
                       }
                     },
                     style: ElevatedButton.styleFrom(
