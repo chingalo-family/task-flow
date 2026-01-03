@@ -9,9 +9,14 @@ class TaskEntity {
   String? description;
   String status; // 'pending', 'in_progress', 'completed'
   String priority; // 'low', 'medium', 'high'
+  String? category; // Task category
   
   String? assignedToUserId;
   String? assignedToUsername;
+  String? assignedUserIdsJson; // JSON array of assigned user IDs
+  
+  String? teamId; // Team this task belongs to
+  String? teamName;
   
   @Property(type: PropertyType.date)
   DateTime? dueDate;
@@ -24,7 +29,9 @@ class TaskEntity {
   
   String? tagsJson; // JSON array of tags
   String? attachmentsJson; // JSON array of attachment URLs
+  String? subtasksJson; // JSON array of subtasks
   
+  bool? remindMe;
   int progress; // 0-100
   
   bool isSynced;
@@ -42,14 +49,20 @@ class TaskEntity {
     this.description,
     this.status = 'pending',
     this.priority = 'medium',
+    this.category,
     this.assignedToUserId,
     this.assignedToUsername,
+    this.assignedUserIdsJson,
+    this.teamId,
+    this.teamName,
     this.dueDate,
     this.completedAt,
     this.projectId,
     this.projectName,
     this.tagsJson,
     this.attachmentsJson,
+    this.subtasksJson,
+    this.remindMe,
     this.progress = 0,
     this.isSynced = false,
     DateTime? createdAt,

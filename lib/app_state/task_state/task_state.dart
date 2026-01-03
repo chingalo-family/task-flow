@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:task_flow/core/models/models.dart';
+import 'package:task_flow/core/constants/task_constants.dart';
+import 'package:task_flow/core/entities/task_entity.dart';
+import 'package:task_flow/core/utils/task_entity_mapper.dart';
+import 'package:task_flow/objectbox.g.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
 
 class TaskState extends ChangeNotifier {
   List<Task> _tasks = [];
   bool _loading = false;
-  String _filterStatus = 'all'; // 'all', 'pending', 'in_progress', 'completed'
-  String _filterPriority = 'all'; // 'all', 'high', 'medium', 'low'
-  String _sortBy = 'dueDate'; // 'dueDate', 'priority', 'createdAt'
+  String _filterStatus = TaskConstants.defaultFilterStatus;
+  String _filterPriority = TaskConstants.defaultFilterPriority;
+  String _sortBy = TaskConstants.defaultSortBy;
   String? _filterTeamId; // Filter tasks by team
+  Store? _store;
+  Box<TaskEntity>? _taskBox;
 
   List<Task> get tasks => _getFilteredTasks();
   List<Task> get allTasks => _tasks;
@@ -46,23 +54,42 @@ class TaskState extends ChangeNotifier {
     final today = DateTime(now.year, now.month, now.day);
     final tomorrow = today.add(Duration(days: 1));
     return _tasks.where((task) {
-      if (task.dueDate == null || task.isCompleted) return false;
+      if (task.dueDate == null) return false;
       return task.dueDate!.isAfter(today) && task.dueDate!.isBefore(tomorrow);
-    }).toList()..sort((a, b) {
-      final priorityOrder = {'high': 0, 'medium': 1, 'low': 2};
-      return (priorityOrder[a.priority] ?? 3).compareTo(
-        priorityOrder[b.priority] ?? 3,
-      );
-    });
+    }).toList()
+      ..sort((a, b) {
+        // Sort by completion status first (uncompleted first)
+        if (a.isCompleted != b.isCompleted) {
+          return a.isCompleted ? 1 : -1;
+        }
+        // Then by priority
+        final priorityOrder = {'high': 0, 'medium': 1, 'low': 2};
+        final priorityCompare = (priorityOrder[a.priority] ?? 3).compareTo(
+          priorityOrder[b.priority] ?? 3,
+        );
+        if (priorityCompare != 0) return priorityCompare;
+        // Then by due date/time
+        if (a.dueDate != null && b.dueDate != null) {
+          return a.dueDate!.compareTo(b.dueDate!);
+        }
+        return 0;
+      });
   }
 
   List<Task> get overdueTasks {
     return _tasks
         .where(
-          (task) => !task.isCompleted && task.dueDate != null && task.isOverdue,
+          (task) => task.dueDate != null && task.isOverdue,
         )
         .toList()
-      ..sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
+      ..sort((a, b) {
+        // Sort by completion status first (uncompleted first)
+        if (a.isCompleted != b.isCompleted) {
+          return a.isCompleted ? 1 : -1;
+        }
+        // Then by due date
+        return a.dueDate!.compareTo(b.dueDate!);
+      });
   }
 
   List<Task> get focusTasks {
@@ -90,30 +117,62 @@ class TaskState extends ChangeNotifier {
     ).add(Duration(days: 1));
     return _tasks
         .where(
-          (task) =>
-              !task.isCompleted &&
-              task.dueDate != null &&
-              task.dueDate!.isAfter(tomorrow),
+          (task) => task.dueDate != null && task.dueDate!.isAfter(tomorrow),
         )
         .toList()
-      ..sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
+      ..sort((a, b) {
+        // Sort by completion status first (uncompleted first)
+        if (a.isCompleted != b.isCompleted) {
+          return a.isCompleted ? 1 : -1;
+        }
+        // Then by due date
+        return a.dueDate!.compareTo(b.dueDate!);
+      });
   }
 
   Future<void> initialize() async {
     _loading = true;
     notifyListeners();
 
-    // TODO: Load tasks from ObjectBox
+    // Initialize ObjectBox
+    await _initializeObjectBox();
+    
+    // Load tasks from ObjectBox
     await _loadTasks();
 
     _loading = false;
     notifyListeners();
   }
 
+  Future<void> _initializeObjectBox() async {
+    if (_store != null) return; // Already initialized
+
+    try {
+      final docsDir = await getApplicationDocumentsDirectory();
+      final storePath = p.join(docsDir.path, 'task-flow-objectbox');
+      _store = await openStore(directory: storePath);
+      _taskBox = _store!.box<TaskEntity>();
+    } catch (e) {
+      debugPrint('Error initializing ObjectBox: $e');
+    }
+  }
+
   Future<void> _loadTasks() async {
-    // TODO: Implement ObjectBox loading
-    // Load only tasks assigned to current user
-    _tasks = [];
+    if (_taskBox == null) {
+      _tasks = [];
+      return;
+    }
+
+    try {
+      // Load all task entities from ObjectBox
+      final entities = _taskBox!.getAll();
+      
+      // Convert entities to Task models
+      _tasks = entities.map((entity) => TaskEntityMapper.fromEntity(entity)).toList();
+    } catch (e) {
+      debugPrint('Error loading tasks: $e');
+      _tasks = [];
+    }
   }
 
   List<Task> _getFilteredTasks() {
@@ -123,32 +182,47 @@ class TaskState extends ChangeNotifier {
           .where((task) => task.teamId == _filterTeamId)
           .toList();
     }
-    if (_filterStatus != 'all') {
+    if (_filterStatus != TaskConstants.statusAll) {
       filtered = filtered
           .where((task) => task.status == _filterStatus)
           .toList();
     }
     // Filter by priority
-    if (_filterPriority != 'all') {
+    if (_filterPriority != TaskConstants.priorityAll) {
       filtered = filtered
           .where((task) => task.priority == _filterPriority)
           .toList();
     }
     // Sort
     filtered.sort((a, b) {
+      // Always sort by completion status first (uncompleted first)
+      if (a.isCompleted != b.isCompleted) {
+        return a.isCompleted ? 1 : -1;
+      }
+      
+      // Then by the selected sort option
       switch (_sortBy) {
-        case 'dueDate':
+        case TaskConstants.sortByDueDate:
           if (a.dueDate == null && b.dueDate == null) return 0;
           if (a.dueDate == null) return 1;
           if (b.dueDate == null) return -1;
           return a.dueDate!.compareTo(b.dueDate!);
-        case 'priority':
+        case TaskConstants.sortByPriority:
           final priorityOrder = {'high': 0, 'medium': 1, 'low': 2};
           return (priorityOrder[a.priority] ?? 3).compareTo(
             priorityOrder[b.priority] ?? 3,
           );
-        case 'createdAt':
+        case TaskConstants.sortByCreatedAt:
           return b.createdAt.compareTo(a.createdAt);
+        case TaskConstants.sortByStatus:
+          final statusOrder = {
+            TaskConstants.statusInProgress: 0,
+            TaskConstants.statusPending: 1,
+            TaskConstants.statusCompleted: 2,
+          };
+          return (statusOrder[a.status] ?? 3).compareTo(
+            statusOrder[b.status] ?? 3,
+          );
         default:
           return 0;
       }
@@ -183,7 +257,17 @@ class TaskState extends ChangeNotifier {
 
   Future<void> addTask(Task task) async {
     _tasks.add(task);
-    // TODO: Save to ObjectBox
+    
+    // Save to ObjectBox
+    if (_taskBox != null) {
+      try {
+        final entity = TaskEntityMapper.toEntity(task);
+        _taskBox!.put(entity);
+      } catch (e) {
+        debugPrint('Error saving task to ObjectBox: $e');
+      }
+    }
+    
     notifyListeners();
   }
 
@@ -191,14 +275,53 @@ class TaskState extends ChangeNotifier {
     final index = _tasks.indexWhere((task) => task.id == updatedTask.id);
     if (index != -1) {
       _tasks[index] = updatedTask;
-      // TODO: Update in ObjectBox
+      
+      // Update in ObjectBox
+      if (_taskBox != null) {
+        try {
+          // Find the entity by taskId
+          final query = _taskBox!
+              .query(TaskEntity_.taskId.equals(updatedTask.id))
+              .build();
+          final entities = query.find();
+          query.close();
+          
+          if (entities.isNotEmpty) {
+            final entity = TaskEntityMapper.toEntity(
+              updatedTask,
+              objectBoxId: entities.first.id,
+            );
+            _taskBox!.put(entity);
+          }
+        } catch (e) {
+          debugPrint('Error updating task in ObjectBox: $e');
+        }
+      }
+      
       notifyListeners();
     }
   }
 
   Future<void> deleteTask(String taskId) async {
     _tasks.removeWhere((task) => task.id == taskId);
-    // TODO: Delete from ObjectBox
+    
+    // Delete from ObjectBox
+    if (_taskBox != null) {
+      try {
+        final query = _taskBox!
+            .query(TaskEntity_.taskId.equals(taskId))
+            .build();
+        final entities = query.find();
+        query.close();
+        
+        for (var entity in entities) {
+          _taskBox!.remove(entity.id);
+        }
+      } catch (e) {
+        debugPrint('Error deleting task from ObjectBox: $e');
+      }
+    }
+    
     notifyListeners();
   }
 
@@ -206,15 +329,57 @@ class TaskState extends ChangeNotifier {
     final index = _tasks.indexWhere((task) => task.id == taskId);
     if (index != -1) {
       final task = _tasks[index];
-      final newStatus = task.isCompleted ? 'pending' : 'completed';
+      final newStatus = task.isCompleted
+          ? TaskConstants.statusPending
+          : TaskConstants.statusCompleted;
+      
+      // If completing the task, also complete all subtasks
+      List<Subtask>? updatedSubtasks = task.subtasks;
+      if (newStatus == TaskConstants.statusCompleted && task.subtasks != null) {
+        updatedSubtasks = task.subtasks!
+            .map((st) => st.copyWith(isCompleted: true))
+            .toList();
+      }
+      
       final updatedTask = task.copyWith(
         status: newStatus,
-        progress: newStatus == 'completed' ? 100 : task.progress,
-        completedAt: newStatus == 'completed' ? DateTime.now() : null,
+        progress: newStatus == TaskConstants.statusCompleted ? 100 : task.progress,
+        completedAt:
+            newStatus == TaskConstants.statusCompleted ? DateTime.now() : null,
+        subtasks: updatedSubtasks,
+        updatedAt: DateTime.now(),
       );
+      
       _tasks[index] = updatedTask;
-      // TODO: Update in ObjectBox
+      
+      // Update in ObjectBox
+      if (_taskBox != null) {
+        try {
+          final query = _taskBox!
+              .query(TaskEntity_.taskId.equals(taskId))
+              .build();
+          final entities = query.find();
+          query.close();
+          
+          if (entities.isNotEmpty) {
+            final entity = TaskEntityMapper.toEntity(
+              updatedTask,
+              objectBoxId: entities.first.id,
+            );
+            _taskBox!.put(entity);
+          }
+        } catch (e) {
+          debugPrint('Error updating task status in ObjectBox: $e');
+        }
+      }
+      
       notifyListeners();
     }
+  }
+
+  @override
+  void dispose() {
+    _store?.close();
+    super.dispose();
   }
 }
