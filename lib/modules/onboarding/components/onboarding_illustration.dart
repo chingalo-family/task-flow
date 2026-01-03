@@ -572,11 +572,7 @@ class OnboardingIllustration extends StatelessWidget {
   Widget _buildFloatingCheckItem(bool checked) {
     return Row(
       children: [
-        Icon(
-          Icons.check,
-          color: AppConstant.primaryBlue,
-          size: 12,
-        ),
+        Icon(Icons.check, color: AppConstant.primaryBlue, size: 12),
         SizedBox(width: 4),
         Expanded(
           child: Container(
@@ -631,16 +627,9 @@ class OnboardingIllustration extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppConstant.illustrationGreen,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: AppConstant.cardBackground,
-                  width: 3,
-                ),
+                border: Border.all(color: AppConstant.cardBackground, width: 3),
               ),
-              child: Icon(
-                Icons.sync_rounded,
-                color: Colors.white,
-                size: 28,
-              ),
+              child: Icon(Icons.sync_rounded, color: Colors.white, size: 28),
             ),
           ),
         ],
@@ -669,43 +658,22 @@ class OnboardingIllustration extends StatelessWidget {
           Stack(
             alignment: Alignment.bottomCenter,
             children: [
-              Container(
+              SizedBox(
                 width: 100,
                 height: 80,
                 child: Stack(
                   children: [
-                    Positioned(
-                      bottom: 0,
-                      left: 10,
-                      child: _buildDisc(0),
-                    ),
-                    Positioned(
-                      bottom: 12,
-                      left: 10,
-                      child: _buildDisc(1),
-                    ),
-                    Positioned(
-                      bottom: 24,
-                      left: 10,
-                      child: _buildDisc(2),
-                    ),
-                    Positioned(
-                      bottom: 36,
-                      left: 10,
-                      child: _buildDisc(3),
-                    ),
-                    Positioned(
-                      bottom: 48,
-                      left: 10,
-                      child: _buildDisc(4),
-                    ),
+                    Positioned(bottom: 0, left: 10, child: _buildDisc(0)),
+                    Positioned(bottom: 12, left: 10, child: _buildDisc(1)),
+                    Positioned(bottom: 24, left: 10, child: _buildDisc(2)),
+                    Positioned(bottom: 36, left: 10, child: _buildDisc(3)),
+                    Positioned(bottom: 48, left: 10, child: _buildDisc(4)),
                   ],
                 ),
               ),
             ],
           ),
           SizedBox(height: AppConstant.spacing32),
-          // Floating checkmarks
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -718,8 +686,6 @@ class OnboardingIllustration extends StatelessWidget {
               _buildFloatingCheck(0.15, 25, 0.7),
               SizedBox(width: 8),
               _buildFloatingCheck(-0.1, 30, 0.6),
-              SizedBox(width: 8),
-              _buildFloatingCheck(0.25, 28, 0.5),
             ],
           ),
         ],
