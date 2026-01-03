@@ -588,7 +588,7 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
                           if (widget.selectedAssignees.length > 3)
                             Container(
                               margin: EdgeInsets.only(
-                                left: i == 0 ? 0 : AppConstant.spacing8,
+                                left: AppConstant.spacing8,
                               ),
                               width: 32,
                               height: 32,
