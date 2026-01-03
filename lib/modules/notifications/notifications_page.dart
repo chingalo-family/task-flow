@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/notification_state/notification_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
-import 'package:task_flow/modules/notifications/components/notification_card.dart';
+import 'package:task_flow/core/models/models.dart' as app_notif;
+import 'package:task_flow/core/utils/notification_filter_utils.dart';
+import 'package:task_flow/modules/notifications/components/filter_chip.dart' as custom_chip;
+import 'package:task_flow/modules/notifications/components/grouped_notification_list.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
@@ -12,6 +15,8 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
+  String selectedFilter = 'All';
+
   @override
   void initState() {
     super.initState();
@@ -35,29 +40,28 @@ class _NotificationsPageState extends State<NotificationsPage> {
               );
             }
 
+            final filteredNotifications = NotificationFilterUtils
+                .filterNotifications(
+              notificationState.notifications,
+              selectedFilter,
+            );
+            final groupedNotifications = NotificationFilterUtils
+                .groupNotificationsByTime(filteredNotifications);
+
             return CustomScrollView(
               slivers: [
                 // App Bar
                 SliverAppBar(
-                  floating: true,
+                  pinned: true,
                   backgroundColor: AppConstant.darkBackground,
                   elevation: 0,
-                  title: Row(
-                    children: [
-                      Icon(
-                        Icons.notifications_rounded,
-                        color: AppConstant.primaryBlue,
-                        size: 24,
-                      ),
-                      SizedBox(width: AppConstant.spacing8),
-                      Text(
-                        'Notifications',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+                  title: Text(
+                    'Notifications',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: AppConstant.textPrimary,
+                    ),
                   ),
                   actions: [
                     if (notificationState.unreadCount > 0)
@@ -70,37 +74,80 @@ class _NotificationsPageState extends State<NotificationsPage> {
                           style: TextStyle(
                             color: AppConstant.primaryBlue,
                             fontSize: 14,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
+                    IconButton(
+                      icon: Icon(
+                        notificationState.notificationsEnabled
+                            ? Icons.notifications_active
+                            : Icons.notifications_off,
+                        color: notificationState.notificationsEnabled
+                            ? AppConstant.primaryBlue
+                            : AppConstant.textSecondary,
+                      ),
+                      onPressed: () {
+                        notificationState.setNotificationsEnabled(
+                          !notificationState.notificationsEnabled,
+                        );
+                      },
+                    ),
                   ],
                 ),
 
-                // Header
+                // Filter Tabs
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: EdgeInsets.all(AppConstant.spacing24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Stay Updated',
-                          style: Theme.of(context).textTheme.headlineMedium,
-                        ),
-                        SizedBox(height: AppConstant.spacing8),
-                        Text(
-                          notificationState.unreadCount > 0
-                              ? '${notificationState.unreadCount} unread ${notificationState.unreadCount == 1 ? 'notification' : 'notifications'}'
-                              : 'You\'re all caught up!',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ],
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppConstant.spacing16,
+                      vertical: AppConstant.spacing12,
+                    ),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          custom_chip.FilterChip(
+                            label: 'All',
+                            isSelected: selectedFilter == 'All',
+                            onTap: () => setState(() => selectedFilter = 'All'),
+                          ),
+                          SizedBox(width: AppConstant.spacing8),
+                          custom_chip.FilterChip(
+                            label: 'Unread',
+                            isSelected: selectedFilter == 'Unread',
+                            onTap: () =>
+                                setState(() => selectedFilter = 'Unread'),
+                          ),
+                          SizedBox(width: AppConstant.spacing8),
+                          custom_chip.FilterChip(
+                            label: 'Mentions',
+                            isSelected: selectedFilter == 'Mentions',
+                            onTap: () =>
+                                setState(() => selectedFilter = 'Mentions'),
+                          ),
+                          SizedBox(width: AppConstant.spacing8),
+                          custom_chip.FilterChip(
+                            label: 'Assigned to Me',
+                            isSelected: selectedFilter == 'Assigned to Me',
+                            onTap: () =>
+                                setState(() => selectedFilter = 'Assigned to Me'),
+                          ),
+                          SizedBox(width: AppConstant.spacing8),
+                          custom_chip.FilterChip(
+                            label: 'System',
+                            isSelected: selectedFilter == 'System',
+                            onTap: () =>
+                                setState(() => selectedFilter = 'System'),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
 
                 // Notification List
-                notificationState.notifications.isEmpty
+                filteredNotifications.isEmpty
                     ? SliverFillRemaining(
                         child: Center(
                           child: Column(
@@ -132,22 +179,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         ),
                       )
                     : SliverPadding(
-                        padding: EdgeInsets.all(AppConstant.spacing16),
-                        sliver: SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                              final notification =
-                                  notificationState.notifications[index];
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                  bottom: AppConstant.spacing8,
-                                ),
-                                child: NotificationCard(
-                                  notification: notification,
-                                ),
-                              );
-                            },
-                            childCount: notificationState.notifications.length,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppConstant.spacing16,
+                        ),
+                        sliver: SliverToBoxAdapter(
+                          child: GroupedNotificationList(
+                            groupedNotifications: groupedNotifications,
                           ),
                         ),
                       ),

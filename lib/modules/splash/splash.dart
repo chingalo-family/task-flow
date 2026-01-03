@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_flow/app_state/app_info_state/app_info_state.dart';
+import 'package:task_flow/app_state/notification_state/notification_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/modules/splash/components/app_logo.dart';
 import 'package:task_flow/modules/onboarding/onboarding_screen.dart';
@@ -47,6 +48,11 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       Provider.of<AppInfoState>(context, listen: false).initiatizeAppInfo();
+      
+      // Initialize notifications early for badge count
+      final notificationState = Provider.of<NotificationState>(context, listen: false);
+      await notificationState.initialize();
+      
       for (int count = 0; count <= 100; count += 5) {
         await Future.delayed(const Duration(milliseconds: 50));
         if (mounted) {

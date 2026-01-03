@@ -14,6 +14,17 @@ class AppConstant {
   static const Color successGreen = Color(0xFF10B981);
   static const Color warningOrange = Color(0xFFF59E0B);
   static const Color errorRed = Color(0xFFEF4444);
+  static const Color pinkAccent = Color(0xFFFF6B9D);
+
+  // Illustration Colors
+  static const Color illustrationTeal = Color(0xFF5A7C8C);
+  static const Color illustrationTealDark = Color(0xFF4A6C7C);
+  static const Color illustrationCyan = Color(0xFF5A9E9E);
+  static const Color illustrationCyanDark = Color(0xFF4A8E8E);
+  static const Color illustrationGray = Color(0xFF2C3E50);
+  static const Color illustrationGreen = Color(0xFF2ECC71);
+  static const Color illustrationBeige = Color(0xFFD4A574);
+  static const Color illustrationBeigeOutline = Color(0xFFB8956A);
 
   // Spacing
   static const double spacing4 = 4.0;
