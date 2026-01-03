@@ -10,6 +10,7 @@ import 'package:path/path.dart' as p;
 class TaskState extends ChangeNotifier {
   List<Task> _tasks = [];
   bool _loading = false;
+  bool _initialized = false; // Thread-safe initialization flag
   String _filterStatus = TaskConstants.defaultFilterStatus;
   String _filterPriority = TaskConstants.defaultFilterPriority;
   String _sortBy = TaskConstants.defaultSortBy;
@@ -33,7 +34,7 @@ class TaskState extends ChangeNotifier {
     final today = DateTime(now.year, now.month, now.day);
     final tomorrow = today.add(Duration(days: 1));
     return _tasks.where((task) {
-      if (task.dueDate == null || task.isCompleted) return false;
+      if (task.dueDate == null) return false;
       return task.dueDate!.isAfter(today) && task.dueDate!.isBefore(tomorrow);
     }).length;
   }
@@ -145,7 +146,9 @@ class TaskState extends ChangeNotifier {
   }
 
   Future<void> _initializeObjectBox() async {
-    if (_store != null) return; // Already initialized
+    if (_initialized) return; // Already initialized or in progress
+
+    _initialized = true; // Set flag to prevent concurrent initialization
 
     try {
       final docsDir = await getApplicationDocumentsDirectory();
@@ -154,6 +157,7 @@ class TaskState extends ChangeNotifier {
       _taskBox = _store!.box<TaskEntity>();
     } catch (e) {
       debugPrint('Error initializing ObjectBox: $e');
+      _initialized = false; // Reset flag on error
     }
   }
 
@@ -165,6 +169,8 @@ class TaskState extends ChangeNotifier {
 
     try {
       // Load all task entities from ObjectBox
+      // Note: For large datasets, consider implementing pagination
+      // by using Query with limit() and offset()
       final entities = _taskBox!.getAll();
       
       // Convert entities to Task models
