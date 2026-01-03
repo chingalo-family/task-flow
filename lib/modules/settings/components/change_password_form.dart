@@ -32,14 +32,11 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
   }
 
   String? _validateCurrentPassword(String? value) {
-    final userState = Provider.of<UserState>(context, listen: false);
     if (value == null || value.isEmpty) {
       return 'Current password is required';
     }
-    // Check if current password matches the user's password
-    if (value != userState.currentUser?.password) {
-      return 'Current password is incorrect';
-    }
+    // Note: Password validation is done server-side during the change password request
+    // This is just a client-side check for non-empty input
     return null;
   }
 
@@ -77,14 +74,20 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
 
     try {
       final userState = Provider.of<UserState>(context, listen: false);
-      await userState.changeCurrentUserPassword(
+      final success = await userState.changeCurrentUserPassword(
         _currentPasswordController.text,
         _newPasswordController.text,
       );
       
       if (mounted) {
-        AppUtil.showToastMessage(message: 'Password changed successfully!');
-        Navigator.pop(context);
+        if (success) {
+          AppUtil.showToastMessage(message: 'Password changed successfully!');
+          Navigator.pop(context);
+        } else {
+          AppUtil.showToastMessage(
+            message: 'Failed to change password. Please check your current password.',
+          );
+        }
       }
     } catch (e) {
       if (mounted) {
