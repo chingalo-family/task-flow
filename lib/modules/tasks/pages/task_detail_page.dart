@@ -101,7 +101,11 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                   value: 'edit',
                   child: Row(
                     children: [
-                      Icon(Icons.edit, size: 20, color: AppConstant.textPrimary),
+                      Icon(
+                        Icons.edit,
+                        size: 20,
+                        color: AppConstant.textPrimary,
+                      ),
                       SizedBox(width: AppConstant.spacing8),
                       Text(
                         'Edit',
@@ -207,7 +211,9 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                       ),
                       SizedBox(height: AppConstant.spacing8),
                       InkWell(
-                        onTap: _task.isCompleted ? null : () => _showStatusPicker(context),
+                        onTap: _task.isCompleted
+                            ? null
+                            : () => _showStatusPicker(context),
                         borderRadius: BorderRadius.circular(8),
                         child: Container(
                           padding: EdgeInsets.symmetric(
@@ -282,7 +288,9 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                       ),
                       SizedBox(height: AppConstant.spacing8),
                       InkWell(
-                        onTap: _task.isCompleted ? null : () => _selectDueDate(),
+                        onTap: _task.isCompleted
+                            ? null
+                            : () => _selectDueDate(),
                         borderRadius: BorderRadius.circular(8),
                         child: Container(
                           padding: EdgeInsets.symmetric(
@@ -446,7 +454,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
             ),
 
             // Subtasks section
-            if (_task.subtasks != null && _task.subtasks!.isNotEmpty) ...[
+            ...[
               SizedBox(height: AppConstant.spacing32),
               Container(
                 padding: EdgeInsets.all(AppConstant.spacing20),
@@ -495,127 +503,129 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                       ),
                     ),
                     SizedBox(height: AppConstant.spacing20),
-                    ..._task.subtasks!.asMap().entries.map(
-                      (entry) {
-                        final index = entry.key;
-                        final subtask = entry.value;
-                        return Padding(
-                          padding: EdgeInsets.only(bottom: AppConstant.spacing12),
-                          child: Row(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    final updatedSubtasks = List<Subtask>.from(
-                                      _task.subtasks!,
-                                    );
-                                    updatedSubtasks[index] = subtask.copyWith(
-                                      isCompleted: !subtask.isCompleted,
-                                    );
-                                    _task = _task.copyWith(
-                                      subtasks: updatedSubtasks,
-                                    );
-                                    taskState.updateTask(_task);
-                                  });
-                                },
-                                child: Container(
-                                  width: 24,
-                                  height: 24,
-                                  decoration: BoxDecoration(
+                    ...(_task.subtasks ?? []).asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final subtask = entry.value;
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: AppConstant.spacing12),
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  final updatedSubtasks = List<Subtask>.from(
+                                    _task.subtasks!,
+                                  );
+                                  updatedSubtasks[index] = subtask.copyWith(
+                                    isCompleted: !subtask.isCompleted,
+                                  );
+                                  _task = _task.copyWith(
+                                    subtasks: updatedSubtasks,
+                                  );
+                                  taskState.updateTask(_task);
+                                });
+                              },
+                              child: Container(
+                                width: 24,
+                                height: 24,
+                                decoration: BoxDecoration(
+                                  color: subtask.isCompleted
+                                      ? AppConstant.primaryBlue
+                                      : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(6),
+                                  border: Border.all(
                                     color: subtask.isCompleted
                                         ? AppConstant.primaryBlue
-                                        : Colors.transparent,
-                                    borderRadius: BorderRadius.circular(6),
-                                    border: Border.all(
-                                      color: subtask.isCompleted
-                                          ? AppConstant.primaryBlue
-                                          : AppConstant.textSecondary.withValues(
-                                              alpha: 0.3,
-                                            ),
-                                      width: 2,
-                                    ),
+                                        : AppConstant.textSecondary.withValues(
+                                            alpha: 0.3,
+                                          ),
+                                    width: 2,
                                   ),
-                                  child: subtask.isCompleted
-                                      ? Icon(
-                                          Icons.check,
-                                          size: 16,
-                                          color: Colors.white,
-                                        )
+                                ),
+                                child: subtask.isCompleted
+                                    ? Icon(
+                                        Icons.check,
+                                        size: 16,
+                                        color: Colors.white,
+                                      )
+                                    : null,
+                              ),
+                            ),
+                            SizedBox(width: AppConstant.spacing12),
+                            Expanded(
+                              child: Text(
+                                subtask.title,
+                                style: TextStyle(
+                                  color: subtask.isCompleted
+                                      ? AppConstant.textSecondary
+                                      : AppConstant.textPrimary,
+                                  fontSize: 14,
+                                  decoration: subtask.isCompleted
+                                      ? TextDecoration.lineThrough
                                       : null,
                                 ),
                               ),
-                              SizedBox(width: AppConstant.spacing12),
-                              Expanded(
-                                child: Text(
-                                  subtask.title,
-                                  style: TextStyle(
-                                    color: subtask.isCompleted
-                                        ? AppConstant.textSecondary
-                                        : AppConstant.textPrimary,
-                                    fontSize: 14,
-                                    decoration: subtask.isCompleted
-                                        ? TextDecoration.lineThrough
-                                        : null,
-                                  ),
+                            ),
+                            if (!_task.isCompleted)
+                              PopupMenuButton<String>(
+                                icon: Icon(
+                                  Icons.more_vert,
+                                  size: 18,
+                                  color: AppConstant.textSecondary,
                                 ),
-                              ),
-                              if (!_task.isCompleted)
-                                PopupMenuButton<String>(
-                                  icon: Icon(
-                                    Icons.more_vert,
-                                    size: 18,
-                                    color: AppConstant.textSecondary,
-                                  ),
-                                  color: AppConstant.cardBackground,
-                                  onSelected: (value) {
-                                    if (value == 'edit') {
-                                      _showEditSubtaskDialog(subtask, index);
-                                    } else if (value == 'delete') {
-                                      _deleteSubtask(index);
-                                    }
-                                  },
-                                  itemBuilder: (context) => [
-                                    PopupMenuItem(
-                                      value: 'edit',
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.edit, 
-                                            size: 18, 
-                                            color: AppConstant.primaryBlue,
+                                color: AppConstant.cardBackground,
+                                onSelected: (value) {
+                                  if (value == 'edit') {
+                                    _showEditSubtaskDialog(subtask, index);
+                                  } else if (value == 'delete') {
+                                    _deleteSubtask(index);
+                                  }
+                                },
+                                itemBuilder: (context) => [
+                                  PopupMenuItem(
+                                    value: 'edit',
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.edit,
+                                          size: 18,
+                                          color: AppConstant.primaryBlue,
+                                        ),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          'Edit',
+                                          style: TextStyle(
+                                            color: AppConstant.textPrimary,
                                           ),
-                                          SizedBox(width: 8),
-                                          Text('Edit',
-                                            style: TextStyle(
-                                              color: AppConstant.textPrimary,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                    PopupMenuItem(
-                                      value: 'delete',
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.delete,
-                                            size: 18,
+                                  ),
+                                  PopupMenuItem(
+                                    value: 'delete',
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.delete,
+                                          size: 18,
+                                          color: AppConstant.errorRed,
+                                        ),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          'Delete',
+                                          style: TextStyle(
                                             color: AppConstant.errorRed,
                                           ),
-                                          SizedBox(width: 8),
-                                          Text('Delete',
-                                            style: TextStyle(
-                                              color: AppConstant.errorRed,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
+                                  ),
+                                ],
+                              ),
+                          ],
+                        ),
+                      );
+                    }),
                     SizedBox(height: AppConstant.spacing8),
                     if (!_task.isCompleted)
                       GestureDetector(
@@ -674,8 +684,16 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 ),
               ),
               SizedBox(height: AppConstant.spacing16),
-              _buildStatusOption('pending', 'Pending', Icons.radio_button_unchecked),
-              _buildStatusOption('in_progress', 'In Progress', Icons.play_circle),
+              _buildStatusOption(
+                'pending',
+                'Pending',
+                Icons.radio_button_unchecked,
+              ),
+              _buildStatusOption(
+                'in_progress',
+                'In Progress',
+                Icons.play_circle,
+              ),
               _buildStatusOption('completed', 'Completed', Icons.check_circle),
             ],
           ),
@@ -687,7 +705,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   Widget _buildStatusOption(String status, String label, IconData icon) {
     final isSelected = _task.status == status;
     final color = _getStatusColor(status);
-    
+
     return ListTile(
       leading: Icon(icon, color: color),
       title: Text(
@@ -773,7 +791,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
   void _showAddSubtaskDialog() {
     final titleController = TextEditingController();
-    
+
     showDialog(
       context: context,
       builder: (context) {
@@ -793,7 +811,9 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 ),
                 decoration: BoxDecoration(
                   color: AppConstant.darkBackground,
-                  borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                  borderRadius: BorderRadius.circular(
+                    AppConstant.borderRadius12,
+                  ),
                   border: Border.all(
                     color: AppConstant.textSecondary.withValues(alpha: 0.1),
                   ),
@@ -841,7 +861,10 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
             ElevatedButton(
               onPressed: () {
                 if (titleController.text.trim().isNotEmpty) {
-                  final taskState = Provider.of<TaskState>(context, listen: false);
+                  final taskState = Provider.of<TaskState>(
+                    context,
+                    listen: false,
+                  );
                   final subtasks = List<Subtask>.from(_task.subtasks ?? []);
                   subtasks.add(
                     Subtask(
@@ -860,10 +883,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppConstant.primaryBlue,
               ),
-              child: Text(
-                'Add',
-                style: TextStyle(color: Colors.white),
-              ),
+              child: Text('Add', style: TextStyle(color: Colors.white)),
             ),
           ],
         );
@@ -873,7 +893,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
   void _showEditSubtaskDialog(Subtask subtask, int index) {
     final titleController = TextEditingController(text: subtask.title);
-    
+
     showDialog(
       context: context,
       builder: (context) {
@@ -893,7 +913,9 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 ),
                 decoration: BoxDecoration(
                   color: AppConstant.darkBackground,
-                  borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                  borderRadius: BorderRadius.circular(
+                    AppConstant.borderRadius12,
+                  ),
                   border: Border.all(
                     color: AppConstant.textSecondary.withValues(alpha: 0.1),
                   ),
@@ -941,7 +963,10 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
             ElevatedButton(
               onPressed: () {
                 if (titleController.text.trim().isNotEmpty) {
-                  final taskState = Provider.of<TaskState>(context, listen: false);
+                  final taskState = Provider.of<TaskState>(
+                    context,
+                    listen: false,
+                  );
                   final subtasks = List<Subtask>.from(_task.subtasks!);
                   subtasks[index] = subtask.copyWith(
                     title: titleController.text.trim(),
@@ -956,10 +981,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppConstant.primaryBlue,
               ),
-              child: Text(
-                'Save',
-                style: TextStyle(color: Colors.white),
-              ),
+              child: Text('Save', style: TextStyle(color: Colors.white)),
             ),
           ],
         );
@@ -1002,10 +1024,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppConstant.errorRed,
             ),
-            child: Text(
-              'Delete',
-              style: TextStyle(color: Colors.white),
-            ),
+            child: Text('Delete', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -1016,7 +1035,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     final assigneeIds = _task.assignedUserIds ?? [];
     final userState = Provider.of<UserState>(context, listen: false);
     final currentUserId = userState.currentUser?.id.toString() ?? '';
-    
+
     if (assigneeIds.isEmpty && _task.assignedToUserId != null) {
       // Fallback to single assignee
       return [_buildAvatar(_task.assignedToUsername ?? 'U', 0, false)];
@@ -1031,31 +1050,39 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
       final index = entry.key;
       final userId = entry.value;
       final isCurrentUser = userId == currentUserId;
-      
+
       // Get user initials - try to get from user state, otherwise use generic
       String initials;
       if (isCurrentUser) {
         final user = userState.currentUser;
         if (user?.fullName != null && user!.fullName!.isNotEmpty) {
-          final nameParts = user.fullName!.split(' ').where((p) => p.isNotEmpty).toList();
-          if (nameParts.length >= 2 && nameParts[0].isNotEmpty && nameParts[1].isNotEmpty) {
-            initials = nameParts[0].substring(0, 1).toUpperCase() + 
-                      nameParts[1].substring(0, 1).toUpperCase();
+          final nameParts = user.fullName!
+              .split(' ')
+              .where((p) => p.isNotEmpty)
+              .toList();
+          if (nameParts.length >= 2 &&
+              nameParts[0].isNotEmpty &&
+              nameParts[1].isNotEmpty) {
+            initials =
+                nameParts[0].substring(0, 1).toUpperCase() +
+                nameParts[1].substring(0, 1).toUpperCase();
           } else if (nameParts.isNotEmpty && nameParts[0].isNotEmpty) {
             initials = nameParts[0].substring(0, 1).toUpperCase();
           } else {
             initials = 'ME';
           }
-        } else if (user?.username != null && user!.username!.isNotEmpty) {
-          initials = user.username!.substring(0, 1).toUpperCase();
+        } else if (user?.username != null && user!.username.isNotEmpty) {
+          initials = user.username.substring(0, 1).toUpperCase();
         } else {
           initials = 'ME';
         }
       } else {
         // For other users, show first letter of user ID
-        initials = userId.isNotEmpty ? userId.substring(0, 1).toUpperCase() : 'U';
+        initials = userId.isNotEmpty
+            ? userId.substring(0, 1).toUpperCase()
+            : 'U';
       }
-      
+
       return _buildAvatar(initials, index, isCurrentUser);
     }).toList();
   }

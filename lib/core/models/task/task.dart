@@ -2,18 +2,10 @@ class Subtask {
   final String id;
   final String title;
   final bool isCompleted;
-  
-  Subtask({
-    required this.id,
-    required this.title,
-    this.isCompleted = false,
-  });
-  
-  Subtask copyWith({
-    String? id,
-    String? title,
-    bool? isCompleted,
-  }) {
+
+  Subtask({required this.id, required this.title, this.isCompleted = false});
+
+  Subtask copyWith({String? id, String? title, bool? isCompleted}) {
     return Subtask(
       id: id ?? this.id,
       title: title ?? this.title,
@@ -28,7 +20,8 @@ class Task {
   final String? description;
   final String status;
   final String priority;
-  final String? category; // e.g., 'design', 'dev', 'marketing', 'research', 'bug'
+  final String?
+  category; // e.g., 'design', 'dev', 'marketing', 'research', 'bug'
   final String? assignedToUserId;
   final String? assignedToUsername;
   final List<String>? assignedUserIds; // Multiple assignees
@@ -64,13 +57,13 @@ class Task {
     this.projectName,
     this.tags,
     this.attachments,
-    this.subtasks,
+    this.subtasks = const [],
     this.remindMe,
     this.progress = 0,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   Task copyWith({
     String? id,
@@ -125,25 +118,25 @@ class Task {
   bool get isCompleted => status == 'completed';
   bool get isInProgress => status == 'in_progress';
   bool get isPending => status == 'pending';
-  
+
   bool get isHighPriority => priority == 'high';
   bool get isMediumPriority => priority == 'medium';
   bool get isLowPriority => priority == 'low';
-  
+
   bool get isOverdue {
     if (dueDate == null || isCompleted) return false;
     return DateTime.now().isAfter(dueDate!);
   }
-  
+
   int get subtasksCompleted {
     if (subtasks == null || subtasks!.isEmpty) return 0;
     return subtasks!.where((s) => s.isCompleted).length;
   }
-  
+
   int get subtasksTotal {
     return subtasks?.length ?? 0;
   }
-  
+
   double get subtasksProgress {
     if (subtasksTotal == 0) return 0;
     return subtasksCompleted / subtasksTotal;
