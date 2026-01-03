@@ -787,12 +787,20 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
       onTap: () {
         final taskState = Provider.of<TaskState>(context, listen: false);
         setState(() {
-          // If marking as completed, also complete all subtasks
+          // Handle subtask completion based on task status change
           List<Subtask>? updatedSubtasks;
-          if (status == 'completed' && _task.subtasks != null) {
-            updatedSubtasks = _task.subtasks!.map((subtask) {
-              return subtask.copyWith(isCompleted: true);
-            }).toList();
+          if (_task.subtasks != null && _task.subtasks!.isNotEmpty) {
+            if (status == 'completed') {
+              // Mark all subtasks as completed when task is completed
+              updatedSubtasks = _task.subtasks!.map((subtask) {
+                return subtask.copyWith(isCompleted: true);
+              }).toList();
+            } else if (_task.status == 'completed' && status != 'completed') {
+              // When changing from completed to other status, unmark subtasks
+              updatedSubtasks = _task.subtasks!.map((subtask) {
+                return subtask.copyWith(isCompleted: false);
+              }).toList();
+            }
           }
 
           _task = _task.copyWith(
