@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
+import 'package:task_flow/core/constants/task_constants.dart';
 
 /// Reusable widget for status picker
 class StatusPicker extends StatelessWidget {
@@ -16,11 +17,11 @@ class StatusPicker extends StatelessWidget {
 
   Color _getStatusColor(String status) {
     switch (status) {
-      case 'completed':
+      case TaskConstants.statusCompleted:
         return AppConstant.successGreen;
-      case 'in_progress':
+      case TaskConstants.statusInProgress:
         return AppConstant.primaryBlue;
-      case 'pending':
+      case TaskConstants.statusPending:
         return AppConstant.textSecondary;
       default:
         return AppConstant.textSecondary;
@@ -29,11 +30,11 @@ class StatusPicker extends StatelessWidget {
 
   String _getStatusLabel(String status) {
     switch (status) {
-      case 'completed':
+      case TaskConstants.statusCompleted:
         return 'Completed';
-      case 'in_progress':
+      case TaskConstants.statusInProgress:
         return 'In Progress';
-      case 'pending':
+      case TaskConstants.statusPending:
         return 'Pending';
       default:
         return status;
@@ -42,11 +43,11 @@ class StatusPicker extends StatelessWidget {
 
   IconData _getStatusIcon(String status) {
     switch (status) {
-      case 'completed':
+      case TaskConstants.statusCompleted:
         return Icons.check_circle;
-      case 'in_progress':
+      case TaskConstants.statusInProgress:
         return Icons.play_circle;
-      case 'pending':
+      case TaskConstants.statusPending:
         return Icons.circle_outlined;
       default:
         return Icons.circle_outlined;
@@ -92,9 +93,9 @@ class StatusPicker extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: AppConstant.spacing16),
-                      _buildStatusOption(context, 'pending'),
-                      _buildStatusOption(context, 'in_progress'),
-                      _buildStatusOption(context, 'completed'),
+                      _buildStatusOption(context, TaskConstants.statusPending),
+                      _buildStatusOption(context, TaskConstants.statusInProgress),
+                      _buildStatusOption(context, TaskConstants.statusCompleted),
                       SizedBox(height: AppConstant.spacing16),
                     ],
                   ),

@@ -4,6 +4,7 @@ import 'package:task_flow/app_state/task_state/task_state.dart';
 import 'package:task_flow/app_state/team_state/team_state.dart';
 import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
+import 'package:task_flow/core/constants/task_constants.dart';
 import 'package:task_flow/core/models/models.dart';
 import 'package:task_flow/core/utils/app_modal_util.dart';
 import 'package:intl/intl.dart';
@@ -22,7 +23,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
 
-  String _selectedPriority = 'medium';
+  String _selectedPriority = TaskConstants.priorityMedium;
   String? _selectedCategory;
   DateTime? _selectedDueDate;
   bool _remindMe = false;
@@ -156,7 +157,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
         teamId: _selectedTeam?.id,
         teamName: _selectedTeam?.name,
         assignedUserIds: _selectedAssignees.isEmpty ? null : _selectedAssignees,
-        status: widget.task?.status ?? 'pending',
+        status: widget.task?.status ?? TaskConstants.statusPending,
         progress: widget.task?.progress ?? 0,
         tags: widget.task?.tags,
         attachments: widget.task?.attachments,
@@ -510,13 +511,13 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                     SizedBox(height: AppConstant.spacing16),
                     Row(
                       children: [
-                        Expanded(child: _buildPriorityButton('Low', 'low')),
+                        Expanded(child: _buildPriorityButton('Low', TaskConstants.priorityLow)),
                         SizedBox(width: AppConstant.spacing12),
                         Expanded(
-                          child: _buildPriorityButton('Medium', 'medium'),
+                          child: _buildPriorityButton('Medium', TaskConstants.priorityMedium),
                         ),
                         SizedBox(width: AppConstant.spacing12),
-                        Expanded(child: _buildPriorityButton('High', 'high')),
+                        Expanded(child: _buildPriorityButton('High', TaskConstants.priorityHigh)),
                       ],
                     ),
                   ],
@@ -814,13 +815,13 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
     Color color;
 
     switch (value) {
-      case 'high':
+      case TaskConstants.priorityHigh:
         color = AppConstant.errorRed;
         break;
-      case 'medium':
+      case TaskConstants.priorityMedium:
         color = AppConstant.primaryBlue;
         break;
-      case 'low':
+      case TaskConstants.priorityLow:
         color = AppConstant.successGreen;
         break;
       default:

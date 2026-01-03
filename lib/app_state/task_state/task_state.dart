@@ -95,7 +95,11 @@ class TaskState extends ChangeNotifier {
           return a.isCompleted ? 1 : -1;
         }
         // Then by priority
-        final priorityOrder = {'high': 0, 'medium': 1, 'low': 2};
+        final priorityOrder = {
+          TaskConstants.priorityHigh: 0,
+          TaskConstants.priorityMedium: 1,
+          TaskConstants.priorityLow: 2
+        };
         final priorityCompare = (priorityOrder[a.priority] ?? 3).compareTo(
           priorityOrder[b.priority] ?? 3,
         );
@@ -127,7 +131,11 @@ class TaskState extends ChangeNotifier {
   List<Task> get focusTasks {
     return _tasks.where((task) => !task.isCompleted).toList()..sort((a, b) {
       // First sort by priority
-      final priorityOrder = {'high': 0, 'medium': 1, 'low': 2};
+      final priorityOrder = {
+        TaskConstants.priorityHigh: 0,
+        TaskConstants.priorityMedium: 1,
+        TaskConstants.priorityLow: 2
+      };
       final priorityCompare = (priorityOrder[a.priority] ?? 3).compareTo(
         priorityOrder[b.priority] ?? 3,
       );
@@ -245,7 +253,11 @@ class TaskState extends ChangeNotifier {
           if (b.dueDate == null) return -1;
           return a.dueDate!.compareTo(b.dueDate!);
         case TaskConstants.sortByPriority:
-          final priorityOrder = {'high': 0, 'medium': 1, 'low': 2};
+          final priorityOrder = {
+            TaskConstants.priorityHigh: 0,
+            TaskConstants.priorityMedium: 1,
+            TaskConstants.priorityLow: 2
+          };
           return (priorityOrder[a.priority] ?? 3).compareTo(
             priorityOrder[b.priority] ?? 3,
           );

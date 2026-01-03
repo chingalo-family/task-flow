@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/task_state/task_state.dart';
 import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
+import 'package:task_flow/core/constants/task_constants.dart';
 import 'package:task_flow/core/models/models.dart';
 import 'package:task_flow/core/utils/app_modal_util.dart';
 import 'package:task_flow/modules/tasks/pages/add_edit_task_page.dart';
@@ -802,12 +803,13 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
           // Handle subtask completion based on task status change
           List<Subtask>? updatedSubtasks;
           if (_task.subtasks != null && _task.subtasks!.isNotEmpty) {
-            if (status == 'completed') {
+            if (status == TaskConstants.statusCompleted) {
               // Mark all subtasks as completed when task is completed
               updatedSubtasks = _task.subtasks!.map((subtask) {
                 return subtask.copyWith(isCompleted: true);
               }).toList();
-            } else if (_task.status == 'completed' && status != 'completed') {
+            } else if (_task.status == TaskConstants.statusCompleted && 
+                       status != TaskConstants.statusCompleted) {
               // When changing from completed to other status, unmark subtasks
               updatedSubtasks = _task.subtasks!.map((subtask) {
                 return subtask.copyWith(isCompleted: false);
@@ -817,8 +819,8 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
           _task = _task.copyWith(
             status: status,
-            completedAt: status == 'completed' ? DateTime.now() : null,
-            progress: status == 'completed' ? 100 : _task.progress,
+            completedAt: status == TaskConstants.statusCompleted ? DateTime.now() : null,
+            progress: status == TaskConstants.statusCompleted ? 100 : _task.progress,
             subtasks: updatedSubtasks ?? _task.subtasks,
           );
           taskState.updateTask(_task);

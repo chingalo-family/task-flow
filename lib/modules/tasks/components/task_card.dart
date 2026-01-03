@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/task_state/task_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
+import 'package:task_flow/core/constants/task_constants.dart';
 import 'package:task_flow/core/models/models.dart';
 import 'package:task_flow/modules/tasks/pages/task_detail_page.dart';
 
@@ -87,7 +88,7 @@ class TaskCard extends StatelessWidget {
                               fontSize: 10,
                             ),
                           ),
-                          if (task.priority == 'high') ...[
+                          if (task.priority == TaskConstants.priorityHigh) ...[
                             SizedBox(width: AppConstant.spacing8),
                             Text(
                               '• High Priority',

@@ -1,3 +1,5 @@
+import 'package:task_flow/core/constants/task_constants.dart';
+
 class Subtask {
   final String id;
   final String title;
@@ -115,13 +117,13 @@ class Task {
     );
   }
 
-  bool get isCompleted => status == 'completed';
-  bool get isInProgress => status == 'in_progress';
-  bool get isPending => status == 'pending';
+  bool get isCompleted => status == TaskConstants.statusCompleted;
+  bool get isInProgress => status == TaskConstants.statusInProgress;
+  bool get isPending => status == TaskConstants.statusPending;
 
-  bool get isHighPriority => priority == 'high';
-  bool get isMediumPriority => priority == 'medium';
-  bool get isLowPriority => priority == 'low';
+  bool get isHighPriority => priority == TaskConstants.priorityHigh;
+  bool get isMediumPriority => priority == TaskConstants.priorityMedium;
+  bool get isLowPriority => priority == TaskConstants.priorityLow;
 
   bool get isOverdue {
     if (dueDate == null || isCompleted) return false;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
+import 'package:task_flow/core/constants/task_constants.dart';
 import 'package:intl/intl.dart';
 
 /// Utility class for task-related helper functions
@@ -42,12 +43,12 @@ class TaskUtils {
   /// Gets color based on task status
   static Color getStatusColor(String status) {
     switch (status.toLowerCase()) {
-      case 'completed':
+      case TaskConstants.statusCompleted:
         return AppConstant.successGreen;
-      case 'in_progress':
+      case TaskConstants.statusInProgress:
       case 'in progress':
         return AppConstant.primaryBlue;
-      case 'pending':
+      case TaskConstants.statusPending:
         return AppConstant.textSecondary;
       default:
         return AppConstant.textSecondary;
@@ -57,11 +58,11 @@ class TaskUtils {
   /// Gets human-readable status label
   static String getStatusLabel(String status) {
     switch (status.toLowerCase()) {
-      case 'completed':
+      case TaskConstants.statusCompleted:
         return 'Completed';
-      case 'in_progress':
+      case TaskConstants.statusInProgress:
         return 'In Progress';
-      case 'pending':
+      case TaskConstants.statusPending:
         return 'Pending';
       default:
         return status;
@@ -71,11 +72,11 @@ class TaskUtils {
   /// Gets color based on task priority
   static Color getPriorityColor(String priority) {
     switch (priority.toLowerCase()) {
-      case 'high':
+      case TaskConstants.priorityHigh:
         return AppConstant.errorRed;
-      case 'medium':
+      case TaskConstants.priorityMedium:
         return AppConstant.warningYellow;
-      case 'low':
+      case TaskConstants.priorityLow:
         return AppConstant.successGreen;
       default:
         return AppConstant.textSecondary;
@@ -85,11 +86,11 @@ class TaskUtils {
   /// Gets human-readable priority label
   static String getPriorityLabel(String priority) {
     switch (priority.toLowerCase()) {
-      case 'high':
+      case TaskConstants.priorityHigh:
         return 'High';
-      case 'medium':
+      case TaskConstants.priorityMedium:
         return 'Medium';
-      case 'low':
+      case TaskConstants.priorityLow:
         return 'Low';
       default:
         return priority;

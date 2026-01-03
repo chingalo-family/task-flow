@@ -4,6 +4,7 @@ import 'package:task_flow/app_state/team_state/team_state.dart';
 import 'package:task_flow/app_state/user_list_state/user_list_state.dart';
 import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
+import 'package:task_flow/core/constants/task_constants.dart';
 import 'package:task_flow/core/models/models.dart';
 import 'package:task_flow/core/utils/app_modal_util.dart';
 import 'package:intl/intl.dart';
@@ -446,27 +447,27 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
                     Expanded(
                       child: _PriorityButton(
                         label: 'Low',
-                        isSelected: widget.selectedPriority == 'low',
+                        isSelected: widget.selectedPriority == TaskConstants.priorityLow,
                         color: AppConstant.successGreen,
-                        onTap: () => widget.onPriorityChanged('low'),
+                        onTap: () => widget.onPriorityChanged(TaskConstants.priorityLow),
                       ),
                     ),
                     SizedBox(width: AppConstant.spacing12),
                     Expanded(
                       child: _PriorityButton(
                         label: 'Medium',
-                        isSelected: widget.selectedPriority == 'medium',
+                        isSelected: widget.selectedPriority == TaskConstants.priorityMedium,
                         color: Colors.orange,
-                        onTap: () => widget.onPriorityChanged('medium'),
+                        onTap: () => widget.onPriorityChanged(TaskConstants.priorityMedium),
                       ),
                     ),
                     SizedBox(width: AppConstant.spacing12),
                     Expanded(
                       child: _PriorityButton(
                         label: 'High',
-                        isSelected: widget.selectedPriority == 'high',
+                        isSelected: widget.selectedPriority == TaskConstants.priorityHigh,
                         color: Colors.red,
-                        onTap: () => widget.onPriorityChanged('high'),
+                        onTap: () => widget.onPriorityChanged(TaskConstants.priorityHigh),
                       ),
                     ),
                   ],
