@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:task_flow/core/models/notification/notification.dart';
 import 'package:task_flow/core/offline_db/notification_offline_provider/notification_offline_provider.dart';
 import 'package:task_flow/core/utils/utils.dart';
@@ -30,7 +31,7 @@ class NotificationService {
       await _offline.addOrUpdateNotification(notificationToSave);
       return notificationToSave;
     } catch (e) {
-      print('Error creating notification: $e');
+      debugPrint('Error creating notification: $e');
       return null;
     }
   }
@@ -40,7 +41,7 @@ class NotificationService {
     try {
       return await _offline.getNotificationById(id);
     } catch (e) {
-      print('Error getting notification by ID: $e');
+      debugPrint('Error getting notification by ID: $e');
       return null;
     }
   }
@@ -57,7 +58,7 @@ class NotificationService {
       });
       return notifications;
     } catch (e) {
-      print('Error getting all notifications: $e');
+      debugPrint('Error getting all notifications: $e');
       return [];
     }
   }
@@ -68,7 +69,7 @@ class NotificationService {
       await _offline.addOrUpdateNotification(notification);
       return true;
     } catch (e) {
-      print('Error updating notification: $e');
+      debugPrint('Error updating notification: $e');
       return false;
     }
   }
@@ -79,7 +80,7 @@ class NotificationService {
       await _offline.deleteNotification(id);
       return true;
     } catch (e) {
-      print('Error deleting notification: $e');
+      debugPrint('Error deleting notification: $e');
       return false;
     }
   }
@@ -92,7 +93,7 @@ class NotificationService {
           .where((notification) => !(notification.isRead))
           .toList();
     } catch (e) {
-      print('Error getting unread notifications: $e');
+      debugPrint('Error getting unread notifications: $e');
       return [];
     }
   }
@@ -105,7 +106,7 @@ class NotificationService {
           .where((notification) => notification.type == type)
           .toList();
     } catch (e) {
-      print('Error getting notifications by type: $e');
+      debugPrint('Error getting notifications by type: $e');
       return [];
     }
   }
@@ -121,7 +122,7 @@ class NotificationService {
           )
           .toList();
     } catch (e) {
-      print('Error getting unread notifications by type: $e');
+      debugPrint('Error getting unread notifications by type: $e');
       return [];
     }
   }
@@ -135,7 +136,7 @@ class NotificationService {
       final updatedNotification = notification.copyWith(isRead: true);
       return await updateNotification(updatedNotification);
     } catch (e) {
-      print('Error marking notification as read: $e');
+      debugPrint('Error marking notification as read: $e');
       return false;
     }
   }
@@ -151,7 +152,7 @@ class NotificationService {
       }
       return true;
     } catch (e) {
-      print('Error marking all notifications as read: $e');
+      debugPrint('Error marking all notifications as read: $e');
       return false;
     }
   }
@@ -162,7 +163,7 @@ class NotificationService {
       await _offline.deleteAllNotifications();
       return true;
     } catch (e) {
-      print('Error deleting all notifications: $e');
+      debugPrint('Error deleting all notifications: $e');
       return false;
     }
   }
@@ -173,7 +174,7 @@ class NotificationService {
       final unread = await getUnreadNotifications();
       return unread.length;
     } catch (e) {
-      print('Error getting unread count: $e');
+      debugPrint('Error getting unread count: $e');
       return 0;
     }
   }

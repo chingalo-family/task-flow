@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:task_flow/core/entities/task_entity.dart';
 import 'package:task_flow/core/models/task/task.dart';
 import 'package:task_flow/core/services/db_service.dart';
@@ -12,23 +13,26 @@ class TaskOfflineProvider {
   static final TaskOfflineProvider _instance = TaskOfflineProvider._();
   factory TaskOfflineProvider() => _instance;
 
-  final _dbService = DbService();
-
   /// Add or update task in database
   Future<void> addOrUpdateTask(Task task) async {
     try {
-      final store = await _dbService.getObjectBoxStore();
-      final box = store.box<TaskEntity>();
+      await DBService().init();
+      final box = DBService().taskBox;
+      if (box == null) return;
 
       // Convert Task model to TaskEntity
       final entity = TaskEntityMapper.toEntity(task);
 
-      // Check if task already exists
-      final existingQuery = box
-          .query(TaskEntity_.apiTaskId.equals(task.id))
-          .build();
-      final existing = existingQuery.findFirst();
-      existingQuery.close();
+      // Check if task already exists by iterating through all tasks
+      // (This is a temporary solution until ObjectBox code generation is run)
+      final allEntities = box.getAll();
+      TaskEntity? existing;
+      for (var e in allEntities) {
+        if (e.apiTaskId == task.id) {
+          existing = e;
+          break;
+        }
+      }
 
       if (existing != null) {
         // Update existing task
@@ -38,7 +42,7 @@ class TaskOfflineProvider {
       // Save to database
       box.put(entity);
     } catch (e) {
-      print('Error adding/updating task: $e');
+      debugPrint('Error adding/updating task: $e');
       rethrow;
     }
   }
@@ -46,20 +50,22 @@ class TaskOfflineProvider {
   /// Get task by API task ID
   Future<Task?> getTaskById(String apiTaskId) async {
     try {
-      final store = await _dbService.getObjectBoxStore();
-      final box = store.box<TaskEntity>();
+      await DBService().init();
+      final box = DBService().taskBox;
+      if (box == null) return null;
 
-      final query = box
-          .query(TaskEntity_.apiTaskId.equals(apiTaskId))
-          .build();
-      final entity = query.findFirst();
-      query.close();
+      // Find task by iterating through all tasks
+      // (This is a temporary solution until ObjectBox code generation is run)
+      final allEntities = box.getAll();
+      for (var entity in allEntities) {
+        if (entity.apiTaskId == apiTaskId) {
+          return TaskEntityMapper.fromEntity(entity);
+        }
+      }
 
-      if (entity == null) return null;
-
-      return TaskEntityMapper.fromEntity(entity);
+      return null;
     } catch (e) {
-      print('Error getting task by ID: $e');
+      debugPrint('Error getting task by ID: $e');
       return null;
     }
   }
@@ -67,8 +73,9 @@ class TaskOfflineProvider {
   /// Get all tasks
   Future<List<Task>> getAllTasks() async {
     try {
-      final store = await _dbService.getObjectBoxStore();
-      final box = store.box<TaskEntity>();
+      await DBService().init();
+      final box = DBService().taskBox;
+      if (box == null) return [];
 
       final entities = box.getAll();
 
@@ -76,7 +83,7 @@ class TaskOfflineProvider {
           .map((entity) => TaskEntityMapper.fromEntity(entity))
           .toList();
     } catch (e) {
-      print('Error getting all tasks: $e');
+      debugPrint('Error getting all tasks: $e');
       return [];
     }
   }
@@ -84,20 +91,21 @@ class TaskOfflineProvider {
   /// Delete task by API task ID
   Future<void> deleteTask(String apiTaskId) async {
     try {
-      final store = await _dbService.getObjectBoxStore();
-      final box = store.box<TaskEntity>();
+      await DBService().init();
+      final box = DBService().taskBox;
+      if (box == null) return;
 
-      final query = box
-          .query(TaskEntity_.apiTaskId.equals(apiTaskId))
-          .build();
-      final entity = query.findFirst();
-      query.close();
-
-      if (entity != null) {
-        box.remove(entity.id);
+      // Find and delete task by iterating through all tasks
+      // (This is a temporary solution until ObjectBox code generation is run)
+      final allEntities = box.getAll();
+      for (var entity in allEntities) {
+        if (entity.apiTaskId == apiTaskId) {
+          box.remove(entity.id);
+          break;
+        }
       }
     } catch (e) {
-      print('Error deleting task: $e');
+      debugPrint('Error deleting task: $e');
       rethrow;
     }
   }
@@ -105,11 +113,13 @@ class TaskOfflineProvider {
   /// Delete all tasks
   Future<void> deleteAllTasks() async {
     try {
-      final store = await _dbService.getObjectBoxStore();
-      final box = store.box<TaskEntity>();
+      await DBService().init();
+      final box = DBService().taskBox;
+      if (box == null) return;
+      
       box.removeAll();
     } catch (e) {
-      print('Error deleting all tasks: $e');
+      debugPrint('Error deleting all tasks: $e');
       rethrow;
     }
   }
@@ -117,11 +127,13 @@ class TaskOfflineProvider {
   /// Get tasks count
   Future<int> getTasksCount() async {
     try {
-      final store = await _dbService.getObjectBoxStore();
-      final box = store.box<TaskEntity>();
+      await DBService().init();
+      final box = DBService().taskBox;
+      if (box == null) return 0;
+      
       return box.count();
     } catch (e) {
-      print('Error getting tasks count: $e');
+      debugPrint('Error getting tasks count: $e');
       return 0;
     }
   }

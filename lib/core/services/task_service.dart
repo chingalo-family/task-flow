@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:task_flow/core/constants/task_constants.dart';
 import 'package:task_flow/core/models/task/task.dart';
 import 'package:task_flow/core/offline_db/task_offline_provider/task_offline_provider.dart';
@@ -28,7 +29,7 @@ class TaskService {
       await _offline.addOrUpdateTask(task);
       return task;
     } catch (e) {
-      print('Error creating task: $e');
+      debugPrint('Error creating task: $e');
       return null;
     }
   }
@@ -38,7 +39,7 @@ class TaskService {
     try {
       return await _offline.getTaskById(id);
     } catch (e) {
-      print('Error getting task by ID: $e');
+      debugPrint('Error getting task by ID: $e');
       return null;
     }
   }
@@ -48,7 +49,7 @@ class TaskService {
     try {
       return await _offline.getAllTasks();
     } catch (e) {
-      print('Error getting all tasks: $e');
+      debugPrint('Error getting all tasks: $e');
       return [];
     }
   }
@@ -59,7 +60,7 @@ class TaskService {
       await _offline.addOrUpdateTask(task);
       return true;
     } catch (e) {
-      print('Error updating task: $e');
+      debugPrint('Error updating task: $e');
       return false;
     }
   }
@@ -70,7 +71,7 @@ class TaskService {
       await _offline.deleteTask(id);
       return true;
     } catch (e) {
-      print('Error deleting task: $e');
+      debugPrint('Error deleting task: $e');
       return false;
     }
   }
@@ -81,7 +82,7 @@ class TaskService {
       final allTasks = await getAllTasks();
       return allTasks.where((task) => task.status == status).toList();
     } catch (e) {
-      print('Error getting tasks by status: $e');
+      debugPrint('Error getting tasks by status: $e');
       return [];
     }
   }
@@ -92,7 +93,7 @@ class TaskService {
       final allTasks = await getAllTasks();
       return allTasks.where((task) => task.priority == priority).toList();
     } catch (e) {
-      print('Error getting tasks by priority: $e');
+      debugPrint('Error getting tasks by priority: $e');
       return [];
     }
   }
@@ -102,12 +103,12 @@ class TaskService {
     try {
       final allTasks = await getAllTasks();
       return allTasks.where((task) {
-        // Check if user is in assignedUserIds or if task is created by user
+        // Check if user is in assignedUserIds or assignedToUserId
         return task.assignedUserIds?.contains(userId) ?? false ||
-            task.createdBy == userId;
+            task.assignedToUserId == userId;
       }).toList();
     } catch (e) {
-      print('Error getting my tasks: $e');
+      debugPrint('Error getting my tasks: $e');
       return [];
     }
   }
@@ -118,7 +119,7 @@ class TaskService {
       final allTasks = await getAllTasks();
       return allTasks.where((task) => task.teamId == teamId).toList();
     } catch (e) {
-      print('Error getting tasks by team: $e');
+      debugPrint('Error getting tasks by team: $e');
       return [];
     }
   }
@@ -131,7 +132,7 @@ class TaskService {
       }
       return true;
     } catch (e) {
-      print('Error deleting tasks: $e');
+      debugPrint('Error deleting tasks: $e');
       return false;
     }
   }
@@ -152,7 +153,7 @@ class TaskService {
 
       return await updateTask(updatedTask);
     } catch (e) {
-      print('Error updating task status: $e');
+      debugPrint('Error updating task status: $e');
       return false;
     }
   }
@@ -178,7 +179,7 @@ class TaskService {
             task.status != TaskConstants.statusCompleted;
       }).toList();
     } catch (e) {
-      print('Error getting overdue tasks: $e');
+      debugPrint('Error getting overdue tasks: $e');
       return [];
     }
   }
@@ -197,7 +198,7 @@ class TaskService {
             task.dueDate!.isBefore(tomorrow);
       }).toList();
     } catch (e) {
-      print('Error getting tasks due today: $e');
+      debugPrint('Error getting tasks due today: $e');
       return [];
     }
   }
@@ -215,7 +216,7 @@ class TaskService {
         return task.dueDate!.isAfter(tomorrow);
       }).toList();
     } catch (e) {
-      print('Error getting upcoming tasks: $e');
+      debugPrint('Error getting upcoming tasks: $e');
       return [];
     }
   }

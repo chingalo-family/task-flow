@@ -1,9 +1,9 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:task_flow/core/entities/notification_entity.dart';
 import 'package:task_flow/core/models/notification/notification.dart';
 import 'package:task_flow/core/services/db_service.dart';
-import 'package:task_flow/objectbox.g.dart';
 
 /// Offline provider for notification persistence
 ///
@@ -15,35 +15,32 @@ class NotificationOfflineProvider {
       NotificationOfflineProvider._();
   factory NotificationOfflineProvider() => _instance;
 
-  final _dbService = DbService();
-
   /// Add or update notification in database
   Future<void> addOrUpdateNotification(Notification notification) async {
     try {
-      final store = await _dbService.getObjectBoxStore();
-      final box = store.box<NotificationEntity>();
+      await DBService().init();
+      final box = DBService().notificationBox;
+      if (box == null) return;
 
       // Convert Notification model to NotificationEntity
       final entity = _toEntity(notification);
 
-      // Check if notification already exists
-      if (notification.id.isNotEmpty) {
-        final existingQuery = box
-            .query(NotificationEntity_.notificationId.equals(notification.id!))
-            .build();
-        final existing = existingQuery.findFirst();
-        existingQuery.close();
-
-        if (existing != null) {
-          // Update existing notification
-          entity.id = existing.id;
+      // Check if notification already exists by iterating through all notifications
+      // (This is a temporary solution until ObjectBox code generation is run)
+      if (notification.id != null && notification.id!.isNotEmpty) {
+        final allEntities = box.getAll();
+        for (var e in allEntities) {
+          if (e.notificationId == notification.id) {
+            entity.id = e.id;
+            break;
+          }
         }
       }
 
       // Save to database
       box.put(entity);
     } catch (e) {
-      print('Error adding/updating notification: $e');
+      debugPrint('Error adding/updating notification: $e');
       rethrow;
     }
   }
@@ -51,22 +48,22 @@ class NotificationOfflineProvider {
   /// Get notification by API notification ID
   Future<Notification?> getNotificationById(String apiNotificationId) async {
     try {
-      final store = await _dbService.getObjectBoxStore();
-      final box = store.box<NotificationEntity>();
+      await DBService().init();
+      final box = DBService().notificationBox;
+      if (box == null) return null;
 
-      final query = box
-          .query(
-            NotificationEntity_.apiNotificationId.equals(apiNotificationId),
-          )
-          .build();
-      final entity = query.findFirst();
-      query.close();
+      // Find notification by iterating through all notifications
+      // (This is a temporary solution until ObjectBox code generation is run)
+      final allEntities = box.getAll();
+      for (var entity in allEntities) {
+        if (entity.notificationId == apiNotificationId) {
+          return _toNotification(entity);
+        }
+      }
 
-      if (entity == null) return null;
-
-      return _toNotification(entity);
+      return null;
     } catch (e) {
-      print('Error getting notification by ID: $e');
+      debugPrint('Error getting notification by ID: $e');
       return null;
     }
   }
@@ -74,14 +71,15 @@ class NotificationOfflineProvider {
   /// Get all notifications
   Future<List<Notification>> getAllNotifications() async {
     try {
-      final store = await _dbService.getObjectBoxStore();
-      final box = store.box<NotificationEntity>();
+      await DBService().init();
+      final box = DBService().notificationBox;
+      if (box == null) return [];
 
       final entities = box.getAll();
 
       return entities.map((entity) => _toNotification(entity)).toList();
     } catch (e) {
-      print('Error getting all notifications: $e');
+      debugPrint('Error getting all notifications: $e');
       return [];
     }
   }
@@ -89,22 +87,21 @@ class NotificationOfflineProvider {
   /// Delete notification by API notification ID
   Future<void> deleteNotification(String apiNotificationId) async {
     try {
-      final store = await _dbService.getObjectBoxStore();
-      final box = store.box<NotificationEntity>();
+      await DBService().init();
+      final box = DBService().notificationBox;
+      if (box == null) return;
 
-      final query = box
-          .query(
-            NotificationEntity_.apiNotificationId.equals(apiNotificationId),
-          )
-          .build();
-      final entity = query.findFirst();
-      query.close();
-
-      if (entity != null) {
-        box.remove(entity.id);
+      // Find and delete notification by iterating through all notifications
+      // (This is a temporary solution until ObjectBox code generation is run)
+      final allEntities = box.getAll();
+      for (var entity in allEntities) {
+        if (entity.notificationId == apiNotificationId) {
+          box.remove(entity.id);
+          break;
+        }
       }
     } catch (e) {
-      print('Error deleting notification: $e');
+      debugPrint('Error deleting notification: $e');
       rethrow;
     }
   }
@@ -112,11 +109,13 @@ class NotificationOfflineProvider {
   /// Delete all notifications
   Future<void> deleteAllNotifications() async {
     try {
-      final store = await _dbService.getObjectBoxStore();
-      final box = store.box<NotificationEntity>();
+      await DBService().init();
+      final box = DBService().notificationBox;
+      if (box == null) return;
+      
       box.removeAll();
     } catch (e) {
-      print('Error deleting all notifications: $e');
+      debugPrint('Error deleting all notifications: $e');
       rethrow;
     }
   }
@@ -124,11 +123,13 @@ class NotificationOfflineProvider {
   /// Get notifications count
   Future<int> getNotificationsCount() async {
     try {
-      final store = await _dbService.getObjectBoxStore();
-      final box = store.box<NotificationEntity>();
+      await DBService().init();
+      final box = DBService().notificationBox;
+      if (box == null) return 0;
+      
       return box.count();
     } catch (e) {
-      print('Error getting notifications count: $e');
+      debugPrint('Error getting notifications count: $e');
       return 0;
     }
   }
@@ -142,7 +143,7 @@ class NotificationOfflineProvider {
           jsonDecode(entity.metadataJson!) as Map,
         );
       } catch (e) {
-        print('Error parsing metadata JSON: $e');
+        debugPrint('Error parsing metadata JSON: $e');
       }
     }
 
@@ -165,7 +166,7 @@ class NotificationOfflineProvider {
       try {
         metadataJson = jsonEncode(notification.metadata);
       } catch (e) {
-        print('Error encoding metadata to JSON: $e');
+        debugPrint('Error encoding metadata to JSON: $e');
       }
     }
 
