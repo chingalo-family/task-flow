@@ -57,7 +57,8 @@ class _TasksPageState extends State<TasksPage> {
               );
             }
 
-            final focusTasks = taskState.focusTasks.take(2).toList();
+            final tasksDueToday = taskState.tasksDueTodayList.take(2).toList();
+            final overdueTasks = taskState.overdueTasks.take(2).toList();
             final upcomingTasks = taskState.upcomingTasks.take(2).toList();
 
             return CustomScrollView(
@@ -193,7 +194,7 @@ class _TasksPageState extends State<TasksPage> {
                                   ),
                                   SizedBox(height: AppConstant.spacing4),
                                   Text(
-                                    '${taskState.completedTasks}/${taskState.totalTasks} tasks completed',
+                                    '${taskState.tasksCompletedToday}/${taskState.tasksDueToday} tasks completed',
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: AppConstant.textSecondary,
@@ -210,9 +211,9 @@ class _TasksPageState extends State<TasksPage> {
                                       width: 60,
                                       height: 60,
                                       child: CircularProgressIndicator(
-                                        value: taskState.totalTasks > 0
-                                            ? taskState.completedTasks /
-                                                  taskState.totalTasks
+                                        value: taskState.tasksDueToday > 0
+                                            ? taskState.tasksCompletedToday /
+                                                  taskState.tasksDueToday
                                             : 0,
                                         strokeWidth: 6,
                                         backgroundColor: AppConstant
@@ -225,7 +226,7 @@ class _TasksPageState extends State<TasksPage> {
                                     ),
                                     Center(
                                       child: Text(
-                                        '${taskState.totalTasks > 0 ? ((taskState.completedTasks / taskState.totalTasks) * 100).toInt() : 0}%',
+                                        '${taskState.tasksDueToday > 0 ? ((taskState.tasksCompletedToday / taskState.tasksDueToday) * 100).toInt() : 0}%',
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
@@ -242,9 +243,9 @@ class _TasksPageState extends State<TasksPage> {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(4),
                             child: LinearProgressIndicator(
-                              value: taskState.totalTasks > 0
-                                  ? taskState.completedTasks /
-                                        taskState.totalTasks
+                              value: taskState.tasksDueToday > 0
+                                  ? taskState.tasksCompletedToday /
+                                        taskState.tasksDueToday
                                   : 0,
                               backgroundColor: AppConstant.textSecondary
                                   .withValues(alpha: 0.2),
@@ -254,59 +255,14 @@ class _TasksPageState extends State<TasksPage> {
                               minHeight: 8,
                             ),
                           ),
-                          SizedBox(height: AppConstant.spacing16),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  _buildTeamAvatar('A', 0),
-                                  _buildTeamAvatar('B', 1),
-                                  Container(
-                                    width: 32,
-                                    height: 32,
-                                    decoration: BoxDecoration(
-                                      color: AppConstant.primaryBlue.withValues(
-                                        alpha: 0.2,
-                                      ),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        '+${taskState.totalTasks > 3 ? taskState.totalTasks - 3 : 3}',
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.bold,
-                                          color: AppConstant.primaryBlue,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  // TODO: Navigate to report
-                                },
-                                child: Text(
-                                  'View Report',
-                                  style: TextStyle(
-                                    color: AppConstant.primaryBlue,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
                         ],
                       ),
                     ),
                   ),
                 ),
 
-                // Focus Today Section
-                if (focusTasks.isNotEmpty) ...[
+                // Focus Today Section (tasks due today)
+                if (tasksDueToday.isNotEmpty) ...[
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(
@@ -331,14 +287,52 @@ class _TasksPageState extends State<TasksPage> {
                     ),
                     sliver: SliverList(
                       delegate: SliverChildBuilderDelegate((context, index) {
-                        final task = focusTasks[index];
+                        final task = tasksDueToday[index];
                         return Padding(
                           padding: EdgeInsets.only(
                             bottom: AppConstant.spacing12,
                           ),
                           child: TaskCard(task: task),
                         );
-                      }, childCount: focusTasks.length),
+                      }, childCount: tasksDueToday.length),
+                    ),
+                  ),
+                ],
+
+                // Overdue Section
+                if (overdueTasks.isNotEmpty) ...[
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        AppConstant.spacing24,
+                        AppConstant.spacing16,
+                        AppConstant.spacing24,
+                        AppConstant.spacing12,
+                      ),
+                      child: Text(
+                        'Overdue',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: AppConstant.errorRed,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppConstant.spacing24,
+                    ),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        final task = overdueTasks[index];
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            bottom: AppConstant.spacing12,
+                          ),
+                          child: TaskCard(task: task),
+                        );
+                      }, childCount: overdueTasks.length),
                     ),
                   ),
                 ],
@@ -385,7 +379,7 @@ class _TasksPageState extends State<TasksPage> {
                 ],
 
                 // Empty state
-                if (focusTasks.isEmpty && upcomingTasks.isEmpty)
+                if (tasksDueToday.isEmpty && overdueTasks.isEmpty && upcomingTasks.isEmpty)
                   SliverFillRemaining(
                     child: Center(
                       child: Column(

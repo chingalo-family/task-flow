@@ -33,6 +33,43 @@ class TaskState extends ChangeNotifier {
       return t.dueDate!.isAfter(today) && t.dueDate!.isBefore(tomorrow);
     }).length;
   }
+  
+  int get tasksCompletedToday {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final tomorrow = today.add(Duration(days: 1));
+
+    return _tasks.where((t) {
+      if (t.completedAt == null) return false;
+      return t.completedAt!.isAfter(today) && t.completedAt!.isBefore(tomorrow);
+    }).length;
+  }
+
+  List<Task> get tasksDueTodayList {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final tomorrow = today.add(Duration(days: 1));
+
+    return _tasks
+        .where((t) {
+          if (t.dueDate == null || t.isCompleted) return false;
+          return t.dueDate!.isAfter(today) && t.dueDate!.isBefore(tomorrow);
+        })
+        .toList()
+      ..sort((a, b) {
+        final priorityOrder = {'high': 0, 'medium': 1, 'low': 2};
+        return (priorityOrder[a.priority] ?? 3)
+            .compareTo(priorityOrder[b.priority] ?? 3);
+      });
+  }
+
+  List<Task> get overdueTasks {
+    final now = DateTime.now();
+    return _tasks
+        .where((t) => !t.isCompleted && t.isOverdue)
+        .toList()
+      ..sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
+  }
 
   List<Task> get focusTasks {
     // Tasks that are in progress or pending, sorted by priority and due date

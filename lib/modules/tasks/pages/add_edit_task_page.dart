@@ -49,6 +49,9 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
     } else {
       // Default category for new task
       _selectedCategory = 'design';
+      // Default due date to today at 11:59 PM
+      final now = DateTime.now();
+      _selectedDueDate = DateTime(now.year, now.month, now.day, 23, 59);
       // Default assign to current user
       WidgetsBinding.instance.addPostFrameCallback((_) {
         final userState = Provider.of<UserState>(context, listen: false);
@@ -258,26 +261,14 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                 ),
 
               // Title field
-              Row(
-                children: [
-                  Icon(
-                    Icons.title,
-                    color: AppConstant.textSecondary.withValues(alpha: 0.6),
-                    size: 28,
-                  ),
-                  SizedBox(width: AppConstant.spacing12),
-                  Expanded(
-                    child: Text(
-                      'What needs to be done?',
-                      style: TextStyle(
-                        color: AppConstant.textSecondary.withValues(alpha: 0.6),
-                        fontSize: 28,
-                        fontWeight: FontWeight.w500,
-                        height: 1.2,
-                      ),
-                    ),
-                  ),
-                ],
+              Text(
+                'What needs to be done?',
+                style: TextStyle(
+                  color: AppConstant.textSecondary.withValues(alpha: 0.6),
+                  fontSize: 28,
+                  fontWeight: FontWeight.w500,
+                  height: 1.2,
+                ),
               ),
               SizedBox(height: AppConstant.spacing8),
               TextFormField(
@@ -290,7 +281,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                     fontSize: 14,
                   ),
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(left: AppConstant.spacing32),
+                  contentPadding: EdgeInsets.zero,
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -534,6 +525,78 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
 
               SizedBox(height: AppConstant.spacing24),
 
+              // Team Selection (optional)
+              Consumer<TeamState>(
+                builder: (context, teamState, _) {
+                  return Container(
+                    padding: EdgeInsets.all(AppConstant.spacing20),
+                    decoration: BoxDecoration(
+                      color: AppConstant.cardBackground,
+                      borderRadius: BorderRadius.circular(
+                        AppConstant.borderRadius12,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            color: AppConstant.successGreen.withValues(
+                              alpha: 0.15,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            Icons.group,
+                            color: AppConstant.successGreen,
+                            size: 24,
+                          ),
+                        ),
+                        SizedBox(width: AppConstant.spacing16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Team',
+                                style: TextStyle(
+                                  color: AppConstant.textPrimary,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              if (_selectedTeam != null)
+                                Text(
+                                  _selectedTeam!.name,
+                                  style: TextStyle(
+                                    color: AppConstant.textSecondary,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            _showTeamPicker(context);
+                          },
+                          child: Text(
+                            _selectedTeam == null ? 'Select' : 'Change',
+                            style: TextStyle(
+                              color: AppConstant.primaryBlue,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+
+              SizedBox(height: AppConstant.spacing24),
+
               // Assign To
               Container(
                 padding: EdgeInsets.all(AppConstant.spacing20),
@@ -675,77 +738,6 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                     ),
                   ],
                 ),
-              ),
-
-              // Team Selection (optional)
-              SizedBox(height: AppConstant.spacing24),
-              Consumer<TeamState>(
-                builder: (context, teamState, _) {
-                  return Container(
-                    padding: EdgeInsets.all(AppConstant.spacing20),
-                    decoration: BoxDecoration(
-                      color: AppConstant.cardBackground,
-                      borderRadius: BorderRadius.circular(
-                        AppConstant.borderRadius12,
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 48,
-                          height: 48,
-                          decoration: BoxDecoration(
-                            color: AppConstant.successGreen.withValues(
-                              alpha: 0.15,
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Icon(
-                            Icons.group,
-                            color: AppConstant.successGreen,
-                            size: 24,
-                          ),
-                        ),
-                        SizedBox(width: AppConstant.spacing16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Team',
-                                style: TextStyle(
-                                  color: AppConstant.textPrimary,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              if (_selectedTeam != null)
-                                Text(
-                                  _selectedTeam!.name,
-                                  style: TextStyle(
-                                    color: AppConstant.textSecondary,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            _showTeamPicker(context);
-                          },
-                          child: Text(
-                            _selectedTeam == null ? 'Select' : 'Change',
-                            style: TextStyle(
-                              color: AppConstant.primaryBlue,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
               ),
             ],
           ),
