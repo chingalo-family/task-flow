@@ -6,7 +6,6 @@ import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/components/components.dart';
 import 'package:task_flow/core/utils/utils.dart';
 import 'package:task_flow/modules/login/login_page.dart';
-import 'package:task_flow/modules/settings/components/profile_card.dart';
 import 'package:task_flow/modules/settings/pages/privacy_policy_page.dart';
 import 'package:task_flow/modules/settings/pages/contact_us_page.dart';
 
@@ -231,14 +230,14 @@ class _SettingsPageState extends State<SettingsPage> {
                           width: 40,
                           height: 40,
                           decoration: BoxDecoration(
-                            color: Color(0xFFFF6B9D).withValues(alpha: 0.1),
+                            color: AppConstant.pinkAccent.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(
                               AppConstant.borderRadius8,
                             ),
                           ),
                           child: Icon(
                             Icons.notifications,
-                            color: Color(0xFFFF6B9D),
+                            color: AppConstant.pinkAccent,
                             size: 20,
                           ),
                         ),
@@ -390,7 +389,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       builder: (context, appInfo, _) {
                         return Center(
                           child: Text(
-                            'Version 2.4.0 (Build 392)',
+                            'Version ${appInfo.version} (Build ${appInfo.buildNumber})',
                             style: TextStyle(
                               color: AppConstant.textSecondary.withValues(
                                 alpha: 0.5,
