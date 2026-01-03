@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/task_state/task_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/models/models.dart';
+import 'package:task_flow/modules/tasks/pages/add_edit_task_page.dart';
 import 'package:intl/intl.dart';
 
 class TaskDetailPage extends StatefulWidget {
@@ -82,7 +83,12 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
             color: AppConstant.cardBackground,
             onSelected: (value) {
               if (value == 'edit') {
-                // TODO: Navigate to edit task page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddEditTaskPage(task: _task),
+                  ),
+                );
               } else if (value == 'delete') {
                 taskState.deleteTask(_task.id);
                 Navigator.pop(context);

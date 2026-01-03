@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/modules/tasks/tasks_page.dart';
+import 'package:task_flow/modules/tasks/pages/add_edit_task_page.dart';
 import 'package:task_flow/modules/teams/teams_page.dart';
 import 'package:task_flow/modules/notifications/notifications_page.dart';
 import 'package:task_flow/modules/settings/settings_page.dart';
@@ -51,7 +52,12 @@ class _HomeState extends State<Home> {
                 // Center Create Button
                 GestureDetector(
                   onTap: () {
-                    // TODO: Navigate to create task
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddEditTaskPage(),
+                      ),
+                    );
                   },
                   child: Container(
                     width: 56,

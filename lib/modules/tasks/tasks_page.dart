@@ -4,6 +4,7 @@ import 'package:task_flow/app_state/task_state/task_state.dart';
 import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/modules/tasks/components/task_card.dart';
+import 'package:task_flow/modules/tasks/pages/add_edit_task_page.dart';
 
 class TasksPage extends StatefulWidget {
   const TasksPage({super.key});
@@ -381,7 +382,12 @@ class _TasksPageState extends State<TasksPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // TODO: Navigate to add task page
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddEditTaskPage(),
+            ),
+          );
         },
         backgroundColor: AppConstant.primaryBlue,
         child: Icon(Icons.add, color: Colors.white),
