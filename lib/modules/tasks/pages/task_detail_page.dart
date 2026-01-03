@@ -793,8 +793,9 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
   void _showAddSubtaskDialog() {
     final userState = Provider.of<UserState>(context, listen: false);
-    final currentUserId = userState.currentUser?.id.toString() ?? 'current_user';
-    
+    final currentUserId =
+        userState.currentUser?.id.toString() ?? 'current_user';
+
     // Form controllers and state
     final formKey = GlobalKey<FormState>();
     final titleController = TextEditingController();
@@ -804,11 +805,15 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     final now = DateTime.now();
     DateTime selectedDueDate = DateTime(now.year, now.month, now.day, 23, 59);
     bool remindMe = false;
-    List<String> selectedAssignees = [currentUserId]; // Auto-assign to current user
+    List<String> selectedAssignees = [
+      currentUserId,
+    ]; // Auto-assign to current user
 
     AppModalUtil.showActionSheetModal(
       context: context,
-      child: StatefulBuilder(
+      maxHeightRatio: 0.85,
+      initialHeightRatio: 0.85,
+      actionSheetContainer: StatefulBuilder(
         builder: (context, setState) {
           return Container(
             padding: EdgeInsets.all(AppConstant.spacing24),
@@ -835,7 +840,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                   ],
                 ),
                 SizedBox(height: AppConstant.spacing16),
-                
+
                 // Task Form Fields
                 Expanded(
                   child: SingleChildScrollView(
@@ -849,20 +854,27 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                       remindMe: remindMe,
                       selectedTeam: null, // No team for subtasks
                       selectedAssignees: selectedAssignees,
-                      onPriorityChanged: (value) => setState(() => selectedPriority = value),
-                      onCategoryChanged: (value) => setState(() => selectedCategory = value),
-                      onDueDateChanged: (value) => setState(() => selectedDueDate = value),
-                      onRemindMeChanged: (value) => setState(() => remindMe = value),
+                      onPriorityChanged: (value) =>
+                          setState(() => selectedPriority = value),
+                      onCategoryChanged: (value) =>
+                          setState(() => selectedCategory = value),
+                      onDueDateChanged: (value) =>
+                          setState(() => selectedDueDate = value),
+                      onRemindMeChanged: (value) =>
+                          setState(() => remindMe = value),
                       onTeamChanged: (value) {}, // Not used for subtasks
-                      onAssigneesChanged: (value) => setState(() => selectedAssignees = value),
-                      hideTeamAndAssignee: _task.teamId == null, // Hide if parent task has no team
+                      onAssigneesChanged: (value) =>
+                          setState(() => selectedAssignees = value),
+                      hideTeamAndAssignee:
+                          _task.teamId ==
+                          null, // Hide if parent task has no team
                       isSubtask: true,
                     ),
                   ),
                 ),
-                
+
                 SizedBox(height: AppConstant.spacing24),
-                
+
                 // Save button
                 SizedBox(
                   width: double.infinity,
@@ -873,7 +885,9 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                           context,
                           listen: false,
                         );
-                        final subtasks = List<Subtask>.from(_task.subtasks ?? []);
+                        final subtasks = List<Subtask>.from(
+                          _task.subtasks ?? [],
+                        );
                         subtasks.add(
                           Subtask(
                             id: '${DateTime.now().millisecondsSinceEpoch}_${subtasks.length}',
@@ -917,8 +931,9 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
   void _showEditSubtaskDialog(Subtask subtask, int index) {
     final userState = Provider.of<UserState>(context, listen: false);
-    final currentUserId = userState.currentUser?.id.toString() ?? 'current_user';
-    
+    final currentUserId =
+        userState.currentUser?.id.toString() ?? 'current_user';
+
     // Form controllers and state - pre-fill with subtask data
     final formKey = GlobalKey<FormState>();
     final titleController = TextEditingController(text: subtask.title);
@@ -932,7 +947,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
     AppModalUtil.showActionSheetModal(
       context: context,
-      child: StatefulBuilder(
+      actionSheetContainer: StatefulBuilder(
         builder: (context, setState) {
           return Container(
             padding: EdgeInsets.all(AppConstant.spacing24),
@@ -959,7 +974,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                   ],
                 ),
                 SizedBox(height: AppConstant.spacing16),
-                
+
                 // Task Form Fields
                 Expanded(
                   child: SingleChildScrollView(
@@ -973,20 +988,25 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                       remindMe: remindMe,
                       selectedTeam: null,
                       selectedAssignees: selectedAssignees,
-                      onPriorityChanged: (value) => setState(() => selectedPriority = value),
-                      onCategoryChanged: (value) => setState(() => selectedCategory = value),
-                      onDueDateChanged: (value) => setState(() => selectedDueDate = value),
-                      onRemindMeChanged: (value) => setState(() => remindMe = value),
+                      onPriorityChanged: (value) =>
+                          setState(() => selectedPriority = value),
+                      onCategoryChanged: (value) =>
+                          setState(() => selectedCategory = value),
+                      onDueDateChanged: (value) =>
+                          setState(() => selectedDueDate = value),
+                      onRemindMeChanged: (value) =>
+                          setState(() => remindMe = value),
                       onTeamChanged: (value) {},
-                      onAssigneesChanged: (value) => setState(() => selectedAssignees = value),
+                      onAssigneesChanged: (value) =>
+                          setState(() => selectedAssignees = value),
                       hideTeamAndAssignee: _task.teamId == null,
                       isSubtask: true,
                     ),
                   ),
                 ),
-                
+
                 SizedBox(height: AppConstant.spacing24),
-                
+
                 // Save button
                 SizedBox(
                   width: double.infinity,
@@ -997,7 +1017,9 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                           context,
                           listen: false,
                         );
-                        final subtasks = List<Subtask>.from(_task.subtasks ?? []);
+                        final subtasks = List<Subtask>.from(
+                          _task.subtasks ?? [],
+                        );
                         subtasks[index] = subtask.copyWith(
                           title: titleController.text.trim(),
                         );

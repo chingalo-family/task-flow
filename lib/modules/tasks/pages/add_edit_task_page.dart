@@ -6,7 +6,6 @@ import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/models/models.dart';
 import 'package:task_flow/core/utils/app_modal_util.dart';
-import 'package:task_flow/modules/tasks/components/task_form_fields.dart';
 import 'package:intl/intl.dart';
 
 class AddEditTaskPage extends StatefulWidget {
@@ -43,10 +42,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
       _remindMe = widget.task!.remindMe ?? false;
       _selectedAssignees = widget.task!.assignedUserIds ?? [];
       _selectedTeam = widget.task!.teamId != null
-          ? Team(
-              id: widget.task!.teamId!,
-              name: widget.task!.teamName!,
-            )
+          ? Team(id: widget.task!.teamId!, name: widget.task!.teamName!)
           : null;
     } else {
       // Default category for new task
@@ -57,7 +53,8 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
       // Default assign to current user
       WidgetsBinding.instance.addPostFrameCallback((_) {
         final userState = Provider.of<UserState>(context, listen: false);
-        final currentUserId = userState.currentUser?.id.toString() ?? 'current_user';
+        final currentUserId =
+            userState.currentUser?.id.toString() ?? 'current_user';
         setState(() {
           _selectedAssignees = [currentUserId];
         });
@@ -751,7 +748,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
 
   void _showTeamPicker(BuildContext context) async {
     final teamState = Provider.of<TeamState>(context, listen: false);
-    
+
     await AppModalUtil.showActionSheetModal(
       context: context,
       actionSheetContainer: _TeamPickerContainer(
@@ -767,8 +764,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
           setState(() {
             _selectedTeam = null;
             // Clear assignees except current user
-            final userState =
-                Provider.of<UserState>(context, listen: false);
+            final userState = Provider.of<UserState>(context, listen: false);
             final currentUserId =
                 userState.currentUser?.id.toString() ?? 'current_user';
             _selectedAssignees = [currentUserId];
@@ -786,7 +782,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
 
     final teamState = Provider.of<TeamState>(context, listen: false);
     final team = teamState.getTeamById(_selectedTeam!.id);
-    
+
     if (team == null || team.memberIds == null || team.memberIds!.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -995,8 +991,9 @@ class _TeamPickerContainer extends StatelessWidget {
                     color: isSelected
                         ? AppConstant.primaryBlue
                         : AppConstant.textPrimary,
-                    fontWeight:
-                        isSelected ? FontWeight.bold : FontWeight.normal,
+                    fontWeight: isSelected
+                        ? FontWeight.bold
+                        : FontWeight.normal,
                   ),
                 ),
                 subtitle: team.description != null
@@ -1130,9 +1127,7 @@ class _UserPickerContainerState extends State<_UserPickerContainer> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppConstant.primaryBlue,
-                padding: EdgeInsets.symmetric(
-                  vertical: AppConstant.spacing16,
-                ),
+                padding: EdgeInsets.symmetric(vertical: AppConstant.spacing16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),

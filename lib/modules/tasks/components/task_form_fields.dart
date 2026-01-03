@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/team_state/team_state.dart';
+import 'package:task_flow/app_state/user_list_state/user_list_state.dart';
 import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/models/models.dart';
@@ -116,7 +117,9 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
 
     AppModalUtil.showActionSheetModal(
       context: context,
-      child: _TeamPickerContainer(
+      maxHeightRatio: 0.85,
+      initialHeightRatio: 0.85,
+      actionSheetContainer: _TeamPickerContainer(
         teams: teams,
         selectedTeam: widget.selectedTeam,
         onTeamSelected: (team) {
@@ -155,7 +158,9 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
 
     AppModalUtil.showActionSheetModal(
       context: context,
-      child: _UserPickerContainer(
+      maxHeightRatio: 0.85,
+      initialHeightRatio: 0.85,
+      actionSheetContainer: _UserPickerContainer(
         memberIds: memberIds,
         selectedUserIds: widget.selectedAssignees,
         currentUserId: userState.currentUser?.id.toString() ?? 'current_user',
@@ -170,7 +175,8 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
   @override
   Widget build(BuildContext context) {
     final userState = Provider.of<UserState>(context);
-    final currentUserId = userState.currentUser?.id.toString() ?? 'current_user';
+    final currentUserId =
+        userState.currentUser?.id.toString() ?? 'current_user';
 
     return Form(
       key: widget.formKey,
@@ -211,7 +217,9 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
 
           // Title field
           Text(
-            widget.isSubtask ? 'What is the subtask?' : 'What needs to be done?',
+            widget.isSubtask
+                ? 'What is the subtask?'
+                : 'What needs to be done?',
             style: TextStyle(
               color: AppConstant.textPrimary.withValues(alpha: 0.6),
               fontSize: 28,
@@ -227,21 +235,18 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
             ),
             decoration: BoxDecoration(
               color: AppConstant.cardBackground,
-              borderRadius: BorderRadius.circular(
-                AppConstant.borderRadius12,
-              ),
+              borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
               border: Border.all(
                 color: AppConstant.textSecondary.withValues(alpha: 0.1),
               ),
             ),
             child: TextFormField(
               controller: widget.titleController,
-              style: TextStyle(
-                color: AppConstant.textPrimary,
-                fontSize: 16,
-              ),
+              style: TextStyle(color: AppConstant.textPrimary, fontSize: 16),
               decoration: InputDecoration(
-                hintText: widget.isSubtask ? 'Enter subtask title...' : 'Enter task title...',
+                hintText: widget.isSubtask
+                    ? 'Enter subtask title...'
+                    : 'Enter task title...',
                 hintStyle: TextStyle(
                   color: AppConstant.textSecondary,
                   fontSize: 16,
@@ -268,9 +273,7 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
             ),
             decoration: BoxDecoration(
               color: AppConstant.cardBackground,
-              borderRadius: BorderRadius.circular(
-                AppConstant.borderRadius12,
-              ),
+              borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
               border: Border.all(
                 color: AppConstant.textSecondary.withValues(alpha: 0.1),
               ),
@@ -278,11 +281,7 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.subject,
-                  color: AppConstant.textSecondary,
-                  size: 20,
-                ),
+                Icon(Icons.subject, color: AppConstant.textSecondary, size: 20),
                 SizedBox(width: AppConstant.spacing12),
                 Expanded(
                   child: TextFormField(
@@ -314,9 +313,7 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
             padding: EdgeInsets.all(AppConstant.spacing16),
             decoration: BoxDecoration(
               color: AppConstant.cardBackground,
-              borderRadius: BorderRadius.circular(
-                AppConstant.borderRadius12,
-              ),
+              borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
               border: Border.all(
                 color: AppConstant.textSecondary.withValues(alpha: 0.1),
               ),
@@ -402,7 +399,7 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
                     Switch(
                       value: widget.remindMe,
                       onChanged: widget.onRemindMeChanged,
-                      activeColor: AppConstant.primaryBlue,
+                      activeThumbColor: AppConstant.primaryBlue,
                     ),
                   ],
                 ),
@@ -417,9 +414,7 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
             padding: EdgeInsets.all(AppConstant.spacing16),
             decoration: BoxDecoration(
               color: AppConstant.cardBackground,
-              borderRadius: BorderRadius.circular(
-                AppConstant.borderRadius12,
-              ),
+              borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
               border: Border.all(
                 color: AppConstant.textSecondary.withValues(alpha: 0.1),
               ),
@@ -577,9 +572,11 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
                     if (widget.selectedAssignees.isNotEmpty)
                       Row(
                         children: [
-                          for (int i = 0;
-                              i < widget.selectedAssignees.length && i < 3;
-                              i++)
+                          for (
+                            int i = 0;
+                            i < widget.selectedAssignees.length && i < 3;
+                            i++
+                          )
                             _buildAssigneeAvatar(
                               widget.selectedAssignees[i],
                               currentUserId,
@@ -655,7 +652,9 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
                         border: Border.all(
                           color: isSelected
                               ? category.color
-                              : AppConstant.textSecondary.withValues(alpha: 0.1),
+                              : AppConstant.textSecondary.withValues(
+                                  alpha: 0.1,
+                                ),
                           width: isSelected ? 2 : 1,
                         ),
                       ),
@@ -677,8 +676,9 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
                                   ? category.color
                                   : AppConstant.textSecondary,
                               fontSize: 12,
-                              fontWeight:
-                                  isSelected ? FontWeight.w600 : FontWeight.normal,
+                              fontWeight: isSelected
+                                  ? FontWeight.w600
+                                  : FontWeight.normal,
                             ),
                           ),
                         ],
@@ -695,20 +695,20 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
   }
 
   Widget _buildAssigneeAvatar(String userId, String currentUserId, int index) {
-    final userState = Provider.of<UserState>(context);
-    final user = userState.getUserById(int.tryParse(userId) ?? 0);
+    final userListState = Provider.of<UserListState>(context);
+    final user = userListState.getUserById(userId);
     final isCurrentUser = userId == currentUserId;
 
     String initials;
     if (isCurrentUser) {
       initials = 'ME';
-    } else if (user != null && user.name.isNotEmpty) {
-      initials = user.name.length >= 2
-          ? user.name.substring(0, 2).toUpperCase()
-          : user.name.substring(0, 1).toUpperCase();
+    } else if (user != null && user.fullName!.isNotEmpty) {
+      initials = user.fullName!.length >= 2
+          ? user.fullName!.substring(0, 2).toUpperCase()
+          : user.fullName!.substring(0, 1).toUpperCase();
     } else if (userId.isNotEmpty) {
-      initials = userId.length >= 2 
-          ? userId.substring(0, 2).toUpperCase() 
+      initials = userId.length >= 2
+          ? userId.substring(0, 2).toUpperCase()
           : userId.substring(0, 1).toUpperCase();
     } else {
       initials = '?';
@@ -763,7 +763,9 @@ class _PriorityButton extends StatelessWidget {
               : AppConstant.darkBackground,
           borderRadius: BorderRadius.circular(AppConstant.borderRadius8),
           border: Border.all(
-            color: isSelected ? color : AppConstant.textSecondary.withValues(alpha: 0.1),
+            color: isSelected
+                ? color
+                : AppConstant.textSecondary.withValues(alpha: 0.1),
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -889,7 +891,7 @@ class _UserPickerContainerState extends State<_UserPickerContainer> {
 
   @override
   Widget build(BuildContext context) {
-    final userState = Provider.of<UserState>(context);
+    final userListState = Provider.of<UserListState>(context);
 
     return Container(
       padding: EdgeInsets.all(AppConstant.spacing24),
@@ -913,10 +915,9 @@ class _UserPickerContainerState extends State<_UserPickerContainer> {
             )
           else
             ...widget.memberIds.map((memberId) {
-              final user = userState.getUserById(int.tryParse(memberId) ?? 0);
+              final user = userListState.getUserById(memberId);
               final isCurrentUser = memberId == widget.currentUserId;
               final isSelected = _tempSelectedUsers.contains(memberId);
-
               return CheckboxListTile(
                 value: isSelected,
                 onChanged: (bool? value) {
@@ -931,7 +932,7 @@ class _UserPickerContainerState extends State<_UserPickerContainer> {
                 title: Row(
                   children: [
                     Text(
-                      user?.name ?? 'User $memberId',
+                      user?.fullName ?? 'User $memberId',
                       style: TextStyle(color: AppConstant.textPrimary),
                     ),
                     if (isCurrentUser) ...[
@@ -959,7 +960,7 @@ class _UserPickerContainerState extends State<_UserPickerContainer> {
                 ),
                 activeColor: AppConstant.primaryBlue,
               );
-            }).toList(),
+            }),
           SizedBox(height: AppConstant.spacing16),
           SizedBox(
             width: double.infinity,
