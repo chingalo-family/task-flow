@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/app_info_state/app_info_state.dart';
@@ -51,9 +52,24 @@ class _ContactUsPageState extends State<ContactUsPage> {
       final userState = Provider.of<UserState>(context, listen: false);
       final appInfoState = Provider.of<AppInfoState>(context, listen: false);
       
-      final userEmail = userState.currentUser?.email ?? 'unknown@example.com';
-      final userName = userState.currentUser?.fullName ?? 
-                       userState.currentUser?.username ?? 
+      // Ensure user is authenticated
+      if (userState.currentUser == null) {
+        AppUtil.showToastMessage(
+          message: 'Please log in to send a message',
+        );
+        return;
+      }
+      
+      final userEmail = userState.currentUser!.email ?? '';
+      if (userEmail.isEmpty) {
+        AppUtil.showToastMessage(
+          message: 'Email address not found. Please update your profile.',
+        );
+        return;
+      }
+      
+      final userName = userState.currentUser!.fullName ?? 
+                       userState.currentUser!.username ?? 
                        'User';
 
       // Create HTML email using template
@@ -94,10 +110,18 @@ Sent by: $userName
         AppUtil.showToastMessage(message: 'Message sent successfully!');
         Navigator.pop(context);
       }
-    } catch (e) {
+    } on Exception catch (e) {
+      debugPrint('Failed to send contact form email: $e');
       if (mounted) {
         AppUtil.showToastMessage(
-          message: 'Failed to send message. Please try again.',
+          message: 'Failed to send message. Please check your internet connection and try again.',
+        );
+      }
+    } catch (e) {
+      debugPrint('Unexpected error sending contact form: $e');
+      if (mounted) {
+        AppUtil.showToastMessage(
+          message: 'An unexpected error occurred. Please try again later.',
         );
       }
     } finally {
@@ -218,7 +242,7 @@ Sent by: $userName
                     ),
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 0,
+                      horizontal: 16,
                       vertical: 18,
                     ),
                   ),
