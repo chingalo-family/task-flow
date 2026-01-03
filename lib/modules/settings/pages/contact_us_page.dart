@@ -180,14 +180,16 @@ class _ContactUsPageState extends State<ContactUsPage> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    _buildCategoryChip('Bug Report', Icons.bug_report),
                     SizedBox(width: AppConstant.spacing8),
+                    _buildCategoryChip('General Inquiry', Icons.help_outline),
+                    SizedBox(width: AppConstant.spacing8),
+                    _buildCategoryChip('Feedback', Icons.feedback_outlined),
                     _buildCategoryChip(
                       'Feature Request',
                       Icons.lightbulb_outline,
                     ),
                     SizedBox(width: AppConstant.spacing8),
-                    _buildCategoryChip('General Inquiry', Icons.help_outline),
+                    _buildCategoryChip('Bug Report', Icons.bug_report),
                     SizedBox(width: AppConstant.spacing8),
                     _buildCategoryChip(
                       'Account Issue',
@@ -195,13 +197,10 @@ class _ContactUsPageState extends State<ContactUsPage> {
                     ),
                     SizedBox(width: AppConstant.spacing8),
                     _buildCategoryChip('Billing', Icons.payment),
-                    SizedBox(width: AppConstant.spacing8),
-                    _buildCategoryChip('Feedback', Icons.feedback_outlined),
                   ],
                 ),
               ),
               SizedBox(height: AppConstant.spacing24),
-
               // Subject Field
               ModernInputField(
                 controller: _subjectController,
