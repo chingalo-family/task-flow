@@ -116,7 +116,7 @@ class TaskCard extends StatelessWidget {
                           ),
                           SizedBox(width: AppConstant.spacing8),
                           Text(
-                            '#TSK-${task.id.padLeft(3, '0')}',
+                            '#TSK-${task.id.length <= 3 ? task.id.padLeft(3, '0') : task.id.substring(0, 6)}',
                             style: TextStyle(
                               color: AppConstant.textSecondary,
                               fontSize: 10,

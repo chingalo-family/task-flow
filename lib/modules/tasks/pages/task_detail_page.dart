@@ -155,7 +155,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 ),
                 SizedBox(width: AppConstant.spacing12),
                 Text(
-                  '#TSK-${_task.id.padLeft(3, '0')}',
+                  '#TSK-${_task.id.length <= 3 ? _task.id.padLeft(3, '0') : _task.id.substring(0, 6)}',
                   style: TextStyle(
                     color: AppConstant.textSecondary,
                     fontSize: 14,

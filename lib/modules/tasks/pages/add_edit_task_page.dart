@@ -115,8 +115,19 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
     if (_formKey.currentState!.validate()) {
       final taskState = Provider.of<TaskState>(context, listen: false);
       
+      // Generate a better ID for new tasks
+      String taskId;
+      if (widget.task != null) {
+        taskId = widget.task!.id;
+      } else {
+        // Use milliseconds + random suffix for better uniqueness
+        final timestamp = DateTime.now().millisecondsSinceEpoch;
+        final random = (timestamp % 1000).toString().padLeft(3, '0');
+        taskId = '$timestamp$random';
+      }
+      
       final task = Task(
-        id: widget.task?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
+        id: taskId,
         title: _titleController.text,
         description: _descriptionController.text.isEmpty ? null : _descriptionController.text,
         priority: _selectedPriority,
@@ -250,7 +261,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                   fontSize: 16,
                 ),
                 decoration: InputDecoration(
-                  hintText: 'Add a description...',
+                  hintText: 'Enter task title...',
                   hintStyle: TextStyle(
                     color: AppConstant.textSecondary.withOpacity(0.5),
                     fontSize: 14,
