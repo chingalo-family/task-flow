@@ -195,7 +195,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(3, 636520496469286108),
     name: 'TaskEntity',
-    lastPropertyId: const obx_int.IdUid(18, 7617994320264726487),
+    lastPropertyId: const obx_int.IdUid(24, 3590199673161262875),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -304,6 +304,42 @@ final _entities = <obx_int.ModelEntity>[
         id: const obx_int.IdUid(18, 7617994320264726487),
         name: 'updatedAt',
         type: 10,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(19, 1563129029436451486),
+        name: 'category',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(20, 6796764885512761521),
+        name: 'assignedUserIdsJson',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(21, 1124996016942223540),
+        name: 'teamId',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(22, 4025574684188529509),
+        name: 'teamName',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(23, 8943130831190389910),
+        name: 'subtasksJson',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(24, 3590199673161262875),
+        name: 'remindMe',
+        type: 1,
         flags: 0,
       ),
     ],
@@ -710,7 +746,22 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final attachmentsJsonOffset = object.attachmentsJson == null
             ? null
             : fbb.writeString(object.attachmentsJson!);
-        fbb.startTable(19);
+        final categoryOffset = object.category == null
+            ? null
+            : fbb.writeString(object.category!);
+        final assignedUserIdsJsonOffset = object.assignedUserIdsJson == null
+            ? null
+            : fbb.writeString(object.assignedUserIdsJson!);
+        final teamIdOffset = object.teamId == null
+            ? null
+            : fbb.writeString(object.teamId!);
+        final teamNameOffset = object.teamName == null
+            ? null
+            : fbb.writeString(object.teamName!);
+        final subtasksJsonOffset = object.subtasksJson == null
+            ? null
+            : fbb.writeString(object.subtasksJson!);
+        fbb.startTable(25);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, taskIdOffset);
         fbb.addOffset(2, titleOffset);
@@ -729,6 +780,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
         fbb.addBool(15, object.isSynced);
         fbb.addInt64(16, object.createdAt.millisecondsSinceEpoch);
         fbb.addInt64(17, object.updatedAt.millisecondsSinceEpoch);
+        fbb.addOffset(18, categoryOffset);
+        fbb.addOffset(19, assignedUserIdsJsonOffset);
+        fbb.addOffset(20, teamIdOffset);
+        fbb.addOffset(21, teamNameOffset);
+        fbb.addOffset(22, subtasksJsonOffset);
+        fbb.addBool(23, object.remindMe);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -766,12 +823,24 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final priorityParam = const fb.StringReader(
           asciiOptimization: true,
         ).vTableGet(buffer, rootOffset, 14, '');
+        final categoryParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 40);
         final assignedToUserIdParam = const fb.StringReader(
           asciiOptimization: true,
         ).vTableGetNullable(buffer, rootOffset, 16);
         final assignedToUsernameParam = const fb.StringReader(
           asciiOptimization: true,
         ).vTableGetNullable(buffer, rootOffset, 18);
+        final assignedUserIdsJsonParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 42);
+        final teamIdParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 44);
+        final teamNameParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 46);
         final dueDateParam = dueDateValue == null
             ? null
             : DateTime.fromMillisecondsSinceEpoch(dueDateValue);
@@ -790,6 +859,14 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final attachmentsJsonParam = const fb.StringReader(
           asciiOptimization: true,
         ).vTableGetNullable(buffer, rootOffset, 30);
+        final subtasksJsonParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 48);
+        final remindMeParam = const fb.BoolReader().vTableGetNullable(
+          buffer,
+          rootOffset,
+          50,
+        );
         final progressParam = const fb.Int64Reader().vTableGet(
           buffer,
           rootOffset,
@@ -815,14 +892,20 @@ obx_int.ModelDefinition getObjectBoxModel() {
           description: descriptionParam,
           status: statusParam,
           priority: priorityParam,
+          category: categoryParam,
           assignedToUserId: assignedToUserIdParam,
           assignedToUsername: assignedToUsernameParam,
+          assignedUserIdsJson: assignedUserIdsJsonParam,
+          teamId: teamIdParam,
+          teamName: teamNameParam,
           dueDate: dueDateParam,
           completedAt: completedAtParam,
           projectId: projectIdParam,
           projectName: projectNameParam,
           tagsJson: tagsJsonParam,
           attachmentsJson: attachmentsJsonParam,
+          subtasksJson: subtasksJsonParam,
+          remindMe: remindMeParam,
           progress: progressParam,
           isSynced: isSyncedParam,
           createdAt: createdAtParam,
@@ -1166,6 +1249,36 @@ class TaskEntity_ {
   /// See [TaskEntity.updatedAt].
   static final updatedAt = obx.QueryDateProperty<TaskEntity>(
     _entities[2].properties[17],
+  );
+
+  /// See [TaskEntity.category].
+  static final category = obx.QueryStringProperty<TaskEntity>(
+    _entities[2].properties[18],
+  );
+
+  /// See [TaskEntity.assignedUserIdsJson].
+  static final assignedUserIdsJson = obx.QueryStringProperty<TaskEntity>(
+    _entities[2].properties[19],
+  );
+
+  /// See [TaskEntity.teamId].
+  static final teamId = obx.QueryStringProperty<TaskEntity>(
+    _entities[2].properties[20],
+  );
+
+  /// See [TaskEntity.teamName].
+  static final teamName = obx.QueryStringProperty<TaskEntity>(
+    _entities[2].properties[21],
+  );
+
+  /// See [TaskEntity.subtasksJson].
+  static final subtasksJson = obx.QueryStringProperty<TaskEntity>(
+    _entities[2].properties[22],
+  );
+
+  /// See [TaskEntity.remindMe].
+  static final remindMe = obx.QueryBooleanProperty<TaskEntity>(
+    _entities[2].properties[23],
   );
 }
 
