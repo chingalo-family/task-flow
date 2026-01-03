@@ -14,7 +14,6 @@ class NotificationsPage extends StatefulWidget {
 
 class _NotificationsPageState extends State<NotificationsPage> {
   String selectedFilter = 'All';
-  bool notificationsMuted = false;
 
   @override
   void initState() {
@@ -120,15 +119,17 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       ),
                     IconButton(
                       icon: Icon(
-                        notificationsMuted
-                            ? Icons.notifications_off
-                            : Icons.notifications_none,
-                        color: AppConstant.textSecondary,
+                        notificationState.notificationsEnabled
+                            ? Icons.notifications_active
+                            : Icons.notifications_off,
+                        color: notificationState.notificationsEnabled
+                            ? AppConstant.primaryBlue
+                            : AppConstant.textSecondary,
                       ),
                       onPressed: () {
-                        setState(() {
-                          notificationsMuted = !notificationsMuted;
-                        });
+                        notificationState.setNotificationsEnabled(
+                          !notificationState.notificationsEnabled,
+                        );
                       },
                     ),
                   ],

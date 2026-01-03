@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:task_flow/core/models/models.dart' as app_notif;
+import 'package:task_flow/core/services/preference_service.dart';
 
 class NotificationState extends ChangeNotifier {
   List<app_notif.Notification> _notifications = [];
   bool _loading = false;
+  bool _notificationsEnabled = true;
 
   List<app_notif.Notification> get notifications => _notifications;
   List<app_notif.Notification> get unreadNotifications =>
       _notifications.where((n) => !n.isRead).toList();
   bool get loading => _loading;
+  bool get notificationsEnabled => _notificationsEnabled;
 
   int get totalNotifications => _notifications.length;
   int get unreadCount => unreadNotifications.length;
@@ -17,10 +20,28 @@ class NotificationState extends ChangeNotifier {
     _loading = true;
     notifyListeners();
     
+    // Load notification preference
+    await _loadNotificationPreference();
+    
     // TODO: Load notifications from ObjectBox
     await _loadNotifications();
     
     _loading = false;
+    notifyListeners();
+  }
+
+  Future<void> _loadNotificationPreference() async {
+    try {
+      final enabled = await PreferenceService().getBool('notifications_enabled');
+      _notificationsEnabled = enabled ?? true;
+    } catch (e) {
+      _notificationsEnabled = true;
+    }
+  }
+
+  Future<void> setNotificationsEnabled(bool enabled) async {
+    _notificationsEnabled = enabled;
+    await PreferenceService().setBool('notifications_enabled', enabled);
     notifyListeners();
   }
 

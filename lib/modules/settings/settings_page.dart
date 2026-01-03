@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/app_info_state/app_info_state.dart';
 import 'package:task_flow/app_state/user_state/user_state.dart';
+import 'package:task_flow/app_state/notification_state/notification_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/components/components.dart';
 import 'package:task_flow/core/utils/utils.dart';
 import 'package:task_flow/modules/login/login_page.dart';
 import 'package:task_flow/modules/settings/pages/privacy_policy_page.dart';
 import 'package:task_flow/modules/settings/pages/contact_us_page.dart';
+import 'package:task_flow/modules/settings/components/change_password_form.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -17,8 +19,18 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool notificationsEnabled = true;
   bool offlineAccessEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Load offline access preference
+    _loadOfflineAccessPreference();
+  }
+
+  Future<void> _loadOfflineAccessPreference() async {
+    // TODO: Load from preferences
+  }
 
   Future<void> _handleLogout(BuildContext context) async {
     await DialogUtils.showConfirmationDialog(
@@ -209,7 +221,12 @@ class _SettingsPageState extends State<SettingsPage> {
                       title: 'Change Password',
                       subtitle: 'Last changed 30 days ago',
                       onTap: () {
-                        // TODO: Navigate to change password page
+                        AppModalUtil.showActionSheetModal(
+                          context: context,
+                          actionSheetContainer: const ChangePasswordForm(),
+                          initialHeightRatio: 0.7,
+                          maxHeightRatio: 0.85,
+                        );
                       },
                     ),
 
@@ -225,50 +242,52 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
 
                     // Notifications Toggle
-                    Container(
-                      margin: EdgeInsets.only(bottom: AppConstant.spacing12),
-                      decoration: BoxDecoration(
-                        color: AppConstant.cardBackground,
-                        borderRadius: BorderRadius.circular(
-                          AppConstant.borderRadius12,
-                        ),
-                      ),
-                      child: ListTile(
-                        leading: Container(
-                          width: 40,
-                          height: 40,
+                    Consumer<NotificationState>(
+                      builder: (context, notificationState, _) {
+                        return Container(
+                          margin: EdgeInsets.only(bottom: AppConstant.spacing12),
                           decoration: BoxDecoration(
-                            color: AppConstant.pinkAccent.withValues(
-                              alpha: 0.1,
-                            ),
+                            color: AppConstant.cardBackground,
                             borderRadius: BorderRadius.circular(
-                              AppConstant.borderRadius8,
+                              AppConstant.borderRadius12,
                             ),
                           ),
-                          child: Icon(
-                            Icons.notifications,
-                            color: AppConstant.pinkAccent,
-                            size: 20,
+                          child: ListTile(
+                            leading: Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: AppConstant.pinkAccent.withValues(
+                                  alpha: 0.1,
+                                ),
+                                borderRadius: BorderRadius.circular(
+                                  AppConstant.borderRadius8,
+                                ),
+                              ),
+                              child: Icon(
+                                Icons.notifications,
+                                color: AppConstant.pinkAccent,
+                                size: 20,
+                              ),
+                            ),
+                            title: Text(
+                              'Notifications',
+                              style: TextStyle(
+                                color: AppConstant.textPrimary,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            trailing: Switch(
+                              value: notificationState.notificationsEnabled,
+                              onChanged: (value) {
+                                notificationState.setNotificationsEnabled(value);
+                              },
+                              activeColor: AppConstant.primaryBlue,
+                            ),
                           ),
-                        ),
-                        title: Text(
-                          'Notifications',
-                          style: TextStyle(
-                            color: AppConstant.textPrimary,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        trailing: Switch(
-                          value: notificationsEnabled,
-                          onChanged: (value) {
-                            setState(() {
-                              notificationsEnabled = value;
-                            });
-                          },
-                          activeThumbColor: AppConstant.primaryBlue,
-                        ),
-                      ),
+                        );
+                      },
                     ),
 
                     // Offline Access Toggle

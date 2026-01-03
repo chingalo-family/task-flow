@@ -75,14 +75,17 @@ class _ContactUsPageState extends State<ContactUsPage> {
                 ),
               ),
               SizedBox(height: AppConstant.spacing12),
-              Row(
-                children: [
-                  _buildCategoryChip('Bug Report', Icons.bug_report),
-                  SizedBox(width: AppConstant.spacing8),
-                  _buildCategoryChip('Feature Request', Icons.lightbulb_outline),
-                  SizedBox(width: AppConstant.spacing8),
-                  _buildCategoryChip('Billing', Icons.payment),
-                ],
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    _buildCategoryChip('Bug Report', Icons.bug_report),
+                    SizedBox(width: AppConstant.spacing8),
+                    _buildCategoryChip('Feature Request', Icons.lightbulb_outline),
+                    SizedBox(width: AppConstant.spacing8),
+                    _buildCategoryChip('Billing', Icons.payment),
+                  ],
+                ),
               ),
               SizedBox(height: AppConstant.spacing24),
 
