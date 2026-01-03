@@ -51,15 +51,13 @@ class _ContactUsPageState extends State<ContactUsPage> {
     try {
       final userState = Provider.of<UserState>(context, listen: false);
       final appInfoState = Provider.of<AppInfoState>(context, listen: false);
-      
+
       // Ensure user is authenticated
       if (userState.currentUser == null) {
-        AppUtil.showToastMessage(
-          message: 'Please log in to send a message',
-        );
+        AppUtil.showToastMessage(message: 'Please log in to send a message');
         return;
       }
-      
+
       final userEmail = userState.currentUser!.email ?? '';
       if (userEmail.isEmpty) {
         AppUtil.showToastMessage(
@@ -67,11 +65,8 @@ class _ContactUsPageState extends State<ContactUsPage> {
         );
         return;
       }
-      
-      final userName = userState.currentUser!.fullName ?? 
-                       userState.currentUser!.username ?? 
-                       'User';
-
+      final userName =
+          userState.currentUser!.fullName ?? userState.currentUser!.username;
       // Create HTML email using template
       final htmlBody = EmailTemplates.getContactFormEmail(
         category: selectedCategory,
@@ -83,19 +78,19 @@ class _ContactUsPageState extends State<ContactUsPage> {
       );
 
       // Create plain text version
-      final textBody = '''
-Contact Form Submission
+      final textBody =
+          '''
+          Contact Form Submission
 
-Category: $selectedCategory
-Subject: ${_subjectController.text.trim()}
+          Category: $selectedCategory
+          Subject: ${_subjectController.text.trim()}
 
-Message:
-${_messageController.text.trim()}
+          Message:
+          ${_messageController.text.trim()}
 
-Reply to: $userEmail
-Sent by: $userName
-      ''';
-
+          Reply to: $userEmail
+          Sent by: $userName
+                ''';
       // Send email to admins
       final emailNotification = EmailNotification(
         recipients: EmailConnection.adminEmails,
@@ -114,7 +109,8 @@ Sent by: $userName
       debugPrint('Failed to send contact form email: $e');
       if (mounted) {
         AppUtil.showToastMessage(
-          message: 'Failed to send message. Please check your internet connection and try again.',
+          message:
+              'Failed to send message. Please check your internet connection and try again.',
         );
       }
     } catch (e) {
@@ -186,11 +182,17 @@ Sent by: $userName
                   children: [
                     _buildCategoryChip('Bug Report', Icons.bug_report),
                     SizedBox(width: AppConstant.spacing8),
-                    _buildCategoryChip('Feature Request', Icons.lightbulb_outline),
+                    _buildCategoryChip(
+                      'Feature Request',
+                      Icons.lightbulb_outline,
+                    ),
                     SizedBox(width: AppConstant.spacing8),
                     _buildCategoryChip('General Inquiry', Icons.help_outline),
                     SizedBox(width: AppConstant.spacing8),
-                    _buildCategoryChip('Account Issue', Icons.account_circle_outlined),
+                    _buildCategoryChip(
+                      'Account Issue',
+                      Icons.account_circle_outlined,
+                    ),
                     SizedBox(width: AppConstant.spacing8),
                     _buildCategoryChip('Billing', Icons.payment),
                     SizedBox(width: AppConstant.spacing8),
@@ -212,7 +214,9 @@ Sent by: $userName
               Container(
                 decoration: BoxDecoration(
                   color: AppConstant.cardBackground,
-                  borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                  borderRadius: BorderRadius.circular(
+                    AppConstant.borderRadius12,
+                  ),
                   border: Border.all(
                     color: AppConstant.textSecondary.withValues(alpha: 0.1),
                     width: 1,
@@ -221,7 +225,10 @@ Sent by: $userName
                 child: TextFormField(
                   controller: _messageController,
                   maxLines: 8,
-                  style: TextStyle(color: AppConstant.textPrimary, fontSize: 16),
+                  style: TextStyle(
+                    color: AppConstant.textPrimary,
+                    fontSize: 16,
+                  ),
                   decoration: InputDecoration(
                     hintText: 'Describe your issue or feedback in detail...',
                     hintStyle: TextStyle(
@@ -229,7 +236,11 @@ Sent by: $userName
                       fontSize: 16,
                     ),
                     prefixIcon: Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 12, top: 12),
+                      padding: const EdgeInsets.only(
+                        left: 20,
+                        right: 12,
+                        top: 12,
+                      ),
                       child: Icon(
                         Icons.message_outlined,
                         color: AppConstant.textSecondary,
@@ -266,11 +277,7 @@ Sent by: $userName
                       ),
                     ),
                     SizedBox(width: AppConstant.spacing8),
-                    Icon(
-                      Icons.arrow_forward,
-                      color: Colors.white,
-                      size: 20,
-                    ),
+                    Icon(Icons.arrow_forward, color: Colors.white, size: 20),
                   ],
                 ),
               ),
