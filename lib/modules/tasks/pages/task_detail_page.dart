@@ -93,8 +93,44 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                   ),
                 );
               } else if (value == 'delete') {
-                taskState.deleteTask(_task.id);
-                Navigator.pop(context);
+                // Show confirmation dialog for task deletion
+                showDialog(
+                  context: context,
+                  builder: (dialogContext) => AlertDialog(
+                    backgroundColor: AppConstant.cardBackground,
+                    title: Text(
+                      'Delete Task',
+                      style: TextStyle(color: AppConstant.textPrimary),
+                    ),
+                    content: Text(
+                      'Are you sure you want to delete this task? This will also delete all subtasks associated with it.',
+                      style: TextStyle(color: AppConstant.textSecondary),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(dialogContext),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(color: AppConstant.textSecondary),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          taskState.deleteTask(_task.id);
+                          Navigator.pop(dialogContext); // Close dialog
+                          Navigator.pop(context); // Close task detail page
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppConstant.errorRed,
+                        ),
+                        child: Text(
+                          'Delete',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
               }
             },
             itemBuilder: (context) => [
@@ -213,9 +249,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                       ),
                       SizedBox(height: AppConstant.spacing8),
                       InkWell(
-                        onTap: _task.isCompleted
-                            ? null
-                            : () => _showStatusPicker(context),
+                        onTap: () => _showStatusPicker(context),
                         borderRadius: BorderRadius.circular(8),
                         child: Container(
                           padding: EdgeInsets.symmetric(
@@ -258,12 +292,11 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                                   ),
                                 ],
                               ),
-                              if (!_task.isCompleted)
-                                Icon(
-                                  Icons.keyboard_arrow_down,
-                                  size: 20,
-                                  color: _getStatusColor(_task.status),
-                                ),
+                              Icon(
+                                Icons.keyboard_arrow_down,
+                                size: 20,
+                                color: _getStatusColor(_task.status),
+                              ),
                             ],
                           ),
                         ),
@@ -540,24 +573,26 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                           child: Row(
                             children: [
                               GestureDetector(
-                                onTap: () {
-                                  final taskState = Provider.of<TaskState>(
-                                    context,
-                                    listen: false,
-                                  );
-                                  setState(() {
-                                    final updatedSubtasks = List<Subtask>.from(
-                                      _task.subtasks!,
-                                    );
-                                    updatedSubtasks[index] = subtask.copyWith(
-                                      isCompleted: !subtask.isCompleted,
-                                    );
-                                    _task = _task.copyWith(
-                                      subtasks: updatedSubtasks,
-                                    );
-                                    taskState.updateTask(_task);
-                                  });
-                                },
+                                onTap: _task.isCompleted
+                                    ? null
+                                    : () {
+                                        final taskState = Provider.of<TaskState>(
+                                          context,
+                                          listen: false,
+                                        );
+                                        setState(() {
+                                          final updatedSubtasks = List<Subtask>.from(
+                                            _task.subtasks!,
+                                          );
+                                          updatedSubtasks[index] = subtask.copyWith(
+                                            isCompleted: !subtask.isCompleted,
+                                          );
+                                          _task = _task.copyWith(
+                                            subtasks: updatedSubtasks,
+                                          );
+                                          taskState.updateTask(_task);
+                                        });
+                                      },
                                 child: Container(
                                   width: 24,
                                   height: 24,
@@ -752,10 +787,19 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
       onTap: () {
         final taskState = Provider.of<TaskState>(context, listen: false);
         setState(() {
+          // If marking as completed, also complete all subtasks
+          List<Subtask>? updatedSubtasks;
+          if (status == 'completed' && _task.subtasks != null) {
+            updatedSubtasks = _task.subtasks!.map((subtask) {
+              return subtask.copyWith(isCompleted: true);
+            }).toList();
+          }
+
           _task = _task.copyWith(
             status: status,
             completedAt: status == 'completed' ? DateTime.now() : null,
             progress: status == 'completed' ? 100 : _task.progress,
+            subtasks: updatedSubtasks ?? _task.subtasks,
           );
           taskState.updateTask(_task);
         });
