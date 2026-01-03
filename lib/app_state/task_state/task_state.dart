@@ -22,6 +22,52 @@ class TaskState extends ChangeNotifier {
   int get inProgressTasks => _tasks.where((t) => t.isInProgress).length;
   int get pendingTasks => _tasks.where((t) => t.isPending).length;
   int get overdueTasks => _tasks.where((t) => t.isOverdue).length;
+  
+  int get tasksDueToday {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final tomorrow = today.add(Duration(days: 1));
+    
+    return _tasks.where((t) {
+      if (t.dueDate == null || t.isCompleted) return false;
+      return t.dueDate!.isAfter(today) && t.dueDate!.isBefore(tomorrow);
+    }).length;
+  }
+  
+  List<Task> get focusTasks {
+    // Tasks that are in progress or pending, sorted by priority and due date
+    final now = DateTime.now();
+    return _tasks
+        .where((t) => !t.isCompleted)
+        .toList()
+      ..sort((a, b) {
+        // First sort by priority
+        final priorityOrder = {'high': 0, 'medium': 1, 'low': 2};
+        final priorityCompare = (priorityOrder[a.priority] ?? 3)
+            .compareTo(priorityOrder[b.priority] ?? 3);
+        if (priorityCompare != 0) return priorityCompare;
+        
+        // Then by due date
+        if (a.dueDate == null && b.dueDate == null) return 0;
+        if (a.dueDate == null) return 1;
+        if (b.dueDate == null) return -1;
+        return a.dueDate!.compareTo(b.dueDate!);
+      });
+  }
+  
+  List<Task> get upcomingTasks {
+    final now = DateTime.now();
+    final tomorrow = DateTime(now.year, now.month, now.day).add(Duration(days: 1));
+    
+    return _tasks
+        .where((t) => 
+            !t.isCompleted && 
+            t.dueDate != null && 
+            t.dueDate!.isAfter(tomorrow)
+        )
+        .toList()
+      ..sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
+  }
 
   Future<void> initialize() async {
     _loading = true;
@@ -45,67 +91,81 @@ class TaskState extends ChangeNotifier {
     return [
       Task(
         id: '1',
-        title: 'Complete project proposal',
-        description: 'Finish the Q1 project proposal document',
+        title: 'Implement Auth API',
+        description: 'Build authentication endpoints with JWT tokens',
         status: 'in_progress',
         priority: 'high',
+        category: 'dev',
         dueDate: now.add(Duration(days: 2)),
         progress: 65,
-        tags: ['proposal', 'urgent'],
+        tags: ['backend', 'urgent'],
         teamId: '1',
         teamName: 'Product Team',
         assignedToUserId: 'user2',
         assignedToUsername: 'Jane Smith',
+        assignedUserIds: ['user2'],
       ),
       Task(
         id: '2',
-        title: 'Review team feedback',
+        title: 'Review Design System',
         description: 'Go through all feedback from last sprint',
         status: 'pending',
         priority: 'medium',
+        category: 'design',
         dueDate: now.add(Duration(days: 5)),
         progress: 0,
         tags: ['review'],
-        teamId: '1',
-        teamName: 'Product Team',
-      ),
-      Task(
-        id: '3',
-        title: 'Update documentation',
-        description: 'Update API documentation with new endpoints',
-        status: 'completed',
-        priority: 'low',
-        completedAt: now.subtract(Duration(days: 1)),
-        progress: 100,
-        tags: ['docs'],
         teamId: '2',
         teamName: 'Design Squad',
       ),
       Task(
+        id: '3',
+        title: 'Weekly Team Sync',
+        description: 'Organize weekly sync meeting',
+        status: 'pending',
+        priority: 'low',
+        category: 'meeting',
+        dueDate: now.add(Duration(hours: 26)),
+        progress: 0,
+        tags: ['meeting'],
+        teamId: '1',
+        teamName: 'Product Team',
+      ),
+      Task(
         id: '4',
-        title: 'Fix critical bugs',
+        title: 'Fix Navigation Bug',
         description: 'Address high-priority bugs from issue tracker',
-        status: 'in_progress',
-        priority: 'high',
+        status: 'pending',
+        priority: 'low',
+        category: 'bug',
         dueDate: now.add(Duration(days: 1)),
-        progress: 40,
-        tags: ['bugs', 'urgent'],
+        progress: 0,
+        tags: ['bugs'],
         teamId: '3',
         teamName: 'Engineering',
         assignedToUserId: 'user1',
         assignedToUsername: 'John Doe',
+        assignedUserIds: ['user1'],
       ),
       Task(
         id: '5',
-        title: 'Schedule team meeting',
-        description: 'Organize weekly sync meeting',
-        status: 'pending',
-        priority: 'low',
-        dueDate: now.add(Duration(days: 7)),
-        progress: 0,
-        tags: ['meeting'],
+        title: 'Redesign Landing Page Hero Section',
+        description: 'Update the main hero image and H1 copy to reflect the new Q4 branding guidelines. Ensure the CTA button has the new gradient style and links to the campaign dashboard.',
+        status: 'in_progress',
+        priority: 'medium',
+        category: 'marketing',
+        dueDate: DateTime(2024, 10, 24, 17, 0),
+        progress: 50,
+        tags: ['campaign'],
         teamId: '4',
         teamName: 'Marketing',
+        assignedUserIds: ['user5', 'user6', 'user7'],
+        subtasks: [
+          Subtask(id: 's1', title: 'Review new brand assets', isCompleted: true),
+          Subtask(id: 's2', title: 'Draft new copy', isCompleted: true),
+          Subtask(id: 's3', title: 'Create high-fidelity mockups', isCompleted: false),
+          Subtask(id: 's4', title: 'Get approval from Lead', isCompleted: false),
+        ],
       ),
     ];
   }
