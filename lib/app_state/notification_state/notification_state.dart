@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:task_flow/core/models/models.dart' as app_notif;
+import 'package:task_flow/core/services/preference_service.dart';
 
 class NotificationState extends ChangeNotifier {
   List<app_notif.Notification> _notifications = [];
   bool _loading = false;
+  bool _notificationsEnabled = true;
 
   List<app_notif.Notification> get notifications => _notifications;
   List<app_notif.Notification> get unreadNotifications =>
       _notifications.where((n) => !n.isRead).toList();
   bool get loading => _loading;
+  bool get notificationsEnabled => _notificationsEnabled;
 
   int get totalNotifications => _notifications.length;
   int get unreadCount => unreadNotifications.length;
@@ -17,10 +20,28 @@ class NotificationState extends ChangeNotifier {
     _loading = true;
     notifyListeners();
     
+    // Load notification preference
+    await _loadNotificationPreference();
+    
     // TODO: Load notifications from ObjectBox
     await _loadNotifications();
     
     _loading = false;
+    notifyListeners();
+  }
+
+  Future<void> _loadNotificationPreference() async {
+    try {
+      final enabled = await PreferenceService().getBool('notifications_enabled');
+      _notificationsEnabled = enabled ?? true;
+    } catch (e) {
+      _notificationsEnabled = true;
+    }
+  }
+
+  Future<void> setNotificationsEnabled(bool enabled) async {
+    _notificationsEnabled = enabled;
+    await PreferenceService().setBool('notifications_enabled', enabled);
     notifyListeners();
   }
 
@@ -103,5 +124,39 @@ class NotificationState extends ChangeNotifier {
     _notifications.removeWhere((n) => n.id == notificationId);
     // TODO: Delete from ObjectBox
     notifyListeners();
+  }
+
+  /// Add a new notification to the list
+  /// This is used to dynamically create notifications as events occur
+  Future<void> addNotification(app_notif.Notification notification) async {
+    _notifications.insert(0, notification); // Add to the beginning
+    // TODO: Save to ObjectBox
+    notifyListeners();
+  }
+
+  /// Add multiple notifications at once
+  Future<void> addNotifications(List<app_notif.Notification> notifications) async {
+    _notifications.insertAll(0, notifications);
+    // TODO: Save to ObjectBox
+    notifyListeners();
+  }
+
+  /// Clear all notifications
+  Future<void> clearAllNotifications() async {
+    _notifications.clear();
+    // TODO: Clear from ObjectBox
+    notifyListeners();
+  }
+
+  /// Get notifications by type
+  List<app_notif.Notification> getNotificationsByType(String type) {
+    return _notifications.where((n) => n.type == type).toList();
+  }
+
+  /// Get unread notifications by type
+  List<app_notif.Notification> getUnreadNotificationsByType(String type) {
+    return _notifications
+        .where((n) => n.type == type && !n.isRead)
+        .toList();
   }
 }

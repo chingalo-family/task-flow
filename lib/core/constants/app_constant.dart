@@ -15,6 +15,7 @@ class AppConstant {
   static const Color warningOrange = Color(0xFFF59E0B);
   static const Color warningYellow = Color(0xFFFBBF24);
   static const Color errorRed = Color(0xFFEF4444);
+  static const Color pinkAccent = Color(0xFFFF6B9D);
 
   // Illustration Colors
   static const Color illustrationTeal = Color(0xFF5A7C8C);
