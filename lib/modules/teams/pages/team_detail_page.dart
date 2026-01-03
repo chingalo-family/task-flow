@@ -10,6 +10,7 @@ import 'package:task_flow/core/utils/utils.dart';
 import 'package:task_flow/modules/tasks/components/task_card.dart';
 import 'package:task_flow/modules/teams/dialogs/add_member_dialog.dart';
 import 'package:task_flow/modules/teams/dialogs/add_task_dialog.dart';
+import 'package:task_flow/modules/teams/dialogs/edit_team_dialog.dart';
 import 'package:task_flow/modules/teams/pages/team_settings_page.dart';
 
 class TeamDetailPage extends StatefulWidget {
@@ -91,13 +92,22 @@ class _TeamDetailPageState extends State<TeamDetailPage>
         actions: [
           IconButton(
             icon: Icon(Icons.settings, color: AppConstant.textPrimary),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => TeamSettingsPage(teamId: team.id),
-                ),
+            onPressed: () async {
+              final result = await AppModalUtil.showActionSheetModal(
+                context: context,
+                actionSheetContainer: EditTeamDialog(team: team),
+                maxHeightRatio: 0.95,
+                initialHeightRatio: 0.95,
               );
+
+              if (result == true && mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Team updated successfully'),
+                    backgroundColor: AppConstant.successGreen,
+                  ),
+                );
+              }
             },
           ),
         ],
