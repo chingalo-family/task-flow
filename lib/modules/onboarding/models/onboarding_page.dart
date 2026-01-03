@@ -14,7 +14,13 @@ class OnboardingPage {
   static List<OnboardingPage> getPages() {
     return [
       OnboardingPage(
-        title: 'Manage tasks\nefficiently',
+        title: 'Master Your Day',
+        description:
+            'The modern way to manage tasks and subtasks effortlessly.',
+        icon: 'master',
+      ),
+      OnboardingPage(
+        title: 'Manage tasks efficiently',
         description:
             'Break complex projects into manageable subtasks. Organize your team\'s workflow and stay ahead of deadlines.',
         icon: 'tasks',
@@ -26,16 +32,16 @@ class OnboardingPage {
         icon: 'team',
       ),
       OnboardingPage(
-        title: 'Track Progress',
+        title: 'Offline mode supported',
         description:
-            'Monitor task completion, view analytics, and stay on top of your projects with real-time updates.',
-        icon: 'progress',
+            'Keep working even when your internet isn\'t. Your tasks sync automatically the moment you\'re back online.',
+        icon: 'offline',
       ),
       OnboardingPage(
-        title: 'Master Your Day',
+        title: 'Get Started with TaskFlow',
         description:
-            'The modern way to manage tasks and subtasks effortlessly.',
-        icon: 'master',
+            'Join thousands of teams using TaskFlow to manage tasks effortlessly, online or offline. Let\'s get to work.',
+        icon: 'get_started',
         isLastPage: true,
       ),
     ];
