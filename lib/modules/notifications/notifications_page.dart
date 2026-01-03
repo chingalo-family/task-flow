@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/notification_state/notification_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/models/models.dart' as app_notif;
-import 'package:task_flow/core/components/components.dart';
 import 'package:task_flow/modules/notifications/components/notification_card.dart';
 
 class NotificationsPage extends StatefulWidget {
@@ -213,11 +212,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
                             // Earlier Section
                             if (groupedNotifications['Earlier']!.isNotEmpty) ...[
                               SizedBox(height: AppConstant.spacing16),
-                              SectionHeader(
-                                title: 'Earlier',
-                                padding: EdgeInsets.only(
-                                  left: 0,
-                                  bottom: AppConstant.spacing16,
+                              Padding(
+                                padding: EdgeInsets.only(bottom: AppConstant.spacing16),
+                                child: Text(
+                                  'Earlier',
+                                  style: TextStyle(
+                                    color: AppConstant.textPrimary,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
                               for (var notification in groupedNotifications['Earlier']!)
