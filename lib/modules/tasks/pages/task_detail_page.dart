@@ -947,6 +947,8 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
     AppModalUtil.showActionSheetModal(
       context: context,
+      maxHeightRatio: 0.85,
+      initialHeightRatio: 0.85,
       actionSheetContainer: StatefulBuilder(
         builder: (context, setState) {
           return Container(
