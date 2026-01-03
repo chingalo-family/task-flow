@@ -1,4 +1,4 @@
-import 'package:task_flow/core/models/models.dart' as app_notif;
+import 'package:task_flow/core/models/models.dart' as appNotification;
 
 /// Utility class for creating and managing dynamic notifications
 /// Supports different notification types that can be triggered by various events
@@ -9,7 +9,7 @@ class NotificationUtils {
   }
 
   /// Create a task assigned notification
-  /// 
+  ///
   /// Example usage:
   /// ```dart
   /// final notification = NotificationUtils.createTaskAssignedNotification(
@@ -18,12 +18,12 @@ class NotificationUtils {
   ///   taskId: 'task123',
   /// );
   /// ```
-  static app_notif.Notification createTaskAssignedNotification({
+  static appNotification.Notification createTaskAssignedNotification({
     required String taskTitle,
     required String assignedBy,
     String? taskId,
   }) {
-    return app_notif.Notification(
+    return appNotification.Notification(
       id: _generateId(),
       title: 'New task assigned',
       body: '$assignedBy assigned you to "$taskTitle"',
@@ -37,7 +37,7 @@ class NotificationUtils {
   }
 
   /// Create a task completed notification
-  /// 
+  ///
   /// Example usage:
   /// ```dart
   /// final notification = NotificationUtils.createTaskCompletedNotification(
@@ -46,12 +46,12 @@ class NotificationUtils {
   ///   taskId: 'task456',
   /// );
   /// ```
-  static app_notif.Notification createTaskCompletedNotification({
+  static appNotification.Notification createTaskCompletedNotification({
     required String taskTitle,
     required String completedBy,
     String? taskId,
   }) {
-    return app_notif.Notification(
+    return appNotification.Notification(
       id: _generateId(),
       title: 'Task completed',
       body: '$completedBy marked "$taskTitle" as complete',
@@ -65,7 +65,7 @@ class NotificationUtils {
   }
 
   /// Create a team invitation notification
-  /// 
+  ///
   /// Example usage:
   /// ```dart
   /// final notification = NotificationUtils.createTeamInviteNotification(
@@ -74,12 +74,12 @@ class NotificationUtils {
   ///   teamId: 'team789',
   /// );
   /// ```
-  static app_notif.Notification createTeamInviteNotification({
+  static appNotification.Notification createTeamInviteNotification({
     required String teamName,
     required String invitedBy,
     String? teamId,
   }) {
-    return app_notif.Notification(
+    return appNotification.Notification(
       id: _generateId(),
       title: 'Team invitation',
       body: 'You\'ve been invited to join $teamName',
@@ -93,7 +93,7 @@ class NotificationUtils {
   }
 
   /// Create a mention notification
-  /// 
+  ///
   /// Example usage:
   /// ```dart
   /// final notification = NotificationUtils.createMentionNotification(
@@ -102,13 +102,13 @@ class NotificationUtils {
   ///   entityId: 'comment123',
   /// );
   /// ```
-  static app_notif.Notification createMentionNotification({
+  static appNotification.Notification createMentionNotification({
     required String mentionedBy,
     required String context,
     String? entityId,
     String? preview,
   }) {
-    return app_notif.Notification(
+    return appNotification.Notification(
       id: _generateId(),
       title: 'Mentioned in $context',
       body: preview ?? '$mentionedBy mentioned you in a $context',
@@ -122,7 +122,7 @@ class NotificationUtils {
   }
 
   /// Create a deadline reminder notification
-  /// 
+  ///
   /// Example usage:
   /// ```dart
   /// final notification = NotificationUtils.createDeadlineReminderNotification(
@@ -131,14 +131,14 @@ class NotificationUtils {
   ///   taskId: 'task999',
   /// );
   /// ```
-  static app_notif.Notification createDeadlineReminderNotification({
+  static appNotification.Notification createDeadlineReminderNotification({
     required String taskTitle,
     required DateTime dueDate,
     String? taskId,
   }) {
     final now = DateTime.now();
     final difference = dueDate.difference(now);
-    
+
     String timeText;
     if (difference.inHours < 24) {
       timeText = 'today';
@@ -148,7 +148,7 @@ class NotificationUtils {
       timeText = 'in ${difference.inDays} days';
     }
 
-    return app_notif.Notification(
+    return appNotification.Notification(
       id: _generateId(),
       title: 'Deadline reminder',
       body: '"$taskTitle" is due $timeText',
@@ -161,7 +161,7 @@ class NotificationUtils {
   }
 
   /// Create a task comment notification
-  /// 
+  ///
   /// Example usage:
   /// ```dart
   /// final notification = NotificationUtils.createTaskCommentNotification(
@@ -171,13 +171,13 @@ class NotificationUtils {
   ///   taskId: 'task111',
   /// );
   /// ```
-  static app_notif.Notification createTaskCommentNotification({
+  static appNotification.Notification createTaskCommentNotification({
     required String taskTitle,
     required String commentedBy,
     String? commentPreview,
     String? taskId,
   }) {
-    return app_notif.Notification(
+    return appNotification.Notification(
       id: _generateId(),
       title: '$commentedBy commented',
       body: commentPreview ?? '$commentedBy commented on "$taskTitle"',
@@ -191,7 +191,7 @@ class NotificationUtils {
   }
 
   /// Create a task status change notification
-  /// 
+  ///
   /// Example usage:
   /// ```dart
   /// final notification = NotificationUtils.createTaskStatusChangeNotification(
@@ -201,13 +201,13 @@ class NotificationUtils {
   ///   taskId: 'task222',
   /// );
   /// ```
-  static app_notif.Notification createTaskStatusChangeNotification({
+  static appNotification.Notification createTaskStatusChangeNotification({
     required String taskTitle,
     required String newStatus,
     required String changedBy,
     String? taskId,
   }) {
-    return app_notif.Notification(
+    return appNotification.Notification(
       id: _generateId(),
       title: 'Task status updated',
       body: '$changedBy changed "$taskTitle" to $newStatus',
@@ -221,7 +221,7 @@ class NotificationUtils {
   }
 
   /// Create a system notification
-  /// 
+  ///
   /// Example usage:
   /// ```dart
   /// final notification = NotificationUtils.createSystemNotification(
@@ -229,11 +229,11 @@ class NotificationUtils {
   ///   message: 'Scheduled maintenance on Sunday at 2 AM',
   /// );
   /// ```
-  static app_notif.Notification createSystemNotification({
+  static appNotification.Notification createSystemNotification({
     required String title,
     required String message,
   }) {
-    return app_notif.Notification(
+    return appNotification.Notification(
       id: _generateId(),
       title: title,
       body: message,
@@ -244,7 +244,7 @@ class NotificationUtils {
   }
 
   /// Create a custom notification with any type
-  /// 
+  ///
   /// Example usage:
   /// ```dart
   /// final notification = NotificationUtils.createCustomNotification(
@@ -254,7 +254,7 @@ class NotificationUtils {
   ///   actorUsername: 'User Name',
   /// );
   /// ```
-  static app_notif.Notification createCustomNotification({
+  static appNotification.Notification createCustomNotification({
     required String title,
     required String body,
     required String type,
@@ -262,7 +262,7 @@ class NotificationUtils {
     String? relatedEntityId,
     String? relatedEntityType,
   }) {
-    return app_notif.Notification(
+    return appNotification.Notification(
       id: _generateId(),
       title: title,
       body: body,
@@ -276,7 +276,7 @@ class NotificationUtils {
   }
 
   /// Batch create multiple notifications at once
-  /// 
+  ///
   /// Example usage:
   /// ```dart
   /// final notifications = NotificationUtils.batchCreateNotifications([
@@ -284,8 +284,8 @@ class NotificationUtils {
   ///   () => NotificationUtils.createDeadlineReminderNotification(...),
   /// ]);
   /// ```
-  static List<app_notif.Notification> batchCreateNotifications(
-    List<app_notif.Notification Function()> notificationFactories,
+  static List<appNotification.Notification> batchCreateNotifications(
+    List<appNotification.Notification Function()> notificationFactories,
   ) {
     return notificationFactories.map((factory) => factory()).toList();
   }
