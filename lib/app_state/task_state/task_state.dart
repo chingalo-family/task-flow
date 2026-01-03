@@ -84,8 +84,8 @@ class TaskState extends ChangeNotifier {
 
   Future<void> _loadTasks() async {
     // TODO: Implement ObjectBox loading
-    // For now, create some sample data
-    _tasks = _generateSampleTasks();
+    // Load only tasks assigned to current user
+    _tasks = [];
   }
 
   List<Task> _generateSampleTasks() {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/task_state/task_state.dart';
 import 'package:task_flow/app_state/team_state/team_state.dart';
+import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/models/models.dart';
 import 'package:intl/intl.dart';
@@ -39,9 +40,23 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
       _selectedDueDate = widget.task!.dueDate;
       _remindMe = widget.task!.remindMe ?? false;
       _selectedAssignees = widget.task!.assignedUserIds ?? [];
+      _selectedTeam = widget.task!.teamId != null
+          ? Team(
+              id: widget.task!.teamId!,
+              name: widget.task!.teamName!,
+            )
+          : null;
     } else {
       // Default category for new task
       _selectedCategory = 'design';
+      // Default assign to current user
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final userState = Provider.of<UserState>(context, listen: false);
+        final currentUserId = userState.currentUser?.id.toString() ?? 'current_user';
+        setState(() {
+          _selectedAssignees = [currentUserId];
+        });
+      });
     }
   }
 
@@ -243,14 +258,26 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                 ),
 
               // Title field
-              Text(
-                'What needs to be done?',
-                style: TextStyle(
-                  color: AppConstant.textSecondary.withValues(alpha: 0.6),
-                  fontSize: 28,
-                  fontWeight: FontWeight.w500,
-                  height: 1.2,
-                ),
+              Row(
+                children: [
+                  Icon(
+                    Icons.title,
+                    color: AppConstant.textSecondary.withValues(alpha: 0.6),
+                    size: 28,
+                  ),
+                  SizedBox(width: AppConstant.spacing12),
+                  Expanded(
+                    child: Text(
+                      'What needs to be done?',
+                      style: TextStyle(
+                        color: AppConstant.textSecondary.withValues(alpha: 0.6),
+                        fontSize: 28,
+                        fontWeight: FontWeight.w500,
+                        height: 1.2,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: AppConstant.spacing8),
               TextFormField(
@@ -263,7 +290,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                     fontSize: 14,
                   ),
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.zero,
+                  contentPadding: EdgeInsets.only(left: 40),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -289,23 +316,39 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                     color: AppConstant.textSecondary.withValues(alpha: 0.1),
                   ),
                 ),
-                child: TextFormField(
-                  controller: _descriptionController,
-                  style: TextStyle(
-                    color: AppConstant.textPrimary,
-                    fontSize: 14,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: 'Add more details...',
-                    hintStyle: TextStyle(
-                      color: AppConstant.textSecondary,
-                      fontSize: 14,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 2),
+                      child: Icon(
+                        Icons.subject,
+                        color: AppConstant.textSecondary,
+                        size: 20,
+                      ),
                     ),
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                  maxLines: 3,
-                  keyboardType: TextInputType.multiline,
+                    SizedBox(width: AppConstant.spacing12),
+                    Expanded(
+                      child: TextFormField(
+                        controller: _descriptionController,
+                        style: TextStyle(
+                          color: AppConstant.textPrimary,
+                          fontSize: 14,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'Add more details...',
+                          hintStyle: TextStyle(
+                            color: AppConstant.textSecondary,
+                            fontSize: 14,
+                          ),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.zero,
+                        ),
+                        maxLines: 3,
+                        keyboardType: TextInputType.multiline,
+                      ),
+                    ),
+                  ],
                 ),
               ),
 
@@ -529,43 +572,52 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                     Row(
                       children: [
                         if (_selectedAssignees.isNotEmpty) ...[
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppConstant.primaryBlue,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              'ME',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                          Consumer<UserState>(
+                            builder: (context, userState, _) {
+                              return Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppConstant.primaryBlue,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  'ME',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                           SizedBox(width: 8),
-                          _buildAssigneeAvatar('A', 0),
+                          if (_selectedAssignees.length > 1)
+                            _buildAssigneeAvatar('A', 0),
                         ],
                         SizedBox(width: AppConstant.spacing8),
-                        GestureDetector(
-                          onTap: () {
-                            // TODO: Show assignee picker
-                            setState(() {
-                              if (_selectedAssignees.isEmpty) {
-                                _selectedAssignees = ['user1'];
-                              }
-                            });
-                          },
-                          child: Icon(
+                        if (_selectedTeam != null)
+                          GestureDetector(
+                            onTap: () {
+                              _showUserPicker(context);
+                            },
+                            child: Icon(
+                              Icons.add_circle_outline,
+                              color: AppConstant.primaryBlue,
+                              size: 24,
+                            ),
+                          )
+                        else
+                          Icon(
                             Icons.add_circle_outline,
-                            color: AppConstant.textSecondary,
+                            color: AppConstant.textSecondary.withValues(
+                              alpha: 0.3,
+                            ),
                             size: 24,
                           ),
-                        ),
                       ],
                     ),
                   ],
@@ -680,7 +732,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                         ),
                         TextButton(
                           onPressed: () {
-                            // TODO: Show team picker
+                            _showTeamPicker(context);
                           },
                           child: Text(
                             _selectedTeam == null ? 'Select' : 'Change',
@@ -699,6 +751,248 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showTeamPicker(BuildContext context) {
+    final teamState = Provider.of<TeamState>(context, listen: false);
+    
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppConstant.cardBackground,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: EdgeInsets.all(AppConstant.spacing24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Select Team',
+                style: TextStyle(
+                  color: AppConstant.textPrimary,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: AppConstant.spacing16),
+              if (teamState.teams.isEmpty)
+                Padding(
+                  padding: EdgeInsets.all(AppConstant.spacing24),
+                  child: Text(
+                    'No teams available',
+                    style: TextStyle(
+                      color: AppConstant.textSecondary,
+                      fontSize: 14,
+                    ),
+                  ),
+                )
+              else
+                ...teamState.teams.map((team) {
+                  final isSelected = _selectedTeam?.id == team.id;
+                  return ListTile(
+                    leading: Icon(
+                      Icons.group,
+                      color: isSelected
+                          ? AppConstant.primaryBlue
+                          : AppConstant.textSecondary,
+                    ),
+                    title: Text(
+                      team.name,
+                      style: TextStyle(
+                        color: isSelected
+                            ? AppConstant.primaryBlue
+                            : AppConstant.textPrimary,
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.normal,
+                      ),
+                    ),
+                    subtitle: team.description != null
+                        ? Text(
+                            team.description!,
+                            style: TextStyle(
+                              color: AppConstant.textSecondary,
+                              fontSize: 12,
+                            ),
+                          )
+                        : null,
+                    trailing: isSelected
+                        ? Icon(Icons.check, color: AppConstant.primaryBlue)
+                        : null,
+                    onTap: () {
+                      setState(() {
+                        _selectedTeam = team;
+                      });
+                      Navigator.pop(context);
+                    },
+                  );
+                }),
+              if (_selectedTeam != null) ...[
+                Divider(color: AppConstant.textSecondary.withValues(alpha: 0.2)),
+                ListTile(
+                  leading: Icon(Icons.clear, color: AppConstant.errorRed),
+                  title: Text(
+                    'Clear Selection',
+                    style: TextStyle(color: AppConstant.errorRed),
+                  ),
+                  onTap: () {
+                    setState(() {
+                      _selectedTeam = null;
+                      // Clear assignees except current user
+                      final userState =
+                          Provider.of<UserState>(context, listen: false);
+                      final currentUserId =
+                          userState.currentUser?.id.toString() ?? 'current_user';
+                      _selectedAssignees = [currentUserId];
+                    });
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showUserPicker(BuildContext context) {
+    if (_selectedTeam == null) return;
+
+    final teamState = Provider.of<TeamState>(context, listen: false);
+    final team = teamState.getTeamById(_selectedTeam!.id);
+    
+    if (team == null || team.memberIds == null || team.memberIds!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('No team members available'),
+          backgroundColor: AppConstant.errorRed,
+        ),
+      );
+      return;
+    }
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppConstant.cardBackground,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Container(
+              padding: EdgeInsets.all(AppConstant.spacing24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Select Team Members',
+                    style: TextStyle(
+                      color: AppConstant.textPrimary,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: AppConstant.spacing16),
+                  ...team.memberIds!.map((userId) {
+                    final isSelected = _selectedAssignees.contains(userId);
+                    final userState =
+                        Provider.of<UserState>(context, listen: false);
+                    final isCurrentUser =
+                        userId == userState.currentUser?.id.toString();
+
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: isSelected
+                            ? AppConstant.primaryBlue
+                            : AppConstant.textSecondary.withValues(alpha: 0.3),
+                        child: Text(
+                          'U${userId.length > 4 ? userId.substring(userId.length - 1) : userId}',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      title: Text(
+                        isCurrentUser
+                            ? '${userState.currentUser?.fullName ?? userState.currentUser?.username ?? "User"} (Me)'
+                            : 'User $userId',
+                        style: TextStyle(
+                          color: AppConstant.textPrimary,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                        ),
+                      ),
+                      trailing: Checkbox(
+                        value: isSelected,
+                        onChanged: (value) {
+                          setModalState(() {
+                            setState(() {
+                              if (value == true) {
+                                if (!_selectedAssignees.contains(userId)) {
+                                  _selectedAssignees.add(userId);
+                                }
+                              } else {
+                                _selectedAssignees.remove(userId);
+                              }
+                            });
+                          });
+                        },
+                        activeColor: AppConstant.primaryBlue,
+                      ),
+                      onTap: () {
+                        setModalState(() {
+                          setState(() {
+                            if (_selectedAssignees.contains(userId)) {
+                              _selectedAssignees.remove(userId);
+                            } else {
+                              _selectedAssignees.add(userId);
+                            }
+                          });
+                        });
+                      },
+                    );
+                  }),
+                  SizedBox(height: AppConstant.spacing16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppConstant.primaryBlue,
+                        padding: EdgeInsets.symmetric(
+                          vertical: AppConstant.spacing16,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: Text(
+                        'Done',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 

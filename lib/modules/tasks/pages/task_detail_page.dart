@@ -95,19 +95,20 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               }
             },
             itemBuilder: (context) => [
-              PopupMenuItem(
-                value: 'edit',
-                child: Row(
-                  children: [
-                    Icon(Icons.edit, size: 20, color: AppConstant.textPrimary),
-                    SizedBox(width: AppConstant.spacing8),
-                    Text(
-                      'Edit',
-                      style: TextStyle(color: AppConstant.textPrimary),
-                    ),
-                  ],
+              if (!_task.isCompleted)
+                PopupMenuItem(
+                  value: 'edit',
+                  child: Row(
+                    children: [
+                      Icon(Icons.edit, size: 20, color: AppConstant.textPrimary),
+                      SizedBox(width: AppConstant.spacing8),
+                      Text(
+                        'Edit',
+                        style: TextStyle(color: AppConstant.textPrimary),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
               PopupMenuItem(
                 value: 'delete',
                 child: Row(
@@ -204,53 +205,58 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                         ),
                       ),
                       SizedBox(height: AppConstant.spacing8),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: AppConstant.spacing16,
-                          vertical: AppConstant.spacing12,
-                        ),
-                        decoration: BoxDecoration(
-                          color: _getStatusColor(
-                            _task.status,
-                          ).withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
+                      InkWell(
+                        onTap: _task.isCompleted ? null : () => _showStatusPicker(context),
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppConstant.spacing16,
+                            vertical: AppConstant.spacing12,
+                          ),
+                          decoration: BoxDecoration(
                             color: _getStatusColor(
                               _task.status,
-                            ).withValues(alpha: 0.3),
+                            ).withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: _getStatusColor(
+                                _task.status,
+                              ).withValues(alpha: 0.3),
+                            ),
                           ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    _task.isCompleted
+                                        ? Icons.check_circle
+                                        : _task.isInProgress
+                                        ? Icons.play_circle
+                                        : Icons.radio_button_unchecked,
+                                    size: 20,
+                                    color: _getStatusColor(_task.status),
+                                  ),
+                                  SizedBox(width: AppConstant.spacing8),
+                                  Text(
+                                    _getStatusLabel(_task.status),
+                                    style: TextStyle(
+                                      color: _getStatusColor(_task.status),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              if (!_task.isCompleted)
                                 Icon(
-                                  _task.isCompleted
-                                      ? Icons.check_circle
-                                      : _task.isInProgress
-                                      ? Icons.play_circle
-                                      : Icons.radio_button_unchecked,
+                                  Icons.keyboard_arrow_down,
                                   size: 20,
                                   color: _getStatusColor(_task.status),
                                 ),
-                                SizedBox(width: AppConstant.spacing8),
-                                Text(
-                                  _getStatusLabel(_task.status),
-                                  style: TextStyle(
-                                    color: _getStatusColor(_task.status),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Icon(
-                              Icons.keyboard_arrow_down,
-                              size: 20,
-                              color: _getStatusColor(_task.status),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -274,40 +280,50 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                         ),
                       ),
                       SizedBox(height: AppConstant.spacing8),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: AppConstant.spacing12,
-                          vertical: AppConstant.spacing12,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppConstant.cardBackground,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: AppConstant.textSecondary.withValues(
-                              alpha: 0.2,
-                            ),
+                      InkWell(
+                        onTap: _task.isCompleted ? null : () => _selectDueDate(),
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppConstant.spacing12,
+                            vertical: AppConstant.spacing12,
                           ),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.calendar_today,
-                              size: 16,
-                              color: AppConstant.textPrimary,
-                            ),
-                            SizedBox(width: AppConstant.spacing8),
-                            Expanded(
-                              child: Text(
-                                _formatDate(_task.dueDate),
-                                style: TextStyle(
-                                  color: AppConstant.textPrimary,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                overflow: TextOverflow.ellipsis,
+                          decoration: BoxDecoration(
+                            color: AppConstant.cardBackground,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: AppConstant.textSecondary.withValues(
+                                alpha: 0.2,
                               ),
                             ),
-                          ],
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.calendar_today,
+                                size: 16,
+                                color: AppConstant.textPrimary,
+                              ),
+                              SizedBox(width: AppConstant.spacing8),
+                              Expanded(
+                                child: Text(
+                                  _formatDate(_task.dueDate),
+                                  style: TextStyle(
+                                    color: AppConstant.textPrimary,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              if (!_task.isCompleted)
+                                Icon(
+                                  Icons.edit,
+                                  size: 14,
+                                  color: AppConstant.textSecondary,
+                                ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -493,29 +509,30 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                       ),
                     ),
                     SizedBox(height: AppConstant.spacing8),
-                    GestureDetector(
-                      onTap: () {
-                        // TODO: Add new subtask
-                      },
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.add,
-                            size: 20,
-                            color: AppConstant.primaryBlue,
-                          ),
-                          SizedBox(width: AppConstant.spacing8),
-                          Text(
-                            'Add Subtask',
-                            style: TextStyle(
+                    if (!_task.isCompleted)
+                      GestureDetector(
+                        onTap: () {
+                          _showAddSubtaskDialog();
+                        },
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.add,
+                              size: 20,
                               color: AppConstant.primaryBlue,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
                             ),
-                          ),
-                        ],
+                            SizedBox(width: AppConstant.spacing8),
+                            Text(
+                              'Add Subtask',
+                              style: TextStyle(
+                                color: AppConstant.primaryBlue,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),
@@ -523,6 +540,226 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showStatusPicker(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppConstant.cardBackground,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: EdgeInsets.all(AppConstant.spacing24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Update Status',
+                style: TextStyle(
+                  color: AppConstant.textPrimary,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: AppConstant.spacing16),
+              _buildStatusOption('pending', 'Pending', Icons.radio_button_unchecked),
+              _buildStatusOption('in_progress', 'In Progress', Icons.play_circle),
+              _buildStatusOption('completed', 'Completed', Icons.check_circle),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildStatusOption(String status, String label, IconData icon) {
+    final isSelected = _task.status == status;
+    final color = _getStatusColor(status);
+    
+    return ListTile(
+      leading: Icon(icon, color: color),
+      title: Text(
+        label,
+        style: TextStyle(
+          color: isSelected ? color : AppConstant.textPrimary,
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      trailing: isSelected ? Icon(Icons.check, color: color) : null,
+      onTap: () {
+        final taskState = Provider.of<TaskState>(context, listen: false);
+        setState(() {
+          _task = _task.copyWith(
+            status: status,
+            completedAt: status == 'completed' ? DateTime.now() : null,
+            progress: status == 'completed' ? 100 : _task.progress,
+          );
+          taskState.updateTask(_task);
+        });
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  Future<void> _selectDueDate() async {
+    final date = await showDatePicker(
+      context: context,
+      initialDate: _task.dueDate ?? DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 365)),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: AppConstant.primaryBlue,
+              onPrimary: Colors.white,
+              surface: AppConstant.cardBackground,
+              onSurface: AppConstant.textPrimary,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (date != null) {
+      final time = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: ColorScheme.dark(
+                primary: AppConstant.primaryBlue,
+                onPrimary: Colors.white,
+                surface: AppConstant.cardBackground,
+                onSurface: AppConstant.textPrimary,
+              ),
+            ),
+            child: child!,
+          );
+        },
+      );
+
+      if (time != null) {
+        final taskState = Provider.of<TaskState>(context, listen: false);
+        setState(() {
+          _task = _task.copyWith(
+            dueDate: DateTime(
+              date.year,
+              date.month,
+              date.day,
+              time.hour,
+              time.minute,
+            ),
+          );
+          taskState.updateTask(_task);
+        });
+      }
+    }
+  }
+
+  void _showAddSubtaskDialog() {
+    final titleController = TextEditingController();
+    
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: AppConstant.cardBackground,
+          title: Text(
+            'Add Subtask',
+            style: TextStyle(color: AppConstant.textPrimary),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppConstant.spacing16,
+                  vertical: AppConstant.spacing12,
+                ),
+                decoration: BoxDecoration(
+                  color: AppConstant.darkBackground,
+                  borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                  border: Border.all(
+                    color: AppConstant.textSecondary.withValues(alpha: 0.1),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.subdirectory_arrow_right,
+                      color: AppConstant.textSecondary,
+                      size: 20,
+                    ),
+                    SizedBox(width: AppConstant.spacing12),
+                    Expanded(
+                      child: TextField(
+                        controller: titleController,
+                        style: TextStyle(
+                          color: AppConstant.textPrimary,
+                          fontSize: 14,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'Enter subtask title...',
+                          hintStyle: TextStyle(
+                            color: AppConstant.textSecondary,
+                            fontSize: 14,
+                          ),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.zero,
+                        ),
+                        autofocus: true,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: AppConstant.textSecondary),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (titleController.text.trim().isNotEmpty) {
+                  final taskState = Provider.of<TaskState>(context, listen: false);
+                  final subtasks = List<Subtask>.from(_task.subtasks ?? []);
+                  subtasks.add(
+                    Subtask(
+                      id: DateTime.now().millisecondsSinceEpoch.toString(),
+                      title: titleController.text.trim(),
+                      isCompleted: false,
+                    ),
+                  );
+                  setState(() {
+                    _task = _task.copyWith(subtasks: subtasks);
+                    taskState.updateTask(_task);
+                  });
+                  Navigator.pop(context);
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppConstant.primaryBlue,
+              ),
+              child: Text(
+                'Add',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
