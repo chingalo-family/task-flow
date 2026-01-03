@@ -11,7 +11,7 @@ class OnboardingIllustration extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final isTablet = size.shortestSide >= 600;
     final maxWidth = isTablet ? 500.0 : size.width;
-    
+
     return Center(
       child: Container(
         constraints: BoxConstraints(maxWidth: maxWidth),
@@ -45,7 +45,7 @@ class OnboardingIllustration extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final isTablet = size.shortestSide >= 600;
     final scaleFactor = isTablet ? 1.3 : 1.0;
-    
+
     return Container(
       decoration: BoxDecoration(
         color: AppConstant.cardBackground,
@@ -58,7 +58,11 @@ class OnboardingIllustration extends StatelessWidget {
           // Folder icon with progress
           Row(
             children: [
-              Icon(Icons.folder, color: AppConstant.primaryBlue, size: 40 * scaleFactor),
+              Icon(
+                Icons.folder,
+                color: AppConstant.primaryBlue,
+                size: 40 * scaleFactor,
+              ),
               SizedBox(width: AppConstant.spacing16 * scaleFactor),
               Expanded(
                 child: Column(
@@ -115,7 +119,11 @@ class OnboardingIllustration extends StatelessWidget {
                 color: AppConstant.primaryBlue,
                 borderRadius: BorderRadius.circular(16 * scaleFactor),
               ),
-              child: Icon(Icons.add, color: Colors.white, size: 24 * scaleFactor),
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
+                size: 24 * scaleFactor,
+              ),
             ),
           ),
         ],
@@ -123,14 +131,20 @@ class OnboardingIllustration extends StatelessWidget {
     );
   }
 
-  Widget _buildTaskItem(bool checked, {bool hasProgress = false, double scaleFactor = 1.0}) {
+  Widget _buildTaskItem(
+    bool checked, {
+    bool hasProgress = false,
+    double scaleFactor = 1.0,
+  }) {
     return Container(
       padding: EdgeInsets.all(AppConstant.spacing16 * scaleFactor),
       decoration: BoxDecoration(
         color: checked
             ? AppConstant.primaryBlue.withValues(alpha: 0.1)
             : Colors.black.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(AppConstant.borderRadius12 * scaleFactor),
+        borderRadius: BorderRadius.circular(
+          AppConstant.borderRadius12 * scaleFactor,
+        ),
         border: Border.all(
           color: checked
               ? AppConstant.primaryBlue.withValues(alpha: 0.3)
@@ -178,7 +192,9 @@ class OnboardingIllustration extends StatelessWidget {
                           height: 4 * scaleFactor,
                           decoration: BoxDecoration(
                             color: AppConstant.primaryBlue,
-                            borderRadius: BorderRadius.circular(2 * scaleFactor),
+                            borderRadius: BorderRadius.circular(
+                              2 * scaleFactor,
+                            ),
                           ),
                         ),
                       ),
@@ -188,7 +204,9 @@ class OnboardingIllustration extends StatelessWidget {
                           height: 4 * scaleFactor,
                           decoration: BoxDecoration(
                             color: Colors.white.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(2 * scaleFactor),
+                            borderRadius: BorderRadius.circular(
+                              2 * scaleFactor,
+                            ),
                           ),
                         ),
                       ),
@@ -207,7 +225,7 @@ class OnboardingIllustration extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final isTablet = size.shortestSide >= 600;
     final scaleFactor = isTablet ? 1.3 : 1.0;
-    
+
     return Container(
       decoration: BoxDecoration(
         color: AppConstant.cardBackground,
@@ -219,7 +237,11 @@ class OnboardingIllustration extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.people, color: AppConstant.primaryBlue, size: 32 * scaleFactor),
+              Icon(
+                Icons.people,
+                color: AppConstant.primaryBlue,
+                size: 32 * scaleFactor,
+              ),
               SizedBox(width: AppConstant.spacing12 * scaleFactor),
               Expanded(
                 child: Container(
@@ -237,7 +259,9 @@ class OnboardingIllustration extends StatelessWidget {
             padding: EdgeInsets.all(AppConstant.spacing16 * scaleFactor),
             decoration: BoxDecoration(
               color: Colors.black.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(AppConstant.borderRadius12 * scaleFactor),
+              borderRadius: BorderRadius.circular(
+                AppConstant.borderRadius12 * scaleFactor,
+              ),
             ),
             child: Column(
               children: [
@@ -275,7 +299,9 @@ class OnboardingIllustration extends StatelessWidget {
             padding: EdgeInsets.all(AppConstant.spacing12 * scaleFactor),
             decoration: BoxDecoration(
               color: Colors.black.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(AppConstant.borderRadius12 * scaleFactor),
+              borderRadius: BorderRadius.circular(
+                AppConstant.borderRadius12 * scaleFactor,
+              ),
             ),
             child: Row(
               children: [
@@ -325,7 +351,11 @@ class OnboardingIllustration extends StatelessWidget {
                     color: Colors.green.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12 * scaleFactor),
                   ),
-                  child: Icon(Icons.chat_bubble, color: Colors.green, size: 24 * scaleFactor),
+                  child: Icon(
+                    Icons.chat_bubble,
+                    color: Colors.green,
+                    size: 24 * scaleFactor,
+                  ),
                 ),
               ),
             ],
@@ -335,7 +365,11 @@ class OnboardingIllustration extends StatelessWidget {
     );
   }
 
-  Widget _buildAvatar(String initials, Color color, [double scaleFactor = 1.0]) {
+  Widget _buildAvatar(
+    String initials,
+    Color color, [
+    double scaleFactor = 1.0,
+  ]) {
     return Container(
       width: 36 * scaleFactor,
       height: 36 * scaleFactor,
@@ -357,7 +391,7 @@ class OnboardingIllustration extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final isTablet = size.shortestSide >= 600;
     final scaleFactor = isTablet ? 1.3 : 1.0;
-    
+
     return Container(
       decoration: BoxDecoration(
         color: AppConstant.cardBackground,
@@ -409,9 +443,24 @@ class OnboardingIllustration extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildStatCard('12', 'Tasks', AppConstant.primaryBlue, scaleFactor),
-              _buildStatCard('8', 'Done', AppConstant.successGreen, scaleFactor),
-              _buildStatCard('4', 'Pending', AppConstant.warningOrange, scaleFactor),
+              _buildStatCard(
+                '12',
+                'Tasks',
+                AppConstant.primaryBlue,
+                scaleFactor,
+              ),
+              _buildStatCard(
+                '8',
+                'Done',
+                AppConstant.successGreen,
+                scaleFactor,
+              ),
+              _buildStatCard(
+                '4',
+                'Pending',
+                AppConstant.warningOrange,
+                scaleFactor,
+              ),
             ],
           ),
         ],
@@ -419,7 +468,12 @@ class OnboardingIllustration extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard(String value, String label, Color color, [double scaleFactor = 1.0]) {
+  Widget _buildStatCard(
+    String value,
+    String label,
+    Color color, [
+    double scaleFactor = 1.0,
+  ]) {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: AppConstant.spacing16 * scaleFactor,
@@ -427,7 +481,9 @@ class OnboardingIllustration extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(AppConstant.borderRadius12 * scaleFactor),
+        borderRadius: BorderRadius.circular(
+          AppConstant.borderRadius12 * scaleFactor,
+        ),
         border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Column(
@@ -443,7 +499,10 @@ class OnboardingIllustration extends StatelessWidget {
           SizedBox(height: 4 * scaleFactor),
           Text(
             label,
-            style: TextStyle(fontSize: 12 * scaleFactor, color: AppConstant.textSecondary),
+            style: TextStyle(
+              fontSize: 12 * scaleFactor,
+              color: AppConstant.textSecondary,
+            ),
           ),
         ],
       ),
@@ -454,7 +513,7 @@ class OnboardingIllustration extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final isTablet = size.shortestSide >= 600;
     final scaleFactor = isTablet ? 1.3 : 1.0;
-    
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -623,7 +682,7 @@ class OnboardingIllustration extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final isTablet = size.shortestSide >= 600;
     final scaleFactor = isTablet ? 1.3 : 1.0;
-    
+
     return Container(
       decoration: BoxDecoration(
         color: AppConstant.cardBackground,
@@ -639,7 +698,9 @@ class OnboardingIllustration extends StatelessWidget {
             height: 180 * scaleFactor,
             decoration: BoxDecoration(
               color: AppConstant.illustrationGray.withValues(alpha: 0.6),
-              borderRadius: BorderRadius.circular(AppConstant.borderRadius24 * scaleFactor),
+              borderRadius: BorderRadius.circular(
+                AppConstant.borderRadius24 * scaleFactor,
+              ),
               border: Border.all(
                 color: Colors.white.withValues(alpha: 0.1),
                 width: 2,
@@ -665,7 +726,11 @@ class OnboardingIllustration extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12 * scaleFactor),
                 border: Border.all(color: AppConstant.cardBackground, width: 3),
               ),
-              child: Icon(Icons.sync_rounded, color: Colors.white, size: 28 * scaleFactor),
+              child: Icon(
+                Icons.sync_rounded,
+                color: Colors.white,
+                size: 28 * scaleFactor,
+              ),
             ),
           ),
         ],
@@ -677,7 +742,7 @@ class OnboardingIllustration extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final isTablet = size.shortestSide >= 600;
     final scaleFactor = isTablet ? 1.3 : 1.0;
-    
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -698,7 +763,7 @@ class OnboardingIllustration extends StatelessWidget {
           Stack(
             alignment: Alignment.bottomCenter,
             children: [
-              Container(
+              SizedBox(
                 width: 100 * scaleFactor,
                 height: 80 * scaleFactor,
                 child: Stack(
@@ -738,17 +803,17 @@ class OnboardingIllustration extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildFloatingCheck(-0.3, 30 * scaleFactor, 0.8),
+              _buildFloatingCheck(-0.3, 25 * scaleFactor, 0.5),
               SizedBox(width: 8 * scaleFactor),
-              _buildFloatingCheck(0.0, 35 * scaleFactor, 1.0),
+              _buildFloatingCheck(0.0, 30 * scaleFactor, 0.6),
               SizedBox(width: 8 * scaleFactor),
-              _buildFloatingCheck(0.2, 40 * scaleFactor, 0.9),
-              SizedBox(width: 12 * scaleFactor),
-              _buildFloatingCheck(0.15, 25 * scaleFactor, 0.7),
+              _buildFloatingCheck(0.2, 35 * scaleFactor, 0.7),
+              SizedBox(width: 8 * scaleFactor),
+              _buildFloatingCheck(0.15, 35 * scaleFactor, 0.7),
               SizedBox(width: 8 * scaleFactor),
               _buildFloatingCheck(-0.1, 30 * scaleFactor, 0.6),
               SizedBox(width: 8 * scaleFactor),
-              _buildFloatingCheck(0.25, 28 * scaleFactor, 0.5),
+              _buildFloatingCheck(0.25, 25 * scaleFactor, 0.5),
             ],
           ),
         ],
