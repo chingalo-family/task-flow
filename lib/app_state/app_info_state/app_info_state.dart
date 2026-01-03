@@ -6,10 +6,12 @@ class AppInfoState extends ChangeNotifier {
   String _appName = '';
   String _packageName = '';
   String _version = '';
+  String _buildNumber = '';
 
   String get appName => _appName;
   String get packageName => _packageName;
   String get version => _version;
+  String get buildNumber => _buildNumber;
   bool get loading => _loading;
 
   void initiatizeAppInfo() async {
@@ -20,6 +22,7 @@ class AppInfoState extends ChangeNotifier {
       _packageName = packageInfo.packageName;
       _appName = packageInfo.appName;
       _version = packageInfo.version;
+      _buildNumber = packageInfo.buildNumber;
     } catch (e) {
       //
     }

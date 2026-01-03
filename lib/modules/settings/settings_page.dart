@@ -61,7 +61,9 @@ class _SettingsPageState extends State<SettingsPage> {
             // Content
             SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: AppConstant.spacing24),
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppConstant.spacing24,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -73,7 +75,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         bottom: AppConstant.spacing16,
                       ),
                     ),
-                    
+
                     // Profile Avatar with Edit
                     Center(
                       child: Stack(
@@ -84,9 +86,13 @@ class _SettingsPageState extends State<SettingsPage> {
                                 radius: 50,
                                 backgroundColor: AppConstant.primaryBlue,
                                 child: Text(
-                                  (userState.currentUser?.fullName?.substring(0, 1) ??
-                                          userState.currentUser?.username.substring(0, 1) ??
-                                          'U')
+                                  (userState.currentUser?.fullName?.substring(
+                                            0,
+                                            1,
+                                          ) ??
+                                          userState.currentUser?.username
+                                              .substring(0, 1) ??
+                                          '')
                                       .toUpperCase(),
                                   style: TextStyle(
                                     fontSize: 36,
@@ -136,6 +142,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     Consumer<UserState>(
                       builder: (context, userState, _) {
                         return Container(
+                          width: double.infinity,
                           padding: EdgeInsets.symmetric(
                             horizontal: AppConstant.spacing16,
                             vertical: AppConstant.spacing16,
@@ -173,6 +180,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     Consumer<UserState>(
                       builder: (context, userState, _) {
                         return Container(
+                          width: double.infinity,
                           padding: EdgeInsets.symmetric(
                             horizontal: AppConstant.spacing16,
                             vertical: AppConstant.spacing16,
@@ -230,7 +238,9 @@ class _SettingsPageState extends State<SettingsPage> {
                           width: 40,
                           height: 40,
                           decoration: BoxDecoration(
-                            color: AppConstant.pinkAccent.withValues(alpha: 0.1),
+                            color: AppConstant.pinkAccent.withValues(
+                              alpha: 0.1,
+                            ),
                             borderRadius: BorderRadius.circular(
                               AppConstant.borderRadius8,
                             ),
@@ -256,7 +266,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               notificationsEnabled = value;
                             });
                           },
-                          activeColor: AppConstant.primaryBlue,
+                          activeThumbColor: AppConstant.primaryBlue,
                         ),
                       ),
                     ),
@@ -275,7 +285,9 @@ class _SettingsPageState extends State<SettingsPage> {
                           width: 40,
                           height: 40,
                           decoration: BoxDecoration(
-                            color: AppConstant.successGreen.withValues(alpha: 0.1),
+                            color: AppConstant.successGreen.withValues(
+                              alpha: 0.1,
+                            ),
                             borderRadius: BorderRadius.circular(
                               AppConstant.borderRadius8,
                             ),
@@ -308,7 +320,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               offlineAccessEnabled = value;
                             });
                           },
-                          activeColor: AppConstant.primaryBlue,
+                          activeThumbColor: AppConstant.primaryBlue,
                         ),
                       ),
                     ),

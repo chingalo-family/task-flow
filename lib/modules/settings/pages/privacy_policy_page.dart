@@ -33,7 +33,7 @@ class PrivacyPolicyPage extends StatelessWidget {
               // Last Updated
               Center(
                 child: Text(
-                  'Last Updated: October 24, 2023',
+                  'Last Updated: January 01, 2026',
                   style: TextStyle(
                     color: AppConstant.textSecondary,
                     fontSize: 14,
@@ -58,7 +58,9 @@ class PrivacyPolicyPage extends StatelessWidget {
               ),
               SizedBox(height: AppConstant.spacing8),
               _buildBulletPoint('Account information (email, username).'),
-              _buildBulletPoint('Task data, project details, and attached files.'),
+              _buildBulletPoint(
+                'Task data, project details, and attached files.',
+              ),
               _buildBulletPoint(
                 'Usage metrics to improve TaskFlow performance and stability.',
               ),
@@ -211,11 +213,7 @@ class PrivacyPolicyPage extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            Icons.offline_bolt,
-            color: AppConstant.primaryBlue,
-            size: 24,
-          ),
+          Icon(Icons.offline_bolt, color: AppConstant.primaryBlue, size: 24),
           SizedBox(width: AppConstant.spacing12),
           Expanded(
             child: Column(
