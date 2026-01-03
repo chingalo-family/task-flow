@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/task_state/task_state.dart';
-import 'package:task_flow/app_state/team_state/team_state.dart';
 import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/models/models.dart';
@@ -969,13 +968,48 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   }
 
   void _deleteSubtask(int index) {
-    final taskState = Provider.of<TaskState>(context, listen: false);
-    setState(() {
-      final subtasks = List<Subtask>.from(_task.subtasks!);
-      subtasks.removeAt(index);
-      _task = _task.copyWith(subtasks: subtasks);
-      taskState.updateTask(_task);
-    });
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppConstant.cardBackground,
+        title: Text(
+          'Delete Subtask',
+          style: TextStyle(color: AppConstant.textPrimary),
+        ),
+        content: Text(
+          'Are you sure you want to delete this subtask?',
+          style: TextStyle(color: AppConstant.textSecondary),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: AppConstant.textSecondary),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final taskState = Provider.of<TaskState>(context, listen: false);
+              setState(() {
+                final subtasks = List<Subtask>.from(_task.subtasks!);
+                subtasks.removeAt(index);
+                _task = _task.copyWith(subtasks: subtasks);
+                taskState.updateTask(_task);
+              });
+              Navigator.pop(context);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppConstant.errorRed,
+            ),
+            child: Text(
+              'Delete',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   List<Widget> _buildAssigneeAvatars(BuildContext context) {
@@ -1003,12 +1037,14 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
       if (isCurrentUser) {
         final user = userState.currentUser;
         if (user?.fullName != null && user!.fullName!.isNotEmpty) {
-          final nameParts = user.fullName!.split(' ');
-          if (nameParts.length >= 2) {
+          final nameParts = user.fullName!.split(' ').where((p) => p.isNotEmpty).toList();
+          if (nameParts.length >= 2 && nameParts[0].isNotEmpty && nameParts[1].isNotEmpty) {
             initials = nameParts[0].substring(0, 1).toUpperCase() + 
                       nameParts[1].substring(0, 1).toUpperCase();
-          } else {
+          } else if (nameParts.isNotEmpty && nameParts[0].isNotEmpty) {
             initials = nameParts[0].substring(0, 1).toUpperCase();
+          } else {
+            initials = 'ME';
           }
         } else if (user?.username != null && user!.username!.isNotEmpty) {
           initials = user.username!.substring(0, 1).toUpperCase();
@@ -1017,7 +1053,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
         }
       } else {
         // For other users, show first letter of user ID
-        initials = userId.substring(0, 1).toUpperCase();
+        initials = userId.isNotEmpty ? userId.substring(0, 1).toUpperCase() : 'U';
       }
       
       return _buildAvatar(initials, index, isCurrentUser);
