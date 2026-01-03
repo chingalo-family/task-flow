@@ -705,9 +705,13 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
     } else if (user != null && user.name.isNotEmpty) {
       initials = user.name.length >= 2
           ? user.name.substring(0, 2).toUpperCase()
-          : user.name[0].toUpperCase();
+          : user.name.substring(0, 1).toUpperCase();
+    } else if (userId.isNotEmpty) {
+      initials = userId.length >= 2 
+          ? userId.substring(0, 2).toUpperCase() 
+          : userId.substring(0, 1).toUpperCase();
     } else {
-      initials = userId.length >= 2 ? userId.substring(0, 2).toUpperCase() : userId[0].toUpperCase();
+      initials = '?';
     }
 
     return Container(

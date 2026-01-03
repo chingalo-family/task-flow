@@ -881,7 +881,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                             isCompleted: false,
                           ),
                         );
-                        this.setState(() {
+                        setState(() {
                           _task = _task.copyWith(subtasks: subtasks);
                           taskState.updateTask(_task);
                         });
@@ -1001,7 +1001,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                         subtasks[index] = subtask.copyWith(
                           title: titleController.text.trim(),
                         );
-                        this.setState(() {
+                        setState(() {
                           _task = _task.copyWith(subtasks: subtasks);
                           taskState.updateTask(_task);
                         });
