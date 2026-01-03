@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/modules/tasks/tasks_page.dart';
-import 'package:task_flow/modules/tasks/pages/add_edit_task_page.dart';
 import 'package:task_flow/modules/teams/teams_page.dart';
 import 'package:task_flow/modules/notifications/notifications_page.dart';
 import 'package:task_flow/modules/settings/settings_page.dart';
@@ -49,37 +48,6 @@ class _HomeState extends State<Home> {
               children: [
                 _buildNavItem(0, Icons.check_circle_outline, 'My Tasks'),
                 _buildNavItem(1, Icons.people_outline, 'Teams'),
-                // Center Create Button
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AddEditTaskPage(),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    width: 56,
-                    height: 56,
-                    decoration: BoxDecoration(
-                      color: AppConstant.primaryBlue,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppConstant.primaryBlue.withOpacity(0.3),
-                          blurRadius: 12,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Icon(
-                      Icons.add,
-                      color: Colors.white,
-                      size: 28,
-                    ),
-                  ),
-                ),
                 _buildNavItem(2, Icons.notifications_outlined, 'Alerts'),
                 _buildNavItem(3, Icons.settings_outlined, 'Settings'),
               ],

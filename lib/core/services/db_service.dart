@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:task_flow/core/entities/user_entity.dart';
 import 'package:task_flow/objectbox.g.dart';
@@ -25,7 +26,7 @@ class DBService {
       _userBox = Box<UserEntity>(_store!);
       _opened = true;
     } catch (e) {
-      print('Failed to initialize ObjectBox: $e');
+      debugPrint('Failed to initialize ObjectBox: $e');
       _opened = false;
       _store = null;
       _userBox = null;

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:task_flow/core/constants/app_constant.dart';
 
 class TaskCategory {
   final String id;
@@ -64,14 +63,14 @@ class TaskCategory {
   );
 
   static List<TaskCategory> get all => [
-        design,
-        dev,
-        marketing,
-        research,
-        bug,
-        general,
-        meeting,
-      ];
+    design,
+    dev,
+    marketing,
+    research,
+    bug,
+    general,
+    meeting,
+  ];
 
   static TaskCategory? fromId(String? id) {
     if (id == null) return null;

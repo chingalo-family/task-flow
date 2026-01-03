@@ -22,48 +22,50 @@ class TaskState extends ChangeNotifier {
   int get inProgressTasks => _tasks.where((t) => t.isInProgress).length;
   int get pendingTasks => _tasks.where((t) => t.isPending).length;
   int get overdueTasks => _tasks.where((t) => t.isOverdue).length;
-  
+
   int get tasksDueToday {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final tomorrow = today.add(Duration(days: 1));
-    
+
     return _tasks.where((t) {
       if (t.dueDate == null || t.isCompleted) return false;
       return t.dueDate!.isAfter(today) && t.dueDate!.isBefore(tomorrow);
     }).length;
   }
-  
+
   List<Task> get focusTasks {
     // Tasks that are in progress or pending, sorted by priority and due date
-    final now = DateTime.now();
-    return _tasks
-        .where((t) => !t.isCompleted)
-        .toList()
-      ..sort((a, b) {
-        // First sort by priority
-        final priorityOrder = {'high': 0, 'medium': 1, 'low': 2};
-        final priorityCompare = (priorityOrder[a.priority] ?? 3)
-            .compareTo(priorityOrder[b.priority] ?? 3);
-        if (priorityCompare != 0) return priorityCompare;
-        
-        // Then by due date
-        if (a.dueDate == null && b.dueDate == null) return 0;
-        if (a.dueDate == null) return 1;
-        if (b.dueDate == null) return -1;
-        return a.dueDate!.compareTo(b.dueDate!);
-      });
+    return _tasks.where((t) => !t.isCompleted).toList()..sort((a, b) {
+      // First sort by priority
+      final priorityOrder = {'high': 0, 'medium': 1, 'low': 2};
+      final priorityCompare = (priorityOrder[a.priority] ?? 3).compareTo(
+        priorityOrder[b.priority] ?? 3,
+      );
+      if (priorityCompare != 0) return priorityCompare;
+
+      // Then by due date
+      if (a.dueDate == null && b.dueDate == null) return 0;
+      if (a.dueDate == null) return 1;
+      if (b.dueDate == null) return -1;
+      return a.dueDate!.compareTo(b.dueDate!);
+    });
   }
-  
+
   List<Task> get upcomingTasks {
     final now = DateTime.now();
-    final tomorrow = DateTime(now.year, now.month, now.day).add(Duration(days: 1));
-    
+    final tomorrow = DateTime(
+      now.year,
+      now.month,
+      now.day,
+    ).add(Duration(days: 1));
+
     return _tasks
-        .where((t) => 
-            !t.isCompleted && 
-            t.dueDate != null && 
-            t.dueDate!.isAfter(tomorrow)
+        .where(
+          (t) =>
+              !t.isCompleted &&
+              t.dueDate != null &&
+              t.dueDate!.isAfter(tomorrow),
         )
         .toList()
       ..sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
@@ -72,10 +74,10 @@ class TaskState extends ChangeNotifier {
   Future<void> initialize() async {
     _loading = true;
     notifyListeners();
-    
+
     // TODO: Load tasks from ObjectBox
     await _loadTasks();
-    
+
     _loading = false;
     notifyListeners();
   }
@@ -150,7 +152,8 @@ class TaskState extends ChangeNotifier {
       Task(
         id: '5',
         title: 'Redesign Landing Page Hero Section',
-        description: 'Update the main hero image and H1 copy to reflect the new Q4 branding guidelines. Ensure the CTA button has the new gradient style and links to the campaign dashboard.',
+        description:
+            'Update the main hero image and H1 copy to reflect the new Q4 branding guidelines. Ensure the CTA button has the new gradient style and links to the campaign dashboard.',
         status: 'in_progress',
         priority: 'medium',
         category: 'marketing',
@@ -161,10 +164,22 @@ class TaskState extends ChangeNotifier {
         teamName: 'Marketing',
         assignedUserIds: ['user5', 'user6', 'user7'],
         subtasks: [
-          Subtask(id: 's1', title: 'Review new brand assets', isCompleted: true),
+          Subtask(
+            id: 's1',
+            title: 'Review new brand assets',
+            isCompleted: true,
+          ),
           Subtask(id: 's2', title: 'Draft new copy', isCompleted: true),
-          Subtask(id: 's3', title: 'Create high-fidelity mockups', isCompleted: false),
-          Subtask(id: 's4', title: 'Get approval from Lead', isCompleted: false),
+          Subtask(
+            id: 's3',
+            title: 'Create high-fidelity mockups',
+            isCompleted: false,
+          ),
+          Subtask(
+            id: 's4',
+            title: 'Get approval from Lead',
+            isCompleted: false,
+          ),
         ],
       ),
     ];
@@ -175,17 +190,23 @@ class TaskState extends ChangeNotifier {
 
     // Filter by team
     if (_filterTeamId != null) {
-      filtered = filtered.where((task) => task.teamId == _filterTeamId).toList();
+      filtered = filtered
+          .where((task) => task.teamId == _filterTeamId)
+          .toList();
     }
 
     // Filter by status
     if (_filterStatus != 'all') {
-      filtered = filtered.where((task) => task.status == _filterStatus).toList();
+      filtered = filtered
+          .where((task) => task.status == _filterStatus)
+          .toList();
     }
 
     // Filter by priority
     if (_filterPriority != 'all') {
-      filtered = filtered.where((task) => task.priority == _filterPriority).toList();
+      filtered = filtered
+          .where((task) => task.priority == _filterPriority)
+          .toList();
     }
 
     // Sort
@@ -198,7 +219,9 @@ class TaskState extends ChangeNotifier {
           return a.dueDate!.compareTo(b.dueDate!);
         case 'priority':
           final priorityOrder = {'high': 0, 'medium': 1, 'low': 2};
-          return (priorityOrder[a.priority] ?? 3).compareTo(priorityOrder[b.priority] ?? 3);
+          return (priorityOrder[a.priority] ?? 3).compareTo(
+            priorityOrder[b.priority] ?? 3,
+          );
         case 'createdAt':
           return b.createdAt.compareTo(a.createdAt);
         default:

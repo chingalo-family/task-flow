@@ -76,10 +76,12 @@ class UserOfflineProvider {
     List<String>? groups;
     List<String>? orgs;
     try {
-      if (e.userGroupsJson != null)
+      if (e.userGroupsJson != null) {
         groups = List<String>.from(jsonDecode(e.userGroupsJson!));
-      if (e.userOrgUnitIdsJson != null)
+      }
+      if (e.userOrgUnitIdsJson != null) {
         orgs = List<String>.from(jsonDecode(e.userOrgUnitIdsJson!));
+      }
     } catch (_) {}
     return User(
       id: e.apiUserId,

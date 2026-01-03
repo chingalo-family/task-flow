@@ -26,7 +26,6 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
 
   @override
   void initState() {
-    print("Splash Init State");
     super.initState();
     _controller = AnimationController(
       duration: const Duration(milliseconds: 1500),

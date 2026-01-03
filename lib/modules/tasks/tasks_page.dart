@@ -64,9 +64,14 @@ class _TasksPageState extends State<TasksPage> {
                       builder: (context, userState, _) {
                         final user = userState.currentUser;
                         final initials = user?.fullName != null
-                            ? user!.fullName!.split(' ').map((n) => n[0]).take(2).join()
-                            : user?.username?.substring(0, 1).toUpperCase() ?? 'U';
-                        
+                            ? user!.fullName!
+                                  .split(' ')
+                                  .map((n) => n[0])
+                                  .take(2)
+                                  .join()
+                            : user?.username.substring(0, 1).toUpperCase() ??
+                                  'U';
+
                         return CircleAvatar(
                           backgroundColor: AppConstant.primaryBlue,
                           child: Text(
@@ -111,9 +116,11 @@ class _TasksPageState extends State<TasksPage> {
                     child: Consumer<UserState>(
                       builder: (context, userState, _) {
                         final user = userState.currentUser;
-                        final firstName = user?.fullName?.split(' ').first ?? 
-                                         user?.username ?? 'User';
-                        
+                        final firstName =
+                            user?.fullName?.split(' ').first ??
+                            user?.username ??
+                            'User';
+
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -151,7 +158,9 @@ class _TasksPageState extends State<TasksPage> {
                       padding: EdgeInsets.all(AppConstant.spacing20),
                       decoration: BoxDecoration(
                         color: AppConstant.cardBackground,
-                        borderRadius: BorderRadius.circular(AppConstant.borderRadius16),
+                        borderRadius: BorderRadius.circular(
+                          AppConstant.borderRadius16,
+                        ),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -180,7 +189,7 @@ class _TasksPageState extends State<TasksPage> {
                                   ),
                                 ],
                               ),
-                              Container(
+                              SizedBox(
                                 width: 60,
                                 height: 60,
                                 child: Stack(
@@ -190,11 +199,16 @@ class _TasksPageState extends State<TasksPage> {
                                       height: 60,
                                       child: CircularProgressIndicator(
                                         value: taskState.totalTasks > 0
-                                            ? taskState.completedTasks / taskState.totalTasks
+                                            ? taskState.completedTasks /
+                                                  taskState.totalTasks
                                             : 0,
                                         strokeWidth: 6,
-                                        backgroundColor: AppConstant.textSecondary.withOpacity(0.2),
-                                        valueColor: AlwaysStoppedAnimation(AppConstant.primaryBlue),
+                                        backgroundColor: AppConstant
+                                            .textSecondary
+                                            .withValues(alpha: 0.2),
+                                        valueColor: AlwaysStoppedAnimation(
+                                          AppConstant.primaryBlue,
+                                        ),
                                       ),
                                     ),
                                     Center(
@@ -217,10 +231,14 @@ class _TasksPageState extends State<TasksPage> {
                             borderRadius: BorderRadius.circular(4),
                             child: LinearProgressIndicator(
                               value: taskState.totalTasks > 0
-                                  ? taskState.completedTasks / taskState.totalTasks
+                                  ? taskState.completedTasks /
+                                        taskState.totalTasks
                                   : 0,
-                              backgroundColor: AppConstant.textSecondary.withOpacity(0.2),
-                              valueColor: AlwaysStoppedAnimation(AppConstant.primaryBlue),
+                              backgroundColor: AppConstant.textSecondary
+                                  .withValues(alpha: 0.2),
+                              valueColor: AlwaysStoppedAnimation(
+                                AppConstant.primaryBlue,
+                              ),
                               minHeight: 8,
                             ),
                           ),
@@ -236,7 +254,9 @@ class _TasksPageState extends State<TasksPage> {
                                     width: 32,
                                     height: 32,
                                     decoration: BoxDecoration(
-                                      color: AppConstant.primaryBlue.withOpacity(0.2),
+                                      color: AppConstant.primaryBlue.withValues(
+                                        alpha: 0.2,
+                                      ),
                                       shape: BoxShape.circle,
                                     ),
                                     child: Center(
@@ -294,18 +314,19 @@ class _TasksPageState extends State<TasksPage> {
                     ),
                   ),
                   SliverPadding(
-                    padding: EdgeInsets.symmetric(horizontal: AppConstant.spacing24),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppConstant.spacing24,
+                    ),
                     sliver: SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          final task = focusTasks[index];
-                          return Padding(
-                            padding: EdgeInsets.only(bottom: AppConstant.spacing12),
-                            child: TaskCard(task: task),
-                          );
-                        },
-                        childCount: focusTasks.length,
-                      ),
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        final task = focusTasks[index];
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            bottom: AppConstant.spacing12,
+                          ),
+                          child: TaskCard(task: task),
+                        );
+                      }, childCount: focusTasks.length),
                     ),
                   ),
                 ],
@@ -338,16 +359,15 @@ class _TasksPageState extends State<TasksPage> {
                       AppConstant.spacing24,
                     ),
                     sliver: SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          final task = upcomingTasks[index];
-                          return Padding(
-                            padding: EdgeInsets.only(bottom: AppConstant.spacing12),
-                            child: TaskCard(task: task),
-                          );
-                        },
-                        childCount: upcomingTasks.length,
-                      ),
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        final task = upcomingTasks[index];
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            bottom: AppConstant.spacing12,
+                          ),
+                          child: TaskCard(task: task),
+                        );
+                      }, childCount: upcomingTasks.length),
                     ),
                   ),
                 ],
@@ -362,14 +382,15 @@ class _TasksPageState extends State<TasksPage> {
                           Icon(
                             Icons.task_alt,
                             size: 80,
-                            color: AppConstant.textSecondary.withValues(alpha: 0.3),
+                            color: AppConstant.textSecondary.withValues(
+                              alpha: 0.3,
+                            ),
                           ),
                           SizedBox(height: AppConstant.spacing16),
                           Text(
                             'No tasks found',
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  color: AppConstant.textSecondary,
-                                ),
+                            style: Theme.of(context).textTheme.bodyLarge
+                                ?.copyWith(color: AppConstant.textSecondary),
                           ),
                         ],
                       ),
@@ -384,9 +405,7 @@ class _TasksPageState extends State<TasksPage> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => AddEditTaskPage(),
-            ),
+            MaterialPageRoute(builder: (context) => AddEditTaskPage()),
           );
         },
         backgroundColor: AppConstant.primaryBlue,
@@ -396,23 +415,16 @@ class _TasksPageState extends State<TasksPage> {
   }
 
   Widget _buildTeamAvatar(String initial, int index) {
-    final colors = [
-      Color(0xFFEF4444),
-      Color(0xFF3B82F6),
-      Color(0xFF10B981),
-    ];
+    final colors = [Color(0xFFEF4444), Color(0xFF3B82F6), Color(0xFF10B981)];
 
     return Container(
       width: 32,
       height: 32,
       margin: EdgeInsets.only(right: 8),
       decoration: BoxDecoration(
-        color: colors[index % colors.length].withOpacity(0.2),
+        color: colors[index % colors.length].withValues(alpha: 0.2),
         shape: BoxShape.circle,
-        border: Border.all(
-          color: colors[index % colors.length],
-          width: 2,
-        ),
+        border: Border.all(color: colors[index % colors.length], width: 2),
       ),
       child: Center(
         child: Text(

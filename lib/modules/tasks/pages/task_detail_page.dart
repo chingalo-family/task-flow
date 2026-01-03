@@ -101,7 +101,10 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                   children: [
                     Icon(Icons.edit, size: 20, color: AppConstant.textPrimary),
                     SizedBox(width: AppConstant.spacing8),
-                    Text('Edit', style: TextStyle(color: AppConstant.textPrimary)),
+                    Text(
+                      'Edit',
+                      style: TextStyle(color: AppConstant.textPrimary),
+                    ),
                   ],
                 ),
               ),
@@ -111,7 +114,10 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                   children: [
                     Icon(Icons.delete, size: 20, color: AppConstant.errorRed),
                     SizedBox(width: AppConstant.spacing8),
-                    Text('Delete', style: TextStyle(color: AppConstant.errorRed)),
+                    Text(
+                      'Delete',
+                      style: TextStyle(color: AppConstant.errorRed),
+                    ),
                   ],
                 ),
               ),
@@ -133,7 +139,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                     vertical: AppConstant.spacing8,
                   ),
                   decoration: BoxDecoration(
-                    color: category.color.withOpacity(0.15),
+                    color: category.color.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(
@@ -204,10 +210,14 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                           vertical: AppConstant.spacing12,
                         ),
                         decoration: BoxDecoration(
-                          color: _getStatusColor(_task.status).withOpacity(0.15),
+                          color: _getStatusColor(
+                            _task.status,
+                          ).withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                            color: _getStatusColor(_task.status).withOpacity(0.3),
+                            color: _getStatusColor(
+                              _task.status,
+                            ).withValues(alpha: 0.3),
                           ),
                         ),
                         child: Row(
@@ -219,8 +229,8 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                                   _task.isCompleted
                                       ? Icons.check_circle
                                       : _task.isInProgress
-                                          ? Icons.play_circle
-                                          : Icons.radio_button_unchecked,
+                                      ? Icons.play_circle
+                                      : Icons.radio_button_unchecked,
                                   size: 20,
                                   color: _getStatusColor(_task.status),
                                 ),
@@ -273,7 +283,9 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                           color: AppConstant.cardBackground,
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                            color: AppConstant.textSecondary.withOpacity(0.2),
+                            color: AppConstant.textSecondary.withValues(
+                              alpha: 0.2,
+                            ),
                           ),
                         ),
                         child: Row(
@@ -347,7 +359,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                   height: 40,
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: AppConstant.textSecondary.withOpacity(0.3),
+                      color: AppConstant.textSecondary.withValues(alpha: 0.3),
                       width: 2,
                       style: BorderStyle.solid,
                     ),
@@ -369,7 +381,9 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 padding: EdgeInsets.all(AppConstant.spacing20),
                 decoration: BoxDecoration(
                   color: AppConstant.cardBackground,
-                  borderRadius: BorderRadius.circular(AppConstant.borderRadius16),
+                  borderRadius: BorderRadius.circular(
+                    AppConstant.borderRadius16,
+                  ),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -400,70 +414,84 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                       borderRadius: BorderRadius.circular(4),
                       child: LinearProgressIndicator(
                         value: _task.subtasksProgress,
-                        backgroundColor:
-                            AppConstant.textSecondary.withOpacity(0.2),
-                        valueColor:
-                            AlwaysStoppedAnimation(AppConstant.primaryBlue),
+                        backgroundColor: AppConstant.textSecondary.withValues(
+                          alpha: 0.2,
+                        ),
+                        valueColor: AlwaysStoppedAnimation(
+                          AppConstant.primaryBlue,
+                        ),
                         minHeight: 8,
                       ),
                     ),
                     SizedBox(height: AppConstant.spacing20),
-                    ..._task.subtasks!.map((subtask) => Padding(
-                          padding: EdgeInsets.only(bottom: AppConstant.spacing12),
-                          child: Row(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    final index = _task.subtasks!.indexOf(subtask);
-                                    final updatedSubtasks = List<Subtask>.from(_task.subtasks!);
-                                    updatedSubtasks[index] = subtask.copyWith(
-                                      isCompleted: !subtask.isCompleted,
-                                    );
-                                    _task = _task.copyWith(subtasks: updatedSubtasks);
-                                    taskState.updateTask(_task);
-                                  });
-                                },
-                                child: Container(
-                                  width: 24,
-                                  height: 24,
-                                  decoration: BoxDecoration(
+                    ..._task.subtasks!.map(
+                      (subtask) => Padding(
+                        padding: EdgeInsets.only(bottom: AppConstant.spacing12),
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  final index = _task.subtasks!.indexOf(
+                                    subtask,
+                                  );
+                                  final updatedSubtasks = List<Subtask>.from(
+                                    _task.subtasks!,
+                                  );
+                                  updatedSubtasks[index] = subtask.copyWith(
+                                    isCompleted: !subtask.isCompleted,
+                                  );
+                                  _task = _task.copyWith(
+                                    subtasks: updatedSubtasks,
+                                  );
+                                  taskState.updateTask(_task);
+                                });
+                              },
+                              child: Container(
+                                width: 24,
+                                height: 24,
+                                decoration: BoxDecoration(
+                                  color: subtask.isCompleted
+                                      ? AppConstant.primaryBlue
+                                      : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(6),
+                                  border: Border.all(
                                     color: subtask.isCompleted
                                         ? AppConstant.primaryBlue
-                                        : Colors.transparent,
-                                    borderRadius: BorderRadius.circular(6),
-                                    border: Border.all(
-                                      color: subtask.isCompleted
-                                          ? AppConstant.primaryBlue
-                                          : AppConstant.textSecondary
-                                              .withOpacity(0.3),
-                                      width: 2,
-                                    ),
+                                        : AppConstant.textSecondary.withValues(
+                                            alpha: 0.3,
+                                          ),
+                                    width: 2,
                                   ),
-                                  child: subtask.isCompleted
-                                      ? Icon(Icons.check,
-                                          size: 16, color: Colors.white)
+                                ),
+                                child: subtask.isCompleted
+                                    ? Icon(
+                                        Icons.check,
+                                        size: 16,
+                                        color: Colors.white,
+                                      )
+                                    : null,
+                              ),
+                            ),
+                            SizedBox(width: AppConstant.spacing12),
+                            Expanded(
+                              child: Text(
+                                subtask.title,
+                                style: TextStyle(
+                                  color: subtask.isCompleted
+                                      ? AppConstant.textSecondary
+                                      : AppConstant.textPrimary,
+                                  fontSize: 14,
+                                  decoration: subtask.isCompleted
+                                      ? TextDecoration.lineThrough
                                       : null,
                                 ),
                               ),
-                              SizedBox(width: AppConstant.spacing12),
-                              Expanded(
-                                child: Text(
-                                  subtask.title,
-                                  style: TextStyle(
-                                    color: subtask.isCompleted
-                                        ? AppConstant.textSecondary
-                                        : AppConstant.textPrimary,
-                                    fontSize: 14,
-                                    decoration: subtask.isCompleted
-                                        ? TextDecoration.lineThrough
-                                        : null,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                     SizedBox(height: AppConstant.spacing8),
                     GestureDetector(
                       onTap: () {
@@ -471,8 +499,11 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                       },
                       child: Row(
                         children: [
-                          Icon(Icons.add,
-                              size: 20, color: AppConstant.primaryBlue),
+                          Icon(
+                            Icons.add,
+                            size: 20,
+                            color: AppConstant.primaryBlue,
+                          ),
                           SizedBox(width: AppConstant.spacing8),
                           Text(
                             'Add Subtask',
@@ -499,9 +530,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     final assigneeIds = _task.assignedUserIds ?? [];
     if (assigneeIds.isEmpty && _task.assignedToUserId != null) {
       // Fallback to single assignee
-      return [
-        _buildAvatar(_task.assignedToUsername ?? 'U', 0),
-      ];
+      return [_buildAvatar(_task.assignedToUsername ?? 'U', 0)];
     }
 
     // Create avatars for multiple assignees (max 3 visible)
@@ -533,12 +562,9 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
       height: 40,
       margin: EdgeInsets.only(right: 8),
       decoration: BoxDecoration(
-        color: colors[colorIndex].withOpacity(0.2),
+        color: colors[colorIndex].withValues(alpha: 0.2),
         shape: BoxShape.circle,
-        border: Border.all(
-          color: colors[colorIndex],
-          width: 2,
-        ),
+        border: Border.all(color: colors[colorIndex], width: 2),
       ),
       child: Center(
         child: Text(

@@ -122,7 +122,7 @@ class TeamCard extends StatelessWidget {
                             ),
                           ),
                         );
-                      }).toList(),
+                      }),
 
                       // Show +N if there are more members
                       if (team.memberCount > 5) ...[

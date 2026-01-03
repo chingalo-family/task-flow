@@ -10,37 +10,6 @@ class TaskCard extends StatelessWidget {
 
   const TaskCard({super.key, required this.task});
 
-  Color _getPriorityColor() {
-    switch (task.priority) {
-      case 'high':
-        return AppConstant.errorRed;
-      case 'medium':
-        return AppConstant.warningOrange;
-      case 'low':
-        return AppConstant.successGreen;
-      default:
-        return AppConstant.textSecondary;
-    }
-  }
-
-  String _formatDate(DateTime? date) {
-    if (date == null) return '';
-    final now = DateTime.now();
-    final difference = date.difference(now);
-
-    if (difference.inDays == 0) {
-      return 'Today';
-    } else if (difference.inDays == 1) {
-      return 'Tomorrow';
-    } else if (difference.inDays == -1) {
-      return 'Yesterday';
-    } else if (difference.inDays > 0) {
-      return 'in ${difference.inDays} days';
-    } else {
-      return '${-difference.inDays} days ago';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final taskState = Provider.of<TaskState>(context, listen: false);
@@ -77,14 +46,10 @@ class TaskCard extends StatelessWidget {
                   width: 56,
                   height: 56,
                   decoration: BoxDecoration(
-                    color: category.color.withOpacity(0.15),
+                    color: category.color.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(
-                    category.icon,
-                    color: category.color,
-                    size: 28,
-                  ),
+                  child: Icon(category.icon, color: category.color, size: 28),
                 ),
                 SizedBox(width: AppConstant.spacing16),
                 Expanded(
@@ -95,9 +60,9 @@ class TaskCard extends StatelessWidget {
                       Text(
                         task.title,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: AppConstant.textPrimary,
-                            ),
+                          fontWeight: FontWeight.w600,
+                          color: AppConstant.textPrimary,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -155,9 +120,7 @@ class TaskCard extends StatelessWidget {
                       border: Border.all(
                         color: task.isCompleted
                             ? AppConstant.primaryBlue
-                            : AppConstant.textSecondary.withValues(
-                                alpha: 0.3,
-                              ),
+                            : AppConstant.textSecondary.withValues(alpha: 0.3),
                         width: 2,
                       ),
                     ),

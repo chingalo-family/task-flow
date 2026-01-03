@@ -19,7 +19,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
-  
+
   String _selectedPriority = 'medium';
   String? _selectedCategory;
   DateTime? _selectedDueDate;
@@ -114,7 +114,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
   void _saveTask() {
     if (_formKey.currentState!.validate()) {
       final taskState = Provider.of<TaskState>(context, listen: false);
-      
+
       // Generate a better ID for new tasks
       String taskId;
       if (widget.task != null) {
@@ -125,11 +125,13 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
         final random = (timestamp % 1000).toString().padLeft(3, '0');
         taskId = '$timestamp$random';
       }
-      
+
       final task = Task(
         id: taskId,
         title: _titleController.text,
-        description: _descriptionController.text.isEmpty ? null : _descriptionController.text,
+        description: _descriptionController.text.isEmpty
+            ? null
+            : _descriptionController.text,
         priority: _selectedPriority,
         category: _selectedCategory,
         dueDate: _selectedDueDate,
@@ -167,10 +169,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
           onPressed: () => Navigator.pop(context),
           child: Text(
             'Cancel',
-            style: TextStyle(
-              color: AppConstant.textPrimary,
-              fontSize: 16,
-            ),
+            style: TextStyle(color: AppConstant.textPrimary, fontSize: 16),
           ),
         ),
         leadingWidth: 80,
@@ -186,11 +185,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
               ),
             ),
             SizedBox(width: AppConstant.spacing8),
-            Icon(
-              Icons.edit,
-              color: AppConstant.successGreen,
-              size: 20,
-            ),
+            Icon(Icons.edit, color: AppConstant.successGreen, size: 20),
           ],
         ),
         centerTitle: true,
@@ -230,7 +225,11 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.folder_outlined, size: 16, color: AppConstant.textSecondary),
+                      Icon(
+                        Icons.folder_outlined,
+                        size: 16,
+                        color: AppConstant.textSecondary,
+                      ),
                       SizedBox(width: AppConstant.spacing8),
                       Text(
                         'Parent: ${_selectedTeam!.name}',
@@ -247,7 +246,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
               Text(
                 'What needs to be done?',
                 style: TextStyle(
-                  color: AppConstant.textSecondary.withOpacity(0.6),
+                  color: AppConstant.textSecondary.withValues(alpha: 0.6),
                   fontSize: 28,
                   fontWeight: FontWeight.w500,
                   height: 1.2,
@@ -256,14 +255,11 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
               SizedBox(height: AppConstant.spacing8),
               TextFormField(
                 controller: _titleController,
-                style: TextStyle(
-                  color: AppConstant.textPrimary,
-                  fontSize: 16,
-                ),
+                style: TextStyle(color: AppConstant.textPrimary, fontSize: 16),
                 decoration: InputDecoration(
                   hintText: 'Enter task title...',
                   hintStyle: TextStyle(
-                    color: AppConstant.textSecondary.withOpacity(0.5),
+                    color: AppConstant.textSecondary.withValues(alpha: 0.5),
                     fontSize: 14,
                   ),
                   border: InputBorder.none,
@@ -286,9 +282,11 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                 padding: EdgeInsets.all(AppConstant.spacing16),
                 decoration: BoxDecoration(
                   color: AppConstant.cardBackground,
-                  borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                  borderRadius: BorderRadius.circular(
+                    AppConstant.borderRadius12,
+                  ),
                   border: Border.all(
-                    color: AppConstant.textSecondary.withOpacity(0.1),
+                    color: AppConstant.textSecondary.withValues(alpha: 0.1),
                   ),
                 ),
                 child: TextFormField(
@@ -318,7 +316,9 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                 padding: EdgeInsets.all(AppConstant.spacing20),
                 decoration: BoxDecoration(
                   color: AppConstant.cardBackground,
-                  borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                  borderRadius: BorderRadius.circular(
+                    AppConstant.borderRadius12,
+                  ),
                 ),
                 child: Column(
                   children: [
@@ -327,14 +327,18 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                       onTap: _selectDueDate,
                       borderRadius: BorderRadius.circular(8),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: AppConstant.spacing12),
+                        padding: EdgeInsets.symmetric(
+                          vertical: AppConstant.spacing12,
+                        ),
                         child: Row(
                           children: [
                             Container(
                               width: 48,
                               height: 48,
                               decoration: BoxDecoration(
-                                color: AppConstant.errorRed.withOpacity(0.15),
+                                color: AppConstant.errorRed.withValues(
+                                  alpha: 0.15,
+                                ),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Icon(
@@ -375,17 +379,23 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                         ),
                       ),
                     ),
-                    Divider(color: AppConstant.textSecondary.withOpacity(0.1)),
+                    Divider(
+                      color: AppConstant.textSecondary.withValues(alpha: 0.1),
+                    ),
                     // Remind Me
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: AppConstant.spacing12),
+                      padding: EdgeInsets.symmetric(
+                        vertical: AppConstant.spacing12,
+                      ),
                       child: Row(
                         children: [
                           Container(
                             width: 48,
                             height: 48,
                             decoration: BoxDecoration(
-                              color: AppConstant.warningOrange.withOpacity(0.15),
+                              color: AppConstant.warningOrange.withValues(
+                                alpha: 0.15,
+                              ),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Icon(
@@ -412,7 +422,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                                 _remindMe = value;
                               });
                             },
-                            activeColor: AppConstant.primaryBlue,
+                            activeThumbColor: AppConstant.primaryBlue,
                           ),
                         ],
                       ),
@@ -428,7 +438,9 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                 padding: EdgeInsets.all(AppConstant.spacing20),
                 decoration: BoxDecoration(
                   color: AppConstant.cardBackground,
-                  borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                  borderRadius: BorderRadius.circular(
+                    AppConstant.borderRadius12,
+                  ),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -439,7 +451,9 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                           width: 48,
                           height: 48,
                           decoration: BoxDecoration(
-                            color: AppConstant.primaryBlue.withOpacity(0.15),
+                            color: AppConstant.primaryBlue.withValues(
+                              alpha: 0.15,
+                            ),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Icon(
@@ -462,17 +476,13 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                     SizedBox(height: AppConstant.spacing16),
                     Row(
                       children: [
-                        Expanded(
-                          child: _buildPriorityButton('Low', 'low'),
-                        ),
+                        Expanded(child: _buildPriorityButton('Low', 'low')),
                         SizedBox(width: AppConstant.spacing12),
                         Expanded(
                           child: _buildPriorityButton('Medium', 'medium'),
                         ),
                         SizedBox(width: AppConstant.spacing12),
-                        Expanded(
-                          child: _buildPriorityButton('High', 'high'),
-                        ),
+                        Expanded(child: _buildPriorityButton('High', 'high')),
                       ],
                     ),
                   ],
@@ -486,7 +496,9 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                 padding: EdgeInsets.all(AppConstant.spacing20),
                 decoration: BoxDecoration(
                   color: AppConstant.cardBackground,
-                  borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                  borderRadius: BorderRadius.circular(
+                    AppConstant.borderRadius12,
+                  ),
                 ),
                 child: Row(
                   children: [
@@ -494,7 +506,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                       width: 48,
                       height: 48,
                       decoration: BoxDecoration(
-                        color: Color(0xFF8B5CF6).withOpacity(0.15),
+                        color: Color(0xFF8B5CF6).withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(
@@ -567,7 +579,9 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                 padding: EdgeInsets.all(AppConstant.spacing20),
                 decoration: BoxDecoration(
                   color: AppConstant.cardBackground,
-                  borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                  borderRadius: BorderRadius.circular(
+                    AppConstant.borderRadius12,
+                  ),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -578,7 +592,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                           width: 48,
                           height: 48,
                           decoration: BoxDecoration(
-                            color: Color(0xFFEC4899).withOpacity(0.15),
+                            color: Color(0xFFEC4899).withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Icon(
@@ -619,7 +633,9 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                     padding: EdgeInsets.all(AppConstant.spacing20),
                     decoration: BoxDecoration(
                       color: AppConstant.cardBackground,
-                      borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                      borderRadius: BorderRadius.circular(
+                        AppConstant.borderRadius12,
+                      ),
                     ),
                     child: Row(
                       children: [
@@ -627,7 +643,9 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                           width: 48,
                           height: 48,
                           decoration: BoxDecoration(
-                            color: AppConstant.successGreen.withOpacity(0.15),
+                            color: AppConstant.successGreen.withValues(
+                              alpha: 0.15,
+                            ),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Icon(
@@ -687,7 +705,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
   Widget _buildPriorityButton(String label, String value) {
     final isSelected = _selectedPriority == value;
     Color color;
-    
+
     switch (value) {
       case 'high':
         color = AppConstant.errorRed;
@@ -711,10 +729,12 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: AppConstant.spacing12),
         decoration: BoxDecoration(
-          color: isSelected ? color.withOpacity(0.2) : Colors.transparent,
+          color: isSelected ? color.withValues(alpha: 0.2) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: isSelected ? color : AppConstant.textSecondary.withOpacity(0.2),
+            color: isSelected
+                ? color
+                : AppConstant.textSecondary.withValues(alpha: 0.2),
             width: 2,
           ),
         ),
@@ -733,7 +753,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
 
   Widget _buildCategoryButton(TaskCategory category) {
     final isSelected = _selectedCategory == category.id;
-    
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -747,10 +767,14 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
           vertical: AppConstant.spacing12,
         ),
         decoration: BoxDecoration(
-          color: isSelected ? category.color.withOpacity(0.2) : Colors.transparent,
+          color: isSelected
+              ? category.color.withValues(alpha: 0.2)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: isSelected ? category.color : AppConstant.textSecondary.withOpacity(0.3),
+            color: isSelected
+                ? category.color
+                : AppConstant.textSecondary.withValues(alpha: 0.3),
             width: 2,
           ),
         ),
@@ -778,22 +802,15 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
   }
 
   Widget _buildAssigneeAvatar(String initial, int index) {
-    final colors = [
-      Color(0xFF3B82F6),
-      Color(0xFF10B981),
-      Color(0xFFF59E0B),
-    ];
+    final colors = [Color(0xFF3B82F6), Color(0xFF10B981), Color(0xFFF59E0B)];
 
     return Container(
       width: 32,
       height: 32,
       decoration: BoxDecoration(
-        color: colors[index % colors.length].withOpacity(0.2),
+        color: colors[index % colors.length].withValues(alpha: 0.2),
         shape: BoxShape.circle,
-        border: Border.all(
-          color: colors[index % colors.length],
-          width: 2,
-        ),
+        border: Border.all(color: colors[index % colors.length], width: 2),
       ),
       child: Center(
         child: Text(

@@ -5,15 +5,15 @@ import 'package:task_flow/core/services/db_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Try to initialize ObjectBox, but don't fail if it's not available
   try {
     await DBService().init();
-    print('✅ ObjectBox initialized successfully');
+    debugPrint('✅ ObjectBox initialized successfully');
   } catch (e) {
-    print('⚠️ ObjectBox initialization failed: $e');
-    print('📱 App will run without offline database support');
+    debugPrint('⚠️ ObjectBox initialization failed: $e');
+    debugPrint('📱 App will run without offline database support');
   }
-  
+
   runApp(const MyApp());
 }
