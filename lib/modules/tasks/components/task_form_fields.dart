@@ -1,0 +1,987 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:task_flow/app_state/team_state/team_state.dart';
+import 'package:task_flow/app_state/user_state/user_state.dart';
+import 'package:task_flow/core/constants/app_constant.dart';
+import 'package:task_flow/core/models/models.dart';
+import 'package:task_flow/core/utils/app_modal_util.dart';
+import 'package:intl/intl.dart';
+
+class TaskFormFields extends StatefulWidget {
+  final GlobalKey<FormState> formKey;
+  final TextEditingController titleController;
+  final TextEditingController descriptionController;
+  final String selectedPriority;
+  final String? selectedCategory;
+  final DateTime? selectedDueDate;
+  final bool remindMe;
+  final Team? selectedTeam;
+  final List<String> selectedAssignees;
+  final Function(String) onPriorityChanged;
+  final Function(String) onCategoryChanged;
+  final Function(DateTime) onDueDateChanged;
+  final Function(bool) onRemindMeChanged;
+  final Function(Team?) onTeamChanged;
+  final Function(List<String>) onAssigneesChanged;
+  final bool hideTeamAndAssignee; // Hide team and assignee fields
+  final bool isSubtask; // Indicates if this is a subtask form
+
+  const TaskFormFields({
+    super.key,
+    required this.formKey,
+    required this.titleController,
+    required this.descriptionController,
+    required this.selectedPriority,
+    required this.selectedCategory,
+    required this.selectedDueDate,
+    required this.remindMe,
+    required this.selectedTeam,
+    required this.selectedAssignees,
+    required this.onPriorityChanged,
+    required this.onCategoryChanged,
+    required this.onDueDateChanged,
+    required this.onRemindMeChanged,
+    required this.onTeamChanged,
+    required this.onAssigneesChanged,
+    this.hideTeamAndAssignee = false,
+    this.isSubtask = false,
+  });
+
+  @override
+  State<TaskFormFields> createState() => _TaskFormFieldsState();
+}
+
+class _TaskFormFieldsState extends State<TaskFormFields> {
+  Future<void> _selectDueDate() async {
+    final date = await showDatePicker(
+      context: context,
+      initialDate: widget.selectedDueDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: AppConstant.primaryBlue,
+              onPrimary: Colors.white,
+              surface: AppConstant.cardBackground,
+              onSurface: AppConstant.textPrimary,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (date != null) {
+      final time = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: ColorScheme.dark(
+                primary: AppConstant.primaryBlue,
+                onPrimary: Colors.white,
+                surface: AppConstant.cardBackground,
+                onSurface: AppConstant.textPrimary,
+              ),
+            ),
+            child: child!,
+          );
+        },
+      );
+
+      if (time != null) {
+        final selectedDateTime = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          time.hour,
+          time.minute,
+        );
+        widget.onDueDateChanged(selectedDateTime);
+      }
+    }
+  }
+
+  String _formatDate(DateTime? date) {
+    if (date == null) return 'Today';
+    return DateFormat('MMM d, h:mm a').format(date);
+  }
+
+  void _showTeamPicker() {
+    final teamState = Provider.of<TeamState>(context, listen: false);
+    final teams = teamState.teams;
+
+    AppModalUtil.showActionSheetModal(
+      context: context,
+      child: _TeamPickerContainer(
+        teams: teams,
+        selectedTeam: widget.selectedTeam,
+        onTeamSelected: (team) {
+          widget.onTeamChanged(team);
+          widget.onAssigneesChanged([]); // Clear assignees when team changes
+          Navigator.pop(context);
+        },
+        onClearTeam: () {
+          widget.onTeamChanged(null);
+          widget.onAssigneesChanged([]); // Clear assignees when team is cleared
+          Navigator.pop(context);
+        },
+      ),
+    );
+  }
+
+  void _showUserPicker() {
+    final userState = Provider.of<UserState>(context, listen: false);
+    final teamState = Provider.of<TeamState>(context, listen: false);
+
+    // Get team members if a team is selected
+    final memberIds = widget.selectedTeam != null
+        ? teamState.getTeamById(widget.selectedTeam!.id)?.memberIds ?? []
+        : <String>[];
+
+    if (memberIds.isEmpty) {
+      // Show a message if no team is selected
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please select a team first'),
+          backgroundColor: AppConstant.textSecondary,
+        ),
+      );
+      return;
+    }
+
+    AppModalUtil.showActionSheetModal(
+      context: context,
+      child: _UserPickerContainer(
+        memberIds: memberIds,
+        selectedUserIds: widget.selectedAssignees,
+        currentUserId: userState.currentUser?.id.toString() ?? 'current_user',
+        onUsersSelected: (users) {
+          widget.onAssigneesChanged(users);
+          Navigator.pop(context);
+        },
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final userState = Provider.of<UserState>(context);
+    final currentUserId = userState.currentUser?.id.toString() ?? 'current_user';
+
+    return Form(
+      key: widget.formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Parent/Team selector (optional) - only show if team is selected
+          if (widget.selectedTeam != null && !widget.hideTeamAndAssignee)
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: AppConstant.spacing12,
+                vertical: AppConstant.spacing8,
+              ),
+              margin: EdgeInsets.only(bottom: AppConstant.spacing16),
+              decoration: BoxDecoration(
+                color: AppConstant.cardBackground,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.folder_outlined,
+                    size: 16,
+                    color: AppConstant.textSecondary,
+                  ),
+                  SizedBox(width: AppConstant.spacing8),
+                  Text(
+                    'Parent: ${widget.selectedTeam!.name}',
+                    style: TextStyle(
+                      color: AppConstant.textSecondary,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+          // Title field
+          Text(
+            widget.isSubtask ? 'What is the subtask?' : 'What needs to be done?',
+            style: TextStyle(
+              color: AppConstant.textPrimary.withValues(alpha: 0.6),
+              fontSize: 28,
+              fontWeight: FontWeight.w600,
+              height: 1.3,
+            ),
+          ),
+          SizedBox(height: AppConstant.spacing8),
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppConstant.spacing16,
+              vertical: AppConstant.spacing4,
+            ),
+            decoration: BoxDecoration(
+              color: AppConstant.cardBackground,
+              borderRadius: BorderRadius.circular(
+                AppConstant.borderRadius12,
+              ),
+              border: Border.all(
+                color: AppConstant.textSecondary.withValues(alpha: 0.1),
+              ),
+            ),
+            child: TextFormField(
+              controller: widget.titleController,
+              style: TextStyle(
+                color: AppConstant.textPrimary,
+                fontSize: 16,
+              ),
+              decoration: InputDecoration(
+                hintText: widget.isSubtask ? 'Enter subtask title...' : 'Enter task title...',
+                hintStyle: TextStyle(
+                  color: AppConstant.textSecondary,
+                  fontSize: 16,
+                ),
+                border: InputBorder.none,
+              ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter a title';
+                }
+                return null;
+              },
+              maxLines: null,
+            ),
+          ),
+
+          SizedBox(height: AppConstant.spacing24),
+
+          // Description field with icon
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppConstant.spacing16,
+              vertical: AppConstant.spacing12,
+            ),
+            decoration: BoxDecoration(
+              color: AppConstant.cardBackground,
+              borderRadius: BorderRadius.circular(
+                AppConstant.borderRadius12,
+              ),
+              border: Border.all(
+                color: AppConstant.textSecondary.withValues(alpha: 0.1),
+              ),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.subject,
+                  color: AppConstant.textSecondary,
+                  size: 20,
+                ),
+                SizedBox(width: AppConstant.spacing12),
+                Expanded(
+                  child: TextFormField(
+                    controller: widget.descriptionController,
+                    style: TextStyle(
+                      color: AppConstant.textPrimary,
+                      fontSize: 14,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: 'Add a description...',
+                      hintStyle: TextStyle(
+                        color: AppConstant.textSecondary,
+                        fontSize: 14,
+                      ),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    maxLines: 3,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          SizedBox(height: AppConstant.spacing24),
+
+          // Due date and reminder
+          Container(
+            padding: EdgeInsets.all(AppConstant.spacing16),
+            decoration: BoxDecoration(
+              color: AppConstant.cardBackground,
+              borderRadius: BorderRadius.circular(
+                AppConstant.borderRadius12,
+              ),
+              border: Border.all(
+                color: AppConstant.textSecondary.withValues(alpha: 0.1),
+              ),
+            ),
+            child: Column(
+              children: [
+                // Due date
+                GestureDetector(
+                  onTap: _selectDueDate,
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.red.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          Icons.calendar_today,
+                          color: Colors.red,
+                          size: 20,
+                        ),
+                      ),
+                      SizedBox(width: AppConstant.spacing12),
+                      Expanded(
+                        child: Text(
+                          'Due Date',
+                          style: TextStyle(
+                            color: AppConstant.textPrimary,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        _formatDate(widget.selectedDueDate),
+                        style: TextStyle(
+                          color: AppConstant.textSecondary,
+                          fontSize: 14,
+                        ),
+                      ),
+                      SizedBox(width: AppConstant.spacing8),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        color: AppConstant.textSecondary,
+                        size: 16,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: AppConstant.spacing16),
+                Divider(
+                  color: AppConstant.textSecondary.withValues(alpha: 0.1),
+                  height: 1,
+                ),
+                SizedBox(height: AppConstant.spacing16),
+                // Remind me
+                Row(
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.orange.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(
+                        Icons.notifications,
+                        color: Colors.orange,
+                        size: 20,
+                      ),
+                    ),
+                    SizedBox(width: AppConstant.spacing12),
+                    Expanded(
+                      child: Text(
+                        'Remind me',
+                        style: TextStyle(
+                          color: AppConstant.textPrimary,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    Switch(
+                      value: widget.remindMe,
+                      onChanged: widget.onRemindMeChanged,
+                      activeColor: AppConstant.primaryBlue,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+          SizedBox(height: AppConstant.spacing24),
+
+          // Priority
+          Container(
+            padding: EdgeInsets.all(AppConstant.spacing16),
+            decoration: BoxDecoration(
+              color: AppConstant.cardBackground,
+              borderRadius: BorderRadius.circular(
+                AppConstant.borderRadius12,
+              ),
+              border: Border.all(
+                color: AppConstant.textSecondary.withValues(alpha: 0.1),
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.flag,
+                      color: AppConstant.textSecondary,
+                      size: 20,
+                    ),
+                    SizedBox(width: AppConstant.spacing12),
+                    Text(
+                      'Priority',
+                      style: TextStyle(
+                        color: AppConstant.textPrimary,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: AppConstant.spacing16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _PriorityButton(
+                        label: 'Low',
+                        isSelected: widget.selectedPriority == 'low',
+                        color: AppConstant.successGreen,
+                        onTap: () => widget.onPriorityChanged('low'),
+                      ),
+                    ),
+                    SizedBox(width: AppConstant.spacing12),
+                    Expanded(
+                      child: _PriorityButton(
+                        label: 'Medium',
+                        isSelected: widget.selectedPriority == 'medium',
+                        color: Colors.orange,
+                        onTap: () => widget.onPriorityChanged('medium'),
+                      ),
+                    ),
+                    SizedBox(width: AppConstant.spacing12),
+                    Expanded(
+                      child: _PriorityButton(
+                        label: 'High',
+                        isSelected: widget.selectedPriority == 'high',
+                        color: Colors.red,
+                        onTap: () => widget.onPriorityChanged('high'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+          SizedBox(height: AppConstant.spacing24),
+
+          // Team and Assign To - only show if not hidden
+          if (!widget.hideTeamAndAssignee) ...[
+            // Team selection
+            GestureDetector(
+              onTap: _showTeamPicker,
+              child: Container(
+                padding: EdgeInsets.all(AppConstant.spacing16),
+                decoration: BoxDecoration(
+                  color: AppConstant.cardBackground,
+                  borderRadius: BorderRadius.circular(
+                    AppConstant.borderRadius12,
+                  ),
+                  border: Border.all(
+                    color: AppConstant.textSecondary.withValues(alpha: 0.1),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.group,
+                      color: AppConstant.textSecondary,
+                      size: 20,
+                    ),
+                    SizedBox(width: AppConstant.spacing12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Team',
+                            style: TextStyle(
+                              color: AppConstant.textPrimary,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          if (widget.selectedTeam != null)
+                            Text(
+                              widget.selectedTeam!.name,
+                              style: TextStyle(
+                                color: AppConstant.textSecondary,
+                                fontSize: 14,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: AppConstant.textSecondary,
+                      size: 16,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            SizedBox(height: AppConstant.spacing16),
+
+            // Assign To
+            GestureDetector(
+              onTap: widget.selectedTeam != null ? _showUserPicker : null,
+              child: Container(
+                padding: EdgeInsets.all(AppConstant.spacing16),
+                decoration: BoxDecoration(
+                  color: AppConstant.cardBackground,
+                  borderRadius: BorderRadius.circular(
+                    AppConstant.borderRadius12,
+                  ),
+                  border: Border.all(
+                    color: AppConstant.textSecondary.withValues(alpha: 0.1),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.person,
+                      color: AppConstant.textSecondary,
+                      size: 20,
+                    ),
+                    SizedBox(width: AppConstant.spacing12),
+                    Expanded(
+                      child: Text(
+                        'Assign To',
+                        style: TextStyle(
+                          color: AppConstant.textPrimary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    // Show avatars
+                    if (widget.selectedAssignees.isNotEmpty)
+                      Row(
+                        children: [
+                          for (int i = 0;
+                              i < widget.selectedAssignees.length && i < 3;
+                              i++)
+                            _buildAssigneeAvatar(
+                              widget.selectedAssignees[i],
+                              currentUserId,
+                              i,
+                            ),
+                          if (widget.selectedAssignees.length > 3)
+                            Container(
+                              margin: EdgeInsets.only(
+                                left: i == 0 ? 0 : AppConstant.spacing8,
+                              ),
+                              width: 32,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                color: AppConstant.primaryBlue,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '+${widget.selectedAssignees.length - 3}',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    SizedBox(width: AppConstant.spacing8),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: AppConstant.textSecondary,
+                      size: 16,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            SizedBox(height: AppConstant.spacing24),
+          ],
+
+          // Category
+          Text(
+            'Category',
+            style: TextStyle(
+              color: AppConstant.textPrimary,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: AppConstant.spacing12),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: TaskCategory.all.map((category) {
+                final isSelected = widget.selectedCategory == category.id;
+                return Padding(
+                  padding: EdgeInsets.only(right: AppConstant.spacing12),
+                  child: GestureDetector(
+                    onTap: () => widget.onCategoryChanged(category.id),
+                    child: Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? category.color.withValues(alpha: 0.2)
+                            : AppConstant.cardBackground,
+                        borderRadius: BorderRadius.circular(
+                          AppConstant.borderRadius12,
+                        ),
+                        border: Border.all(
+                          color: isSelected
+                              ? category.color
+                              : AppConstant.textSecondary.withValues(alpha: 0.1),
+                          width: isSelected ? 2 : 1,
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            category.icon,
+                            color: isSelected
+                                ? category.color
+                                : AppConstant.textSecondary,
+                            size: 28,
+                          ),
+                          SizedBox(height: AppConstant.spacing8),
+                          Text(
+                            category.name,
+                            style: TextStyle(
+                              color: isSelected
+                                  ? category.color
+                                  : AppConstant.textSecondary,
+                              fontSize: 12,
+                              fontWeight:
+                                  isSelected ? FontWeight.w600 : FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAssigneeAvatar(String userId, String currentUserId, int index) {
+    final userState = Provider.of<UserState>(context);
+    final user = userState.getUserById(int.tryParse(userId) ?? 0);
+    final isCurrentUser = userId == currentUserId;
+
+    String initials;
+    if (isCurrentUser) {
+      initials = 'ME';
+    } else if (user != null && user.name.isNotEmpty) {
+      initials = user.name.length >= 2
+          ? user.name.substring(0, 2).toUpperCase()
+          : user.name[0].toUpperCase();
+    } else {
+      initials = userId.length >= 2 ? userId.substring(0, 2).toUpperCase() : userId[0].toUpperCase();
+    }
+
+    return Container(
+      margin: EdgeInsets.only(left: index == 0 ? 0 : AppConstant.spacing8),
+      width: 32,
+      height: 32,
+      decoration: BoxDecoration(
+        color: isCurrentUser
+            ? AppConstant.primaryBlue
+            : AppConstant.successGreen,
+        shape: BoxShape.circle,
+      ),
+      child: Center(
+        child: Text(
+          initials,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _PriorityButton extends StatelessWidget {
+  final String label;
+  final bool isSelected;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _PriorityButton({
+    required this.label,
+    required this.isSelected,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: AppConstant.spacing12),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? color.withValues(alpha: 0.2)
+              : AppConstant.darkBackground,
+          borderRadius: BorderRadius.circular(AppConstant.borderRadius8),
+          border: Border.all(
+            color: isSelected ? color : AppConstant.textSecondary.withValues(alpha: 0.1),
+            width: isSelected ? 2 : 1,
+          ),
+        ),
+        child: Center(
+          child: Text(
+            label,
+            style: TextStyle(
+              color: isSelected ? color : AppConstant.textSecondary,
+              fontSize: 14,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Team Picker Container
+class _TeamPickerContainer extends StatelessWidget {
+  final List<Team> teams;
+  final Team? selectedTeam;
+  final Function(Team) onTeamSelected;
+  final VoidCallback onClearTeam;
+
+  const _TeamPickerContainer({
+    required this.teams,
+    required this.selectedTeam,
+    required this.onTeamSelected,
+    required this.onClearTeam,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(AppConstant.spacing24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Select Team',
+            style: TextStyle(
+              color: AppConstant.textPrimary,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: AppConstant.spacing16),
+          if (selectedTeam != null) ...[
+            ListTile(
+              leading: Icon(Icons.clear, color: Colors.red),
+              title: Text(
+                'No Team (Personal Task)',
+                style: TextStyle(color: AppConstant.textPrimary),
+              ),
+              onTap: onClearTeam,
+            ),
+            Divider(color: AppConstant.textSecondary.withValues(alpha: 0.2)),
+          ],
+          ...teams.map((team) {
+            final isSelected = selectedTeam?.id == team.id;
+            return ListTile(
+              leading: Icon(
+                Icons.group,
+                color: isSelected
+                    ? AppConstant.primaryBlue
+                    : AppConstant.textSecondary,
+              ),
+              title: Text(
+                team.name,
+                style: TextStyle(
+                  color: isSelected
+                      ? AppConstant.primaryBlue
+                      : AppConstant.textPrimary,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                ),
+              ),
+              subtitle: team.description != null
+                  ? Text(
+                      team.description!,
+                      style: TextStyle(color: AppConstant.textSecondary),
+                    )
+                  : null,
+              trailing: isSelected
+                  ? Icon(Icons.check, color: AppConstant.primaryBlue)
+                  : null,
+              onTap: () => onTeamSelected(team),
+            );
+          }).toList(),
+        ],
+      ),
+    );
+  }
+}
+
+// User Picker Container
+class _UserPickerContainer extends StatefulWidget {
+  final List<String> memberIds;
+  final List<String> selectedUserIds;
+  final String currentUserId;
+  final Function(List<String>) onUsersSelected;
+
+  const _UserPickerContainer({
+    required this.memberIds,
+    required this.selectedUserIds,
+    required this.currentUserId,
+    required this.onUsersSelected,
+  });
+
+  @override
+  State<_UserPickerContainer> createState() => _UserPickerContainerState();
+}
+
+class _UserPickerContainerState extends State<_UserPickerContainer> {
+  late List<String> _tempSelectedUsers;
+
+  @override
+  void initState() {
+    super.initState();
+    _tempSelectedUsers = List.from(widget.selectedUserIds);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final userState = Provider.of<UserState>(context);
+
+    return Container(
+      padding: EdgeInsets.all(AppConstant.spacing24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Select Team Members',
+            style: TextStyle(
+              color: AppConstant.textPrimary,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: AppConstant.spacing16),
+          if (widget.memberIds.isEmpty)
+            Text(
+              'No team members available',
+              style: TextStyle(color: AppConstant.textSecondary),
+            )
+          else
+            ...widget.memberIds.map((memberId) {
+              final user = userState.getUserById(int.tryParse(memberId) ?? 0);
+              final isCurrentUser = memberId == widget.currentUserId;
+              final isSelected = _tempSelectedUsers.contains(memberId);
+
+              return CheckboxListTile(
+                value: isSelected,
+                onChanged: (bool? value) {
+                  setState(() {
+                    if (value == true) {
+                      _tempSelectedUsers.add(memberId);
+                    } else {
+                      _tempSelectedUsers.remove(memberId);
+                    }
+                  });
+                },
+                title: Row(
+                  children: [
+                    Text(
+                      user?.name ?? 'User $memberId',
+                      style: TextStyle(color: AppConstant.textPrimary),
+                    ),
+                    if (isCurrentUser) ...[
+                      SizedBox(width: AppConstant.spacing8),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppConstant.primaryBlue,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          'ME',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+                activeColor: AppConstant.primaryBlue,
+              );
+            }).toList(),
+          SizedBox(height: AppConstant.spacing16),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => widget.onUsersSelected(_tempSelectedUsers),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppConstant.primaryBlue,
+                padding: EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                    AppConstant.borderRadius12,
+                  ),
+                ),
+              ),
+              child: Text(
+                'Done',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
