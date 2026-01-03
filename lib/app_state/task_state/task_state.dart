@@ -66,7 +66,7 @@ class TaskState extends ChangeNotifier {
   List<Task> get overdueTasks {
     final now = DateTime.now();
     return _tasks
-        .where((t) => !t.isCompleted && t.isOverdue)
+        .where((t) => !t.isCompleted && t.dueDate != null && t.isOverdue)
         .toList()
       ..sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
   }
