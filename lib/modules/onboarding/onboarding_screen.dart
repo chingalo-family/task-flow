@@ -234,8 +234,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           Flexible(
                             child: Text(
                               _pages[_currentPage].isLastPage
-                                  ? 'Get Started'
-                                  : 'Next',
+                                  ? 'Create Free Account'
+                                  : (_currentPage == 0 ? 'Get Started' : 'Next'),
                               style: TextStyle(
                                 fontSize: isSmallScreen ? 14 : 16,
                                 fontWeight: FontWeight.w600,
@@ -244,12 +244,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          SizedBox(width: AppConstant.spacing8),
-                          Icon(
-                            Icons.arrow_forward,
-                            color: Colors.white,
-                            size: isSmallScreen ? 18 : 20,
-                          ),
+                          if (!_pages[_currentPage].isLastPage)
+                            SizedBox(width: AppConstant.spacing8),
+                          if (!_pages[_currentPage].isLastPage)
+                            Icon(
+                              Icons.arrow_forward,
+                              color: Colors.white,
+                              size: isSmallScreen ? 18 : 20,
+                            ),
                         ],
                       ),
                     ),
@@ -262,22 +264,36 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           ? AppConstant.spacing8
                           : AppConstant.spacing12,
                     ),
-                    TextButton(
-                      onPressed: _completeOnboarding,
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.symmetric(
-                          vertical: AppConstant.spacing8,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Already have an account? ',
+                          style: TextStyle(
+                            color: AppConstant.textSecondary,
+                            fontSize: isSmallScreen ? 14 : 16,
+                          ),
                         ),
-                        minimumSize: Size.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      child: Text(
-                        'Log in',
-                        style: TextStyle(
-                          color: AppConstant.textPrimary,
-                          fontSize: isSmallScreen ? 14 : 16,
+                        TextButton(
+                          onPressed: _completeOnboarding,
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: AppConstant.spacing4,
+                              vertical: AppConstant.spacing8,
+                            ),
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: Text(
+                            'Log In',
+                            style: TextStyle(
+                              color: AppConstant.primaryBlue,
+                              fontSize: isSmallScreen ? 14 : 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ],
                 ],
