@@ -170,9 +170,14 @@ class _TasksPageState extends State<TasksPage> {
                     child: Consumer<UserState>(
                       builder: (context, userState, _) {
                         final userId = userState.currentUser?.id ?? '';
-                        final myCompletedCount = taskState.getMyCompletedTasksCount(userId);
-                        final myTotalCount = taskState.getMyTotalTasksCount(userId);
-                        final myProgress = taskState.getMyCompletionProgress(userId);
+                        final myCompletedCount = taskState
+                            .getMyCompletedTasksCount(userId);
+                        final myTotalCount = taskState.getMyTotalTasksCount(
+                          userId,
+                        );
+                        final myProgress = taskState.getMyCompletionProgress(
+                          userId,
+                        );
 
                         return Container(
                           padding: EdgeInsets.all(AppConstant.spacing20),
@@ -186,10 +191,12 @@ class _TasksPageState extends State<TasksPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'My Progress',
@@ -222,42 +229,43 @@ class _TasksPageState extends State<TasksPage> {
                                             strokeWidth: 6,
                                             backgroundColor: AppConstant
                                                 .textSecondary
-                                            .withValues(alpha: 0.2),
-                                        valueColor: AlwaysStoppedAnimation(
-                                          AppConstant.primaryBlue,
+                                                .withValues(alpha: 0.2),
+                                            valueColor: AlwaysStoppedAnimation(
+                                              AppConstant.primaryBlue,
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                    Center(
-                                      child: Text(
-                                        '${(myProgress * 100).toInt()}%',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: AppConstant.primaryBlue,
+                                        Center(
+                                          child: Text(
+                                            '${(myProgress * 100).toInt()}%',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              color: AppConstant.primaryBlue,
+                                            ),
+                                          ),
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: AppConstant.spacing16),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(4),
+                                child: LinearProgressIndicator(
+                                  value: myProgress,
+                                  backgroundColor: AppConstant.textSecondary
+                                      .withValues(alpha: 0.2),
+                                  valueColor: AlwaysStoppedAnimation(
+                                    AppConstant.primaryBlue,
+                                  ),
+                                  minHeight: 8,
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(height: AppConstant.spacing16),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(4),
-                            child: LinearProgressIndicator(
-                              value: myProgress,
-                              backgroundColor: AppConstant.textSecondary
-                                  .withValues(alpha: 0.2),
-                              valueColor: AlwaysStoppedAnimation(
-                                AppConstant.primaryBlue,
-                              ),
-                              minHeight: 8,
-                            ),
-                          ),
-                        ],
-                      );
+                        );
                       },
                     ),
                   ),

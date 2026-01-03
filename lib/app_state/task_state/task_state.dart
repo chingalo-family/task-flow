@@ -5,7 +5,7 @@ import 'package:task_flow/core/entities/task_entity.dart';
 import 'package:task_flow/core/utils/task_entity_mapper.dart';
 import 'package:task_flow/objectbox.g.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as p;
+import 'package:path/path.dart' as path;
 
 class TaskState extends ChangeNotifier {
   List<Task> _tasks = [];
@@ -55,7 +55,7 @@ class TaskState extends ChangeNotifier {
   List<Task> getMyTasks(String userId) {
     return _tasks.where((task) {
       // Check if user is in assignedUserIds
-      if (task.assignedUserIds != null && 
+      if (task.assignedUserIds != null &&
           task.assignedUserIds!.contains(userId)) {
         return true;
       }
@@ -88,35 +88,32 @@ class TaskState extends ChangeNotifier {
     return _tasks.where((task) {
       if (task.dueDate == null) return false;
       return task.dueDate!.isAfter(today) && task.dueDate!.isBefore(tomorrow);
-    }).toList()
-      ..sort((a, b) {
-        // Sort by completion status first (uncompleted first)
-        if (a.isCompleted != b.isCompleted) {
-          return a.isCompleted ? 1 : -1;
-        }
-        // Then by priority
-        final priorityOrder = {
-          TaskConstants.priorityHigh: 0,
-          TaskConstants.priorityMedium: 1,
-          TaskConstants.priorityLow: 2
-        };
-        final priorityCompare = (priorityOrder[a.priority] ?? 3).compareTo(
-          priorityOrder[b.priority] ?? 3,
-        );
-        if (priorityCompare != 0) return priorityCompare;
-        // Then by due date/time
-        if (a.dueDate != null && b.dueDate != null) {
-          return a.dueDate!.compareTo(b.dueDate!);
-        }
-        return 0;
-      });
+    }).toList()..sort((a, b) {
+      // Sort by completion status first (uncompleted first)
+      if (a.isCompleted != b.isCompleted) {
+        return a.isCompleted ? 1 : -1;
+      }
+      // Then by priority
+      final priorityOrder = {
+        TaskConstants.priorityHigh: 0,
+        TaskConstants.priorityMedium: 1,
+        TaskConstants.priorityLow: 2,
+      };
+      final priorityCompare = (priorityOrder[a.priority] ?? 3).compareTo(
+        priorityOrder[b.priority] ?? 3,
+      );
+      if (priorityCompare != 0) return priorityCompare;
+      // Then by due date/time
+      if (a.dueDate != null && b.dueDate != null) {
+        return a.dueDate!.compareTo(b.dueDate!);
+      }
+      return 0;
+    });
   }
 
   List<Task> get overdueTasks {
     return _tasks
-        .where(
-          (task) => task.dueDate != null && task.isOverdue,
-        )
+        .where((task) => task.dueDate != null && task.isOverdue)
         .toList()
       ..sort((a, b) {
         // Sort by completion status first (uncompleted first)
@@ -134,7 +131,7 @@ class TaskState extends ChangeNotifier {
       final priorityOrder = {
         TaskConstants.priorityHigh: 0,
         TaskConstants.priorityMedium: 1,
-        TaskConstants.priorityLow: 2
+        TaskConstants.priorityLow: 2,
       };
       final priorityCompare = (priorityOrder[a.priority] ?? 3).compareTo(
         priorityOrder[b.priority] ?? 3,
@@ -176,7 +173,7 @@ class TaskState extends ChangeNotifier {
 
     // Initialize ObjectBox
     await _initializeObjectBox();
-    
+
     // Load tasks from ObjectBox
     await _loadTasks();
 
@@ -191,7 +188,7 @@ class TaskState extends ChangeNotifier {
 
     try {
       final docsDir = await getApplicationDocumentsDirectory();
-      final storePath = p.join(docsDir.path, 'task-flow-objectbox');
+      final storePath = path.join(docsDir.path, 'task-flow-objectbox');
       _store = await openStore(directory: storePath);
       _taskBox = _store!.box<TaskEntity>();
     } catch (e) {
@@ -211,9 +208,11 @@ class TaskState extends ChangeNotifier {
       // Note: For large datasets, consider implementing pagination
       // by using Query with limit() and offset()
       final entities = _taskBox!.getAll();
-      
+
       // Convert entities to Task models
-      _tasks = entities.map((entity) => TaskEntityMapper.fromEntity(entity)).toList();
+      _tasks = entities
+          .map((entity) => TaskEntityMapper.fromEntity(entity))
+          .toList();
     } catch (e) {
       debugPrint('Error loading tasks: $e');
       _tasks = [];
@@ -244,7 +243,7 @@ class TaskState extends ChangeNotifier {
       if (a.isCompleted != b.isCompleted) {
         return a.isCompleted ? 1 : -1;
       }
-      
+
       // Then by the selected sort option
       switch (_sortBy) {
         case TaskConstants.sortByDueDate:
@@ -256,7 +255,7 @@ class TaskState extends ChangeNotifier {
           final priorityOrder = {
             TaskConstants.priorityHigh: 0,
             TaskConstants.priorityMedium: 1,
-            TaskConstants.priorityLow: 2
+            TaskConstants.priorityLow: 2,
           };
           return (priorityOrder[a.priority] ?? 3).compareTo(
             priorityOrder[b.priority] ?? 3,
@@ -306,7 +305,7 @@ class TaskState extends ChangeNotifier {
 
   Future<void> addTask(Task task) async {
     _tasks.add(task);
-    
+
     // Save to ObjectBox
     if (_taskBox != null) {
       try {
@@ -316,7 +315,7 @@ class TaskState extends ChangeNotifier {
         debugPrint('Error saving task to ObjectBox: $e');
       }
     }
-    
+
     notifyListeners();
   }
 
@@ -324,7 +323,7 @@ class TaskState extends ChangeNotifier {
     final index = _tasks.indexWhere((task) => task.id == updatedTask.id);
     if (index != -1) {
       _tasks[index] = updatedTask;
-      
+
       // Update in ObjectBox
       if (_taskBox != null) {
         try {
@@ -334,7 +333,7 @@ class TaskState extends ChangeNotifier {
               .build();
           final entities = query.find();
           query.close();
-          
+
           if (entities.isNotEmpty) {
             final entity = TaskEntityMapper.toEntity(
               updatedTask,
@@ -346,14 +345,14 @@ class TaskState extends ChangeNotifier {
           debugPrint('Error updating task in ObjectBox: $e');
         }
       }
-      
+
       notifyListeners();
     }
   }
 
   Future<void> deleteTask(String taskId) async {
     _tasks.removeWhere((task) => task.id == taskId);
-    
+
     // Delete from ObjectBox
     if (_taskBox != null) {
       try {
@@ -362,7 +361,7 @@ class TaskState extends ChangeNotifier {
             .build();
         final entities = query.find();
         query.close();
-        
+
         for (var entity in entities) {
           _taskBox!.remove(entity.id);
         }
@@ -370,7 +369,7 @@ class TaskState extends ChangeNotifier {
         debugPrint('Error deleting task from ObjectBox: $e');
       }
     }
-    
+
     notifyListeners();
   }
 
@@ -381,7 +380,7 @@ class TaskState extends ChangeNotifier {
       final newStatus = task.isCompleted
           ? TaskConstants.statusPending
           : TaskConstants.statusCompleted;
-      
+
       // If completing the task, also complete all subtasks
       List<Subtask>? updatedSubtasks = task.subtasks;
       if (newStatus == TaskConstants.statusCompleted && task.subtasks != null) {
@@ -389,18 +388,21 @@ class TaskState extends ChangeNotifier {
             .map((st) => st.copyWith(isCompleted: true))
             .toList();
       }
-      
+
       final updatedTask = task.copyWith(
         status: newStatus,
-        progress: newStatus == TaskConstants.statusCompleted ? 100 : task.progress,
-        completedAt:
-            newStatus == TaskConstants.statusCompleted ? DateTime.now() : null,
+        progress: newStatus == TaskConstants.statusCompleted
+            ? 100
+            : task.progress,
+        completedAt: newStatus == TaskConstants.statusCompleted
+            ? DateTime.now()
+            : null,
         subtasks: updatedSubtasks,
         updatedAt: DateTime.now(),
       );
-      
+
       _tasks[index] = updatedTask;
-      
+
       // Update in ObjectBox
       if (_taskBox != null) {
         try {
@@ -409,7 +411,7 @@ class TaskState extends ChangeNotifier {
               .build();
           final entities = query.find();
           query.close();
-          
+
           if (entities.isNotEmpty) {
             final entity = TaskEntityMapper.toEntity(
               updatedTask,
@@ -421,7 +423,7 @@ class TaskState extends ChangeNotifier {
           debugPrint('Error updating task status in ObjectBox: $e');
         }
       }
-      
+
       notifyListeners();
     }
   }
