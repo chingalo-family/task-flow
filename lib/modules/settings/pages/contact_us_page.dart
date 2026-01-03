@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
+import 'package:task_flow/core/components/components.dart';
+import 'package:task_flow/core/utils/utils.dart';
 
 class ContactUsPage extends StatefulWidget {
   const ContactUsPage({super.key});
@@ -22,12 +24,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
 
   void _sendMessage() {
     // TODO: Implement email sending functionality
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Message sent successfully!'),
-        backgroundColor: AppConstant.successGreen,
-      ),
-    );
+    AppUtil.showToastMessage(message: 'Message sent successfully!');
     Navigator.pop(context);
   }
 
@@ -90,109 +87,45 @@ class _ContactUsPageState extends State<ContactUsPage> {
               SizedBox(height: AppConstant.spacing24),
 
               // Subject Field
-              Text(
-                'Subject',
-                style: TextStyle(
-                  color: AppConstant.textPrimary,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              SizedBox(height: AppConstant.spacing12),
-              TextField(
+              InputField(
                 controller: _subjectController,
-                style: TextStyle(color: AppConstant.textPrimary),
-                decoration: InputDecoration(
-                  hintText: 'Brief summary of the issue',
-                  hintStyle: TextStyle(
-                    color: AppConstant.textSecondary.withValues(alpha: 0.5),
-                  ),
-                  filled: true,
-                  fillColor: AppConstant.cardBackground,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                      AppConstant.borderRadius12,
-                    ),
-                    borderSide: BorderSide.none,
-                  ),
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: AppConstant.spacing16,
-                    vertical: AppConstant.spacing16,
-                  ),
-                ),
+                hintText: 'Brief summary of the issue',
+                icon: Icons.subject,
+                labelText: 'Subject',
               ),
               SizedBox(height: AppConstant.spacing24),
 
               // Message Field
-              Text(
-                'Message',
-                style: TextStyle(
-                  color: AppConstant.textPrimary,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              SizedBox(height: AppConstant.spacing12),
-              TextField(
+              InputField(
                 controller: _messageController,
+                hintText: 'Describe your issue or feedback in detail...',
+                icon: Icons.message_outlined,
+                labelText: 'Message',
                 maxLines: 8,
-                style: TextStyle(color: AppConstant.textPrimary),
-                decoration: InputDecoration(
-                  hintText: 'Describe your issue or feedback in detail...',
-                  hintStyle: TextStyle(
-                    color: AppConstant.textSecondary.withValues(alpha: 0.5),
-                  ),
-                  filled: true,
-                  fillColor: AppConstant.cardBackground,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                      AppConstant.borderRadius12,
-                    ),
-                    borderSide: BorderSide.none,
-                  ),
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: AppConstant.spacing16,
-                    vertical: AppConstant.spacing16,
-                  ),
-                ),
               ),
               SizedBox(height: AppConstant.spacing32),
 
               // Send Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _sendMessage,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppConstant.primaryBlue,
-                    padding: EdgeInsets.symmetric(
-                      vertical: AppConstant.spacing16,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                        AppConstant.borderRadius12,
-                      ),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Send Message',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      SizedBox(width: AppConstant.spacing8),
-                      Icon(
-                        Icons.arrow_forward,
+              PrimaryButton(
+                onPressed: _sendMessage,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Send Message',
+                      style: TextStyle(
                         color: Colors.white,
-                        size: 20,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
                       ),
-                    ],
-                  ),
+                    ),
+                    SizedBox(width: AppConstant.spacing8),
+                    Icon(
+                      Icons.arrow_forward,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ],
                 ),
               ),
             ],
