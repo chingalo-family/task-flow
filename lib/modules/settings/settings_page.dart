@@ -96,7 +96,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       builder: (context, userState, _) {
                         final initials =
                             (userState.currentUser?.fullName?.substring(0, 1) ??
-                                    userState.currentUser?.username?.substring(
+                                    userState.currentUser?.username.substring(
                                       0,
                                       1,
                                     ) ??

@@ -541,10 +541,12 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                     // Show empty state if no subtasks
                     if (_task.subtasks == null || _task.subtasks!.isEmpty)
                       Container(
+                        width: double.infinity,
                         padding: EdgeInsets.symmetric(
                           vertical: AppConstant.spacing24,
                         ),
                         child: Column(
+                          crossAxisAlignment: .center,
                           children: [
                             Icon(
                               Icons.checklist,
@@ -569,24 +571,30 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                         final index = entry.key;
                         final subtask = entry.value;
                         return Padding(
-                          padding: EdgeInsets.only(bottom: AppConstant.spacing12),
+                          padding: EdgeInsets.only(
+                            bottom: AppConstant.spacing12,
+                          ),
                           child: Row(
                             children: [
                               GestureDetector(
                                 onTap: _task.isCompleted
                                     ? null
                                     : () {
-                                        final taskState = Provider.of<TaskState>(
-                                          context,
-                                          listen: false,
-                                        );
+                                        final taskState =
+                                            Provider.of<TaskState>(
+                                              context,
+                                              listen: false,
+                                            );
                                         setState(() {
-                                          final updatedSubtasks = List<Subtask>.from(
-                                            _task.subtasks!,
-                                          );
-                                          updatedSubtasks[index] = subtask.copyWith(
-                                            isCompleted: !subtask.isCompleted,
-                                          );
+                                          final updatedSubtasks =
+                                              List<Subtask>.from(
+                                                _task.subtasks!,
+                                              );
+                                          updatedSubtasks[index] = subtask
+                                              .copyWith(
+                                                isCompleted:
+                                                    !subtask.isCompleted,
+                                              );
                                           _task = _task.copyWith(
                                             subtasks: updatedSubtasks,
                                           );
@@ -604,9 +612,8 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                                     border: Border.all(
                                       color: subtask.isCompleted
                                           ? AppConstant.primaryBlue
-                                          : AppConstant.textSecondary.withValues(
-                                              alpha: 0.3,
-                                            ),
+                                          : AppConstant.textSecondary
+                                                .withValues(alpha: 0.3),
                                       width: 2,
                                     ),
                                   ),
@@ -700,23 +707,28 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                         onTap: () {
                           _showAddSubtaskDialog();
                         },
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.add,
-                              size: 20,
-                              color: AppConstant.primaryBlue,
-                            ),
-                            SizedBox(width: AppConstant.spacing8),
-                            Text(
-                              'Add Subtask',
-                              style: TextStyle(
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.add,
+                                size: 20,
                                 color: AppConstant.primaryBlue,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
                               ),
-                            ),
-                          ],
+                              SizedBox(width: AppConstant.spacing8),
+                              Text(
+                                'Add Subtask',
+                                style: TextStyle(
+                                  color: AppConstant.primaryBlue,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                   ],
