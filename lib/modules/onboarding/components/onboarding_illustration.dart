@@ -25,6 +25,10 @@ class OnboardingIllustration extends StatelessWidget {
         return _buildProgressIllustration();
       case 'master':
         return _buildMasterIllustration();
+      case 'offline':
+        return _buildOfflineIllustration();
+      case 'get_started':
+        return _buildGetStartedIllustration();
       default:
         return Container();
     }
@@ -429,8 +433,230 @@ class OnboardingIllustration extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            AppConstant.cardBackground,
-            AppConstant.cardBackground.withValues(alpha: 0.8),
+            Color(0xFF5A7C8C),
+            Color(0xFF4A6C7C),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(AppConstant.borderRadius24),
+      ),
+      padding: EdgeInsets.all(AppConstant.spacing32),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Laptop base
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Laptop screen
+              Container(
+                width: 180,
+                height: 120,
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.7),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    width: 2,
+                  ),
+                ),
+              ),
+              // Laptop keyboard
+              Container(
+                width: 200,
+                height: 8,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.grey.withValues(alpha: 0.3),
+                      Colors.grey.withValues(alpha: 0.5),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(12),
+                    bottomRight: Radius.circular(12),
+                  ),
+                ),
+              ),
+              // Laptop base
+              Container(
+                width: 220,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey.withValues(alpha: 0.4),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ],
+          ),
+          // Floating task clipboard
+          Positioned(
+            right: 20,
+            top: 40,
+            child: Transform.rotate(
+              angle: 0.15,
+              child: Container(
+                width: 80,
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.95),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Color(0xFFD4A574),
+                    width: 3,
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    _buildFloatingCheckItem(true),
+                    SizedBox(height: 6),
+                    _buildFloatingCheckItem(true),
+                    SizedBox(height: 6),
+                    _buildFloatingCheckItem(true),
+                    SizedBox(height: 6),
+                    _buildFloatingCheckItem(true),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          // Floating pencil
+          Positioned(
+            left: 40,
+            top: 50,
+            child: Transform.rotate(
+              angle: -0.5,
+              child: Container(
+                width: 60,
+                height: 6,
+                decoration: BoxDecoration(
+                  color: Colors.grey.withValues(alpha: 0.6),
+                  borderRadius: BorderRadius.circular(3),
+                ),
+              ),
+            ),
+          ),
+          // Floating paper pieces
+          Positioned(
+            left: 30,
+            bottom: 60,
+            child: Container(
+              width: 40,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+          ),
+          // More floating elements
+          Positioned(
+            right: 30,
+            bottom: 40,
+            child: Transform.rotate(
+              angle: 0.3,
+              child: Container(
+                width: 50,
+                height: 6,
+                decoration: BoxDecoration(
+                  color: Colors.grey.withValues(alpha: 0.4),
+                  borderRadius: BorderRadius.circular(3),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFloatingCheckItem(bool checked) {
+    return Row(
+      children: [
+        Icon(
+          Icons.check,
+          color: AppConstant.primaryBlue,
+          size: 12,
+        ),
+        SizedBox(width: 4),
+        Expanded(
+          child: Container(
+            height: 6,
+            decoration: BoxDecoration(
+              color: Colors.grey.withValues(alpha: 0.4),
+              borderRadius: BorderRadius.circular(3),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildOfflineIllustration() {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppConstant.cardBackground,
+        borderRadius: BorderRadius.circular(AppConstant.borderRadius24),
+      ),
+      padding: EdgeInsets.all(AppConstant.spacing32),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Main rounded square
+          Container(
+            width: 180,
+            height: 180,
+            decoration: BoxDecoration(
+              color: Color(0xFF2C3E50).withValues(alpha: 0.6),
+              borderRadius: BorderRadius.circular(AppConstant.borderRadius24),
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.1),
+                width: 2,
+              ),
+            ),
+            child: Center(
+              child: Icon(
+                Icons.wifi_off_rounded,
+                size: 80,
+                color: AppConstant.primaryBlue,
+              ),
+            ),
+          ),
+          // Sync icon overlay
+          Positioned(
+            bottom: 40,
+            right: 60,
+            child: Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Color(0xFF2ECC71),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: AppConstant.cardBackground,
+                  width: 3,
+                ),
+              ),
+              child: Icon(
+                Icons.sync_rounded,
+                color: Colors.white,
+                size: 28,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGetStartedIllustration() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF5A9E9E),
+            Color(0xFF4A8E8E),
           ],
         ),
         borderRadius: BorderRadius.circular(AppConstant.borderRadius24),
@@ -439,83 +665,90 @@ class OnboardingIllustration extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Laptop illustration
-          Icon(
-            Icons.laptop_mac,
-            size: 80,
-            color: AppConstant.primaryBlue.withValues(alpha: 0.7),
-          ),
-          SizedBox(height: AppConstant.spacing24),
-          // Floating task card
-          Transform.rotate(
-            angle: 0.1,
-            child: Container(
-              width: 140,
-              padding: EdgeInsets.all(AppConstant.spacing12),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
-                border: Border.all(
-                  color: AppConstant.primaryBlue.withValues(alpha: 0.3),
-                  width: 2,
+          // Stack of coins/discs
+          Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              Container(
+                width: 100,
+                height: 80,
+                child: Stack(
+                  children: [
+                    Positioned(
+                      bottom: 0,
+                      left: 10,
+                      child: _buildDisc(0),
+                    ),
+                    Positioned(
+                      bottom: 12,
+                      left: 10,
+                      child: _buildDisc(1),
+                    ),
+                    Positioned(
+                      bottom: 24,
+                      left: 10,
+                      child: _buildDisc(2),
+                    ),
+                    Positioned(
+                      bottom: 36,
+                      left: 10,
+                      child: _buildDisc(3),
+                    ),
+                    Positioned(
+                      bottom: 48,
+                      left: 10,
+                      child: _buildDisc(4),
+                    ),
+                  ],
                 ),
               ),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.check_circle,
-                        color: AppConstant.primaryBlue,
-                        size: 16,
-                      ),
-                      SizedBox(width: 8),
-                      Expanded(
-                        child: Container(
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.5),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.check_circle,
-                        color: AppConstant.primaryBlue,
-                        size: 16,
-                      ),
-                      SizedBox(width: 8),
-                      Expanded(
-                        child: Container(
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.5),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+            ],
           ),
-          SizedBox(height: AppConstant.spacing16),
-          // Pencil icon
-          Align(
-            alignment: Alignment.centerRight,
-            child: Icon(
-              Icons.edit,
-              size: 32,
-              color: AppConstant.textSecondary.withValues(alpha: 0.5),
-            ),
+          SizedBox(height: AppConstant.spacing32),
+          // Floating checkmarks
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildFloatingCheck(-0.3, 30, 0.8),
+              SizedBox(width: 8),
+              _buildFloatingCheck(0.0, 35, 1.0),
+              SizedBox(width: 8),
+              _buildFloatingCheck(0.2, 40, 0.9),
+              SizedBox(width: 12),
+              _buildFloatingCheck(0.15, 25, 0.7),
+              SizedBox(width: 8),
+              _buildFloatingCheck(-0.1, 30, 0.6),
+              SizedBox(width: 8),
+              _buildFloatingCheck(0.25, 28, 0.5),
+            ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildDisc(int index) {
+    return Container(
+      width: 80,
+      height: 14,
+      decoration: BoxDecoration(
+        color: Color(0xFFD4A574),
+        borderRadius: BorderRadius.circular(40),
+        border: Border.all(
+          color: Color(0xFFB8956A),
+          width: 1,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFloatingCheck(double rotation, double size, double opacity) {
+    return Transform.rotate(
+      angle: rotation,
+      child: Icon(
+        Icons.check,
+        color: AppConstant.primaryBlue.withValues(alpha: opacity),
+        size: size,
       ),
     );
   }
