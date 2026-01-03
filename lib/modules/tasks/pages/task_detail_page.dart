@@ -997,7 +997,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                           context,
                           listen: false,
                         );
-                        final subtasks = List<Subtask>.from(_task.subtasks!);
+                        final subtasks = List<Subtask>.from(_task.subtasks ?? []);
                         subtasks[index] = subtask.copyWith(
                           title: titleController.text.trim(),
                         );
