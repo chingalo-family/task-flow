@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/task_state/task_state.dart';
 import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
+import 'package:task_flow/core/models/task/task.dart';
 import 'package:task_flow/modules/tasks/components/task_card.dart';
 import 'package:task_flow/modules/tasks/pages/add_edit_task_page.dart';
 
@@ -15,7 +16,6 @@ class TasksPage extends StatefulWidget {
 
 class _TasksPageState extends State<TasksPage> {
   final TextEditingController _searchController = TextEditingController();
-  String _searchQuery = '';
 
   @override
   void initState() {
@@ -471,10 +471,7 @@ class TaskSearchDelegate extends SearchDelegate<Task?> {
         border: InputBorder.none,
       ),
       textTheme: TextTheme(
-        titleLarge: TextStyle(
-          color: AppConstant.textPrimary,
-          fontSize: 18,
-        ),
+        titleLarge: TextStyle(color: AppConstant.textPrimary, fontSize: 18),
       ),
     );
   }
