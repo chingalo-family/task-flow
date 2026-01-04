@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/rendering.dart';
 import 'package:task_flow/core/entities/task_entity.dart';
 import 'package:task_flow/core/models/models.dart';
 
@@ -12,7 +13,7 @@ class TaskEntityMapper {
       try {
         assignedUserIdsJson = jsonEncode(task.assignedUserIds);
       } catch (e) {
-        print('Error encoding assignedUserIds: $e');
+        debugPrint('Error encoding assignedUserIds: $e');
         assignedUserIdsJson = null;
       }
     }
@@ -23,7 +24,7 @@ class TaskEntityMapper {
       try {
         tagsJson = jsonEncode(task.tags);
       } catch (e) {
-        print('Error encoding tags: $e');
+        debugPrint('Error encoding tags: $e');
         tagsJson = null;
       }
     }
@@ -34,7 +35,7 @@ class TaskEntityMapper {
       try {
         attachmentsJson = jsonEncode(task.attachments);
       } catch (e) {
-        print('Error encoding attachments: $e');
+        debugPrint('Error encoding attachments: $e');
         attachmentsJson = null;
       }
     }
@@ -43,15 +44,19 @@ class TaskEntityMapper {
     String? subtasksJson;
     if (task.subtasks != null && task.subtasks!.isNotEmpty) {
       try {
-        subtasksJson = jsonEncode(task.subtasks!
-            .map((s) => {
+        subtasksJson = jsonEncode(
+          task.subtasks!
+              .map(
+                (s) => {
                   'id': s.id,
                   'title': s.title,
                   'isCompleted': s.isCompleted,
-                })
-            .toList());
+                },
+              )
+              .toList(),
+        );
       } catch (e) {
-        print('Error encoding subtasks: $e');
+        debugPrint('Error encoding subtasks: $e');
         subtasksJson = null;
       }
     }
@@ -97,7 +102,7 @@ class TaskEntityMapper {
           assignedUserIds = List<String>.from(decoded);
         }
       } catch (e) {
-        print('Error decoding assignedUserIds: $e');
+        debugPrint('Error decoding assignedUserIds: $e');
         assignedUserIds = null;
       }
     }
@@ -113,7 +118,7 @@ class TaskEntityMapper {
           tags = List<String>.from(decoded);
         }
       } catch (e) {
-        print('Error decoding tags: $e');
+        debugPrint('Error decoding tags: $e');
         tags = null;
       }
     }
@@ -129,7 +134,7 @@ class TaskEntityMapper {
           attachments = List<String>.from(decoded);
         }
       } catch (e) {
-        print('Error decoding attachments: $e');
+        debugPrint('Error decoding attachments: $e');
         attachments = null;
       }
     }
@@ -142,14 +147,16 @@ class TaskEntityMapper {
       try {
         final List<dynamic> subtasksData = jsonDecode(entity.subtasksJson!);
         subtasks = subtasksData
-            .map((s) => Subtask(
-                  id: s['id'] ?? '',
-                  title: s['title'] ?? '',
-                  isCompleted: s['isCompleted'] ?? false,
-                ))
+            .map(
+              (s) => Subtask(
+                id: s['id'] ?? '',
+                title: s['title'] ?? '',
+                isCompleted: s['isCompleted'] ?? false,
+              ),
+            )
             .toList();
       } catch (e) {
-        print('Error decoding subtasks: $e');
+        debugPrint('Error decoding subtasks: $e');
         subtasks = [];
       }
     }

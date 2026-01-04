@@ -34,8 +34,8 @@ class AppUtil {
     return lastDate;
   }
 
-  static List<Map<String, String>> getPaginationFilters({
-    required Response response,
+  static List<Map<String, String>> getPaginationFilters(
+    Response response, {
     int pageSize = 50,
   }) {
     List<Map<String, String>> pageFilters = [];
