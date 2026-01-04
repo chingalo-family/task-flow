@@ -9,21 +9,22 @@ class NotificationEntity {
   String notificationId; // API notification id
   String title;
   String? body;
-  String type; // 'task_assigned', 'team_invite', 'task_completed', 'mention', etc.
-  
+  String
+  type; // 'task_assigned', 'team_invite', 'task_completed', 'mention', etc.
+
   bool isRead;
   String? relatedEntityId; // ID of related task, team, etc.
   String? relatedEntityType; // 'task', 'team', 'user', etc.
-  
+
   String? actorUserId; // User who triggered the notification
   String? actorUsername;
   String? actorAvatarUrl;
-  
+
   @Property(type: PropertyType.date)
   DateTime createdAt;
-  
+
   String? metadataJson; // Additional metadata stored as JSON
-  
+
   bool isSynced;
 
   NotificationEntity({
@@ -40,5 +41,6 @@ class NotificationEntity {
     this.actorAvatarUrl,
     DateTime? createdAt,
     this.isSynced = false,
+    String? metadataJson,
   }) : createdAt = createdAt ?? DateTime.now();
 }

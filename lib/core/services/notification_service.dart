@@ -193,7 +193,6 @@ class NotificationService {
       isRead: false,
       actorUsername: actorUsername,
       createdAt: DateTime.now(),
-      metadata: {'taskId': taskId},
     );
     return await createNotification(notification);
   }
@@ -212,7 +211,6 @@ class NotificationService {
       isRead: false,
       actorUsername: actorUsername,
       createdAt: DateTime.now(),
-      metadata: {'teamId': teamId},
     );
     return await createNotification(notification);
   }
@@ -231,7 +229,6 @@ class NotificationService {
       isRead: false,
       actorUsername: actorUsername,
       createdAt: DateTime.now(),
-      metadata: {'taskId': taskId},
     );
     return await createNotification(notification);
   }

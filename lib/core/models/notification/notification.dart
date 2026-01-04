@@ -25,7 +25,6 @@ class Notification {
     this.actorUsername,
     this.actorAvatarUrl,
     DateTime? createdAt,
-    required Map<String, String> metadata,
   }) : createdAt = createdAt ?? DateTime.now();
 
   Notification copyWith({
@@ -53,7 +52,6 @@ class Notification {
       actorUsername: actorUsername ?? this.actorUsername,
       actorAvatarUrl: actorAvatarUrl ?? this.actorAvatarUrl,
       createdAt: createdAt ?? this.createdAt,
-      metadata: {},
     );
   }
 

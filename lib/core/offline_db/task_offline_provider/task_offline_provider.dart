@@ -5,7 +5,7 @@ import 'package:task_flow/core/services/db_service.dart';
 import 'package:task_flow/core/utils/task_entity_mapper.dart';
 
 /// Offline provider for task persistence
-/// 
+///
 /// Handles all ObjectBox database operations for tasks.
 /// Follows singleton pattern for efficient database access.
 class TaskOfflineProvider {
@@ -28,7 +28,7 @@ class TaskOfflineProvider {
       final allEntities = box.getAll();
       TaskEntity? existing;
       for (var e in allEntities) {
-        if (e.apiTaskId == task.id) {
+        if (e.taskId == task.id) {
           existing = e;
           break;
         }
@@ -58,7 +58,7 @@ class TaskOfflineProvider {
       // (This is a temporary solution until ObjectBox code generation is run)
       final allEntities = box.getAll();
       for (var entity in allEntities) {
-        if (entity.apiTaskId == apiTaskId) {
+        if (entity.taskId == apiTaskId) {
           return TaskEntityMapper.fromEntity(entity);
         }
       }
@@ -99,7 +99,7 @@ class TaskOfflineProvider {
       // (This is a temporary solution until ObjectBox code generation is run)
       final allEntities = box.getAll();
       for (var entity in allEntities) {
-        if (entity.apiTaskId == apiTaskId) {
+        if (entity.taskId == apiTaskId) {
           box.remove(entity.id);
           break;
         }
@@ -116,7 +116,7 @@ class TaskOfflineProvider {
       await DBService().init();
       final box = DBService().taskBox;
       if (box == null) return;
-      
+
       box.removeAll();
     } catch (e) {
       debugPrint('Error deleting all tasks: $e');
@@ -130,7 +130,7 @@ class TaskOfflineProvider {
       await DBService().init();
       final box = DBService().taskBox;
       if (box == null) return 0;
-      
+
       return box.count();
     } catch (e) {
       debugPrint('Error getting tasks count: $e');

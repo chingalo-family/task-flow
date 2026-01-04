@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:task_flow/core/entities/notification_entity.dart';
 import 'package:task_flow/core/models/notification/notification.dart';
@@ -27,7 +25,7 @@ class NotificationOfflineProvider {
 
       // Check if notification already exists by iterating through all notifications
       // (This is a temporary solution until ObjectBox code generation is run)
-      if (notification.id != null && notification.id!.isNotEmpty) {
+      if (notification.id.isNotEmpty) {
         final allEntities = box.getAll();
         for (var e in allEntities) {
           if (e.notificationId == notification.id) {
@@ -112,7 +110,7 @@ class NotificationOfflineProvider {
       await DBService().init();
       final box = DBService().notificationBox;
       if (box == null) return;
-      
+
       box.removeAll();
     } catch (e) {
       debugPrint('Error deleting all notifications: $e');
@@ -126,7 +124,7 @@ class NotificationOfflineProvider {
       await DBService().init();
       final box = DBService().notificationBox;
       if (box == null) return 0;
-      
+
       return box.count();
     } catch (e) {
       debugPrint('Error getting notifications count: $e');
@@ -136,17 +134,6 @@ class NotificationOfflineProvider {
 
   /// Convert NotificationEntity to Notification model
   Notification _toNotification(NotificationEntity entity) {
-    Map<String, dynamic>? metadata;
-    if (entity.metadataJson != null && entity.metadataJson!.isNotEmpty) {
-      try {
-        metadata = Map<String, dynamic>.from(
-          jsonDecode(entity.metadataJson!) as Map,
-        );
-      } catch (e) {
-        debugPrint('Error parsing metadata JSON: $e');
-      }
-    }
-
     return Notification(
       id: entity.notificationId,
       title: entity.title,
@@ -155,30 +142,19 @@ class NotificationOfflineProvider {
       isRead: entity.isRead,
       actorUsername: entity.actorUsername,
       createdAt: entity.createdAt,
-      metadata: metadata,
     );
   }
 
   /// Convert Notification model to NotificationEntity
   NotificationEntity _toEntity(Notification notification) {
-    String? metadataJson;
-    if (notification.metadata != null && notification.metadata!.isNotEmpty) {
-      try {
-        metadataJson = jsonEncode(notification.metadata);
-      } catch (e) {
-        debugPrint('Error encoding metadata to JSON: $e');
-      }
-    }
-
     return NotificationEntity(
-      notificationId: notification.id ?? '',
+      notificationId: notification.id,
       title: notification.title,
       body: notification.body,
       type: notification.type,
-      isRead: notification.isRead ?? false,
+      isRead: notification.isRead,
       actorUsername: notification.actorUsername,
-      createdAt: notification.createdAt ?? DateTime.now(),
-      metadataJson: metadataJson,
+      createdAt: notification.createdAt,
     );
   }
 }
