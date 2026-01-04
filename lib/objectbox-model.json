@@ -45,16 +45,6 @@
           "type": 9
         },
         {
-          "id": "8:836196098256066830",
-          "name": "userGroupsJson",
-          "type": 9
-        },
-        {
-          "id": "9:4360288102706087886",
-          "name": "userOrgUnitIdsJson",
-          "type": 9
-        },
-        {
           "id": "10:9082837829193722667",
           "name": "isLogin",
           "type": 1
@@ -362,7 +352,10 @@
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    836196098256066830,
+    4360288102706087886
+  ],
   "retiredRelationUids": [],
   "version": 1
 }

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:task_flow/core/models/user.dart';
 import 'package:task_flow/core/entities/user_entity.dart';
 import 'package:task_flow/core/services/db_service.dart';
@@ -21,13 +19,13 @@ class UserOfflineProvider {
     await DBService().init();
     final box = DBService().userBox;
     if (box == null) return null;
-    final q = box
+    final query = box
         .query(
           UserEntity_.apiUserId.equals(apiUserId) as Condition<UserEntity>?,
         )
         .build();
-    final found = q.findFirst();
-    q.close();
+    final found = query.findFirst();
+    query.close();
     return found == null ? null : _toUser(found);
   }
 
@@ -47,12 +45,6 @@ class UserOfflineProvider {
       password: user.password,
       email: user.email,
       phoneNumber: user.phoneNumber,
-      userGroupsJson: user.userGroups == null
-          ? null
-          : jsonEncode(user.userGroups),
-      userOrgUnitIdsJson: user.userOrgUnitIds == null
-          ? null
-          : jsonEncode(user.userOrgUnitIds),
       isLogin: user.isLogin,
     );
     box.put(entity);
@@ -72,27 +64,15 @@ class UserOfflineProvider {
     if (found != null) box.remove(found.id);
   }
 
-  User _toUser(UserEntity e) {
-    List<String>? groups;
-    List<String>? orgs;
-    try {
-      if (e.userGroupsJson != null) {
-        groups = List<String>.from(jsonDecode(e.userGroupsJson!));
-      }
-      if (e.userOrgUnitIdsJson != null) {
-        orgs = List<String>.from(jsonDecode(e.userOrgUnitIdsJson!));
-      }
-    } catch (_) {}
+  User _toUser(UserEntity entity) {
     return User(
-      id: e.apiUserId,
-      username: e.username,
-      fullName: e.fullName,
-      password: e.password,
-      email: e.email,
-      phoneNumber: e.phoneNumber,
-      userGroups: groups,
-      userOrgUnitIds: orgs,
-      isLogin: e.isLogin,
+      id: entity.apiUserId,
+      username: entity.username,
+      fullName: entity.fullName,
+      password: entity.password,
+      email: entity.email,
+      phoneNumber: entity.phoneNumber,
+      isLogin: entity.isLogin,
     );
   }
 }

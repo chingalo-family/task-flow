@@ -10,6 +10,7 @@ import 'preference_service.dart';
 
 class UserService {
   static const _kCurrentUserKey = 'current_user_id';
+  final String apiFields = 'fields=id,username,displayName,email,phoneNumber';
 
   UserService._();
   static final UserService _instance = UserService._();
@@ -51,9 +52,7 @@ class UserService {
 
   Future<User?> login(String username, String password) async {
     final dhis = Dhis2HttpService(username: username, password: password);
-    final res = await dhis.httpGet(
-      '/api/me.json?fields=id,username,displayName,email,phone,userGroups,organisationUnits',
-    );
+    final res = await dhis.httpGet('/api/me.json?$apiFields');
     if (res.statusCode == 200) {
       final body = jsonDecode(res.body) as Map<String, dynamic>;
       final user = User.fromJson(body);

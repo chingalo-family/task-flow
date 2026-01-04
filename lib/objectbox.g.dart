@@ -71,18 +71,6 @@ final _entities = <obx_int.ModelEntity>[
         flags: 0,
       ),
       obx_int.ModelProperty(
-        id: const obx_int.IdUid(8, 836196098256066830),
-        name: 'userGroupsJson',
-        type: 9,
-        flags: 0,
-      ),
-      obx_int.ModelProperty(
-        id: const obx_int.IdUid(9, 4360288102706087886),
-        name: 'userOrgUnitIdsJson',
-        type: 9,
-        flags: 0,
-      ),
-      obx_int.ModelProperty(
         id: const obx_int.IdUid(10, 9082837829193722667),
         name: 'isLogin',
         type: 1,
@@ -487,7 +475,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
     lastSequenceId: const obx_int.IdUid(0, 0),
     retiredEntityUids: const [],
     retiredIndexUids: const [],
-    retiredPropertyUids: const [],
+    retiredPropertyUids: const [836196098256066830, 4360288102706087886],
     retiredRelationUids: const [],
     modelVersion: 5,
     modelVersionParserMinimum: 5,
@@ -518,12 +506,6 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final phoneNumberOffset = object.phoneNumber == null
             ? null
             : fbb.writeString(object.phoneNumber!);
-        final userGroupsJsonOffset = object.userGroupsJson == null
-            ? null
-            : fbb.writeString(object.userGroupsJson!);
-        final userOrgUnitIdsJsonOffset = object.userOrgUnitIdsJson == null
-            ? null
-            : fbb.writeString(object.userOrgUnitIdsJson!);
         fbb.startTable(13);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, apiUserIdOffset);
@@ -532,8 +514,6 @@ obx_int.ModelDefinition getObjectBoxModel() {
         fbb.addOffset(4, passwordOffset);
         fbb.addOffset(5, emailOffset);
         fbb.addOffset(6, phoneNumberOffset);
-        fbb.addOffset(7, userGroupsJsonOffset);
-        fbb.addOffset(8, userOrgUnitIdsJsonOffset);
         fbb.addBool(9, object.isLogin);
         fbb.addInt64(10, object.createdAt.millisecondsSinceEpoch);
         fbb.addInt64(11, object.updatedAt.millisecondsSinceEpoch);
@@ -567,12 +547,6 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final phoneNumberParam = const fb.StringReader(
           asciiOptimization: true,
         ).vTableGetNullable(buffer, rootOffset, 16);
-        final userGroupsJsonParam = const fb.StringReader(
-          asciiOptimization: true,
-        ).vTableGetNullable(buffer, rootOffset, 18);
-        final userOrgUnitIdsJsonParam = const fb.StringReader(
-          asciiOptimization: true,
-        ).vTableGetNullable(buffer, rootOffset, 20);
         final isLoginParam = const fb.BoolReader().vTableGet(
           buffer,
           rootOffset,
@@ -593,8 +567,6 @@ obx_int.ModelDefinition getObjectBoxModel() {
           password: passwordParam,
           email: emailParam,
           phoneNumber: phoneNumberParam,
-          userGroupsJson: userGroupsJsonParam,
-          userOrgUnitIdsJson: userOrgUnitIdsJsonParam,
           isLogin: isLoginParam,
           createdAt: createdAtParam,
           updatedAt: updatedAtParam,
@@ -705,25 +677,25 @@ obx_int.ModelDefinition getObjectBoxModel() {
           28,
           false,
         );
-        final object =
-            NotificationEntity(
-                id: idParam,
-                notificationId: notificationIdParam,
-                title: titleParam,
-                body: bodyParam,
-                type: typeParam,
-                isRead: isReadParam,
-                relatedEntityId: relatedEntityIdParam,
-                relatedEntityType: relatedEntityTypeParam,
-                actorUserId: actorUserIdParam,
-                actorUsername: actorUsernameParam,
-                actorAvatarUrl: actorAvatarUrlParam,
-                createdAt: createdAtParam,
-                isSynced: isSyncedParam,
-              )
-              ..metadataJson = const fb.StringReader(
-                asciiOptimization: true,
-              ).vTableGetNullable(buffer, rootOffset, 30);
+        final metadataJsonParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 30);
+        final object = NotificationEntity(
+          id: idParam,
+          notificationId: notificationIdParam,
+          title: titleParam,
+          body: bodyParam,
+          type: typeParam,
+          isRead: isReadParam,
+          relatedEntityId: relatedEntityIdParam,
+          relatedEntityType: relatedEntityTypeParam,
+          actorUserId: actorUserIdParam,
+          actorUsername: actorUsernameParam,
+          actorAvatarUrl: actorAvatarUrlParam,
+          createdAt: createdAtParam,
+          isSynced: isSyncedParam,
+          metadataJson: metadataJsonParam,
+        );
 
         return object;
       },
@@ -1081,29 +1053,19 @@ class UserEntity_ {
     _entities[0].properties[6],
   );
 
-  /// See [UserEntity.userGroupsJson].
-  static final userGroupsJson = obx.QueryStringProperty<UserEntity>(
-    _entities[0].properties[7],
-  );
-
-  /// See [UserEntity.userOrgUnitIdsJson].
-  static final userOrgUnitIdsJson = obx.QueryStringProperty<UserEntity>(
-    _entities[0].properties[8],
-  );
-
   /// See [UserEntity.isLogin].
   static final isLogin = obx.QueryBooleanProperty<UserEntity>(
-    _entities[0].properties[9],
+    _entities[0].properties[7],
   );
 
   /// See [UserEntity.createdAt].
   static final createdAt = obx.QueryDateProperty<UserEntity>(
-    _entities[0].properties[10],
+    _entities[0].properties[8],
   );
 
   /// See [UserEntity.updatedAt].
   static final updatedAt = obx.QueryDateProperty<UserEntity>(
-    _entities[0].properties[11],
+    _entities[0].properties[9],
   );
 }
 
