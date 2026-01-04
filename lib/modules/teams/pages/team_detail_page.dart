@@ -8,10 +8,8 @@ import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/models/models.dart';
 import 'package:task_flow/core/utils/utils.dart';
 import 'package:task_flow/modules/tasks/components/task_card.dart';
-import 'package:task_flow/modules/teams/dialogs/add_member_dialog.dart';
 import 'package:task_flow/modules/teams/dialogs/add_task_dialog.dart';
 import 'package:task_flow/modules/teams/dialogs/edit_team_dialog.dart';
-import 'package:task_flow/modules/teams/pages/team_settings_page.dart';
 
 class TeamDetailPage extends StatefulWidget {
   final Team team;
@@ -47,7 +45,6 @@ class _TeamDetailPageState extends State<TeamDetailPage>
   Widget build(BuildContext context) {
     final teamState = context.watch<TeamState>();
     final team = teamState.getTeamById(widget.team.id) ?? widget.team;
-    final userListState = context.watch<UserListState>();
 
     return Scaffold(
       backgroundColor: AppConstant.darkBackground,
@@ -156,7 +153,7 @@ class _TeamDetailPageState extends State<TeamDetailPage>
                           },
                         ),
                       );
-                    }).toList(),
+                    }),
                   ],
                 );
               },
@@ -250,9 +247,7 @@ class _TeamDetailPageState extends State<TeamDetailPage>
           SizedBox(height: AppConstant.spacing16),
 
           // Active Tasks Section
-          Expanded(
-            child: _buildTasksList(team),
-          ),
+          Expanded(child: _buildTasksList(team)),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -289,11 +284,7 @@ class _TeamDetailPageState extends State<TeamDetailPage>
               ),
             ),
             child: icon != null
-                ? Icon(
-                    icon,
-                    color: AppConstant.textPrimary,
-                    size: 24,
-                  )
+                ? Icon(icon, color: AppConstant.textPrimary, size: 24)
                 : Center(
                     child: Text(
                       label.substring(0, 1).toUpperCase(),
@@ -393,9 +384,13 @@ class _TeamDetailPageState extends State<TeamDetailPage>
         }
 
         // Separate active and completed tasks
-        final activeTasks = tasks.where((task) =>
-            task.status.toLowerCase() != 'done' &&
-            task.status.toLowerCase() != 'completed').toList();
+        final activeTasks = tasks
+            .where(
+              (task) =>
+                  task.status.toLowerCase() != 'done' &&
+                  task.status.toLowerCase() != 'completed',
+            )
+            .toList();
 
         return SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: AppConstant.spacing16),
@@ -442,7 +437,7 @@ class _TeamDetailPageState extends State<TeamDetailPage>
                     padding: EdgeInsets.only(bottom: AppConstant.spacing12),
                     child: TaskCard(task: task),
                   );
-                }).toList(),
+                }),
             ],
           ),
         );

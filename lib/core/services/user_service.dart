@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:task_flow/core/constants/dhis2_connection.dart';
 import 'package:task_flow/core/models/user.dart';
 import 'package:task_flow/core/offline_db/user_offline_provider/user_offline_provider.dart';
+import 'package:task_flow/core/utils/app_util.dart';
 import 'package:task_flow/core/utils/entry_form_util.dart';
 
 import 'dhis2_http_service.dart';
@@ -10,6 +11,7 @@ import 'preference_service.dart';
 
 class UserService {
   static const _kCurrentUserKey = 'current_user_id';
+  final String apiFields = 'fields=id,username,displayName,email,phoneNumber';
 
   UserService._();
   static final UserService _instance = UserService._();
@@ -51,9 +53,7 @@ class UserService {
 
   Future<User?> login(String username, String password) async {
     final dhis = Dhis2HttpService(username: username, password: password);
-    final res = await dhis.httpGet(
-      '/api/me.json?fields=id,username,displayName,email,phone,userGroups,organisationUnits',
-    );
+    final res = await dhis.httpGet('/api/me.json?$apiFields');
     if (res.statusCode == 200) {
       final body = jsonDecode(res.body) as Map<String, dynamic>;
       final user = User.fromJson(body);
@@ -64,6 +64,27 @@ class UserService {
       return user;
     }
     return null;
+  }
+
+  Future<void> syncAvailableUsersInformations({
+    required String username,
+    required String password,
+  }) async {
+    const url = '/api/users.json';
+    final dhis = Dhis2HttpService(username: username, password: password);
+    final response = await dhis.httpGetPagination(url, {});
+    var paginationFilter = AppUtil.getPaginationFilters(response);
+    for (var filter in paginationFilter) {
+      final res = await dhis.httpGet(url, queryParameters: filter);
+      if (res.statusCode == 200) {
+        final body = jsonDecode(res.body) as Map<String, dynamic>;
+        final users = body['users'] as List<dynamic>;
+        for (var userMap in users) {
+          final user = User.fromJson(userMap);
+          await _offline.addOrUpdateUser(user);
+        }
+      }
+    }
   }
 
   Future<User?> getCurrentUser() async {
@@ -109,5 +130,9 @@ class UserService {
       return true;
     }
     return false;
+  }
+
+  Future<List<User>> getAllUsers() async {
+    return await _offline.getUsers() as List<User>;
   }
 }

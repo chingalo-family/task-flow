@@ -36,23 +36,27 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> _handleLogout(BuildContext context) async {
-    await DialogUtils.showConfirmationDialog(
+    bool isConfirmed = await DialogUtils.showConfirmationDialog(
       context: context,
       title: 'Logout',
       message: 'Are you sure you want to logout?',
       confirmText: 'Logout',
-      onConfirm: () async {
-        final userState = Provider.of<UserState>(context, listen: false);
-        await userState.logout();
-        if (context.mounted) {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (_) => const LoginPage()),
-            (route) => false,
-          );
-        }
-      },
     );
+
+    if (isConfirmed) {
+      _logOutUser();
+    }
+  }
+
+  void _logOutUser() async {
+    Provider.of<UserState>(context, listen: false).logout();
+    if (context.mounted) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginPage()),
+        (route) => false,
+      );
+    }
   }
 
   @override
@@ -94,11 +98,14 @@ class _SettingsPageState extends State<SettingsPage> {
                     // Profile Avatar with Edit
                     Consumer<UserState>(
                       builder: (context, userState, _) {
-                        final initials = (userState.currentUser?.fullName
-                                    ?.substring(0, 1) ??
-                                userState.currentUser?.username?.substring(0, 1) ??
-                                '')
-                            .toUpperCase();
+                        final initials =
+                            (userState.currentUser?.fullName?.substring(0, 1) ??
+                                    userState.currentUser?.username.substring(
+                                      0,
+                                      1,
+                                    ) ??
+                                    '')
+                                .toUpperCase();
                         return Center(
                           child: ProfileAvatarWithEdit(
                             initials: initials,
@@ -116,7 +123,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       builder: (context, userState, _) {
                         return InfoDisplayField(
                           label: 'Display Name',
-                          value: userState.currentUser?.fullName ??
+                          value:
+                              userState.currentUser?.fullName ??
                               userState.currentUser?.username ??
                               'User',
                         );

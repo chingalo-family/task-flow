@@ -19,11 +19,10 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _searchController = TextEditingController();
-  
+
   String _selectedIcon = 'rocket';
   Color _selectedColor = AppConstant.primaryBlue;
   final Set<String> _selectedMemberIds = {};
-  String _searchQuery = '';
 
   final List<Map<String, dynamic>> _teamIcons = [
     {'key': 'rocket', 'icon': Icons.rocket_launch},
@@ -132,7 +131,9 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
                   filled: true,
                   fillColor: AppConstant.cardBackground,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                    borderRadius: BorderRadius.circular(
+                      AppConstant.borderRadius12,
+                    ),
                     borderSide: BorderSide.none,
                   ),
                   contentPadding: EdgeInsets.all(AppConstant.spacing16),
@@ -180,7 +181,9 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
                         color: isSelected
                             ? _selectedColor
                             : AppConstant.cardBackground,
-                        borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                        borderRadius: BorderRadius.circular(
+                          AppConstant.borderRadius12,
+                        ),
                         border: Border.all(
                           color: isSelected
                               ? _selectedColor
@@ -274,7 +277,9 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
                 ),
                 decoration: BoxDecoration(
                   color: AppConstant.cardBackground,
-                  borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                  borderRadius: BorderRadius.circular(
+                    AppConstant.borderRadius12,
+                  ),
                 ),
                 child: Row(
                   children: [
@@ -471,14 +476,14 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
 
     final userState = context.read<UserState>();
     final currentUser = userState.currentUser;
-    
+
     final team = Team(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       name: _nameController.text.trim(),
       description: _descriptionController.text.trim().isEmpty
           ? null
           : _descriptionController.text.trim(),
-      memberIds: [currentUser?.id ?? 'user1', ..._selectedMemberIds.toList()],
+      memberIds: [currentUser?.id ?? 'user1', ..._selectedMemberIds],
       memberCount: _selectedMemberIds.length + 1,
       createdByUserId: currentUser?.id,
       createdByUsername: currentUser?.username,
@@ -576,7 +581,7 @@ class _MemberSelectionSheetState extends State<_MemberSelectionSheet> {
           Expanded(
             child: Consumer<UserListState>(
               builder: (context, userListState, child) {
-                final users = userListState.users.where((user) {
+                final users = userListState.allUsers.where((user) {
                   if (_searchQuery.isEmpty) return true;
                   final name = (user.fullName ?? user.username).toLowerCase();
                   final email = (user.email ?? '').toLowerCase();
@@ -636,7 +641,8 @@ class _MemberSelectionSheetState extends State<_MemberSelectionSheet> {
                                 SizedBox(width: AppConstant.spacing12),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         user.fullName ?? user.username,
@@ -703,10 +709,7 @@ class _MemberSelectionSheetState extends State<_MemberSelectionSheet> {
                 ),
                 child: Text(
                   'Done (${_tempSelectedIds.length} selected)',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ),
             ),

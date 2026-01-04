@@ -10,7 +10,6 @@ class DialogUtils {
     String confirmText = 'Confirm',
     String cancelText = 'Cancel',
     Color? confirmColor,
-    required Future<Null> Function() onConfirm,
   }) async {
     final result = await showDialog<bool>(
       context: context,

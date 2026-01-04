@@ -42,16 +42,16 @@ class _HomeState extends State<Home> {
         child: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: AppConstant.spacing16,
-              vertical: AppConstant.spacing8,
+              horizontal: AppConstant.spacing8,
+              vertical: AppConstant.spacing12,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildNavItem(0, Icons.task_alt, 'Tasks'),
-                _buildNavItem(1, Icons.people, 'Teams'),
-                _buildNavItem(2, Icons.notifications, 'Notifications'),
-                _buildNavItem(3, Icons.settings, 'Settings'),
+                _buildNavItem(0, Icons.check_circle_outline, 'My Tasks'),
+                _buildNavItem(1, Icons.people_outline, 'Teams'),
+                _buildNavItem(2, Icons.notifications_outlined, 'Alerts'),
+                _buildNavItem(3, Icons.settings_outlined, 'Settings'),
               ],
             ),
           ),
@@ -65,7 +65,7 @@ class _HomeState extends State<Home> {
     return Consumer<NotificationState>(
       builder: (context, notificationState, child) {
         final showBadge = index == 2 && notificationState.unreadCount > 0;
-        
+
         return GestureDetector(
           onTap: () {
             setState(() {
@@ -133,7 +133,9 @@ class _HomeState extends State<Home> {
                         ? AppConstant.primaryBlue
                         : AppConstant.textSecondary,
                     fontSize: 12,
-                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                    fontWeight: isSelected
+                        ? FontWeight.w600
+                        : FontWeight.normal,
                   ),
                 ),
               ],

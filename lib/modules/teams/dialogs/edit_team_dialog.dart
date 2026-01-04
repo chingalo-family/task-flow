@@ -24,7 +24,6 @@ class _EditTeamDialogState extends State<EditTeamDialog> {
   late String _selectedIcon;
   late Color _selectedColor;
   late Set<String> _selectedMemberIds;
-  String _searchQuery = '';
 
   // Notification preferences
   bool _mentionsEnabled = true;
@@ -53,8 +52,9 @@ class _EditTeamDialogState extends State<EditTeamDialog> {
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.team.name);
-    _descriptionController =
-        TextEditingController(text: widget.team.description ?? '');
+    _descriptionController = TextEditingController(
+      text: widget.team.description ?? '',
+    );
     _selectedIcon = 'rocket';
     _selectedColor = AppConstant.primaryBlue;
     _selectedMemberIds = Set.from(widget.team.memberIds ?? []);
@@ -149,8 +149,9 @@ class _EditTeamDialogState extends State<EditTeamDialog> {
                   filled: true,
                   fillColor: AppConstant.cardBackground,
                   border: OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.circular(AppConstant.borderRadius12),
+                    borderRadius: BorderRadius.circular(
+                      AppConstant.borderRadius12,
+                    ),
                     borderSide: BorderSide.none,
                   ),
                   contentPadding: EdgeInsets.all(AppConstant.spacing16),
@@ -198,8 +199,9 @@ class _EditTeamDialogState extends State<EditTeamDialog> {
                         color: isSelected
                             ? _selectedColor
                             : AppConstant.cardBackground,
-                        borderRadius:
-                            BorderRadius.circular(AppConstant.borderRadius12),
+                        borderRadius: BorderRadius.circular(
+                          AppConstant.borderRadius12,
+                        ),
                         border: Border.all(
                           color: isSelected
                               ? _selectedColor
@@ -346,8 +348,9 @@ class _EditTeamDialogState extends State<EditTeamDialog> {
                 ),
                 decoration: BoxDecoration(
                   color: AppConstant.cardBackground,
-                  borderRadius:
-                      BorderRadius.circular(AppConstant.borderRadius12),
+                  borderRadius: BorderRadius.circular(
+                    AppConstant.borderRadius12,
+                  ),
                 ),
                 child: Row(
                   children: [
@@ -392,8 +395,7 @@ class _EditTeamDialogState extends State<EditTeamDialog> {
                     return Column(
                       children: selectedMembers.map((member) {
                         return Container(
-                          margin:
-                              EdgeInsets.only(bottom: AppConstant.spacing8),
+                          margin: EdgeInsets.only(bottom: AppConstant.spacing8),
                           padding: EdgeInsets.all(AppConstant.spacing12),
                           decoration: BoxDecoration(
                             color: AppConstant.cardBackground,
@@ -419,8 +421,7 @@ class _EditTeamDialogState extends State<EditTeamDialog> {
                               SizedBox(width: AppConstant.spacing12),
                               Expanded(
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       member.fullName ?? member.username,
@@ -544,11 +545,7 @@ class _EditTeamDialogState extends State<EditTeamDialog> {
               color: iconColor.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(AppConstant.borderRadius8),
             ),
-            child: Icon(
-              icon,
-              color: iconColor,
-              size: 24,
-            ),
+            child: Icon(icon, color: iconColor, size: 24),
           ),
           SizedBox(width: AppConstant.spacing16),
           Expanded(
@@ -577,7 +574,7 @@ class _EditTeamDialogState extends State<EditTeamDialog> {
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: AppConstant.primaryBlue,
+            activeThumbColor: AppConstant.primaryBlue,
           ),
         ],
       ),
@@ -685,8 +682,7 @@ class _MemberSelectionSheetState extends State<_MemberSelectionSheet> {
                     ),
                     IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: Icon(Icons.close,
-                          color: AppConstant.textSecondary),
+                      icon: Icon(Icons.close, color: AppConstant.textSecondary),
                     ),
                   ],
                 ),
@@ -709,10 +705,9 @@ class _MemberSelectionSheetState extends State<_MemberSelectionSheet> {
           Expanded(
             child: Consumer<UserListState>(
               builder: (context, userListState, child) {
-                final users = userListState.users.where((user) {
+                final users = userListState.allUsers.where((user) {
                   if (_searchQuery.isEmpty) return true;
-                  final name =
-                      (user.fullName ?? user.username).toLowerCase();
+                  final name = (user.fullName ?? user.username).toLowerCase();
                   final email = (user.email ?? '').toLowerCase();
                   return name.contains(_searchQuery) ||
                       email.contains(_searchQuery);
@@ -838,10 +833,7 @@ class _MemberSelectionSheetState extends State<_MemberSelectionSheet> {
                 ),
                 child: Text(
                   'Done (${_tempSelectedIds.length} selected)',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ),
             ),

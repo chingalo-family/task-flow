@@ -81,7 +81,7 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
         const SizedBox(height: 16),
         ...statuses.map((status) {
           return _buildStatusCard(context, teamState, team, status);
-        }).toList(),
+        }),
       ],
     );
   }
@@ -175,9 +175,7 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
       await teamState.addTaskStatus(team.id, newStatus);
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Status added successfully')),
-        );
+        _showSnackBarMessage('Status added successfully');
       }
     }
   }
@@ -200,13 +198,9 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
         name: result['name'],
         color: result['color'],
       );
-
       await teamState.updateTaskStatus(team.id, status.id, updatedStatus);
-
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Status updated successfully')),
-        );
+        _showSnackBarMessage('Status updated successfully');
       }
     }
   }
@@ -216,18 +210,25 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
     TeamState teamState,
     Team team,
     TaskStatus status,
-  ) {
-    DialogUtils.showConfirmationDialog(
+  ) async {
+    bool isConfirmed = await DialogUtils.showConfirmationDialog(
       context: context,
       title: 'Delete Status',
       message: 'Are you sure you want to delete "${status.name}" status?',
       confirmText: 'Delete',
-      onConfirm: () async {
-        await teamState.deleteTaskStatus(team.id, status.id);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Status deleted successfully')),
-        );
-      },
     );
+
+    if (isConfirmed) {
+      await teamState.deleteTaskStatus(team.id, status.id);
+      if (mounted) {
+        _showSnackBarMessage('Status deleted successfully');
+      }
+    }
+  }
+
+  void _showSnackBarMessage(String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 }

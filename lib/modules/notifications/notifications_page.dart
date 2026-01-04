@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/notification_state/notification_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
-import 'package:task_flow/core/models/models.dart' as app_notif;
 import 'package:task_flow/core/utils/notification_filter_utils.dart';
-import 'package:task_flow/modules/notifications/components/filter_chip.dart' as custom_chip;
+import 'package:task_flow/modules/notifications/components/filter_chip.dart'
+    as custom_chip;
 import 'package:task_flow/modules/notifications/components/grouped_notification_list.dart';
 
 class NotificationsPage extends StatefulWidget {
@@ -40,13 +40,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
               );
             }
 
-            final filteredNotifications = NotificationFilterUtils
-                .filterNotifications(
-              notificationState.notifications,
-              selectedFilter,
-            );
-            final groupedNotifications = NotificationFilterUtils
-                .groupNotificationsByTime(filteredNotifications);
+            final filteredNotifications =
+                NotificationFilterUtils.filterNotifications(
+                  notificationState.notifications,
+                  selectedFilter,
+                );
+            final groupedNotifications =
+                NotificationFilterUtils.groupNotificationsByTime(
+                  filteredNotifications,
+                );
 
             return CustomScrollView(
               slivers: [
@@ -130,8 +132,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
                           custom_chip.FilterChip(
                             label: 'Assigned to Me',
                             isSelected: selectedFilter == 'Assigned to Me',
-                            onTap: () =>
-                                setState(() => selectedFilter = 'Assigned to Me'),
+                            onTap: () => setState(
+                              () => selectedFilter = 'Assigned to Me',
+                            ),
                           ),
                           SizedBox(width: AppConstant.spacing8),
                           custom_chip.FilterChip(

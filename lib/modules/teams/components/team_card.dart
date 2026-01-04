@@ -18,12 +18,7 @@ class TeamCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppConstant.cardBackground,
         borderRadius: BorderRadius.circular(AppConstant.borderRadius16),
-        border: Border(
-          left: BorderSide(
-            color: teamColor,
-            width: 4,
-          ),
-        ),
+        border: Border(left: BorderSide(color: teamColor, width: 4)),
       ),
       child: Material(
         color: Colors.transparent,
@@ -53,11 +48,7 @@ class TeamCard extends StatelessWidget {
                         color: teamColor,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Icon(
-                        teamIcon,
-                        color: Colors.white,
-                        size: 28,
-                      ),
+                      child: Icon(teamIcon, color: Colors.white, size: 28),
                     ),
                     SizedBox(width: AppConstant.spacing12),
                     Expanded(
@@ -80,9 +71,8 @@ class TeamCard extends StatelessWidget {
                             children: [
                               Text(
                                 'ID: #${team.id.toUpperCase()}',
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.bodyMedium?.copyWith(
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(
                                       fontSize: 12,
                                       color: AppConstant.textSecondary,
                                     ),
@@ -176,18 +166,25 @@ class TeamCard extends StatelessWidget {
                         );
                       },
                     ),
-                    if (team.memberCount > 3)
-                      Padding(
-                        padding: EdgeInsets.only(left: 60),
+
+                    // Show +N if there are more members
+                    if (team.memberCount > 5) ...[
+                      SizedBox(width: 8),
+                      CircleAvatar(
+                        radius: 16,
+                        backgroundColor: AppConstant.textSecondary.withValues(
+                          alpha: 0.2,
+                        ),
                         child: Text(
-                          '+${team.memberCount - 3}',
+                          '+${team.memberCount - 5}',
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 10,
                             fontWeight: FontWeight.w600,
-                            color: AppConstant.textSecondary,
+                            color: AppConstant.textPrimary,
                           ),
                         ),
                       ),
+                    ],
                     Spacer(),
                     Row(
                       children: [
@@ -232,8 +229,9 @@ class TeamCard extends StatelessWidget {
   IconData _getTeamIcon(String teamName) {
     final nameLower = teamName.toLowerCase();
     if (nameLower.contains('market')) return Icons.campaign;
-    if (nameLower.contains('engineer') || nameLower.contains('tech'))
+    if (nameLower.contains('engineer') || nameLower.contains('tech')) {
       return Icons.code;
+    }
     if (nameLower.contains('design')) return Icons.palette;
     if (nameLower.contains('product')) return Icons.rocket_launch;
     return Icons.people_rounded;

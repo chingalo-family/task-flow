@@ -3,6 +3,7 @@
 
 // Task
 export 'task/task.dart';
+export 'task/task_category.dart';
 
 // Team
 export 'team/team.dart';
