@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/task_state/task_state.dart';
-import 'package:task_flow/app_state/team_state/team_state.dart';
 import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/constants/task_constants.dart';
@@ -46,7 +45,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
           : null;
     } else {
       // Default category for new task
-      _selectedCategory = 'design';
+      _selectedCategory = TaskCategory.general.id;
       // Default due date to today at 11:59 PM
       final now = DateTime.now();
       _selectedDueDate = DateTime(now.year, now.month, now.day, 23, 59);
@@ -199,7 +198,10 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
               _selectedTeam = value;
               // Clear assignees except current user when team is cleared
               if (value == null) {
-                final userState = Provider.of<UserState>(context, listen: false);
+                final userState = Provider.of<UserState>(
+                  context,
+                  listen: false,
+                );
                 final currentUserId =
                     userState.currentUser?.id.toString() ?? 'current_user';
                 _selectedAssignees = [currentUserId];
