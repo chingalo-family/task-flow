@@ -36,23 +36,27 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> _handleLogout(BuildContext context) async {
-    await DialogUtils.showConfirmationDialog(
+    bool isConfirmed = await DialogUtils.showConfirmationDialog(
       context: context,
       title: 'Logout',
       message: 'Are you sure you want to logout?',
       confirmText: 'Logout',
-      onConfirm: () async {
-        final userState = Provider.of<UserState>(context, listen: false);
-        await userState.logout();
-        if (context.mounted) {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (_) => const LoginPage()),
-            (route) => false,
-          );
-        }
-      },
     );
+
+    if (isConfirmed) {
+      _logOutUser();
+    }
+  }
+
+  void _logOutUser() async {
+    Provider.of<UserState>(context, listen: false).logout();
+    if (context.mounted) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginPage()),
+        (route) => false,
+      );
+    }
   }
 
   @override
