@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:task_flow/app_state/user_list_state/user_list_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/models/user.dart';
 import 'package:task_flow/core/services/user_service.dart';
@@ -44,7 +46,8 @@ class _LoginFormContainerState extends State<LoginFormContainer> {
   }
 
   Future<void> refreshAppMetadata({required User user}) async {
-    //TODO later this can be used to refresh app metadata after login
+    final userListState = Provider.of<UserListState>(context, listen: false);
+    await userListState.reSyncUserList();
   }
 
   void onLogin(String username, String password) async {

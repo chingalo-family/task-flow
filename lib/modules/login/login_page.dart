@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:task_flow/app_state/notification_state/notification_state.dart';
 import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/models/user.dart';
 import 'package:task_flow/modules/home/home.dart';
@@ -21,6 +22,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void onSuccessLogin(BuildContext context, User user) async {
     Provider.of<UserState>(context, listen: false).setCurrent(user);
+    Provider.of<NotificationState>(context, listen: false).initialize();
     Timer(
       const Duration(seconds: 1),
       () => Navigator.pushReplacement(
@@ -63,32 +65,29 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     // Logo
                     AppLogo(size: 80, showText: true),
-                    
+
                     SizedBox(height: AppConstant.spacing8),
-                    
+
                     // Tagline
                     Text(
                       _showSignUp ? 'Create your account' : 'Welcome back',
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        fontSize: 24,
-                      ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.headlineMedium?.copyWith(fontSize: 24),
                     ),
-                    
                     SizedBox(height: AppConstant.spacing8),
-                    
                     Text(
-                      _showSignUp 
+                      _showSignUp
                           ? 'Start managing your tasks efficiently'
                           : 'Sign in to continue',
                       style: Theme.of(context).textTheme.bodyMedium,
                       textAlign: TextAlign.center,
                     ),
-                    
                     SizedBox(height: AppConstant.spacing32),
-                    
                     // Login/Signup Form
                     LoginFormContainer(
-                      onSuccessLogin: (User user) => onSuccessLogin(context, user),
+                      onSuccessLogin: (User user) =>
+                          onSuccessLogin(context, user),
                       showSignUp: _showSignUp,
                       onToggleAuthMode: toggleAuthMode,
                     ),

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/app_info_state/app_info_state.dart';
@@ -20,7 +19,7 @@ class ContactUsPage extends StatefulWidget {
 }
 
 class _ContactUsPageState extends State<ContactUsPage> {
-  String selectedCategory = 'Bug Report';
+  String selectedCategory = 'General Inquiry';
   final TextEditingController _subjectController = TextEditingController();
   final TextEditingController _messageController = TextEditingController();
   bool _isSending = false;
@@ -184,6 +183,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                     _buildCategoryChip('General Inquiry', Icons.help_outline),
                     SizedBox(width: AppConstant.spacing8),
                     _buildCategoryChip('Feedback', Icons.feedback_outlined),
+                    SizedBox(width: AppConstant.spacing8),
                     _buildCategoryChip(
                       'Feature Request',
                       Icons.lightbulb_outline,

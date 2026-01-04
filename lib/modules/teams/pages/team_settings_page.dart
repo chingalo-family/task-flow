@@ -81,7 +81,7 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
         const SizedBox(height: 16),
         ...statuses.map((status) {
           return _buildStatusCard(context, teamState, team, status);
-        }).toList(),
+        }),
       ],
     );
   }

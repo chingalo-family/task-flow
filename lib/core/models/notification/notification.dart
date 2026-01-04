@@ -54,7 +54,7 @@ class Notification {
       createdAt: createdAt ?? this.createdAt,
     );
   }
-  
+
   String getTimeAgo() {
     return TimeUtils.getTimeAgo(createdAt);
   }

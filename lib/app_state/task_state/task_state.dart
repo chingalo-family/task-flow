@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:task_flow/core/models/models.dart';
+import 'package:task_flow/core/constants/task_constants.dart';
+import 'package:task_flow/core/services/task_service.dart';
 
 class TaskState extends ChangeNotifier {
+  final _service = TaskService();
+  
   List<Task> _tasks = [];
   bool _loading = false;
-  String _filterStatus = 'all'; // 'all', 'pending', 'in_progress', 'completed'
-  String _filterPriority = 'all'; // 'all', 'high', 'medium', 'low'
-  String _sortBy = 'dueDate'; // 'dueDate', 'priority', 'createdAt'
+  String _filterStatus = TaskConstants.defaultFilterStatus;
+  String _filterPriority = TaskConstants.defaultFilterPriority;
+  String _sortBy = TaskConstants.defaultSortBy;
   String? _filterTeamId; // Filter tasks by team
 
   List<Task> get tasks => _getFilteredTasks();
@@ -18,129 +22,218 @@ class TaskState extends ChangeNotifier {
   String? get filterTeamId => _filterTeamId;
 
   int get totalTasks => _tasks.length;
-  int get completedTasks => _tasks.where((t) => t.isCompleted).length;
-  int get inProgressTasks => _tasks.where((t) => t.isInProgress).length;
-  int get pendingTasks => _tasks.where((t) => t.isPending).length;
-  int get overdueTasks => _tasks.where((t) => t.isOverdue).length;
+  int get completedTasks => _tasks.where((task) => task.isCompleted).length;
+  int get inProgressTasks => _tasks.where((task) => task.isInProgress).length;
+  int get tasksDueToday {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final tomorrow = today.add(Duration(days: 1));
+    return _tasks.where((task) {
+      if (task.dueDate == null) return false;
+      return task.dueDate!.isAfter(today) && task.dueDate!.isBefore(tomorrow);
+    }).length;
+  }
+
+  int get tasksCompletedToday {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final tomorrow = today.add(Duration(days: 1));
+    return _tasks.where((task) {
+      if (task.completedAt == null) return false;
+      return task.completedAt!.isAfter(today) &&
+          task.completedAt!.isBefore(tomorrow);
+    }).length;
+  }
+
+  /// Get all tasks assigned to a specific user
+  /// Includes both personal tasks and team tasks where the user is assigned
+  List<Task> getMyTasks(String userId) {
+    return _tasks.where((task) {
+      // Check if user is in assignedUserIds
+      if (task.assignedUserIds != null &&
+          task.assignedUserIds!.contains(userId)) {
+        return true;
+      }
+      return false;
+    }).toList();
+  }
+
+  /// Get completed tasks for a specific user
+  int getMyCompletedTasksCount(String userId) {
+    return getMyTasks(userId).where((task) => task.isCompleted).length;
+  }
+
+  /// Get total tasks assigned to a specific user
+  int getMyTotalTasksCount(String userId) {
+    return getMyTasks(userId).length;
+  }
+
+  /// Get completion percentage for a specific user (0.0 to 1.0)
+  double getMyCompletionProgress(String userId) {
+    final myTasks = getMyTasks(userId);
+    if (myTasks.isEmpty) return 0.0;
+    final completed = myTasks.where((task) => task.isCompleted).length;
+    return completed / myTasks.length;
+  }
+
+  List<Task> get tasksDueTodayList {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final tomorrow = today.add(Duration(days: 1));
+    return _tasks.where((task) {
+      if (task.dueDate == null) return false;
+      return task.dueDate!.isAfter(today) && task.dueDate!.isBefore(tomorrow);
+    }).toList()..sort((a, b) {
+      // Sort by completion status first (uncompleted first)
+      if (a.isCompleted != b.isCompleted) {
+        return a.isCompleted ? 1 : -1;
+      }
+      // Then by priority
+      final priorityOrder = {
+        TaskConstants.priorityHigh: 0,
+        TaskConstants.priorityMedium: 1,
+        TaskConstants.priorityLow: 2,
+      };
+      final priorityCompare = (priorityOrder[a.priority] ?? 3).compareTo(
+        priorityOrder[b.priority] ?? 3,
+      );
+      if (priorityCompare != 0) return priorityCompare;
+      // Then by due date/time
+      if (a.dueDate != null && b.dueDate != null) {
+        return a.dueDate!.compareTo(b.dueDate!);
+      }
+      return 0;
+    });
+  }
+
+  List<Task> get overdueTasks {
+    return _tasks
+        .where((task) => task.dueDate != null && task.isOverdue)
+        .toList()
+      ..sort((a, b) {
+        // Sort by completion status first (uncompleted first)
+        if (a.isCompleted != b.isCompleted) {
+          return a.isCompleted ? 1 : -1;
+        }
+        // Then by due date
+        return a.dueDate!.compareTo(b.dueDate!);
+      });
+  }
+
+  List<Task> get focusTasks {
+    return _tasks.where((task) => !task.isCompleted).toList()..sort((a, b) {
+      // First sort by priority
+      final priorityOrder = {
+        TaskConstants.priorityHigh: 0,
+        TaskConstants.priorityMedium: 1,
+        TaskConstants.priorityLow: 2,
+      };
+      final priorityCompare = (priorityOrder[a.priority] ?? 3).compareTo(
+        priorityOrder[b.priority] ?? 3,
+      );
+      if (priorityCompare != 0) return priorityCompare;
+      // Then by due date
+      if (a.dueDate == null && b.dueDate == null) return 0;
+      if (a.dueDate == null) return 1;
+      if (b.dueDate == null) return -1;
+      return a.dueDate!.compareTo(b.dueDate!);
+    });
+  }
+
+  List<Task> get upcomingTasks {
+    final now = DateTime.now();
+    final tomorrow = DateTime(
+      now.year,
+      now.month,
+      now.day,
+    ).add(Duration(days: 1));
+    return _tasks
+        .where(
+          (task) => task.dueDate != null && task.dueDate!.isAfter(tomorrow),
+        )
+        .toList()
+      ..sort((a, b) {
+        // Sort by completion status first (uncompleted first)
+        if (a.isCompleted != b.isCompleted) {
+          return a.isCompleted ? 1 : -1;
+        }
+        // Then by due date
+        return a.dueDate!.compareTo(b.dueDate!);
+      });
+  }
 
   Future<void> initialize() async {
     _loading = true;
     notifyListeners();
-    
-    // TODO: Load tasks from ObjectBox
+
+    // Load tasks from service
     await _loadTasks();
-    
+
     _loading = false;
     notifyListeners();
   }
 
   Future<void> _loadTasks() async {
-    // TODO: Implement ObjectBox loading
-    // For now, create some sample data
-    _tasks = _generateSampleTasks();
-  }
-
-  List<Task> _generateSampleTasks() {
-    final now = DateTime.now();
-    return [
-      Task(
-        id: '1',
-        title: 'Complete project proposal',
-        description: 'Finish the Q1 project proposal document',
-        status: 'in_progress',
-        priority: 'high',
-        dueDate: now.add(Duration(days: 2)),
-        progress: 65,
-        tags: ['proposal', 'urgent'],
-        teamId: '1',
-        teamName: 'Product Team',
-        assignedToUserId: 'user2',
-        assignedToUsername: 'Jane Smith',
-      ),
-      Task(
-        id: '2',
-        title: 'Review team feedback',
-        description: 'Go through all feedback from last sprint',
-        status: 'pending',
-        priority: 'medium',
-        dueDate: now.add(Duration(days: 5)),
-        progress: 0,
-        tags: ['review'],
-        teamId: '1',
-        teamName: 'Product Team',
-      ),
-      Task(
-        id: '3',
-        title: 'Update documentation',
-        description: 'Update API documentation with new endpoints',
-        status: 'completed',
-        priority: 'low',
-        completedAt: now.subtract(Duration(days: 1)),
-        progress: 100,
-        tags: ['docs'],
-        teamId: '2',
-        teamName: 'Design Squad',
-      ),
-      Task(
-        id: '4',
-        title: 'Fix critical bugs',
-        description: 'Address high-priority bugs from issue tracker',
-        status: 'in_progress',
-        priority: 'high',
-        dueDate: now.add(Duration(days: 1)),
-        progress: 40,
-        tags: ['bugs', 'urgent'],
-        teamId: '3',
-        teamName: 'Engineering',
-        assignedToUserId: 'user1',
-        assignedToUsername: 'John Doe',
-      ),
-      Task(
-        id: '5',
-        title: 'Schedule team meeting',
-        description: 'Organize weekly sync meeting',
-        status: 'pending',
-        priority: 'low',
-        dueDate: now.add(Duration(days: 7)),
-        progress: 0,
-        tags: ['meeting'],
-        teamId: '4',
-        teamName: 'Marketing',
-      ),
-    ];
+    try {
+      _tasks = await _service.getAllTasks();
+    } catch (e) {
+      debugPrint('Error loading tasks: $e');
+      _tasks = [];
+    }
   }
 
   List<Task> _getFilteredTasks() {
     var filtered = List<Task>.from(_tasks);
-
-    // Filter by team
     if (_filterTeamId != null) {
-      filtered = filtered.where((task) => task.teamId == _filterTeamId).toList();
+      filtered = filtered
+          .where((task) => task.teamId == _filterTeamId)
+          .toList();
     }
-
-    // Filter by status
-    if (_filterStatus != 'all') {
-      filtered = filtered.where((task) => task.status == _filterStatus).toList();
+    if (_filterStatus != TaskConstants.statusAll) {
+      filtered = filtered
+          .where((task) => task.status == _filterStatus)
+          .toList();
     }
-
     // Filter by priority
-    if (_filterPriority != 'all') {
-      filtered = filtered.where((task) => task.priority == _filterPriority).toList();
+    if (_filterPriority != TaskConstants.priorityAll) {
+      filtered = filtered
+          .where((task) => task.priority == _filterPriority)
+          .toList();
     }
-
     // Sort
     filtered.sort((a, b) {
+      // Always sort by completion status first (uncompleted first)
+      if (a.isCompleted != b.isCompleted) {
+        return a.isCompleted ? 1 : -1;
+      }
+
+      // Then by the selected sort option
       switch (_sortBy) {
-        case 'dueDate':
+        case TaskConstants.sortByDueDate:
           if (a.dueDate == null && b.dueDate == null) return 0;
           if (a.dueDate == null) return 1;
           if (b.dueDate == null) return -1;
           return a.dueDate!.compareTo(b.dueDate!);
-        case 'priority':
-          final priorityOrder = {'high': 0, 'medium': 1, 'low': 2};
-          return (priorityOrder[a.priority] ?? 3).compareTo(priorityOrder[b.priority] ?? 3);
-        case 'createdAt':
+        case TaskConstants.sortByPriority:
+          final priorityOrder = {
+            TaskConstants.priorityHigh: 0,
+            TaskConstants.priorityMedium: 1,
+            TaskConstants.priorityLow: 2,
+          };
+          return (priorityOrder[a.priority] ?? 3).compareTo(
+            priorityOrder[b.priority] ?? 3,
+          );
+        case TaskConstants.sortByCreatedAt:
           return b.createdAt.compareTo(a.createdAt);
+        case TaskConstants.sortByStatus:
+          final statusOrder = {
+            TaskConstants.statusInProgress: 0,
+            TaskConstants.statusPending: 1,
+            TaskConstants.statusCompleted: 2,
+          };
+          return (statusOrder[a.status] ?? 3).compareTo(
+            statusOrder[b.status] ?? 3,
+          );
         default:
           return 0;
       }
@@ -174,39 +267,70 @@ class TaskState extends ChangeNotifier {
   }
 
   Future<void> addTask(Task task) async {
-    _tasks.add(task);
-    // TODO: Save to ObjectBox
-    notifyListeners();
+    final createdTask = await _service.createTask(task);
+    if (createdTask != null) {
+      _tasks.add(createdTask);
+      notifyListeners();
+    }
   }
 
-  Future<void> updateTask(Task task) async {
-    final index = _tasks.indexWhere((t) => t.id == task.id);
-    if (index != -1) {
-      _tasks[index] = task;
-      // TODO: Update in ObjectBox
-      notifyListeners();
+  Future<void> updateTask(Task updatedTask) async {
+    final success = await _service.updateTask(updatedTask);
+    if (success) {
+      final index = _tasks.indexWhere((task) => task.id == updatedTask.id);
+      if (index != -1) {
+        _tasks[index] = updatedTask;
+        notifyListeners();
+      }
     }
   }
 
   Future<void> deleteTask(String taskId) async {
-    _tasks.removeWhere((t) => t.id == taskId);
-    // TODO: Delete from ObjectBox
-    notifyListeners();
+    final success = await _service.deleteTask(taskId);
+    if (success) {
+      _tasks.removeWhere((task) => task.id == taskId);
+      notifyListeners();
+    }
   }
 
   Future<void> toggleTaskStatus(String taskId) async {
-    final index = _tasks.indexWhere((t) => t.id == taskId);
+    final index = _tasks.indexWhere((task) => task.id == taskId);
     if (index != -1) {
       final task = _tasks[index];
-      final newStatus = task.isCompleted ? 'pending' : 'completed';
+      final newStatus = task.isCompleted
+          ? TaskConstants.statusPending
+          : TaskConstants.statusCompleted;
+
+      // If completing the task, also complete all subtasks
+      List<Subtask>? updatedSubtasks = task.subtasks;
+      if (newStatus == TaskConstants.statusCompleted && task.subtasks != null) {
+        updatedSubtasks = task.subtasks!
+            .map((st) => st.copyWith(isCompleted: true))
+            .toList();
+      }
+
       final updatedTask = task.copyWith(
         status: newStatus,
-        progress: newStatus == 'completed' ? 100 : task.progress,
-        completedAt: newStatus == 'completed' ? DateTime.now() : null,
+        progress: newStatus == TaskConstants.statusCompleted
+            ? 100
+            : task.progress,
+        completedAt: newStatus == TaskConstants.statusCompleted
+            ? DateTime.now()
+            : null,
+        subtasks: updatedSubtasks,
+        updatedAt: DateTime.now(),
       );
-      _tasks[index] = updatedTask;
-      // TODO: Update in ObjectBox
-      notifyListeners();
+
+      final success = await _service.updateTask(updatedTask);
+      if (success) {
+        _tasks[index] = updatedTask;
+        notifyListeners();
+      }
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

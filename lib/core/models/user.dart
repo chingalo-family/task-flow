@@ -46,4 +46,9 @@ class User {
     'userGroups': userGroups,
     'organisationUnits': userOrgUnitIds,
   };
+
+  @override
+  String toString() {
+    return 'User{id: $id, username: $username, fullName: $fullName, email: $email, phoneNumber: $phoneNumber, isLogin: $isLogin}';
+  }
 }

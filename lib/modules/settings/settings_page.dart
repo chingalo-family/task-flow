@@ -94,11 +94,14 @@ class _SettingsPageState extends State<SettingsPage> {
                     // Profile Avatar with Edit
                     Consumer<UserState>(
                       builder: (context, userState, _) {
-                        final initials = (userState.currentUser?.fullName
-                                    ?.substring(0, 1) ??
-                                userState.currentUser?.username?.substring(0, 1) ??
-                                '')
-                            .toUpperCase();
+                        final initials =
+                            (userState.currentUser?.fullName?.substring(0, 1) ??
+                                    userState.currentUser?.username.substring(
+                                      0,
+                                      1,
+                                    ) ??
+                                    '')
+                                .toUpperCase();
                         return Center(
                           child: ProfileAvatarWithEdit(
                             initials: initials,
@@ -116,7 +119,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       builder: (context, userState, _) {
                         return InfoDisplayField(
                           label: 'Display Name',
-                          value: userState.currentUser?.fullName ??
+                          value:
+                              userState.currentUser?.fullName ??
                               userState.currentUser?.username ??
                               'User',
                         );

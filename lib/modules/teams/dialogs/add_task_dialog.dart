@@ -169,7 +169,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                                 ),
                               ),
                             );
-                          }).toList(),
+                          }),
                         ],
                         onChanged: (value) {
                           setState(() {
