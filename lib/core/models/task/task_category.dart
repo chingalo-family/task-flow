@@ -63,13 +63,13 @@ class TaskCategory {
   );
 
   static List<TaskCategory> get all => [
-    design,
-    dev,
-    marketing,
-    research,
-    bug,
     general,
     meeting,
+    marketing,
+    research,
+    design,
+    dev,
+    bug,
   ];
 
   static TaskCategory? fromId(String? id) {

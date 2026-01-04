@@ -407,6 +407,76 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
               ],
             ),
           ),
+          SizedBox(height: AppConstant.spacing24),
+          // Category
+          Text(
+            'Category',
+            style: TextStyle(
+              color: AppConstant.textPrimary,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: AppConstant.spacing12),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: TaskCategory.all.map((category) {
+                final isSelected = widget.selectedCategory == category.id;
+                return Padding(
+                  padding: EdgeInsets.only(right: AppConstant.spacing12),
+                  child: GestureDetector(
+                    onTap: () => widget.onCategoryChanged(category.id),
+                    child: Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? category.color.withValues(alpha: 0.2)
+                            : AppConstant.cardBackground,
+                        borderRadius: BorderRadius.circular(
+                          AppConstant.borderRadius12,
+                        ),
+                        border: Border.all(
+                          color: isSelected
+                              ? category.color
+                              : AppConstant.textSecondary.withValues(
+                                  alpha: 0.1,
+                                ),
+                          width: isSelected ? 2 : 1,
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            category.icon,
+                            color: isSelected
+                                ? category.color
+                                : AppConstant.textSecondary,
+                            size: 28,
+                          ),
+                          SizedBox(height: AppConstant.spacing8),
+                          Text(
+                            category.name,
+                            style: TextStyle(
+                              color: isSelected
+                                  ? category.color
+                                  : AppConstant.textSecondary,
+                              fontSize: 12,
+                              fontWeight: isSelected
+                                  ? FontWeight.w600
+                                  : FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
 
           SizedBox(height: AppConstant.spacing24),
 
@@ -447,27 +517,38 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
                     Expanded(
                       child: _PriorityButton(
                         label: 'Low',
-                        isSelected: widget.selectedPriority == TaskConstants.priorityLow,
+                        isSelected:
+                            widget.selectedPriority ==
+                            TaskConstants.priorityLow,
                         color: AppConstant.successGreen,
-                        onTap: () => widget.onPriorityChanged(TaskConstants.priorityLow),
+                        onTap: () =>
+                            widget.onPriorityChanged(TaskConstants.priorityLow),
                       ),
                     ),
                     SizedBox(width: AppConstant.spacing12),
                     Expanded(
                       child: _PriorityButton(
                         label: 'Medium',
-                        isSelected: widget.selectedPriority == TaskConstants.priorityMedium,
+                        isSelected:
+                            widget.selectedPriority ==
+                            TaskConstants.priorityMedium,
                         color: Colors.orange,
-                        onTap: () => widget.onPriorityChanged(TaskConstants.priorityMedium),
+                        onTap: () => widget.onPriorityChanged(
+                          TaskConstants.priorityMedium,
+                        ),
                       ),
                     ),
                     SizedBox(width: AppConstant.spacing12),
                     Expanded(
                       child: _PriorityButton(
                         label: 'High',
-                        isSelected: widget.selectedPriority == TaskConstants.priorityHigh,
+                        isSelected:
+                            widget.selectedPriority ==
+                            TaskConstants.priorityHigh,
                         color: Colors.red,
-                        onTap: () => widget.onPriorityChanged(TaskConstants.priorityHigh),
+                        onTap: () => widget.onPriorityChanged(
+                          TaskConstants.priorityHigh,
+                        ),
                       ),
                     ),
                   ],
@@ -620,76 +701,6 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
 
             SizedBox(height: AppConstant.spacing24),
           ],
-
-          // Category
-          Text(
-            'Category',
-            style: TextStyle(
-              color: AppConstant.textPrimary,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          SizedBox(height: AppConstant.spacing12),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: TaskCategory.all.map((category) {
-                final isSelected = widget.selectedCategory == category.id;
-                return Padding(
-                  padding: EdgeInsets.only(right: AppConstant.spacing12),
-                  child: GestureDetector(
-                    onTap: () => widget.onCategoryChanged(category.id),
-                    child: Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? category.color.withValues(alpha: 0.2)
-                            : AppConstant.cardBackground,
-                        borderRadius: BorderRadius.circular(
-                          AppConstant.borderRadius12,
-                        ),
-                        border: Border.all(
-                          color: isSelected
-                              ? category.color
-                              : AppConstant.textSecondary.withValues(
-                                  alpha: 0.1,
-                                ),
-                          width: isSelected ? 2 : 1,
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            category.icon,
-                            color: isSelected
-                                ? category.color
-                                : AppConstant.textSecondary,
-                            size: 28,
-                          ),
-                          SizedBox(height: AppConstant.spacing8),
-                          Text(
-                            category.name,
-                            style: TextStyle(
-                              color: isSelected
-                                  ? category.color
-                                  : AppConstant.textSecondary,
-                              fontSize: 12,
-                              fontWeight: isSelected
-                                  ? FontWeight.w600
-                                  : FontWeight.normal,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
         ],
       ),
     );
