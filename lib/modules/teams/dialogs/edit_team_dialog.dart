@@ -61,10 +61,20 @@ class _EditTeamDialogState extends State<EditTeamDialog> {
     _descriptionController = TextEditingController(
       text: widget.team.description ?? '',
     );
-    _selectedIcon = 'rocket';
-    _selectedColor = AppConstant.primaryBlue;
+    // Load existing icon and color from team, or use defaults
+    _selectedIcon = widget.team.teamIcon ?? 'rocket';
+    _selectedColor = widget.team.teamColor != null
+        ? _parseColor(widget.team.teamColor!)
+        : AppConstant.primaryBlue;
     _selectedMemberIds = Set.from(widget.team.memberIds ?? []);
     _loadOfflineAccessPreference();
+  }
+
+  Color _parseColor(String hexColor) {
+    // Remove # if present
+    final hex = hexColor.replaceAll('#', '');
+    // Parse hex string to color
+    return Color(int.parse('FF$hex', radix: 16));
   }
 
   Future<void> _loadOfflineAccessPreference() async {
@@ -692,6 +702,9 @@ class _EditTeamDialogState extends State<EditTeamDialog> {
       return;
     }
 
+    // Convert color to hex string
+    final colorHex = '#${_selectedColor.value.toRadixString(16).substring(2).toUpperCase()}';
+
     final updatedTeam = widget.team.copyWith(
       name: _nameController.text.trim(),
       description: _descriptionController.text.trim().isEmpty
@@ -700,6 +713,8 @@ class _EditTeamDialogState extends State<EditTeamDialog> {
       memberIds: _selectedMemberIds.toList(),
       memberCount: _selectedMemberIds.length,
       updatedAt: DateTime.now(),
+      teamIcon: _selectedIcon,
+      teamColor: colorHex,
     );
 
     await context.read<TeamState>().updateTeam(updatedTeam);

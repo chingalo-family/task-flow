@@ -242,14 +242,19 @@ class _TeamDetailPageState extends State<TeamDetailPage>
           // Task filter tabs
           Container(
             padding: EdgeInsets.symmetric(horizontal: AppConstant.spacing16),
-            child: Row(
-              children: [
-                _buildFilterTab('All Tasks'),
-                SizedBox(width: AppConstant.spacing8),
-                _buildFilterTab('My Tasks'),
-                SizedBox(width: AppConstant.spacing8),
-                _buildFilterTab('Due Soon'),
-              ],
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  _buildFilterTab('All Tasks'),
+                  SizedBox(width: AppConstant.spacing8),
+                  _buildFilterTab('My Tasks'),
+                  SizedBox(width: AppConstant.spacing8),
+                  _buildFilterTab('Due Soon'),
+                  SizedBox(width: AppConstant.spacing8),
+                  _buildFilterTab('Overdue'),
+                ],
+              ),
             ),
           ),
           SizedBox(height: AppConstant.spacing16),
@@ -387,8 +392,10 @@ class _TeamDetailPageState extends State<TeamDetailPage>
         // Apply task filter
         if (_selectedFilter == 'My Tasks') {
           final currentUser = context.read<UserState>().currentUser;
+          final currentUserId = currentUser?.id;
           tasks = tasks.where((task) {
-            return task.assignedToUserId == currentUser?.id;
+            // Check if current user is in the assignedUserIds list
+            return task.assignedUserIds?.contains(currentUserId) ?? false;
           }).toList();
         } else if (_selectedFilter == 'Due Soon') {
           final now = DateTime.now();
@@ -397,6 +404,14 @@ class _TeamDetailPageState extends State<TeamDetailPage>
             if (task.dueDate == null) return false;
             return task.dueDate!.isAfter(now) &&
                 task.dueDate!.isBefore(threeDaysFromNow);
+          }).toList();
+        } else if (_selectedFilter == 'Overdue') {
+          final now = DateTime.now();
+          tasks = tasks.where((task) {
+            if (task.dueDate == null) return false;
+            return task.dueDate!.isBefore(now) &&
+                task.status.toLowerCase() != 'done' &&
+                task.status.toLowerCase() != 'completed';
           }).toList();
         }
 
@@ -516,6 +531,13 @@ class _TeamDetailPageState extends State<TeamDetailPage>
             _buildFilterOption('Due Soon', _selectedFilter == 'Due Soon', () {
               setState(() {
                 _selectedFilter = 'Due Soon';
+              });
+              Navigator.pop(context);
+            }),
+            SizedBox(height: AppConstant.spacing8),
+            _buildFilterOption('Overdue', _selectedFilter == 'Overdue', () {
+              setState(() {
+                _selectedFilter = 'Overdue';
               });
               Navigator.pop(context);
             }),

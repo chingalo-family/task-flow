@@ -569,6 +569,9 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
     final userState = context.read<UserState>();
     final currentUser = userState.currentUser;
 
+    // Convert color to hex string
+    final colorHex = '#${_selectedColor.value.toRadixString(16).substring(2).toUpperCase()}';
+
     final team = Team(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       name: _nameController.text.trim(),
@@ -579,6 +582,8 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
       memberCount: _selectedMemberIds.length + 1,
       createdByUserId: currentUser?.id,
       createdByUsername: currentUser?.username,
+      teamIcon: _selectedIcon,
+      teamColor: colorHex,
     );
 
     await context.read<TeamState>().addTeam(team);

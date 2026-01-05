@@ -10,8 +10,13 @@ class TeamCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final teamColor = _getTeamColor(team.id);
-    final teamIcon = _getTeamIcon(team.name);
+    // Use saved team color and icon if available, otherwise generate from ID/name
+    final teamColor = team.teamColor != null
+        ? _parseColor(team.teamColor!)
+        : _getTeamColor(team.id);
+    final teamIcon = team.teamIcon != null
+        ? _getIconFromKey(team.teamIcon!)
+        : _getTeamIcon(team.name);
     final isSyncing = team.id == '2'; // Mock syncing status for demo
 
     return Container(
@@ -233,6 +238,32 @@ class TeamCard extends StatelessWidget {
     // Use hash code for reliable color assignment with any string ID
     final hash = teamId.hashCode.abs();
     return colors[hash % colors.length];
+  }
+
+  Color _parseColor(String hexColor) {
+    // Remove # if present
+    final hex = hexColor.replaceAll('#', '');
+    // Parse hex string to color
+    return Color(int.parse('FF$hex', radix: 16));
+  }
+
+  IconData _getIconFromKey(String iconKey) {
+    switch (iconKey) {
+      case 'rocket':
+        return Icons.rocket_launch;
+      case 'computer':
+        return Icons.computer;
+      case 'palette':
+        return Icons.palette;
+      case 'campaign':
+        return Icons.campaign;
+      case 'bar_chart':
+        return Icons.bar_chart;
+      case 'shopping_cart':
+        return Icons.shopping_cart;
+      default:
+        return Icons.people_rounded;
+    }
   }
 
   IconData _getTeamIcon(String teamName) {

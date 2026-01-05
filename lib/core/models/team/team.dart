@@ -14,6 +14,8 @@ class Team {
   final String? createdByUsername;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final String? teamIcon; // Icon key for the team (e.g., 'rocket', 'computer')
+  final String? teamColor; // Hex color string for the team (e.g., '#2E90FA')
 
   Team({
     required this.id,
@@ -28,6 +30,8 @@ class Team {
     this.createdByUsername,
     DateTime? createdAt,
     DateTime? updatedAt,
+    this.teamIcon,
+    this.teamColor,
   }) : createdAt = createdAt ?? DateTime.now(),
        updatedAt = updatedAt ?? DateTime.now();
 
@@ -48,6 +52,8 @@ class Team {
     String? createdByUsername,
     DateTime? createdAt,
     DateTime? updatedAt,
+    String? teamIcon,
+    String? teamColor,
   }) {
     return Team(
       id: id ?? this.id,
@@ -62,6 +68,8 @@ class Team {
       createdByUsername: createdByUsername ?? this.createdByUsername,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      teamIcon: teamIcon ?? this.teamIcon,
+      teamColor: teamColor ?? this.teamColor,
     );
   }
 }
