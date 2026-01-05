@@ -385,7 +385,7 @@ Ensure the website is accessible to all users:
 │                                               │
 ├───────────────────────────────────────────────┤
 │  Footer (Dark Background #1A2332)            │
-│  © 2026 Task Flow | Privacy | Terms | Contact│
+│  © 2025 Task Flow | Privacy | Terms | Contact│
 └───────────────────────────────────────────────┘
 ```
 
@@ -463,5 +463,5 @@ This specification provides a comprehensive guide for building a professional, r
 ---
 
 **Document Version:** 1.0  
-**Last Updated:** 2026-01-05  
+**Last Updated:** 2025-01-05  
 **Maintained By:** Task Flow Development Team
