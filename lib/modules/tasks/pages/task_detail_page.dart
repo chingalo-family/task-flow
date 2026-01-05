@@ -899,8 +899,14 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
   void _showAddSubtaskDialog() {
     final userState = Provider.of<UserState>(context, listen: false);
+    final teamState = Provider.of<TeamState>(context, listen: false);
     final currentUserId =
         userState.currentUser?.id.toString() ?? 'current_user';
+
+    // Get team if task has one
+    final team = _task.teamId != null 
+        ? teamState.getTeamById(_task.teamId!)
+        : null;
 
     // Form controllers and state
     final formKey = GlobalKey<FormState>();
@@ -958,7 +964,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                       selectedCategory: selectedCategory,
                       selectedDueDate: selectedDueDate,
                       remindMe: remindMe,
-                      selectedTeam: _task.team, // Use parent task's team
+                      selectedTeam: team, // Use parent task's team
                       selectedAssignees: selectedAssignees,
                       onPriorityChanged: (value) =>
                           setState(() => selectedPriority = value),
