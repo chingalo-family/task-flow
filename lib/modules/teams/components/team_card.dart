@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:task_flow/app_state/user_list_state/user_list_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/models/models.dart';
 import 'package:task_flow/modules/teams/pages/team_detail_page.dart';
@@ -10,6 +12,8 @@ class TeamCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userListState = Provider.of<UserListState>(context);
+    
     // Use saved team color and icon if available, otherwise generate from ID/name
     final teamColor = team.teamColor != null
         ? _parseColor(team.teamColor!)
@@ -18,6 +22,11 @@ class TeamCard extends StatelessWidget {
         ? _getIconFromKey(team.teamIcon!)
         : _getTeamIcon(team.name);
     final isSyncing = team.id == '2'; // Mock syncing status for demo
+    
+    // Get actual team members from memberIds
+    final teamMembers = team.memberIds != null && team.memberIds!.isNotEmpty
+        ? userListState.getUsersByIds(team.memberIds!)
+        : <User>[];
 
     return Container(
       decoration: BoxDecoration(
@@ -139,17 +148,18 @@ class TeamCard extends StatelessWidget {
                 Row(
                   children: [
                     // Show up to 3 member avatars with overlap using Stack
-                    if (team.memberCount > 0)
+                    if (teamMembers.isNotEmpty)
                       SizedBox(
                         height: 32,
-                        width: team.memberCount > 3
+                        width: teamMembers.length > 3
                             ? 88 // 3 avatars with overlap: 32 + 24 + 24 + 8
-                            : (team.memberCount * 32) -
-                                ((team.memberCount - 1) * 8),
+                            : (teamMembers.length * 32) -
+                                ((teamMembers.length - 1) * 8),
                         child: Stack(
                           children: List.generate(
-                            team.memberCount > 3 ? 3 : team.memberCount,
+                            teamMembers.length > 3 ? 3 : teamMembers.length,
                             (index) {
+                              final user = teamMembers[index];
                               return Positioned(
                                 left: index * 24.0,
                                 child: Container(
@@ -166,7 +176,7 @@ class TeamCard extends StatelessWidget {
                                     radius: 14,
                                     backgroundColor: _getAvatarColor(index),
                                     child: Text(
-                                      _getInitials(index),
+                                      _getUserInitials(user),
                                       style: TextStyle(
                                         fontSize: 10,
                                         fontWeight: FontWeight.w600,
@@ -182,7 +192,7 @@ class TeamCard extends StatelessWidget {
                       ),
 
                     // Show +N if there are more members
-                    if (team.memberCount > 3) ...[
+                    if (teamMembers.length > 3) ...[
                       SizedBox(width: 8),
                       CircleAvatar(
                         radius: 16,
@@ -190,7 +200,7 @@ class TeamCard extends StatelessWidget {
                           alpha: 0.2,
                         ),
                         child: Text(
-                          '+${team.memberCount - 3}',
+                          '+${teamMembers.length - 3}',
                           style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
@@ -203,7 +213,7 @@ class TeamCard extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          '${team.memberCount} Member${team.memberCount != 1 ? 's' : ''}',
+                          '${teamMembers.length} Member${teamMembers.length != 1 ? 's' : ''}',
                           style: TextStyle(
                             fontSize: 14,
                             color: AppConstant.textPrimary,
@@ -288,8 +298,15 @@ class TeamCard extends StatelessWidget {
     return colors[index % colors.length];
   }
 
-  String _getInitials(int index) {
-    final names = ['JD', 'KL', 'SM', 'MJ', 'LC'];
-    return names[index % names.length];
+  String _getUserInitials(User user) {
+    // Get initials from full name or username
+    final name = user.fullName ?? user.username;
+    if (name.isEmpty) return '?';
+    
+    final parts = name.trim().split(' ');
+    if (parts.length >= 2) {
+      return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
+    }
+    return name.substring(0, name.length >= 2 ? 2 : 1).toUpperCase();
   }
 }

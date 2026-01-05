@@ -4,8 +4,12 @@ import 'package:objectbox/objectbox.dart';
 class TeamEntity {
   int id; // ObjectBox id
 
+  @Index() // TODO: Add index on teamId for faster lookups by team ID
   String teamId; // API team id
+  
+  @Index() // TODO: Add index on name for faster search by team name
   String name;
+  
   String? description;
   String? avatarUrl;
   
@@ -19,6 +23,7 @@ class TeamEntity {
   @Property(type: PropertyType.date)
   DateTime updatedAt;
   
+  @Index() // TODO: Add index on isSynced for filtering synced/unsynced teams
   bool isSynced;
   
   String? memberIdsJson; // JSON array of member user IDs
