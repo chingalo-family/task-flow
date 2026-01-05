@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:task_flow/core/models/models.dart';
+import 'package:task_flow/core/services/team_service.dart';
 
 class TeamState extends ChangeNotifier {
+  final _service = TeamService();
+  
   List<Team> _teams = [];
   bool _loading = false;
 
@@ -14,7 +17,6 @@ class TeamState extends ChangeNotifier {
     _loading = true;
     notifyListeners();
     
-    // TODO: Load teams from ObjectBox
     await _loadTeams();
     
     _loading = false;
@@ -22,9 +24,21 @@ class TeamState extends ChangeNotifier {
   }
 
   Future<void> _loadTeams() async {
-    // TODO: Implement ObjectBox loading
-    // For now, create some sample data
-    _teams = _generateSampleTeams();
+    try {
+      _teams = await _service.getAllTeams();
+      
+      // If no teams in database, generate sample data for demonstration
+      if (_teams.isEmpty) {
+        _teams = _generateSampleTeams();
+        // Save sample teams to database
+        for (var team in _teams) {
+          await _service.createTeam(team);
+        }
+      }
+    } catch (e) {
+      debugPrint('Error loading teams: $e');
+      _teams = [];
+    }
   }
 
   List<Team> _generateSampleTeams() {
@@ -70,24 +84,30 @@ class TeamState extends ChangeNotifier {
   }
 
   Future<void> addTeam(Team team) async {
-    _teams.add(team);
-    // TODO: Save to ObjectBox
-    notifyListeners();
-  }
-
-  Future<void> updateTeam(Team team) async {
-    final index = _teams.indexWhere((t) => t.id == team.id);
-    if (index != -1) {
-      _teams[index] = team;
-      // TODO: Update in ObjectBox
+    final createdTeam = await _service.createTeam(team);
+    if (createdTeam != null) {
+      _teams.add(createdTeam);
       notifyListeners();
     }
   }
 
+  Future<void> updateTeam(Team team) async {
+    final success = await _service.updateTeam(team);
+    if (success) {
+      final index = _teams.indexWhere((t) => t.id == team.id);
+      if (index != -1) {
+        _teams[index] = team;
+        notifyListeners();
+      }
+    }
+  }
+
   Future<void> deleteTeam(String teamId) async {
-    _teams.removeWhere((t) => t.id == teamId);
-    // TODO: Delete from ObjectBox
-    notifyListeners();
+    final success = await _service.deleteTeam(teamId);
+    if (success) {
+      _teams.removeWhere((t) => t.id == teamId);
+      notifyListeners();
+    }
   }
 
   Team? getTeamById(String teamId) {

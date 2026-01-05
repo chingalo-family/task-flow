@@ -22,6 +22,10 @@ class TeamEntity {
   bool isSynced;
   
   String? memberIdsJson; // JSON array of member user IDs
+  String? taskIdsJson; // JSON array of task IDs
+  String? customTaskStatusesJson; // JSON array of custom task statuses
+  String? teamIcon; // Icon key (e.g., 'rocket', 'computer')
+  String? teamColor; // Hex color string (e.g., '#2E90FA')
 
   TeamEntity({
     this.id = 0,
@@ -36,6 +40,10 @@ class TeamEntity {
     DateTime? updatedAt,
     this.isSynced = false,
     this.memberIdsJson,
+    this.taskIdsJson,
+    this.customTaskStatusesJson,
+    this.teamIcon,
+    this.teamColor,
   })  : createdAt = createdAt ?? DateTime.now(),
         updatedAt = updatedAt ?? DateTime.now();
 }
