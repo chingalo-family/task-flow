@@ -65,25 +65,13 @@ class _TeamsPageState extends State<TeamsPage> {
                   backgroundColor: AppConstant.darkBackground,
                   elevation: 0,
                   automaticallyImplyLeading: false,
-                  title: Row(
-                    children: [
-                      Icon(
-                        Icons.arrow_back,
-                        color: AppConstant.textPrimary,
-                        size: 24,
-                      ),
-                      SizedBox(width: AppConstant.spacing16),
-                      Expanded(
-                        child: Text(
-                          'My Teams',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: AppConstant.textPrimary,
-                          ),
-                        ),
-                      ),
-                    ],
+                  title: Text(
+                    'My Teams',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: AppConstant.textPrimary,
+                    ),
                   ),
                 ),
 
