@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_flow/core/constants/app_constant.dart';
 import 'modern_input_field.dart';
 import 'modern_primary_button.dart';
 
@@ -60,20 +61,21 @@ class _ModernLoginFormState extends State<ModernLoginForm> {
     return Form(
       key: _formKey,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           ModernInputField(
             controller: _usernameController,
-            hintText: 'Username',
+            hintText: 'Username or Email',
             icon: Icons.person_outline_rounded,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter your username';
+                return 'Please enter your username or email';
               }
               return null;
             },
             enabled: !widget.isSaving,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: AppConstant.spacing16),
           ModernInputField(
             controller: _passwordController,
             hintText: 'Password',
@@ -93,7 +95,7 @@ class _ModernLoginFormState extends State<ModernLoginForm> {
                   _obscurePassword
                       ? Icons.visibility_outlined
                       : Icons.visibility_off_outlined,
-                  color: Colors.grey[400],
+                  color: AppConstant.textSecondary,
                   size: 22,
                 ),
                 onPressed: () {
@@ -104,11 +106,32 @@ class _ModernLoginFormState extends State<ModernLoginForm> {
               ),
             ),
           ),
-          const SizedBox(height: 24),
+          
+          SizedBox(height: AppConstant.spacing12),
+          
+          // Forgot password link
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: () {
+                // TODO: Implement forgot password
+              },
+              child: Text(
+                'Forgot password?',
+                style: TextStyle(
+                  color: AppConstant.primaryBlue,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          ),
+          
+          SizedBox(height: AppConstant.spacing24),
+          
           ModernPrimaryButton(
             onPressed: (!_isFormValid || widget.isSaving) ? null : _handleLogin,
             loading: widget.isSaving,
-            child: const Text(
+            child: Text(
               'Log In',
               style: TextStyle(
                 color: Colors.white,

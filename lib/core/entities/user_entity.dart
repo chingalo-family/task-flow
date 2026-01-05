@@ -10,8 +10,6 @@ class UserEntity {
   String? password;
   String? email;
   String? phoneNumber;
-  String? userGroupsJson;
-  String? userOrgUnitIdsJson;
   bool isLogin;
   DateTime createdAt;
   DateTime updatedAt;
@@ -24,8 +22,6 @@ class UserEntity {
     this.password,
     this.email,
     this.phoneNumber,
-    this.userGroupsJson,
-    this.userOrgUnitIdsJson,
     this.isLogin = false,
     DateTime? createdAt,
     DateTime? updatedAt,

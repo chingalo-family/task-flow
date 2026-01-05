@@ -14,7 +14,7 @@ plugins {
 }
 
 android {
-    namespace = "chingalo.family.task_manager"
+    namespace = "chingalo.family.task_flow"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -28,7 +28,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "chingalo.family.task_manager"
+        applicationId = "chingalo.family.task_flow"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

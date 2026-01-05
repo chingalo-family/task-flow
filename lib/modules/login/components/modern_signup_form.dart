@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/core/utils/app_util.dart';
-import 'package:task_manager/modules/login/components/modern_input_field.dart';
-import 'package:task_manager/modules/login/components/modern_primary_button.dart';
+import 'package:task_flow/core/constants/app_constant.dart';
+import 'package:task_flow/core/utils/app_util.dart';
+import 'package:task_flow/modules/login/components/modern_input_field.dart';
+import 'package:task_flow/modules/login/components/modern_primary_button.dart';
 
 class ModernSignupForm extends StatefulWidget {
   final Function(
@@ -9,14 +10,15 @@ class ModernSignupForm extends StatefulWidget {
     String surname,
     String email,
     String phoneNumber,
+    String password,
   )
-  onSignup;
+  onSignUp;
   final bool isSaving;
 
   const ModernSignupForm({
     super.key,
-    required this.onSignup,
     this.isSaving = false,
+    required this.onSignUp,
   });
 
   @override
@@ -29,6 +31,10 @@ class _ModernSignupFormState extends State<ModernSignupForm> {
   final _surnameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phoneNumberController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
   bool _isFormValid = false;
 
   @override
@@ -38,14 +44,18 @@ class _ModernSignupFormState extends State<ModernSignupForm> {
     _surnameController.addListener(_validateForm);
     _emailController.addListener(_validateForm);
     _phoneNumberController.addListener(_validateForm);
+    _passwordController.addListener(_validateForm);
+    _confirmPasswordController.addListener(_validateForm);
   }
 
   @override
   void dispose() {
     _firstNameController.dispose();
     _surnameController.dispose();
-    _emailController.dispose();
     _phoneNumberController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -55,17 +65,24 @@ class _ModernSignupFormState extends State<ModernSignupForm> {
           _firstNameController.text.isNotEmpty &&
           _surnameController.text.isNotEmpty &&
           _emailController.text.isNotEmpty &&
-          _phoneNumberController.text.isNotEmpty;
+          _phoneNumberController.text.isNotEmpty &&
+          _passwordController.text.isNotEmpty &&
+          _confirmPasswordController.text.isNotEmpty;
     });
   }
 
   void _handleSignup() {
     if (_formKey.currentState!.validate()) {
-      widget.onSignup(
+      if (_passwordController.text != _confirmPasswordController.text) {
+        AppUtil.showToastMessage(message: 'Passwords do not match');
+        return;
+      }
+      widget.onSignUp(
         _firstNameController.text,
         _surnameController.text,
         _emailController.text,
         _phoneNumberController.text,
+        _passwordController.text,
       );
     }
   }
@@ -75,36 +92,41 @@ class _ModernSignupFormState extends State<ModernSignupForm> {
     return Form(
       key: _formKey,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           ModernInputField(
             controller: _firstNameController,
             hintText: 'First Name',
             icon: Icons.person_outline_rounded,
+            enabled: !widget.isSaving,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter your first name';
+                return 'Please enter a first name';
               }
+
               return null;
             },
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: AppConstant.spacing16),
           ModernInputField(
             controller: _surnameController,
             hintText: 'Surname',
             icon: Icons.person_outline_rounded,
+            enabled: !widget.isSaving,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter your surname';
+                return 'Please enter a surname';
               }
               return null;
             },
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: AppConstant.spacing16),
           ModernInputField(
             controller: _emailController,
-            hintText: 'E-mail',
+            hintText: 'Email',
             icon: Icons.email_outlined,
             keyboardType: TextInputType.emailAddress,
+            enabled: !widget.isSaving,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter your email';
@@ -115,12 +137,13 @@ class _ModernSignupFormState extends State<ModernSignupForm> {
               return null;
             },
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: AppConstant.spacing16),
           ModernInputField(
             controller: _phoneNumberController,
             hintText: 'Phone Number',
             icon: Icons.phone_outlined,
             keyboardType: TextInputType.phone,
+            enabled: !widget.isSaving,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter your phone number';
@@ -128,18 +151,90 @@ class _ModernSignupFormState extends State<ModernSignupForm> {
               if (!AppUtil.isPhoneNumberValid(value)) {
                 return 'Please enter a valid phone number';
               }
+              if (!AppUtil.isPasswordValid(value)) {
+                return 'Password must be at least 8, include an uppercase letter, number and special character';
+              }
               return null;
             },
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: AppConstant.spacing16),
+          ModernInputField(
+            controller: _passwordController,
+            hintText: 'Password',
+            icon: Icons.lock_outline_rounded,
+            obscureText: _obscurePassword,
+            enabled: !widget.isSaving,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter a password';
+              }
+              if (value.length < 6) {
+                return 'Password must be at least 6 characters';
+              }
+              return null;
+            },
+            suffixIcon: Padding(
+              padding: const EdgeInsets.only(right: 12),
+              child: IconButton(
+                icon: Icon(
+                  _obscurePassword
+                      ? Icons.visibility_outlined
+                      : Icons.visibility_off_outlined,
+                  color: AppConstant.textSecondary,
+                  size: 22,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _obscurePassword = !_obscurePassword;
+                  });
+                },
+              ),
+            ),
+          ),
+          SizedBox(height: AppConstant.spacing16),
+          ModernInputField(
+            controller: _confirmPasswordController,
+            hintText: 'Confirm Password',
+            icon: Icons.lock_outline_rounded,
+            obscureText: _obscureConfirmPassword,
+            enabled: !widget.isSaving,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please confirm your password';
+              }
+              if (value != _passwordController.text) {
+                return 'Passwords do not match';
+              }
+              return null;
+            },
+            suffixIcon: Padding(
+              padding: const EdgeInsets.only(right: 12),
+              child: IconButton(
+                icon: Icon(
+                  _obscureConfirmPassword
+                      ? Icons.visibility_outlined
+                      : Icons.visibility_off_outlined,
+                  color: AppConstant.textSecondary,
+                  size: 22,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _obscureConfirmPassword = !_obscureConfirmPassword;
+                  });
+                },
+              ),
+            ),
+          ),
+
+          SizedBox(height: AppConstant.spacing24),
 
           ModernPrimaryButton(
             onPressed: (!_isFormValid || widget.isSaving)
                 ? null
                 : _handleSignup,
             loading: widget.isSaving,
-            child: const Text(
-              'Request Account',
+            child: Text(
+              'Sign Up',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16,

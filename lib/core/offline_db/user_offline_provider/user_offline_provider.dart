@@ -1,9 +1,7 @@
-import 'dart:convert';
-
-import 'package:task_manager/core/models/user.dart';
-import 'package:task_manager/core/entities/user_entity.dart';
-import 'package:task_manager/core/services/db_service.dart';
-import 'package:task_manager/objectbox.g.dart';
+import 'package:task_flow/core/models/user.dart';
+import 'package:task_flow/core/entities/user_entity.dart';
+import 'package:task_flow/core/services/db_service.dart';
+import 'package:task_flow/objectbox.g.dart';
 
 class UserOfflineProvider {
   UserOfflineProvider._();
@@ -13,25 +11,28 @@ class UserOfflineProvider {
   Future<List<dynamic>> getUsers() async {
     await DBService().init();
     final box = DBService().userBox;
+    if (box == null) return [];
     return box.getAll().map(_toUser).toList();
   }
 
   Future<User?> getUserById(String apiUserId) async {
     await DBService().init();
     final box = DBService().userBox;
-    final q = box
+    if (box == null) return null;
+    final query = box
         .query(
           UserEntity_.apiUserId.equals(apiUserId) as Condition<UserEntity>?,
         )
         .build();
-    final found = q.findFirst();
-    q.close();
+    final found = query.findFirst();
+    query.close();
     return found == null ? null : _toUser(found);
   }
 
   Future<void> addOrUpdateUser(User user) async {
     await DBService().init();
     final box = DBService().userBox;
+    if (box == null) return;
     final existing = box
         .query(UserEntity_.apiUserId.equals(user.id) as Condition<UserEntity>?)
         .build()
@@ -44,12 +45,6 @@ class UserOfflineProvider {
       password: user.password,
       email: user.email,
       phoneNumber: user.phoneNumber,
-      userGroupsJson: user.userGroups == null
-          ? null
-          : jsonEncode(user.userGroups),
-      userOrgUnitIdsJson: user.userOrgUnitIds == null
-          ? null
-          : jsonEncode(user.userOrgUnitIds),
       isLogin: user.isLogin,
     );
     box.put(entity);
@@ -58,6 +53,7 @@ class UserOfflineProvider {
   Future<void> deleteUser(String apiUserId) async {
     await DBService().init();
     final box = DBService().userBox;
+    if (box == null) return;
     final q = box
         .query(
           UserEntity_.apiUserId.equals(apiUserId) as Condition<UserEntity>?,
@@ -68,25 +64,15 @@ class UserOfflineProvider {
     if (found != null) box.remove(found.id);
   }
 
-  User _toUser(UserEntity e) {
-    List<String>? groups;
-    List<String>? orgs;
-    try {
-      if (e.userGroupsJson != null)
-        groups = List<String>.from(jsonDecode(e.userGroupsJson!));
-      if (e.userOrgUnitIdsJson != null)
-        orgs = List<String>.from(jsonDecode(e.userOrgUnitIdsJson!));
-    } catch (_) {}
+  User _toUser(UserEntity entity) {
     return User(
-      id: e.apiUserId,
-      username: e.username,
-      fullName: e.fullName,
-      password: e.password,
-      email: e.email,
-      phoneNumber: e.phoneNumber,
-      userGroups: groups,
-      userOrgUnitIds: orgs,
-      isLogin: e.isLogin,
+      id: entity.apiUserId,
+      username: entity.username,
+      fullName: entity.fullName,
+      password: entity.password,
+      email: entity.email,
+      phoneNumber: entity.phoneNumber,
+      isLogin: entity.isLogin,
     );
   }
 }

@@ -25,7 +25,7 @@ class UserState extends ChangeNotifier {
     return false;
   }
 
-  Future<void> signOut() async {
+  Future<void> logout() async {
     await _service.logout();
     _currentUser = null;
     notifyListeners();
@@ -35,5 +35,21 @@ class UserState extends ChangeNotifier {
     await _service.setCurrentUser(user);
     _currentUser = user;
     notifyListeners();
+  }
+
+  Future<bool> changeCurrentUserPassword(
+    String oldPassword,
+    String newPassword,
+  ) async {
+    final success = await _service.changeCurrentUserPassword(
+      oldPassword,
+      newPassword,
+    );
+    if (success) {
+      // Update current user with new password
+      _currentUser = await _service.getCurrentUser();
+      notifyListeners();
+    }
+    return success;
   }
 }

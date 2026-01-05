@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/core/constants/email_connection.dart';
-import 'package:task_manager/core/models/email_notification.dart';
-import 'package:task_manager/core/services/email_service.dart';
-import 'package:task_manager/core/utils/app_util.dart';
-import 'package:task_manager/modules/login/components/modern_signup_form.dart';
+import 'package:task_flow/core/constants/email_connection.dart';
+import 'package:task_flow/core/models/email_notification.dart';
+import 'package:task_flow/core/services/email_service.dart';
+import 'package:task_flow/core/utils/app_util.dart';
+import 'package:task_flow/modules/login/components/modern_signup_form.dart';
 
 class UserAccountRequestForm extends StatefulWidget {
   const UserAccountRequestForm({super.key});
@@ -15,11 +15,12 @@ class UserAccountRequestForm extends StatefulWidget {
 class _UserAccountRequestFormState extends State<UserAccountRequestForm> {
   bool _isSaving = false;
 
-  void onSignup(
+  void onSignUp(
     String firstName,
     String surname,
     String email,
     String phoneNumber,
+    String password,
   ) async {
     String fullName = '$firstName $surname';
     if (AppUtil.isEmailValid(email)) {
@@ -30,7 +31,7 @@ class _UserAccountRequestFormState extends State<UserAccountRequestForm> {
 
         EmailNotification confirmationEmail = EmailNotification(
           recipients: [email],
-          subject: 'Task Manager App Account Request',
+          subject: 'Task Flow App Account Request',
           textBody:
               'Hello $fullName,\n\nYour request has been sent successfully, we are currently processing this request and will get back to you within two business days.\n\nRegards\nSupport Team',
           htmlBody:
@@ -45,7 +46,7 @@ class _UserAccountRequestFormState extends State<UserAccountRequestForm> {
                   <div style="max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                     <!-- Header -->
                     <div style="background-color: #2AADB1; color: #ffffff; padding: 30px 20px; text-align: center;">
-                      <h1 style="margin: 0; font-size: 24px;">Task Manager App</h1>
+                      <h1 style="margin: 0; font-size: 24px;">Task Flow App</h1>
                     </div>
                     
                     <!-- Content -->
@@ -53,7 +54,7 @@ class _UserAccountRequestFormState extends State<UserAccountRequestForm> {
                       <h2 style="color: #2AADB1; margin-top: 0;">Hello $fullName,</h2>
                       
                       <p style="font-size: 16px; line-height: 1.8;">
-                        Thank you for your interest in Task Manager App! 
+                        Thank you for your interest in Task Flow App! 
                       </p>
                       
                       <p style="font-size: 16px; line-height: 1.8;">
@@ -74,7 +75,7 @@ class _UserAccountRequestFormState extends State<UserAccountRequestForm> {
                       <p style="font-size: 16px; margin-bottom: 5px;">
                         Best regards,<br>
                         <strong>Support Team</strong><br>
-                        Task Manager App
+                        Task Flow App
                       </p>
                     </div>
                     
@@ -96,9 +97,9 @@ class _UserAccountRequestFormState extends State<UserAccountRequestForm> {
         // Admin notification email with HTML content
         EmailNotification requestEmail = EmailNotification(
           recipients: EmailConnection.adminEmails,
-          subject: '[$fullName] Task Manager App Account Request',
+          subject: '[$fullName] Task Flow App Account Request',
           textBody:
-              'Dear Admin Team,\n\n$fullName has requested an account to access Task Manager App. See more information below:\n\nFull name: $fullName\nE-mail: $email\nPhone number: $phoneNumber\n\nPlease review and process this request.',
+              'Dear Admin Team,\n\n$fullName has requested an account to access Task Flow App. See more information below:\n\nFull name: $fullName\nE-mail: $email\nPhone number: $phoneNumber\n\nPlease review and process this request.',
           htmlBody:
               '''
           <!DOCTYPE html>
@@ -119,7 +120,7 @@ class _UserAccountRequestFormState extends State<UserAccountRequestForm> {
                 <h2 style="color: #2AADB1; margin-top: 0;">Dear Admin Team,</h2>
                 
                 <p style="font-size: 16px; line-height: 1.8;">
-                  A new user has requested an account to access <strong>Task Manager App</strong>.
+                  A new user has requested an account to access <strong>Task Flow App</strong>.
                 </p>
                 
                 <!-- User Details Card -->
@@ -152,14 +153,14 @@ class _UserAccountRequestFormState extends State<UserAccountRequestForm> {
                 </div>
                 
                 <p style="font-size: 14px; color: #6c757d; margin-top: 30px;">
-                  This is an automated notification sent from Task Manager App.
+                  This is an automated notification sent from Task Flow App.
                 </p>
               </div>
               
               <!-- Footer -->
               <div style="background-color: #f8f9fa; padding: 20px; text-align: center; border-top: 1px solid #e9ecef;">
                 <p style="margin: 0; font-size: 12px; color: #6c757d;">
-                  Task Manager App - Admin Notification System
+                  Task Flow App - Admin Notification System
                 </p>
               </div>
             </div>
@@ -212,7 +213,7 @@ class _UserAccountRequestFormState extends State<UserAccountRequestForm> {
               ),
             ),
             const SizedBox(height: 10),
-            ModernSignupForm(onSignup: onSignup, isSaving: _isSaving),
+            ModernSignupForm(isSaving: _isSaving, onSignUp: onSignUp),
           ],
         ),
       ),
