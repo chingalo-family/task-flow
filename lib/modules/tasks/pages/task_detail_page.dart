@@ -949,7 +949,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                       selectedCategory: selectedCategory,
                       selectedDueDate: selectedDueDate,
                       remindMe: remindMe,
-                      selectedTeam: null, // No team for subtasks
+                      selectedTeam: _task.team, // Use parent task's team
                       selectedAssignees: selectedAssignees,
                       onPriorityChanged: (value) =>
                           setState(() => selectedPriority = value),
@@ -966,6 +966,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                           _task.teamId ==
                           null, // Hide if parent task has no team
                       isSubtask: true,
+                      lockTeam: _task.teamId != null, // Lock team if parent has team
                     ),
                   ),
                 ),
