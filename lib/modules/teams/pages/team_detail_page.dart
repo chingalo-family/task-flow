@@ -121,40 +121,45 @@ class _TeamDetailPageState extends State<TeamDetailPage>
                   team.memberIds ?? [],
                 );
 
-                return ListView(
+                return ListView.builder(
                   scrollDirection: Axis.horizontal,
                   padding: EdgeInsets.symmetric(
                     horizontal: AppConstant.spacing16,
                   ),
-                  children: [
-                    // All members option
-                    _buildMemberFilterChip(
-                      label: 'All',
-                      isSelected: _selectedMemberId == null,
-                      onTap: () {
-                        setState(() {
-                          _selectedMemberId = null;
-                        });
-                      },
-                      icon: Icons.people,
-                    ),
-                    SizedBox(width: AppConstant.spacing8),
-                    // Individual members
-                    ...members.map((member) {
+                  itemCount: members.length + 1, // +1 for "All" option
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      // All members option
                       return Padding(
                         padding: EdgeInsets.only(right: AppConstant.spacing8),
                         child: _buildMemberFilterChip(
-                          label: member.fullName ?? member.username,
-                          isSelected: _selectedMemberId == member.id,
+                          label: 'All',
+                          isSelected: _selectedMemberId == null,
                           onTap: () {
                             setState(() {
-                              _selectedMemberId = member.id;
+                              _selectedMemberId = null;
                             });
                           },
+                          icon: Icons.people,
                         ),
                       );
-                    }),
-                  ],
+                    }
+                    
+                    // Individual members
+                    final member = members[index - 1];
+                    return Padding(
+                      padding: EdgeInsets.only(right: AppConstant.spacing8),
+                      child: _buildMemberFilterChip(
+                        label: member.fullName ?? member.username,
+                        isSelected: _selectedMemberId == member.id,
+                        onTap: () {
+                          setState(() {
+                            _selectedMemberId = member.id;
+                          });
+                        },
+                      ),
+                    );
+                  },
                 );
               },
             ),
@@ -213,18 +218,21 @@ class _TeamDetailPageState extends State<TeamDetailPage>
                   ),
                 ),
                 SizedBox(width: AppConstant.spacing12),
-                Container(
-                  padding: EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: AppConstant.cardBackground,
-                    borderRadius: BorderRadius.circular(
-                      AppConstant.borderRadius12,
+                GestureDetector(
+                  onTap: _showFilterOptions,
+                  child: Container(
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppConstant.cardBackground,
+                      borderRadius: BorderRadius.circular(
+                        AppConstant.borderRadius12,
+                      ),
                     ),
-                  ),
-                  child: Icon(
-                    Icons.tune,
-                    color: AppConstant.textPrimary,
-                    size: 20,
+                    child: Icon(
+                      Icons.tune,
+                      color: AppConstant.textPrimary,
+                      size: 20,
+                    ),
                   ),
                 ),
               ],
@@ -266,49 +274,55 @@ class _TeamDetailPageState extends State<TeamDetailPage>
   }) {
     return GestureDetector(
       onTap: onTap,
-      child: Column(
-        children: [
-          Container(
-            width: 56,
-            height: 56,
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? AppConstant.primaryBlue
-                  : AppConstant.cardBackground,
-              shape: BoxShape.circle,
-              border: Border.all(
+      child: SizedBox(
+        width: 70, // Fixed width to prevent overflow
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
                 color: isSelected
                     ? AppConstant.primaryBlue
-                    : Colors.transparent,
-                width: 2,
+                    : AppConstant.cardBackground,
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isSelected
+                      ? AppConstant.primaryBlue
+                      : Colors.transparent,
+                  width: 2,
+                ),
               ),
-            ),
-            child: icon != null
-                ? Icon(icon, color: AppConstant.textPrimary, size: 24)
-                : Center(
-                    child: Text(
-                      label.substring(0, 1).toUpperCase(),
-                      style: TextStyle(
-                        color: AppConstant.textPrimary,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+              child: icon != null
+                  ? Icon(icon, color: AppConstant.textPrimary, size: 24)
+                  : Center(
+                      child: Text(
+                        label.substring(0, 1).toUpperCase(),
+                        style: TextStyle(
+                          color: AppConstant.textPrimary,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-          ),
-          SizedBox(height: 4),
-          Text(
-            label.length > 8 ? label.substring(0, 8) : label,
-            style: TextStyle(
-              fontSize: 12,
-              color: isSelected
-                  ? AppConstant.textPrimary
-                  : AppConstant.textSecondary,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
             ),
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
+            SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                color: isSelected
+                    ? AppConstant.textPrimary
+                    : AppConstant.textSecondary,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -442,6 +456,137 @@ class _TeamDetailPageState extends State<TeamDetailPage>
           ),
         );
       },
+    );
+  }
+
+  void _showFilterOptions() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        padding: EdgeInsets.all(AppConstant.spacing24),
+        decoration: BoxDecoration(
+          color: AppConstant.darkBackground,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(AppConstant.borderRadius24),
+            topRight: Radius.circular(AppConstant.borderRadius24),
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Filter Tasks',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: AppConstant.textPrimary,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: Icon(Icons.close, color: AppConstant.textSecondary),
+                ),
+              ],
+            ),
+            SizedBox(height: AppConstant.spacing16),
+            
+            // Filter options
+            _buildFilterOption('All Tasks', _selectedFilter == 'All Tasks', () {
+              setState(() {
+                _selectedFilter = 'All Tasks';
+              });
+              Navigator.pop(context);
+            }),
+            SizedBox(height: AppConstant.spacing8),
+            _buildFilterOption('My Tasks', _selectedFilter == 'My Tasks', () {
+              setState(() {
+                _selectedFilter = 'My Tasks';
+              });
+              Navigator.pop(context);
+            }),
+            SizedBox(height: AppConstant.spacing8),
+            _buildFilterOption('Due Soon', _selectedFilter == 'Due Soon', () {
+              setState(() {
+                _selectedFilter = 'Due Soon';
+              });
+              Navigator.pop(context);
+            }),
+            
+            SizedBox(height: AppConstant.spacing24),
+            
+            // Reset filter
+            SizedBox(
+              width: double.infinity,
+              child: TextButton(
+                onPressed: () {
+                  setState(() {
+                    _selectedFilter = 'All Tasks';
+                    _selectedMemberId = null;
+                    _searchQuery = '';
+                    _searchController.clear();
+                  });
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Reset All Filters',
+                  style: TextStyle(
+                    color: AppConstant.textSecondary,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFilterOption(String label, bool isSelected, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.all(AppConstant.spacing16),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? AppConstant.primaryBlue.withValues(alpha: 0.2)
+              : AppConstant.cardBackground,
+          borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+          border: Border.all(
+            color: isSelected
+                ? AppConstant.primaryBlue
+                : Colors.transparent,
+            width: 2,
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              isSelected ? Icons.check_circle : Icons.circle_outlined,
+              color: isSelected
+                  ? AppConstant.primaryBlue
+                  : AppConstant.textSecondary,
+              size: 20,
+            ),
+            SizedBox(width: AppConstant.spacing12),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                color: isSelected
+                    ? AppConstant.textPrimary
+                    : AppConstant.textSecondary,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
