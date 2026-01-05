@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/task_state/task_state.dart';
+import 'package:task_flow/app_state/team_state/team_state.dart';
 import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/constants/task_constants.dart';
@@ -411,45 +412,53 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 ),
               ),
               SizedBox(height: AppConstant.spacing12),
-              Container(
-                padding: EdgeInsets.all(AppConstant.spacing16),
-                decoration: BoxDecoration(
-                  color: AppConstant.cardBackground,
-                  borderRadius: BorderRadius.circular(
-                    AppConstant.borderRadius12,
-                  ),
-                  border: Border.all(
-                    color: AppConstant.textSecondary.withValues(alpha: 0.2),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: AppConstant.successGreen.withValues(alpha: 0.2),
-                        shape: BoxShape.circle,
+              Consumer<TeamState>(
+                builder: (context, teamState, child) {
+                  final team = teamState.getTeamById(_task.teamId!);
+                  final teamIcon = _getTeamIcon(team);
+                  final teamColor = _getTeamColor(team);
+                  
+                  return Container(
+                    padding: EdgeInsets.all(AppConstant.spacing16),
+                    decoration: BoxDecoration(
+                      color: AppConstant.cardBackground,
+                      borderRadius: BorderRadius.circular(
+                        AppConstant.borderRadius12,
                       ),
-                      child: Icon(
-                        Icons.group,
-                        color: AppConstant.successGreen,
-                        size: 20,
+                      border: Border.all(
+                        color: AppConstant.textSecondary.withValues(alpha: 0.2),
                       ),
                     ),
-                    SizedBox(width: AppConstant.spacing12),
-                    Expanded(
-                      child: Text(
-                        _task.teamName ?? 'Unknown Team',
-                        style: TextStyle(
-                          color: AppConstant.textPrimary,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: teamColor.withValues(alpha: 0.2),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            teamIcon,
+                            color: teamColor,
+                            size: 20,
+                          ),
                         ),
-                      ),
+                        SizedBox(width: AppConstant.spacing12),
+                        Expanded(
+                          child: Text(
+                            _task.teamName ?? 'Unknown Team',
+                            style: TextStyle(
+                              color: AppConstant.textPrimary,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  );
+                },
               ),
               SizedBox(height: AppConstant.spacing32),
             ],
@@ -1288,5 +1297,61 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
         ),
       ),
     );
+  }
+
+  IconData _getTeamIcon(Team? team) {
+    if (team?.teamIcon != null) {
+      return _getIconFromKey(team!.teamIcon!);
+    }
+    // Fallback to name-based icon
+    if (team?.name != null) {
+      return _getTeamIconFromName(team!.name);
+    }
+    return Icons.group;
+  }
+
+  IconData _getIconFromKey(String iconKey) {
+    switch (iconKey) {
+      case 'rocket':
+        return Icons.rocket_launch;
+      case 'computer':
+        return Icons.computer;
+      case 'palette':
+        return Icons.palette;
+      case 'campaign':
+        return Icons.campaign;
+      case 'bar_chart':
+        return Icons.bar_chart;
+      case 'shopping_cart':
+        return Icons.shopping_cart;
+      default:
+        return Icons.people_rounded;
+    }
+  }
+
+  IconData _getTeamIconFromName(String teamName) {
+    final nameLower = teamName.toLowerCase();
+    if (nameLower.contains('market')) return Icons.campaign;
+    if (nameLower.contains('engineer') || nameLower.contains('tech')) {
+      return Icons.code;
+    }
+    if (nameLower.contains('design')) return Icons.palette;
+    if (nameLower.contains('product')) return Icons.rocket_launch;
+    return Icons.people_rounded;
+  }
+
+  Color _getTeamColor(Team? team) {
+    if (team?.teamColor != null) {
+      return _parseColor(team!.teamColor!);
+    }
+    // Fallback to generated color
+    return AppConstant.successGreen;
+  }
+
+  Color _parseColor(String hexColor) {
+    // Remove # if present
+    final hex = hexColor.replaceAll('#', '');
+    // Parse hex string to color
+    return Color(int.parse('FF$hex', radix: 16));
   }
 }
