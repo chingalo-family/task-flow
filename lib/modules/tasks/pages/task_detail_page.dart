@@ -477,24 +477,6 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               children: [
                 // Display avatars - using proper user information
                 ..._buildAssigneeAvatars(context),
-                SizedBox(width: AppConstant.spacing12),
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: AppConstant.textSecondary.withValues(alpha: 0.3),
-                      width: 2,
-                      style: BorderStyle.solid,
-                    ),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.add,
-                    size: 20,
-                    color: AppConstant.textSecondary,
-                  ),
-                ),
               ],
             ),
 
