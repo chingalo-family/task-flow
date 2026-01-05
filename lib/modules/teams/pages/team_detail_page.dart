@@ -113,7 +113,7 @@ class _TeamDetailPageState extends State<TeamDetailPage>
         children: [
           // Member filter tabs
           Container(
-            height: 100,
+            height: 105, // Increased from 100 to prevent overflow
             padding: EdgeInsets.symmetric(vertical: AppConstant.spacing12),
             child: Consumer<UserListState>(
               builder: (context, userListState, child) {
@@ -278,6 +278,7 @@ class _TeamDetailPageState extends State<TeamDetailPage>
         width: 70, // Fixed width to prevent overflow
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
               width: 56,
@@ -308,18 +309,20 @@ class _TeamDetailPageState extends State<TeamDetailPage>
                     ),
             ),
             SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
-                color: isSelected
-                    ? AppConstant.textPrimary
-                    : AppConstant.textSecondary,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            Flexible(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: isSelected
+                      ? AppConstant.textPrimary
+                      : AppConstant.textSecondary,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                textAlign: TextAlign.center,
               ),
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-              textAlign: TextAlign.center,
             ),
           ],
         ),
