@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/task_state/task_state.dart';
 import 'package:task_flow/app_state/team_state/team_state.dart';
-import 'package:task_flow/app_state/user_list_state/user_list_state.dart';
+import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
+import 'package:task_flow/core/constants/task_constants.dart';
 import 'package:task_flow/core/models/models.dart';
-import 'package:task_flow/core/components/components.dart';
+import 'package:task_flow/modules/tasks/components/task_form_fields.dart';
 
 class AddTaskDialog extends StatefulWidget {
   final Team team;
@@ -21,9 +22,30 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
 
-  String _priority = 'medium';
-  String? _assignedToUserId;
-  DateTime? _dueDate;
+  String _selectedPriority = TaskConstants.priorityMedium;
+  String? _selectedCategory;
+  DateTime? _selectedDueDate;
+  bool _remindMe = false;
+  List<String> _selectedAssignees = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // Default category for new task
+    _selectedCategory = TaskCategory.general.id;
+    // Default due date to today at 11:59 PM
+    final now = DateTime.now();
+    _selectedDueDate = DateTime(now.year, now.month, now.day, 23, 59);
+    // Default assign to current user
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final userState = Provider.of<UserState>(context, listen: false);
+      final currentUserId =
+          userState.currentUser?.id.toString() ?? 'current_user';
+      setState(() {
+        _selectedAssignees = [currentUserId];
+      });
+    });
+  }
 
   @override
   void dispose() {
@@ -35,322 +57,161 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(AppConstant.defaultPadding),
+      padding: EdgeInsets.all(AppConstant.spacing24),
+      decoration: BoxDecoration(
+        color: AppConstant.darkBackground,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(AppConstant.borderRadius24),
+          topRight: Radius.circular(AppConstant.borderRadius24),
+        ),
+      ),
       child: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      'Add Task to ${widget.team.name}',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: AppConstant.textPrimary,
-                      ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Add Task to ${widget.team.name}',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: AppConstant.textPrimary,
                     ),
                   ),
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: Icon(Icons.close, color: AppConstant.textSecondary),
-                  ),
-                ],
-              ),
-              SizedBox(height: AppConstant.defaultPadding),
-
-              // Title
-              InputField(
-                controller: _titleController,
-                hintText: 'Enter task title',
-                icon: Icons.title,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Please enter a task title';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 16),
-
-              // Description
-              InputField(
-                controller: _descriptionController,
-                hintText: 'Enter task description',
-                icon: Icons.description,
-                labelText: 'Description (Optional)',
-                keyboardType: TextInputType.multiline,
-                maxLines: 3,
-              ),
-              SizedBox(height: 16),
-
-              // Priority
-              Text(
-                'Priority',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: AppConstant.textPrimary,
                 ),
-              ),
-              SizedBox(height: 8),
-              Row(
-                children: [
-                  _buildPriorityChip('high', 'High', AppConstant.errorRed),
-                  SizedBox(width: 8),
-                  _buildPriorityChip(
-                    'medium',
-                    'Medium',
-                    AppConstant.warningOrange,
-                  ),
-                  SizedBox(width: 8),
-                  _buildPriorityChip('low', 'Low', AppConstant.successGreen),
-                ],
-              ),
-              SizedBox(height: 16),
+                IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: Icon(Icons.close, color: AppConstant.textSecondary),
+                ),
+              ],
+            ),
+            SizedBox(height: AppConstant.spacing16),
 
-              // Assign to team member
-              Consumer<UserListState>(
-                builder: (context, userListState, child) {
-                  final teamMembers = userListState.getUsersByIds(
-                    widget.team.memberIds ?? [],
-                  );
+            // Reuse TaskFormFields from task module
+            TaskFormFields(
+              formKey: _formKey,
+              titleController: _titleController,
+              descriptionController: _descriptionController,
+              selectedPriority: _selectedPriority,
+              selectedCategory: _selectedCategory,
+              selectedDueDate: _selectedDueDate,
+              remindMe: _remindMe,
+              selectedTeam: widget.team,
+              selectedAssignees: _selectedAssignees,
+              onPriorityChanged: (priority) {
+                setState(() {
+                  _selectedPriority = priority;
+                });
+              },
+              onCategoryChanged: (category) {
+                setState(() {
+                  _selectedCategory = category;
+                });
+              },
+              onDueDateChanged: (date) {
+                setState(() {
+                  _selectedDueDate = date;
+                });
+              },
+              onRemindMeChanged: (remind) {
+                setState(() {
+                  _remindMe = remind;
+                });
+              },
+              onTeamChanged: (team) {
+                // Team is fixed for this dialog, so do nothing
+              },
+              onAssigneesChanged: (assignees) {
+                setState(() {
+                  _selectedAssignees = assignees;
+                });
+              },
+              hideTeamAndAssignee: false,
+              isSubtask: false,
+            ),
 
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Assign To (Optional)',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: AppConstant.textPrimary,
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      DropdownButtonFormField<String?>(
-                        initialValue: _assignedToUserId,
-                        dropdownColor: AppConstant.cardBackground,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: AppConstant.darkBackground,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(
-                              AppConstant.borderRadius12,
-                            ),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                        hint: Text(
-                          'Select team member',
-                          style: TextStyle(color: AppConstant.textSecondary),
-                        ),
-                        items: [
-                          DropdownMenuItem<String?>(
-                            value: null,
-                            child: Text(
-                              'Unassigned',
-                              style: TextStyle(
-                                color: AppConstant.textSecondary,
-                              ),
-                            ),
-                          ),
-                          ...teamMembers.map((member) {
-                            return DropdownMenuItem<String>(
-                              value: member.id,
-                              child: Text(
-                                member.fullName ?? member.username,
-                                style: TextStyle(
-                                  color: AppConstant.textPrimary,
-                                ),
-                              ),
-                            );
-                          }),
-                        ],
-                        onChanged: (value) {
-                          setState(() {
-                            _assignedToUserId = value;
-                          });
-                        },
-                      ),
-                    ],
-                  );
-                },
-              ),
-              SizedBox(height: 16),
+            SizedBox(height: AppConstant.spacing24),
 
-              // Due Date
-              InkWell(
-                onTap: _selectDueDate,
-                borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
-                child: Container(
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: AppConstant.darkBackground,
+            // Create Task Button
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _createTask,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppConstant.primaryBlue,
+                  foregroundColor: Colors.white,
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(
                       AppConstant.borderRadius12,
                     ),
                   ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.calendar_today,
-                        color: AppConstant.textSecondary,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Create Task',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
                       ),
-                      SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          _dueDate == null
-                              ? 'Set Due Date (Optional)'
-                              : 'Due: ${_dueDate!.day}/${_dueDate!.month}/${_dueDate!.year}',
-                          style: TextStyle(
-                            color: _dueDate == null
-                                ? AppConstant.textSecondary
-                                : AppConstant.textPrimary,
-                          ),
-                        ),
-                      ),
-                      if (_dueDate != null)
-                        IconButton(
-                          onPressed: () => setState(() => _dueDate = null),
-                          icon: Icon(Icons.clear, size: 20),
-                          color: AppConstant.textSecondary,
-                        ),
-                    ],
-                  ),
+                    ),
+                    SizedBox(width: AppConstant.spacing8),
+                    Icon(Icons.check, size: 20),
+                  ],
                 ),
               ),
-              SizedBox(height: AppConstant.defaultPadding * 1.5),
-
-              // Buttons
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: OutlinedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: 16),
-                        side: BorderSide(color: AppConstant.textSecondary),
-                      ),
-                      child: Text('Cancel'),
-                    ),
-                  ),
-                  SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: _createTask,
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: 16),
-                        backgroundColor: AppConstant.primaryBlue,
-                        foregroundColor: Colors.white,
-                      ),
-                      child: Text('Create Task'),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildPriorityChip(String value, String label, Color color) {
-    final isSelected = _priority == value;
-    return Expanded(
-      child: InkWell(
-        onTap: () => setState(() => _priority = value),
-        borderRadius: BorderRadius.circular(AppConstant.borderRadius8),
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-            color: isSelected
-                ? color.withValues(alpha: 0.2)
-                : AppConstant.darkBackground,
-            borderRadius: BorderRadius.circular(AppConstant.borderRadius8),
-            border: Border.all(
-              color: isSelected ? color : Colors.transparent,
-              width: 2,
-            ),
-          ),
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: isSelected ? color : AppConstant.textSecondary,
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future<void> _selectDueDate() async {
-    final selectedDate = await showDatePicker(
-      context: context,
-      initialDate: _dueDate ?? DateTime.now().add(Duration(days: 7)),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(Duration(days: 365)),
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData.dark().copyWith(
-            colorScheme: ColorScheme.dark(
-              primary: AppConstant.primaryBlue,
-              surface: AppConstant.cardBackground,
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-
-    if (selectedDate != null) {
-      setState(() {
-        _dueDate = selectedDate;
-      });
-    }
-  }
-
-  void _createTask() async {
+  void _createTask() {
     if (!_formKey.currentState!.validate()) {
       return;
     }
 
-    final taskState = context.read<TaskState>();
-    final teamState = context.read<TeamState>();
-    final userListState = context.read<UserListState>();
+    final taskState = Provider.of<TaskState>(context, listen: false);
 
-    final assignedUser = _assignedToUserId != null
-        ? userListState.getUserById(_assignedToUserId!)
-        : null;
+    // Generate a better ID for new tasks
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final random = (timestamp % 1000).toString().padLeft(3, '0');
+    final taskId = '$timestamp$random';
 
-    final newTask = Task(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      title: _titleController.text.trim(),
-      description: _descriptionController.text.trim().isEmpty
+    final task = Task(
+      id: taskId,
+      title: _titleController.text,
+      description: _descriptionController.text.isEmpty
           ? null
-          : _descriptionController.text.trim(),
-      status: 'pending',
-      priority: _priority,
+          : _descriptionController.text,
+      priority: _selectedPriority,
+      category: _selectedCategory,
+      dueDate: _selectedDueDate,
+      remindMe: _remindMe,
       teamId: widget.team.id,
       teamName: widget.team.name,
-      assignedToUserId: _assignedToUserId,
-      assignedToUsername: assignedUser?.fullName ?? assignedUser?.username,
-      dueDate: _dueDate,
+      assignedUserIds: _selectedAssignees.isEmpty ? null : _selectedAssignees,
+      status: TaskConstants.statusPending,
       progress: 0,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     );
 
-    await taskState.addTask(newTask);
-    await teamState.addTaskToTeam(widget.team.id, newTask.id);
+    taskState.addTask(task);
+
+    // Also add the task to the team
+    Provider.of<TeamState>(context, listen: false)
+        .addTaskToTeam(widget.team.id, taskId);
 
     if (mounted) {
-      Navigator.pop(context, true); // Return true to indicate success
+      Navigator.pop(context, true);
     }
   }
 }
