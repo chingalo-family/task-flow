@@ -4,7 +4,7 @@ import 'package:task_flow/core/services/team_service.dart';
 
 class TeamState extends ChangeNotifier {
   final _service = TeamService();
-  
+
   List<Team> _teams = [];
   bool _loading = false;
 
@@ -16,9 +16,7 @@ class TeamState extends ChangeNotifier {
   Future<void> initialize() async {
     _loading = true;
     notifyListeners();
-    
     await _loadTeams();
-    
     _loading = false;
     notifyListeners();
   }
@@ -26,61 +24,10 @@ class TeamState extends ChangeNotifier {
   Future<void> _loadTeams() async {
     try {
       _teams = await _service.getAllTeams();
-      
-      // If no teams in database, generate sample data for demonstration
-      if (_teams.isEmpty) {
-        _teams = _generateSampleTeams();
-        // Save sample teams to database
-        for (var team in _teams) {
-          await _service.createTeam(team);
-        }
-      }
     } catch (e) {
       debugPrint('Error loading teams: $e');
       _teams = [];
     }
-  }
-
-  List<Team> _generateSampleTeams() {
-    final now = DateTime.now();
-    return [
-      Team(
-        id: '1',
-        name: 'Product Team',
-        description: 'Building amazing features for our users',
-        memberCount: 8,
-        memberIds: ['user1', 'user2', 'user3', 'user4', 'user5', 'user6', 'user7', 'user8'],
-        taskIds: ['1', '2'],
-        createdAt: now.subtract(Duration(days: 30)),
-      ),
-      Team(
-        id: '2',
-        name: 'Design Squad',
-        description: 'Crafting beautiful experiences',
-        memberCount: 5,
-        memberIds: ['user1', 'user9', 'user10', 'user11', 'user12'],
-        taskIds: ['3'],
-        createdAt: now.subtract(Duration(days: 20)),
-      ),
-      Team(
-        id: '3',
-        name: 'Engineering',
-        description: 'Code, deploy, repeat',
-        memberCount: 12,
-        memberIds: ['user1', 'user2', 'user13', 'user14', 'user15'],
-        taskIds: ['4'],
-        createdAt: now.subtract(Duration(days: 15)),
-      ),
-      Team(
-        id: '4',
-        name: 'Marketing',
-        description: 'Spreading the word',
-        memberCount: 6,
-        memberIds: ['user16', 'user17', 'user18'],
-        taskIds: ['5'],
-        createdAt: now.subtract(Duration(days: 10)),
-      ),
-    ];
   }
 
   Future<void> addTeam(Team team) async {
@@ -190,7 +137,10 @@ class TeamState extends ChangeNotifier {
   }
 
   Future<void> updateTaskStatus(
-      String teamId, String statusId, TaskStatus updatedStatus) async {
+    String teamId,
+    String statusId,
+    TaskStatus updatedStatus,
+  ) async {
     final team = getTeamById(teamId);
     if (team != null) {
       final statuses = List<TaskStatus>.from(team.taskStatuses);
@@ -224,7 +174,9 @@ class TeamState extends ChangeNotifier {
   }
 
   Future<void> reorderTaskStatuses(
-      String teamId, List<TaskStatus> reorderedStatuses) async {
+    String teamId,
+    List<TaskStatus> reorderedStatuses,
+  ) async {
     final team = getTeamById(teamId);
     if (team != null) {
       final updatedTeam = team.copyWith(

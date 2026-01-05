@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/task_state/task_state.dart';
+import 'package:task_flow/app_state/team_state/team_state.dart';
+import 'package:task_flow/app_state/user_list_state/user_list_state.dart';
 import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/modules/tasks/components/task_card.dart';
@@ -22,6 +24,10 @@ class _TasksPageState extends State<TasksPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<TaskState>(context, listen: false).initialize();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Provider.of<TeamState>(context, listen: false).initialize();
+        Provider.of<UserListState>(context, listen: false).initialize();
+      });
     });
   }
 
