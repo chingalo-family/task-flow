@@ -155,12 +155,12 @@ Logo [☰ Menu]
 
 #### macOS
 - **Badge:** "Coming Soon" badge
-- **Requirements:** macOS 10.14 or later (estimated)
+- **Requirements:** TBD (To Be Determined)
 - **Status Indicator:** Show development progress or waitlist signup
 
 #### Windows
 - **Badge:** "Coming Soon" badge
-- **Requirements:** Windows 10 or later (estimated)
+- **Requirements:** TBD (To Be Determined)
 - **Status Indicator:** Show development progress or waitlist signup
 
 ### 4.3 Download Section Layout
@@ -464,4 +464,5 @@ This specification provides a comprehensive guide for building a professional, r
 
 **Document Version:** 1.0  
 **Last Updated:** 2025-01-05  
+**Next Review Date:** 2025-04-05  
 **Maintained By:** Task Flow Development Team
