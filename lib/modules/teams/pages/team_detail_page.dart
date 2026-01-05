@@ -376,7 +376,7 @@ class _TeamDetailPageState extends State<TeamDetailPage>
         // Apply member filter
         if (_selectedMemberId != null) {
           tasks = tasks.where((task) {
-            return task.assignedToUserId == _selectedMemberId;
+            return task.assignedUserIds?.contains(_selectedMemberId) ?? false;
           }).toList();
         }
 
