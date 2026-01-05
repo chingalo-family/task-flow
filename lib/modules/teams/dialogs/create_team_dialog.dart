@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_flow/app_state/team_state/team_state.dart';
 import 'package:task_flow/app_state/user_list_state/user_list_state.dart';
 import 'package:task_flow/app_state/user_state/user_state.dart';
@@ -23,6 +24,7 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
   String _selectedIcon = 'rocket';
   Color _selectedColor = AppConstant.primaryBlue;
   final Set<String> _selectedMemberIds = {};
+  bool _offlineAccessEnabled = false;
 
   final List<Map<String, dynamic>> _teamIcons = [
     {'key': 'rocket', 'icon': Icons.rocket_launch},
@@ -40,7 +42,24 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
     Color(0xFFEF4444), // Red/Pink
     Color(0xFFF59E0B), // Orange
     Color(0xFF06B6D4), // Cyan
+    Color(0xFFE91E63), // Pink
+    Color(0xFF795548), // Brown
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadOfflineAccessPreference();
+  }
+
+  Future<void> _loadOfflineAccessPreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (mounted) {
+      setState(() {
+        _offlineAccessEnabled = prefs.getBool('offlineAccessEnabled') ?? false;
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -163,8 +182,9 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
                 ),
               ),
               SizedBox(height: AppConstant.spacing12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+              Wrap(
+                spacing: AppConstant.spacing12,
+                runSpacing: AppConstant.spacing12,
                 children: _teamIcons.map((iconData) {
                   final isSelected = _selectedIcon == iconData['key'];
                   return GestureDetector(
@@ -176,7 +196,6 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
                     child: Container(
                       width: 56,
                       height: 56,
-                      margin: EdgeInsets.only(right: AppConstant.spacing12),
                       decoration: BoxDecoration(
                         color: isSelected
                             ? _selectedColor
@@ -213,7 +232,9 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
                 ),
               ),
               SizedBox(height: AppConstant.spacing12),
-              Row(
+              Wrap(
+                spacing: AppConstant.spacing12,
+                runSpacing: AppConstant.spacing12,
                 children: _teamColors.map((color) {
                   final isSelected = _selectedColor == color;
                   return GestureDetector(
@@ -225,7 +246,6 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
                     child: Container(
                       width: 48,
                       height: 48,
-                      margin: EdgeInsets.only(right: AppConstant.spacing12),
                       decoration: BoxDecoration(
                         color: color,
                         shape: BoxShape.circle,
@@ -243,78 +263,101 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
               SizedBox(height: AppConstant.spacing24),
 
               // Members Section
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Members',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: AppConstant.textPrimary,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () => _showMemberSelectionSheet(),
-                    child: Text(
-                      'Manage',
-                      style: TextStyle(
-                        color: AppConstant.primaryBlue,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
+              Text(
+                'Members',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppConstant.textPrimary,
+                ),
               ),
               SizedBox(height: AppConstant.spacing12),
 
-              // Add member input
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppConstant.spacing16,
-                  vertical: AppConstant.spacing12,
-                ),
-                decoration: BoxDecoration(
-                  color: AppConstant.cardBackground,
-                  borderRadius: BorderRadius.circular(
-                    AppConstant.borderRadius12,
+              // Add members - matching Assign To field pattern
+              GestureDetector(
+                onTap: _showMemberSelectionSheet,
+                child: Container(
+                  padding: EdgeInsets.all(AppConstant.spacing16),
+                  decoration: BoxDecoration(
+                    color: AppConstant.cardBackground,
+                    borderRadius: BorderRadius.circular(
+                      AppConstant.borderRadius12,
+                    ),
+                    border: Border.all(
+                      color: AppConstant.textSecondary.withValues(alpha: 0.1),
+                    ),
                   ),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.person_add,
-                      color: AppConstant.textSecondary,
-                      size: 20,
-                    ),
-                    SizedBox(width: AppConstant.spacing12),
-                    Expanded(
-                      child: Text(
-                        'Add by name or email...',
-                        style: TextStyle(
-                          color: AppConstant.textSecondary,
-                          fontSize: 14,
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.person_add,
+                        color: AppConstant.textSecondary,
+                        size: 20,
+                      ),
+                      SizedBox(width: AppConstant.spacing12),
+                      Expanded(
+                        child: Text(
+                          'Add Members',
+                          style: TextStyle(
+                            color: AppConstant.textPrimary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
-                    ),
-                    TextButton(
-                      onPressed: () => _showMemberSelectionSheet(),
-                      child: Text(
-                        'Add',
-                        style: TextStyle(
-                          color: AppConstant.primaryBlue,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
+                      // Show member avatars
+                      if (_selectedMemberIds.isNotEmpty)
+                        Consumer<UserListState>(
+                          builder: (context, userListState, child) {
+                            return Row(
+                              children: [
+                                for (int i = 0;
+                                    i < _selectedMemberIds.length && i < 3;
+                                    i++)
+                                  _buildMemberAvatar(
+                                    _selectedMemberIds.elementAt(i),
+                                    userListState,
+                                    i,
+                                  ),
+                                if (_selectedMemberIds.length > 3)
+                                  Container(
+                                    margin: EdgeInsets.only(
+                                      left: AppConstant.spacing8,
+                                    ),
+                                    width: 32,
+                                    height: 32,
+                                    decoration: BoxDecoration(
+                                      color: AppConstant.primaryBlue,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        '+${_selectedMemberIds.length - 3}',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            );
+                          },
                         ),
+                      SizedBox(width: AppConstant.spacing8),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        color: AppConstant.textSecondary,
+                        size: 16,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               SizedBox(height: AppConstant.spacing16),
 
-              // Selected members list
+              // Selected members list (expanded view)
               if (_selectedMemberIds.isNotEmpty)
                 Consumer<UserListState>(
                   builder: (context, userListState, child) {
@@ -425,26 +468,27 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
               SizedBox(height: AppConstant.spacing16),
 
               // Offline mode indicator
-              Center(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.wifi_off,
-                      size: 16,
-                      color: AppConstant.textSecondary,
-                    ),
-                    SizedBox(width: AppConstant.spacing8),
-                    Text(
-                      'OFFLINE MODE ENABLED',
-                      style: TextStyle(
-                        fontSize: 12,
+              if (_offlineAccessEnabled)
+                Center(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.wifi_off,
+                        size: 16,
                         color: AppConstant.textSecondary,
                       ),
-                    ),
-                  ],
+                      SizedBox(width: AppConstant.spacing8),
+                      Text(
+                        'OFFLINE MODE ENABLED',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: AppConstant.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
             ],
           ),
         ),
@@ -465,6 +509,54 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
             _selectedMemberIds.addAll(members);
           });
         },
+      ),
+    );
+  }
+
+  Widget _buildMemberAvatar(
+    String userId,
+    UserListState userListState,
+    int index,
+  ) {
+    final user = userListState.getUserById(userId);
+    final userState = context.read<UserState>();
+    final currentUserId = userState.currentUser?.id;
+    final isCurrentUser = userId == currentUserId;
+
+    String initials;
+    if (isCurrentUser) {
+      initials = 'ME';
+    } else if (user != null && user.fullName != null && user.fullName!.isNotEmpty) {
+      initials = user.fullName!.length >= 2
+          ? user.fullName!.substring(0, 2).toUpperCase()
+          : user.fullName!.substring(0, 1).toUpperCase();
+    } else if (userId.isNotEmpty) {
+      initials = userId.length >= 2
+          ? userId.substring(0, 2).toUpperCase()
+          : userId.substring(0, 1).toUpperCase();
+    } else {
+      initials = '?';
+    }
+
+    return Container(
+      margin: EdgeInsets.only(left: index == 0 ? 0 : AppConstant.spacing8),
+      width: 32,
+      height: 32,
+      decoration: BoxDecoration(
+        color: isCurrentUser
+            ? AppConstant.primaryBlue
+            : AppConstant.successGreen,
+        shape: BoxShape.circle,
+      ),
+      child: Center(
+        child: Text(
+          initials,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ),
     );
   }
