@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
-import 'package:task_flow/core/models/task/task.dart';
+import 'package:task_flow/core/models/task.dart';
 import 'package:task_flow/modules/tasks/components/task_card.dart';
 
 class TaskSearchDelegate extends SearchDelegate<Task?> {

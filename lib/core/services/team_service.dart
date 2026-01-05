@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:task_flow/core/models/team/team.dart';
-import 'package:task_flow/core/models/task_status/task_status.dart';
+import 'package:task_flow/core/models/team.dart';
+import 'package:task_flow/core/models/task_status.dart';
 import 'package:task_flow/core/offline_db/team_offline_provider/team_offline_provider.dart';
 
 /// Service layer for team management
@@ -191,7 +191,10 @@ class TeamService {
 
   /// Update task status
   Future<bool> updateTaskStatus(
-      String teamId, String statusId, TaskStatus updatedStatus) async {
+    String teamId,
+    String statusId,
+    TaskStatus updatedStatus,
+  ) async {
     try {
       final team = await getTeamById(teamId);
       if (team == null) return false;
@@ -223,7 +226,7 @@ class TeamService {
       // Find status to delete
       final statusToDeleteIndex = statuses.indexWhere((s) => s.id == statusId);
       if (statusToDeleteIndex == -1) return false;
-      
+
       final statusToDelete = statuses[statusToDeleteIndex];
       if (!statusToDelete.isDefault) {
         statuses.removeAt(statusToDeleteIndex);
@@ -242,7 +245,9 @@ class TeamService {
 
   /// Reorder task statuses
   Future<bool> reorderTaskStatuses(
-      String teamId, List<TaskStatus> reorderedStatuses) async {
+    String teamId,
+    List<TaskStatus> reorderedStatuses,
+  ) async {
     try {
       final team = await getTeamById(teamId);
       if (team == null) return false;

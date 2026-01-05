@@ -1,4 +1,4 @@
-import 'package:task_flow/core/models/task_status/task_status.dart';
+import 'package:task_flow/core/models/task_status.dart';
 
 class Team {
   final String id;

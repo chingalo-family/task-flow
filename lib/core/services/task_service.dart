@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:task_flow/core/constants/task_constants.dart';
-import 'package:task_flow/core/models/task/task.dart';
+import 'package:task_flow/core/models/task.dart';
 import 'package:task_flow/core/offline_db/task_offline_provider/task_offline_provider.dart';
 
 /// Service layer for task management
-/// 
+///
 /// Handles business logic, validation, and coordinates between state and data layers.
 /// Follows singleton pattern for consistent access across the application.
 class TaskService {
@@ -15,7 +15,7 @@ class TaskService {
   final _offline = TaskOfflineProvider();
 
   /// Create a new task
-  /// 
+  ///
   /// Validates and saves task to database.
   /// Returns the created task or null if creation fails.
   Future<Task?> createTask(Task task) async {
@@ -104,8 +104,8 @@ class TaskService {
       final allTasks = await getAllTasks();
       return allTasks.where((task) {
         // Check if user is in assignedUserIds or assignedToUserId
-        return task.assignedUserIds?.contains(userId) ?? false ||
-            task.assignedToUserId == userId;
+        return task.assignedUserIds?.contains(userId) ??
+            false || task.assignedToUserId == userId;
       }).toList();
     } catch (e) {
       debugPrint('Error getting my tasks: $e');
@@ -194,8 +194,7 @@ class TaskService {
 
       return allTasks.where((task) {
         if (task.dueDate == null) return false;
-        return task.dueDate!.isAfter(today) &&
-            task.dueDate!.isBefore(tomorrow);
+        return task.dueDate!.isAfter(today) && task.dueDate!.isBefore(tomorrow);
       }).toList();
     } catch (e) {
       debugPrint('Error getting tasks due today: $e');
