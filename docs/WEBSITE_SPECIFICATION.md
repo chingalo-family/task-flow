@@ -223,7 +223,209 @@ Each feature should be presented with:
 - **Title:** Clear, concise feature name
 - **Description:** 2-3 sentences explaining the feature
 - **Benefits:** Key advantages for users
-- **Screenshot (Optional):** Visual demonstration from the app
+- **Screenshot:** Visual demonstration from the app (see section 5.1 for guidelines)
+
+---
+
+## 5.1. Mobile App Screenshots
+
+Mobile app screenshots are essential for showcasing the application's user interface and demonstrating key features to potential users. This section provides guidelines for capturing, preparing, and using screenshots on the website.
+
+### Screenshot Requirements
+
+**Platforms to Capture:**
+- **Android:** Screenshots from Android devices (phones and tablets)
+- **iOS:** Screenshots from iOS devices (iPhone and iPad)
+
+**Recommended Screen Sizes:**
+- **Android Phone:** 1080x2400px or higher (e.g., Pixel, Samsung Galaxy)
+- **iOS iPhone:** 1170x2532px (iPhone 13/14 Pro) or 1284x2778px (iPhone 14 Pro Max)
+- **Android Tablet:** 2560x1600px (10-inch tablet)
+- **iOS iPad:** 2048x2732px (12.9-inch iPad Pro)
+
+### Key Screens to Capture
+
+Capture screenshots from the following modules/screens to showcase the app's functionality:
+
+1. **Splash/Onboarding Screen**
+   - First impression of the app
+   - Brand introduction
+
+2. **Login Screen**
+   - User authentication interface
+   - Clean and professional design
+
+3. **Home/Dashboard**
+   - Main navigation hub
+   - Overview of tasks and activities
+
+4. **Task Management**
+   - Task list view
+   - Task creation/editing interface
+   - Task details with status indicators
+
+5. **Team Collaboration**
+   - Team list and management
+   - Team member view
+   - Task assignment interface
+
+6. **Notifications**
+   - Notification list
+   - Real-time alerts
+   - Notification settings
+
+7. **User Settings/Profile**
+   - Profile management
+   - Preferences and customization options
+   - Account settings
+
+### Screenshot Preparation Guidelines
+
+**Image Format & Quality:**
+- **Format:** PNG (preferred for transparency and quality) or JPEG
+- **Quality:** High resolution, no compression artifacts
+- **File Size:** Optimize to 200-500KB per image for web performance
+
+**Editing & Enhancement:**
+- Remove sensitive information (personal data, real names, email addresses)
+- Use placeholder or demo data that looks realistic
+- Ensure consistent lighting and clarity
+- Maintain original aspect ratios
+- Add device frames (optional) for visual appeal
+
+**Naming Convention:**
+```
+android-phone-[screen-name].png
+ios-iphone-[screen-name].png
+android-tablet-[screen-name].png
+ios-ipad-[screen-name].png
+
+Examples:
+- android-phone-login.png
+- ios-iphone-home-dashboard.png
+- android-phone-task-list.png
+- ios-iphone-team-collaboration.png
+- android-tablet-settings.png
+```
+
+### Screenshot Organization
+
+Store screenshots in the website repository:
+```
+/docs/website/images/screenshots/
+  /android/
+    /phone/
+      login.png
+      home-dashboard.png
+      task-list.png
+      task-details.png
+      team-collaboration.png
+      notifications.png
+      settings.png
+    /tablet/
+      [same structure]
+  /ios/
+    /iphone/
+      [same structure]
+    /ipad/
+      [same structure]
+```
+
+### Website Integration
+
+**Homepage/Landing Page:**
+- Feature 3-4 hero screenshots showcasing the main interface
+- Use a carousel or grid layout
+- Include both Android and iOS screenshots for platform diversity
+
+**Features Page:**
+- Pair each feature description with relevant screenshot(s)
+- Show before/after or step-by-step flows where applicable
+- Highlight UI elements that demonstrate the feature
+
+**Download Page:**
+- Display platform-specific screenshots (Android screenshots near Android download button)
+- Use device mockups to make screenshots more appealing
+- Show app in action on actual device frames
+
+### Screenshot Display Techniques
+
+**Responsive Display:**
+```html
+<img src="screenshots/android/phone/home-dashboard.png" 
+     alt="Task Flow Home Dashboard on Android"
+     class="screenshot-responsive"
+     loading="lazy">
+```
+
+**Device Mockup Integration:**
+- Use mockup generators (Mockuphone, Smartmockups, etc.) to place screenshots in device frames
+- Maintain consistent device colors (e.g., black or white frames)
+- Ensure mockups don't overshadow the actual screenshots
+
+**Gallery/Carousel:**
+- Implement a screenshot gallery with navigation
+- Allow users to click for full-size view
+- Add captions describing what each screenshot shows
+
+### Screenshot Best Practices
+
+1. **Consistency:**
+   - Use the same app theme (dark mode) across all screenshots
+   - Capture screenshots at similar times to maintain UI consistency
+   - Use consistent demo data (user names, task titles, dates)
+
+2. **Clarity:**
+   - Ensure text is readable in screenshots
+   - Avoid blurry or pixelated images
+   - Use high-contrast settings if needed
+
+3. **Relevance:**
+   - Show real use cases and workflows
+   - Highlight unique or standout features
+   - Demonstrate value proposition visually
+
+4. **Accessibility:**
+   - Provide descriptive alt text for all screenshot images
+   - Ensure screenshots have sufficient color contrast
+   - Don't rely solely on screenshots to convey information
+
+5. **Performance:**
+   - Optimize images for web (use tools like TinyPNG, ImageOptim)
+   - Implement lazy loading for below-the-fold screenshots
+   - Use responsive images with srcset for different screen sizes
+
+### Example Alt Text
+
+Good alt text examples for screenshots:
+- "Task Flow home dashboard showing active tasks and team notifications on Android"
+- "Creating a new task with priority and deadline settings on iOS"
+- "Team collaboration interface with member list and task assignments"
+- "Real-time notification center displaying task updates and team activity"
+- "User profile settings page with customization options"
+
+### Tools & Resources
+
+**Screenshot Capture Tools:**
+- **Android:** Android Studio Device Manager, ADB screenshot command, or on-device
+- **iOS:** Xcode Simulator, iPhone/iPad native screenshot functionality
+- **Cross-platform:** Flutter DevTools, Browser DevTools for web version
+
+**Image Optimization:**
+- TinyPNG (https://tinypng.com/)
+- ImageOptim (https://imageoptim.com/)
+- Squoosh (https://squoosh.app/)
+
+**Device Mockup Generators:**
+- Mockuphone (https://mockuphone.com/)
+- Smartmockups (https://smartmockups.com/)
+- Placeit (https://placeit.net/)
+- Screely (https://www.screely.com/) - for browser mockups
+
+**Screenshot Enhancement:**
+- Figma - for adding annotations or highlights
+- Canva - for creating promotional graphics with screenshots
+- Photoshop/GIMP - for advanced editing
 
 ---
 
@@ -241,8 +443,20 @@ Each feature should be presented with:
       main.js
     /images
       logo.png
-      screenshots/
-      icons/
+      /screenshots
+        /android
+          /phone
+            login.png
+            home-dashboard.png
+            task-list.png
+            team-collaboration.png
+            notifications.png
+            settings.png
+          /tablet
+        /ios
+          /iphone
+          /ipad
+      /icons
     /assets
 ```
 
@@ -369,6 +583,11 @@ Ensure the website is accessible to all users:
 │   [Download for Android] [Download for iOS]   │
 │                                               │
 ├───────────────────────────────────────────────┤
+│         App Screenshots Carousel              │
+│   [← Android Screenshot] [iOS Screenshot →]   │
+│      Show app in action on mobile devices     │
+│                                               │
+├───────────────────────────────────────────────┤
 │         Features Preview                      │
 │  [Icon] [Icon] [Icon] [Icon] [Icon]          │
 │  Tasks  Teams  Notify Settings Cross-Platform │
@@ -377,6 +596,7 @@ Ensure the website is accessible to all users:
 │         Key Benefits Section                  │
 │  Collaborate Seamlessly | Stay Organized      │
 │  Get Notified | Work Anywhere                 │
+│  (Paired with feature-specific screenshots)   │
 │                                               │
 ├───────────────────────────────────────────────┤
 │         Download CTA Section                  │
@@ -410,7 +630,15 @@ Ensure the website is accessible to all users:
 ### Phase 3: Content
 - [ ] Write copy for all pages following content guidelines
 - [ ] Create or source icons/illustrations
-- [ ] Add app screenshots (if available)
+- [ ] Capture mobile app screenshots from Android and iOS
+  - [ ] Splash/Onboarding screens
+  - [ ] Login screen
+  - [ ] Home/Dashboard
+  - [ ] Task Management screens
+  - [ ] Team Collaboration interface
+  - [ ] Notifications
+  - [ ] User Settings/Profile
+- [ ] Optimize and organize screenshots following guidelines in section 5.1
 - [ ] Include download badges/buttons
 - [ ] Add "Coming Soon" indicators for future platforms
 
