@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:task_flow/core/entities/user_entity.dart';
 import 'package:task_flow/core/entities/task_entity.dart';
+import 'package:task_flow/core/entities/team_entity.dart';
 import 'package:task_flow/core/entities/notification_entity.dart';
 import 'package:task_flow/objectbox.g.dart';
 
@@ -16,6 +17,7 @@ class DBService {
   Store? _store;
   Box<UserEntity>? _userBox;
   Box<TaskEntity>? _taskBox;
+  Box<TeamEntity>? _teamBox;
   Box<NotificationEntity>? _notificationBox;
 
   bool _opened = false;
@@ -29,6 +31,7 @@ class DBService {
       _store = await openStore(directory: dir.path);
       _userBox = Box<UserEntity>(_store!);
       _taskBox = Box<TaskEntity>(_store!);
+      _teamBox = Box<TeamEntity>(_store!);
       _notificationBox = Box<NotificationEntity>(_store!);
       _opened = true;
     } catch (e) {
@@ -37,6 +40,7 @@ class DBService {
       _store = null;
       _userBox = null;
       _taskBox = null;
+      _teamBox = null;
       _notificationBox = null;
       rethrow;
     }
@@ -54,6 +58,13 @@ class DBService {
       return null;
     }
     return _taskBox;
+  }
+
+  Box<TeamEntity>? get teamBox {
+    if (!_opened || _teamBox == null) {
+      return null;
+    }
+    return _teamBox;
   }
 
   Box<NotificationEntity>? get notificationBox {
