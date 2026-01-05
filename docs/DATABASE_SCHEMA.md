@@ -20,6 +20,7 @@ Stores user account information and authentication data.
 ```dart
 @Entity()
 class UserEntity {
+  @Id()
   int id;                    // ObjectBox auto-incremented ID
   String apiUserId;          // External API user ID
   String username;           // Unique username
@@ -189,6 +190,7 @@ Stores team information, members, and custom configurations.
 ```dart
 @Entity()
 class TeamEntity {
+  @Id()
   int id;                         // ObjectBox auto-incremented ID
   
   @Index()
