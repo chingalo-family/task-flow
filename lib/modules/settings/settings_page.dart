@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_flow/app_state/app_info_state/app_info_state.dart';
 import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/app_state/notification_state/notification_state.dart';
@@ -32,7 +33,17 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> _loadOfflineAccessPreference() async {
-    // TODO: Load from preferences
+    final prefs = await SharedPreferences.getInstance();
+    if (mounted) {
+      setState(() {
+        offlineAccessEnabled = prefs.getBool('offlineAccessEnabled') ?? false;
+      });
+    }
+  }
+
+  Future<void> _saveOfflineAccessPreference(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('offlineAccessEnabled', value);
   }
 
   Future<void> _handleLogout(BuildContext context) async {
@@ -195,6 +206,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         setState(() {
                           offlineAccessEnabled = value;
                         });
+                        _saveOfflineAccessPreference(value);
                       },
                     ),
 

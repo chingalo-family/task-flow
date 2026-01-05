@@ -68,7 +68,7 @@ class PreferenceToggleItem extends StatelessWidget {
         trailing: Switch(
           value: value,
           onChanged: onChanged,
-          activeColor: activeColor ?? AppConstant.primaryBlue,
+          activeThumbColor: activeColor ?? AppConstant.primaryBlue,
         ),
       ),
     );

@@ -57,7 +57,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
       await notificationState.initialize();
       await userListState.reSyncUserList();
       for (int count = 0; count <= 100; count += 5) {
-        await Future.delayed(const Duration(milliseconds: 70));
+        await Future.delayed(const Duration(milliseconds: 80));
         if (mounted) {
           setState(() {
             _progress = count / 100;

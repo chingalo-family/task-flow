@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:task_flow/core/entities/task_entity.dart';
-import 'package:task_flow/core/models/task/task.dart';
+import 'package:task_flow/core/models/task.dart';
 import 'package:task_flow/core/services/db_service.dart';
 import 'package:task_flow/core/utils/task_entity_mapper.dart';
 

@@ -2,17 +2,17 @@
 // This file provides a single import point for all core models
 
 // Task
-export 'task/task.dart';
-export 'task/task_category.dart';
+export 'task.dart';
+export 'task_category.dart';
 
 // Team
-export 'team/team.dart';
+export 'team.dart';
 
 // Task Status
-export 'task_status/task_status.dart';
+export 'task_status.dart';
 
 // Notification
-export 'notification/notification.dart';
+export 'notification.dart';
 
 // User
 export 'user.dart';

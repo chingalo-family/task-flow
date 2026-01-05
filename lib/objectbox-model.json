@@ -276,7 +276,7 @@
     },
     {
       "id": "4:8634427917478567143",
-      "lastPropertyId": "12:6555534071892076546",
+      "lastPropertyId": "16:1984349909510261685",
       "name": "TeamEntity",
       "properties": [
         {
@@ -338,6 +338,26 @@
         {
           "id": "12:6555534071892076546",
           "name": "memberIdsJson",
+          "type": 9
+        },
+        {
+          "id": "13:6498061324321972108",
+          "name": "taskIdsJson",
+          "type": 9
+        },
+        {
+          "id": "14:6839939419456406559",
+          "name": "customTaskStatusesJson",
+          "type": 9
+        },
+        {
+          "id": "15:7023405807681367260",
+          "name": "teamIcon",
+          "type": 9
+        },
+        {
+          "id": "16:1984349909510261685",
+          "name": "teamColor",
           "type": 9
         }
       ],

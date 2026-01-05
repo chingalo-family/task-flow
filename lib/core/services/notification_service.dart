@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:task_flow/core/models/notification/notification.dart';
+import 'package:task_flow/core/models/notification.dart';
 import 'package:task_flow/core/offline_db/notification_offline_provider/notification_offline_provider.dart';
 import 'package:task_flow/core/utils/utils.dart';
 

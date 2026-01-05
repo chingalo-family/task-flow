@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:task_flow/core/entities/notification_entity.dart';
-import 'package:task_flow/core/models/notification/notification.dart';
+import 'package:task_flow/core/models/notification.dart';
 import 'package:task_flow/core/services/db_service.dart';
 
 /// Offline provider for notification persistence

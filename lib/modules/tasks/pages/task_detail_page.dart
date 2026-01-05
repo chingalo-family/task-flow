@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/task_state/task_state.dart';
+import 'package:task_flow/app_state/team_state/team_state.dart';
+import 'package:task_flow/app_state/user_list_state/user_list_state.dart';
 import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/constants/task_constants.dart';
@@ -411,45 +413,53 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 ),
               ),
               SizedBox(height: AppConstant.spacing12),
-              Container(
-                padding: EdgeInsets.all(AppConstant.spacing16),
-                decoration: BoxDecoration(
-                  color: AppConstant.cardBackground,
-                  borderRadius: BorderRadius.circular(
-                    AppConstant.borderRadius12,
-                  ),
-                  border: Border.all(
-                    color: AppConstant.textSecondary.withValues(alpha: 0.2),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: AppConstant.successGreen.withValues(alpha: 0.2),
-                        shape: BoxShape.circle,
+              Consumer<TeamState>(
+                builder: (context, teamState, child) {
+                  final team = teamState.getTeamById(_task.teamId!);
+                  final teamIcon = _getTeamIcon(team);
+                  final teamColor = _getTeamColor(team);
+                  
+                  return Container(
+                    padding: EdgeInsets.all(AppConstant.spacing16),
+                    decoration: BoxDecoration(
+                      color: AppConstant.cardBackground,
+                      borderRadius: BorderRadius.circular(
+                        AppConstant.borderRadius12,
                       ),
-                      child: Icon(
-                        Icons.group,
-                        color: AppConstant.successGreen,
-                        size: 20,
+                      border: Border.all(
+                        color: AppConstant.textSecondary.withValues(alpha: 0.2),
                       ),
                     ),
-                    SizedBox(width: AppConstant.spacing12),
-                    Expanded(
-                      child: Text(
-                        _task.teamName ?? 'Unknown Team',
-                        style: TextStyle(
-                          color: AppConstant.textPrimary,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: teamColor.withValues(alpha: 0.2),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            teamIcon,
+                            color: teamColor,
+                            size: 20,
+                          ),
                         ),
-                      ),
+                        SizedBox(width: AppConstant.spacing12),
+                        Expanded(
+                          child: Text(
+                            _task.teamName ?? 'Unknown Team',
+                            style: TextStyle(
+                              color: AppConstant.textPrimary,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  );
+                },
               ),
               SizedBox(height: AppConstant.spacing32),
             ],
@@ -468,24 +478,6 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               children: [
                 // Display avatars - using proper user information
                 ..._buildAssigneeAvatars(context),
-                SizedBox(width: AppConstant.spacing12),
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: AppConstant.textSecondary.withValues(alpha: 0.3),
-                      width: 2,
-                      style: BorderStyle.solid,
-                    ),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.add,
-                    size: 20,
-                    color: AppConstant.textSecondary,
-                  ),
-                ),
               ],
             ),
 
@@ -890,8 +882,14 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
   void _showAddSubtaskDialog() {
     final userState = Provider.of<UserState>(context, listen: false);
+    final teamState = Provider.of<TeamState>(context, listen: false);
     final currentUserId =
         userState.currentUser?.id.toString() ?? 'current_user';
+
+    // Get team if task has one
+    final team = _task.teamId != null 
+        ? teamState.getTeamById(_task.teamId!)
+        : null;
 
     // Form controllers and state
     final formKey = GlobalKey<FormState>();
@@ -949,7 +947,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                       selectedCategory: selectedCategory,
                       selectedDueDate: selectedDueDate,
                       remindMe: remindMe,
-                      selectedTeam: null, // No team for subtasks
+                      selectedTeam: team, // Use parent task's team
                       selectedAssignees: selectedAssignees,
                       onPriorityChanged: (value) =>
                           setState(() => selectedPriority = value),
@@ -966,6 +964,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                           _task.teamId ==
                           null, // Hide if parent task has no team
                       isSubtask: true,
+                      lockTeam: _task.teamId != null, // Lock team if parent has team
                     ),
                   ),
                 ),
@@ -1203,6 +1202,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   List<Widget> _buildAssigneeAvatars(BuildContext context) {
     final assigneeIds = _task.assignedUserIds ?? [];
     final userState = Provider.of<UserState>(context, listen: false);
+    final userListState = Provider.of<UserListState>(context, listen: false);
     final currentUserId = userState.currentUser?.id.toString() ?? '';
 
     if (assigneeIds.isEmpty && _task.assignedToUserId != null) {
@@ -1214,42 +1214,37 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
       return [];
     }
 
-    // Create avatars for multiple assignees (max 3 visible)
-    return assigneeIds.take(3).toList().asMap().entries.map((entry) {
-      final index = entry.key;
-      final userId = entry.value;
-      final isCurrentUser = userId == currentUserId;
+    // Get actual users from UserListState
+    final assignedUsers = userListState.getUsersByIds(assigneeIds);
 
-      // Get user initials - try to get from user state, otherwise use generic
+    // Create avatars for multiple assignees (max 3 visible)
+    return assignedUsers.take(3).toList().asMap().entries.map((entry) {
+      final index = entry.key;
+      final user = entry.value;
+      final isCurrentUser = user.id == currentUserId;
+
+      // Get user initials from actual user data
       String initials;
-      if (isCurrentUser) {
-        final user = userState.currentUser;
-        if (user?.fullName != null && user!.fullName!.isNotEmpty) {
-          final nameParts = user.fullName!
-              .split(' ')
-              .where((p) => p.isNotEmpty)
-              .toList();
-          if (nameParts.length >= 2 &&
-              nameParts[0].isNotEmpty &&
-              nameParts[1].isNotEmpty) {
-            initials =
-                nameParts[0].substring(0, 1).toUpperCase() +
-                nameParts[1].substring(0, 1).toUpperCase();
-          } else if (nameParts.isNotEmpty && nameParts[0].isNotEmpty) {
-            initials = nameParts[0].substring(0, 1).toUpperCase();
-          } else {
-            initials = 'ME';
-          }
-        } else if (user?.username != null && user!.username.isNotEmpty) {
-          initials = user.username.substring(0, 1).toUpperCase();
+      if (user.fullName != null && user.fullName!.isNotEmpty) {
+        final nameParts = user.fullName!
+            .split(' ')
+            .where((p) => p.isNotEmpty)
+            .toList();
+        if (nameParts.length >= 2 &&
+            nameParts[0].isNotEmpty &&
+            nameParts[1].isNotEmpty) {
+          initials =
+              nameParts[0].substring(0, 1).toUpperCase() +
+              nameParts[1].substring(0, 1).toUpperCase();
+        } else if (nameParts.isNotEmpty && nameParts[0].isNotEmpty) {
+          initials = nameParts[0].substring(0, 1).toUpperCase();
         } else {
-          initials = 'ME';
+          initials = 'U';
         }
+      } else if (user.username.isNotEmpty) {
+        initials = user.username.substring(0, 1).toUpperCase();
       } else {
-        // For other users, show first letter of user ID
-        initials = userId.isNotEmpty
-            ? userId.substring(0, 1).toUpperCase()
-            : 'U';
+        initials = 'U';
       }
 
       return _buildAvatar(initials, index, isCurrentUser);
@@ -1287,5 +1282,61 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
         ),
       ),
     );
+  }
+
+  IconData _getTeamIcon(Team? team) {
+    if (team?.teamIcon != null) {
+      return _getIconFromKey(team!.teamIcon!);
+    }
+    // Fallback to name-based icon
+    if (team?.name != null) {
+      return _getTeamIconFromName(team!.name);
+    }
+    return Icons.group;
+  }
+
+  IconData _getIconFromKey(String iconKey) {
+    switch (iconKey) {
+      case 'rocket':
+        return Icons.rocket_launch;
+      case 'computer':
+        return Icons.computer;
+      case 'palette':
+        return Icons.palette;
+      case 'campaign':
+        return Icons.campaign;
+      case 'bar_chart':
+        return Icons.bar_chart;
+      case 'shopping_cart':
+        return Icons.shopping_cart;
+      default:
+        return Icons.people_rounded;
+    }
+  }
+
+  IconData _getTeamIconFromName(String teamName) {
+    final nameLower = teamName.toLowerCase();
+    if (nameLower.contains('market')) return Icons.campaign;
+    if (nameLower.contains('engineer') || nameLower.contains('tech')) {
+      return Icons.code;
+    }
+    if (nameLower.contains('design')) return Icons.palette;
+    if (nameLower.contains('product')) return Icons.rocket_launch;
+    return Icons.people_rounded;
+  }
+
+  Color _getTeamColor(Team? team) {
+    if (team?.teamColor != null) {
+      return _parseColor(team!.teamColor!);
+    }
+    // Fallback to generated color
+    return AppConstant.successGreen;
+  }
+
+  Color _parseColor(String hexColor) {
+    // Remove # if present
+    final hex = hexColor.replaceAll('#', '');
+    // Parse hex string to color
+    return Color(int.parse('FF$hex', radix: 16));
   }
 }

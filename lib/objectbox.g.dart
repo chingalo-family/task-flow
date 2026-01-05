@@ -345,7 +345,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(4, 8634427917478567143),
     name: 'TeamEntity',
-    lastPropertyId: const obx_int.IdUid(12, 6555534071892076546),
+    lastPropertyId: const obx_int.IdUid(16, 1984349909510261685),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -417,6 +417,30 @@ final _entities = <obx_int.ModelEntity>[
       obx_int.ModelProperty(
         id: const obx_int.IdUid(12, 6555534071892076546),
         name: 'memberIdsJson',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(13, 6498061324321972108),
+        name: 'taskIdsJson',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(14, 6839939419456406559),
+        name: 'customTaskStatusesJson',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(15, 7023405807681367260),
+        name: 'teamIcon',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(16, 1984349909510261685),
+        name: 'teamColor',
         type: 9,
         flags: 0,
       ),
@@ -929,7 +953,20 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final memberIdsJsonOffset = object.memberIdsJson == null
             ? null
             : fbb.writeString(object.memberIdsJson!);
-        fbb.startTable(13);
+        final taskIdsJsonOffset = object.taskIdsJson == null
+            ? null
+            : fbb.writeString(object.taskIdsJson!);
+        final customTaskStatusesJsonOffset =
+            object.customTaskStatusesJson == null
+            ? null
+            : fbb.writeString(object.customTaskStatusesJson!);
+        final teamIconOffset = object.teamIcon == null
+            ? null
+            : fbb.writeString(object.teamIcon!);
+        final teamColorOffset = object.teamColor == null
+            ? null
+            : fbb.writeString(object.teamColor!);
+        fbb.startTable(17);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, teamIdOffset);
         fbb.addOffset(2, nameOffset);
@@ -942,6 +979,10 @@ obx_int.ModelDefinition getObjectBoxModel() {
         fbb.addInt64(9, object.updatedAt.millisecondsSinceEpoch);
         fbb.addBool(10, object.isSynced);
         fbb.addOffset(11, memberIdsJsonOffset);
+        fbb.addOffset(12, taskIdsJsonOffset);
+        fbb.addOffset(13, customTaskStatusesJsonOffset);
+        fbb.addOffset(14, teamIconOffset);
+        fbb.addOffset(15, teamColorOffset);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -993,6 +1034,18 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final memberIdsJsonParam = const fb.StringReader(
           asciiOptimization: true,
         ).vTableGetNullable(buffer, rootOffset, 26);
+        final taskIdsJsonParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 28);
+        final customTaskStatusesJsonParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 30);
+        final teamIconParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 32);
+        final teamColorParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 34);
         final object = TeamEntity(
           id: idParam,
           teamId: teamIdParam,
@@ -1006,6 +1059,10 @@ obx_int.ModelDefinition getObjectBoxModel() {
           updatedAt: updatedAtParam,
           isSynced: isSyncedParam,
           memberIdsJson: memberIdsJsonParam,
+          taskIdsJson: taskIdsJsonParam,
+          customTaskStatusesJson: customTaskStatusesJsonParam,
+          teamIcon: teamIconParam,
+          teamColor: teamColorParam,
         );
 
         return object;
@@ -1325,5 +1382,25 @@ class TeamEntity_ {
   /// See [TeamEntity.memberIdsJson].
   static final memberIdsJson = obx.QueryStringProperty<TeamEntity>(
     _entities[3].properties[11],
+  );
+
+  /// See [TeamEntity.taskIdsJson].
+  static final taskIdsJson = obx.QueryStringProperty<TeamEntity>(
+    _entities[3].properties[12],
+  );
+
+  /// See [TeamEntity.customTaskStatusesJson].
+  static final customTaskStatusesJson = obx.QueryStringProperty<TeamEntity>(
+    _entities[3].properties[13],
+  );
+
+  /// See [TeamEntity.teamIcon].
+  static final teamIcon = obx.QueryStringProperty<TeamEntity>(
+    _entities[3].properties[14],
+  );
+
+  /// See [TeamEntity.teamColor].
+  static final teamColor = obx.QueryStringProperty<TeamEntity>(
+    _entities[3].properties[15],
   );
 }

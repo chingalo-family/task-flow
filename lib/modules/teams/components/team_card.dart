@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:task_flow/app_state/user_list_state/user_list_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/models/models.dart';
 import 'package:task_flow/modules/teams/pages/team_detail_page.dart';
@@ -10,10 +12,27 @@ class TeamCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userListState = Provider.of<UserListState>(context);
+    
+    // Use saved team color and icon if available, otherwise generate from ID/name
+    final teamColor = team.teamColor != null
+        ? _parseColor(team.teamColor!)
+        : _getTeamColor(team.id);
+    final teamIcon = team.teamIcon != null
+        ? _getIconFromKey(team.teamIcon!)
+        : _getTeamIcon(team.name);
+    final isSyncing = team.id == '2'; // Mock syncing status for demo
+    
+    // Get actual team members from memberIds
+    final teamMembers = team.memberIds != null && team.memberIds!.isNotEmpty
+        ? userListState.getUsersByIds(team.memberIds!)
+        : <User>[];
+
     return Container(
       decoration: BoxDecoration(
         color: AppConstant.cardBackground,
         borderRadius: BorderRadius.circular(AppConstant.borderRadius16),
+        border: Border(left: BorderSide(color: teamColor, width: 4)),
       ),
       child: Material(
         color: Colors.transparent,
@@ -35,19 +54,15 @@ class TeamCard extends StatelessWidget {
                 // Team Header
                 Row(
                   children: [
-                    // Team Avatar
+                    // Team Avatar with Icon
                     Container(
-                      width: 48,
-                      height: 48,
+                      width: 56,
+                      height: 56,
                       decoration: BoxDecoration(
-                        color: AppConstant.primaryBlue.withValues(alpha: 0.1),
+                        color: teamColor,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Icon(
-                        Icons.people_rounded,
-                        color: AppConstant.primaryBlue,
-                        size: 24,
-                      ),
+                      child: Icon(teamIcon, color: Colors.white, size: 28),
                     ),
                     SizedBox(width: AppConstant.spacing12),
                     Expanded(
@@ -59,98 +74,217 @@ class TeamCard extends StatelessWidget {
                             style: Theme.of(context).textTheme.bodyLarge
                                 ?.copyWith(
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 16,
+                                  fontSize: 18,
+                                  color: AppConstant.textPrimary,
                                 ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                           SizedBox(height: 4),
-                          Text(
-                            '${team.memberCount} ${team.memberCount == 1 ? 'member' : 'members'}',
-                            style: Theme.of(
-                              context,
-                            ).textTheme.bodyMedium?.copyWith(fontSize: 12),
+                          Row(
+                            children: [
+                              Text(
+                                'ID: #${team.id.toUpperCase()}',
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(
+                                      fontSize: 12,
+                                      color: AppConstant.textSecondary,
+                                    ),
+                              ),
+                              if (isSyncing) ...[
+                                SizedBox(width: 8),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppConstant.warningOrange.withValues(
+                                      alpha: 0.2,
+                                    ),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.sync,
+                                        size: 10,
+                                        color: AppConstant.warningOrange,
+                                      ),
+                                      SizedBox(width: 4),
+                                      Text(
+                                        'SYNCING...',
+                                        style: TextStyle(
+                                          fontSize: 9,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppConstant.warningOrange,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ],
                           ),
                         ],
                       ),
                     ),
-                    Icon(
-                      Icons.chevron_right,
-                      color: AppConstant.textSecondary,
-                      size: 20,
+                    IconButton(
+                      onPressed: () {
+                        // Show options menu
+                      },
+                      icon: Icon(
+                        Icons.more_vert,
+                        color: AppConstant.textSecondary,
+                        size: 20,
+                      ),
                     ),
                   ],
                 ),
 
-                // Description
-                if (team.description != null &&
-                    team.description!.isNotEmpty) ...[
-                  SizedBox(height: AppConstant.spacing12),
-                  Text(
-                    team.description!,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-
                 // Member Avatars
-                if (team.memberIds != null && team.memberIds!.isNotEmpty) ...[
-                  SizedBox(height: AppConstant.spacing16),
-                  Row(
-                    children: [
-                      // Show up to 5 member avatars
-                      ...team.memberIds!.take(5).map((memberId) {
-                        final index = team.memberIds!.indexOf(memberId);
-                        return Container(
-                          margin: EdgeInsets.only(
-                            right:
-                                index < 4 && index < team.memberIds!.length - 1
-                                ? 8
-                                : 0,
-                          ),
-                          child: CircleAvatar(
-                            radius: 16,
-                            backgroundColor: _getAvatarColor(index),
-                            child: Text(
-                              _getInitials(index),
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        );
-                      }),
-
-                      // Show +N if there are more members
-                      if (team.memberCount > 5) ...[
-                        SizedBox(width: 8),
-                        CircleAvatar(
-                          radius: 16,
-                          backgroundColor: AppConstant.textSecondary.withValues(
-                            alpha: 0.2,
-                          ),
-                          child: Text(
-                            '+${team.memberCount - 5}',
-                            style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w600,
-                              color: AppConstant.textPrimary,
-                            ),
+                SizedBox(height: AppConstant.spacing16),
+                Row(
+                  children: [
+                    // Show up to 3 member avatars with overlap using Stack
+                    if (teamMembers.isNotEmpty)
+                      SizedBox(
+                        height: 32,
+                        width: teamMembers.length > 3
+                            ? 88 // 3 avatars with overlap: 32 + 24 + 24 + 8
+                            : (teamMembers.length * 32) -
+                                ((teamMembers.length - 1) * 8),
+                        child: Stack(
+                          children: List.generate(
+                            teamMembers.length > 3 ? 3 : teamMembers.length,
+                            (index) {
+                              final user = teamMembers[index];
+                              return Positioned(
+                                left: index * 24.0,
+                                child: Container(
+                                  width: 32,
+                                  height: 32,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: AppConstant.cardBackground,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  child: CircleAvatar(
+                                    radius: 14,
+                                    backgroundColor: _getAvatarColor(index),
+                                    child: Text(
+                                      _getUserInitials(user),
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ),
-                      ],
+                      ),
+
+                    // Show +N if there are more members
+                    if (teamMembers.length > 3) ...[
+                      SizedBox(width: 8),
+                      CircleAvatar(
+                        radius: 16,
+                        backgroundColor: AppConstant.textSecondary.withValues(
+                          alpha: 0.2,
+                        ),
+                        child: Text(
+                          '+${teamMembers.length - 3}',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w600,
+                            color: AppConstant.textPrimary,
+                          ),
+                        ),
+                      ),
                     ],
-                  ),
-                ],
+                    Spacer(),
+                    Row(
+                      children: [
+                        Text(
+                          '${teamMembers.length} Member${teamMembers.length != 1 ? 's' : ''}',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: AppConstant.textPrimary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(width: 4),
+                        Icon(
+                          Icons.chevron_right,
+                          color: AppConstant.textSecondary,
+                          size: 20,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  Color _getTeamColor(String teamId) {
+    final colors = [
+      AppConstant.primaryBlue,
+      Color(0xFFFF6B35), // Orange
+      Color(0xFF10B981), // Green
+      Color(0xFF94A3B8), // Gray
+    ];
+    // Use hash code for reliable color assignment with any string ID
+    final hash = teamId.hashCode.abs();
+    return colors[hash % colors.length];
+  }
+
+  Color _parseColor(String hexColor) {
+    // Remove # if present
+    final hex = hexColor.replaceAll('#', '');
+    // Parse hex string to color
+    return Color(int.parse('FF$hex', radix: 16));
+  }
+
+  IconData _getIconFromKey(String iconKey) {
+    switch (iconKey) {
+      case 'rocket':
+        return Icons.rocket_launch;
+      case 'computer':
+        return Icons.computer;
+      case 'palette':
+        return Icons.palette;
+      case 'campaign':
+        return Icons.campaign;
+      case 'bar_chart':
+        return Icons.bar_chart;
+      case 'shopping_cart':
+        return Icons.shopping_cart;
+      default:
+        return Icons.people_rounded;
+    }
+  }
+
+  IconData _getTeamIcon(String teamName) {
+    final nameLower = teamName.toLowerCase();
+    if (nameLower.contains('market')) return Icons.campaign;
+    if (nameLower.contains('engineer') || nameLower.contains('tech')) {
+      return Icons.code;
+    }
+    if (nameLower.contains('design')) return Icons.palette;
+    if (nameLower.contains('product')) return Icons.rocket_launch;
+    return Icons.people_rounded;
   }
 
   Color _getAvatarColor(int index) {
@@ -164,8 +298,15 @@ class TeamCard extends StatelessWidget {
     return colors[index % colors.length];
   }
 
-  String _getInitials(int index) {
-    final names = ['JD', 'KL', 'SM', 'MJ', 'LC'];
-    return names[index % names.length];
+  String _getUserInitials(User user) {
+    // Get initials from full name or username
+    final name = user.fullName ?? user.username;
+    if (name.isEmpty) return '?';
+    
+    final parts = name.trim().split(' ');
+    if (parts.length >= 2) {
+      return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
+    }
+    return name.substring(0, name.length >= 2 ? 2 : 1).toUpperCase();
   }
 }
