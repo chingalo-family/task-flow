@@ -803,7 +803,6 @@ class OnboardingIllustration extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildFloatingCheck(-0.3, 25 * scaleFactor, 0.5),
               SizedBox(width: 8 * scaleFactor),
               _buildFloatingCheck(0.0, 30 * scaleFactor, 0.6),
               SizedBox(width: 8 * scaleFactor),
@@ -812,8 +811,6 @@ class OnboardingIllustration extends StatelessWidget {
               _buildFloatingCheck(0.15, 35 * scaleFactor, 0.7),
               SizedBox(width: 8 * scaleFactor),
               _buildFloatingCheck(-0.1, 30 * scaleFactor, 0.6),
-              SizedBox(width: 8 * scaleFactor),
-              _buildFloatingCheck(0.25, 25 * scaleFactor, 0.5),
             ],
           ),
         ],
