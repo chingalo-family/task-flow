@@ -113,8 +113,6 @@ Built with ❤️ using Flutter and open-source technologies.
 
 ### ObjectBox Setup
 
-### ObjectBox Setup
-
 Task Flow uses ObjectBox for local database storage. You must generate the ObjectBox files before running the app:
 
 1. **Install dependencies:**
