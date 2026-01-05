@@ -27,6 +27,7 @@ class TaskFormFields extends StatefulWidget {
   final Function(List<String>) onAssigneesChanged;
   final bool hideTeamAndAssignee; // Hide team and assignee fields
   final bool isSubtask; // Indicates if this is a subtask form
+  final bool lockTeam; // Lock team selection (disable interaction)
 
   const TaskFormFields({
     super.key,
@@ -47,6 +48,7 @@ class TaskFormFields extends StatefulWidget {
     required this.onAssigneesChanged,
     this.hideTeamAndAssignee = false,
     this.isSubtask = false,
+    this.lockTeam = false,
   });
 
   @override
@@ -562,56 +564,75 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
           // Team and Assign To - only show if not hidden
           if (!widget.hideTeamAndAssignee) ...[
             // Team selection
-            GestureDetector(
-              onTap: _showTeamPicker,
-              child: Container(
-                padding: EdgeInsets.all(AppConstant.spacing16),
-                decoration: BoxDecoration(
-                  color: AppConstant.cardBackground,
-                  borderRadius: BorderRadius.circular(
-                    AppConstant.borderRadius12,
-                  ),
-                  border: Border.all(
-                    color: AppConstant.textSecondary.withValues(alpha: 0.1),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.group,
-                      color: AppConstant.textSecondary,
-                      size: 20,
+            Opacity(
+              opacity: widget.lockTeam ? 0.6 : 1.0,
+              child: GestureDetector(
+                onTap: widget.lockTeam ? null : _showTeamPicker,
+                child: Container(
+                  padding: EdgeInsets.all(AppConstant.spacing16),
+                  decoration: BoxDecoration(
+                    color: AppConstant.cardBackground,
+                    borderRadius: BorderRadius.circular(
+                      AppConstant.borderRadius12,
                     ),
-                    SizedBox(width: AppConstant.spacing12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Team',
-                            style: TextStyle(
-                              color: AppConstant.textPrimary,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          if (widget.selectedTeam != null)
-                            Text(
-                              widget.selectedTeam!.name,
-                              style: TextStyle(
-                                color: AppConstant.textSecondary,
-                                fontSize: 14,
-                              ),
-                            ),
-                        ],
+                    border: Border.all(
+                      color: AppConstant.textSecondary.withValues(alpha: 0.1),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        widget.lockTeam ? Icons.lock : Icons.group,
+                        color: AppConstant.textSecondary,
+                        size: 20,
                       ),
-                    ),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      color: AppConstant.textSecondary,
-                      size: 16,
-                    ),
-                  ],
+                      SizedBox(width: AppConstant.spacing12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  'Team',
+                                  style: TextStyle(
+                                    color: AppConstant.textPrimary,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                if (widget.lockTeam) ...[
+                                  SizedBox(width: 8),
+                                  Text(
+                                    '(Fixed)',
+                                    style: TextStyle(
+                                      color: AppConstant.textSecondary,
+                                      fontSize: 12,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                            if (widget.selectedTeam != null)
+                              Text(
+                                widget.selectedTeam!.name,
+                                style: TextStyle(
+                                  color: AppConstant.textSecondary,
+                                  fontSize: 14,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                      if (!widget.lockTeam)
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          color: AppConstant.textSecondary,
+                          size: 16,
+                        ),
+                    ],
+                  ),
                 ),
               ),
             ),

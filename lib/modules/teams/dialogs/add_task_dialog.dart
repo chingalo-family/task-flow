@@ -123,7 +123,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                 });
               },
               onTeamChanged: (team) {
-                // Team is fixed for this dialog, so do nothing
+                // Team is locked, so this won't be called
               },
               onAssigneesChanged: (assignees) {
                 setState(() {
@@ -132,6 +132,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
               },
               hideTeamAndAssignee: false,
               isSubtask: false,
+              lockTeam: true, // Lock team selection in team context
             ),
 
             SizedBox(height: AppConstant.spacing24),
