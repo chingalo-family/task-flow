@@ -66,24 +66,6 @@ class _TeamDetailPageState extends State<TeamDetailPage>
                 color: AppConstant.textPrimary,
               ),
             ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.cloud_done,
-                  size: 12,
-                  color: AppConstant.successGreen,
-                ),
-                SizedBox(width: 4),
-                Text(
-                  'SYNCED',
-                  style: TextStyle(
-                    fontSize: 10,
-                    color: AppConstant.textSecondary,
-                  ),
-                ),
-              ],
-            ),
           ],
         ),
         actions: [
