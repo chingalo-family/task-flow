@@ -818,7 +818,7 @@ class _PriorityButton extends StatelessWidget {
 }
 
 // Team Picker Container
-class _TeamPickerContainer extends StatelessWidget {
+class _TeamPickerContainer extends StatefulWidget {
   final List<Team> teams;
   final Team? selectedTeam;
   final Function(Team) onTeamSelected;
@@ -832,7 +832,33 @@ class _TeamPickerContainer extends StatelessWidget {
   });
 
   @override
+  State<_TeamPickerContainer> createState() => _TeamPickerContainerState();
+}
+
+class _TeamPickerContainerState extends State<_TeamPickerContainer> {
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // Sort teams alphabetically by name
+    final sortedTeams = List<Team>.from(widget.teams)
+      ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+
+    // Filter teams based on search query
+    final filteredTeams = sortedTeams.where((team) {
+      if (_searchQuery.isEmpty) return true;
+      final query = _searchQuery.toLowerCase();
+      return team.name.toLowerCase().contains(query) ||
+          (team.description?.toLowerCase().contains(query) ?? false);
+    }).toList();
+
     return Container(
       padding: EdgeInsets.all(AppConstant.spacing24),
       child: Column(
@@ -848,19 +874,75 @@ class _TeamPickerContainer extends StatelessWidget {
             ),
           ),
           SizedBox(height: AppConstant.spacing16),
-          if (selectedTeam != null) ...[
+          // Search field
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppConstant.spacing16,
+              vertical: AppConstant.spacing8,
+            ),
+            decoration: BoxDecoration(
+              color: AppConstant.cardBackground,
+              borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+              border: Border.all(
+                color: AppConstant.textSecondary.withValues(alpha: 0.1),
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.search,
+                  color: AppConstant.textSecondary,
+                  size: 20,
+                ),
+                SizedBox(width: AppConstant.spacing12),
+                Expanded(
+                  child: TextField(
+                    controller: _searchController,
+                    style: TextStyle(color: AppConstant.textPrimary),
+                    decoration: InputDecoration(
+                      hintText: 'Search teams...',
+                      hintStyle: TextStyle(color: AppConstant.textSecondary),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _searchQuery = value;
+                      });
+                    },
+                  ),
+                ),
+                if (_searchQuery.isNotEmpty)
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _searchController.clear();
+                        _searchQuery = '';
+                      });
+                    },
+                    child: Icon(
+                      Icons.clear,
+                      color: AppConstant.textSecondary,
+                      size: 20,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          SizedBox(height: AppConstant.spacing16),
+          if (widget.selectedTeam != null) ...[
             ListTile(
               leading: Icon(Icons.clear, color: Colors.red),
               title: Text(
                 'No Team (Personal Task)',
                 style: TextStyle(color: AppConstant.textPrimary),
               ),
-              onTap: onClearTeam,
+              onTap: widget.onClearTeam,
             ),
             Divider(color: AppConstant.textSecondary.withValues(alpha: 0.2)),
           ],
-          ...teams.map((team) {
-            final isSelected = selectedTeam?.id == team.id;
+          ...filteredTeams.map((team) {
+            final isSelected = widget.selectedTeam?.id == team.id;
             return ListTile(
               leading: Icon(
                 Icons.group,
@@ -886,7 +968,7 @@ class _TeamPickerContainer extends StatelessWidget {
               trailing: isSelected
                   ? Icon(Icons.check, color: AppConstant.primaryBlue)
                   : null,
-              onTap: () => onTeamSelected(team),
+              onTap: () => widget.onTeamSelected(team),
             );
           }),
         ],
@@ -915,6 +997,8 @@ class _UserPickerContainer extends StatefulWidget {
 
 class _UserPickerContainerState extends State<_UserPickerContainer> {
   late List<String> _tempSelectedUsers;
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
 
   @override
   void initState() {
@@ -923,8 +1007,37 @@ class _UserPickerContainerState extends State<_UserPickerContainer> {
   }
 
   @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final userListState = Provider.of<UserListState>(context);
+
+    // Make member list unique
+    final uniqueMemberIds = widget.memberIds.toSet().toList();
+
+    // Sort members alphabetically by name
+    final sortedMemberIds = List<String>.from(uniqueMemberIds)..sort((a, b) {
+      final userA = userListState.getUserById(a);
+      final userB = userListState.getUserById(b);
+      final nameA = userA?.fullName ?? 'User $a';
+      final nameB = userB?.fullName ?? 'User $b';
+      return nameA.toLowerCase().compareTo(nameB.toLowerCase());
+    });
+
+    // Filter members based on search query
+    final filteredMemberIds = sortedMemberIds.where((memberId) {
+      if (_searchQuery.isEmpty) return true;
+      final user = userListState.getUserById(memberId);
+      final name = user?.fullName ?? 'User $memberId';
+      final email = user?.email ?? '';
+      final query = _searchQuery.toLowerCase();
+      return name.toLowerCase().contains(query) ||
+          email.toLowerCase().contains(query);
+    }).toList();
 
     return Container(
       padding: EdgeInsets.all(AppConstant.spacing24),
@@ -941,13 +1054,71 @@ class _UserPickerContainerState extends State<_UserPickerContainer> {
             ),
           ),
           SizedBox(height: AppConstant.spacing16),
-          if (widget.memberIds.isEmpty)
+          // Search field
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppConstant.spacing16,
+              vertical: AppConstant.spacing8,
+            ),
+            decoration: BoxDecoration(
+              color: AppConstant.cardBackground,
+              borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+              border: Border.all(
+                color: AppConstant.textSecondary.withValues(alpha: 0.1),
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.search,
+                  color: AppConstant.textSecondary,
+                  size: 20,
+                ),
+                SizedBox(width: AppConstant.spacing12),
+                Expanded(
+                  child: TextField(
+                    controller: _searchController,
+                    style: TextStyle(color: AppConstant.textPrimary),
+                    decoration: InputDecoration(
+                      hintText: 'Search members...',
+                      hintStyle: TextStyle(color: AppConstant.textSecondary),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _searchQuery = value;
+                      });
+                    },
+                  ),
+                ),
+                if (_searchQuery.isNotEmpty)
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _searchController.clear();
+                        _searchQuery = '';
+                      });
+                    },
+                    child: Icon(
+                      Icons.clear,
+                      color: AppConstant.textSecondary,
+                      size: 20,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          SizedBox(height: AppConstant.spacing16),
+          if (filteredMemberIds.isEmpty)
             Text(
-              'No team members available',
+              _searchQuery.isEmpty
+                  ? 'No team members available'
+                  : 'No members found',
               style: TextStyle(color: AppConstant.textSecondary),
             )
           else
-            ...widget.memberIds.map((memberId) {
+            ...filteredMemberIds.map((memberId) {
               final user = userListState.getUserById(memberId);
               final isCurrentUser = memberId == widget.currentUserId;
               final isSelected = _tempSelectedUsers.contains(memberId);
