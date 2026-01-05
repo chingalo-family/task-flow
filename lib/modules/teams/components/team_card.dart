@@ -133,42 +133,51 @@ class TeamCard extends StatelessWidget {
                 SizedBox(height: AppConstant.spacing16),
                 Row(
                   children: [
-                    // Show up to 3 member avatars with overlap
-                    ...List.generate(
-                      team.memberCount > 3 ? 3 : team.memberCount,
-                      (index) {
-                        return Positioned(
-                          left: index * 24.0,
-                          child: Container(
-                            width: 32,
-                            height: 32,
-                            margin: EdgeInsets.only(right: index < 2 ? 0 : 8),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: AppConstant.cardBackground,
-                                width: 2,
-                              ),
-                            ),
-                            child: CircleAvatar(
-                              radius: 14,
-                              backgroundColor: _getAvatarColor(index),
-                              child: Text(
-                                _getInitials(index),
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
+                    // Show up to 3 member avatars with overlap using Stack
+                    if (team.memberCount > 0)
+                      SizedBox(
+                        height: 32,
+                        width: team.memberCount > 3
+                            ? 88 // 3 avatars with overlap: 32 + 24 + 24 + 8
+                            : (team.memberCount * 32) -
+                                ((team.memberCount - 1) * 8),
+                        child: Stack(
+                          children: List.generate(
+                            team.memberCount > 3 ? 3 : team.memberCount,
+                            (index) {
+                              return Positioned(
+                                left: index * 24.0,
+                                child: Container(
+                                  width: 32,
+                                  height: 32,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: AppConstant.cardBackground,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  child: CircleAvatar(
+                                    radius: 14,
+                                    backgroundColor: _getAvatarColor(index),
+                                    child: Text(
+                                      _getInitials(index),
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      ),
 
                     // Show +N if there are more members
-                    if (team.memberCount > 5) ...[
+                    if (team.memberCount > 3) ...[
                       SizedBox(width: 8),
                       CircleAvatar(
                         radius: 16,
@@ -176,7 +185,7 @@ class TeamCard extends StatelessWidget {
                           alpha: 0.2,
                         ),
                         child: Text(
-                          '+${team.memberCount - 5}',
+                          '+${team.memberCount - 3}',
                           style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
