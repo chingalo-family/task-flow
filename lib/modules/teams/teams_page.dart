@@ -24,6 +24,7 @@ class _TeamsPageState extends State<TeamsPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<TeamState>(context, listen: false).initialize();
       Provider.of<UserListState>(context, listen: false).initialize();
+      Provider.of<UserListState>(context, listen: false).reSyncUserList();
     });
   }
 
