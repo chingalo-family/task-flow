@@ -24,6 +24,8 @@ class TeamOfflineProvider {
       final entity = TeamEntityMapper.toEntity(team);
 
       // Check if team already exists by iterating through all teams
+      // NOTE: This is a temporary solution until ObjectBox indexing is optimized
+      // TODO: Add index on teamId field for better performance
       final allEntities = box.getAll();
       TeamEntity? existing;
       for (var e in allEntities) {
@@ -54,6 +56,8 @@ class TeamOfflineProvider {
       if (box == null) return null;
 
       // Find team by iterating through all teams
+      // NOTE: This is a temporary solution until ObjectBox indexing is optimized
+      // TODO: Add index on teamId field for better performance
       final allEntities = box.getAll();
       for (var entity in allEntities) {
         if (entity.teamId == apiTeamId) {
@@ -94,6 +98,8 @@ class TeamOfflineProvider {
       if (box == null) return;
 
       // Find and delete team by iterating through all teams
+      // NOTE: This is a temporary solution until ObjectBox indexing is optimized
+      // TODO: Add index on teamId field for better performance
       final allEntities = box.getAll();
       for (var entity in allEntities) {
         if (entity.teamId == apiTeamId) {
@@ -145,6 +151,9 @@ class TeamOfflineProvider {
       final box = DBService().teamBox;
       if (box == null) return;
 
+      // Find and update team sync status
+      // NOTE: This follows the same pattern as task module
+      // TODO: Consider optimizing with ObjectBox indexing
       final allEntities = box.getAll();
       for (var entity in allEntities) {
         if (entity.teamId == apiTeamId) {

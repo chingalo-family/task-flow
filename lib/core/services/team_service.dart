@@ -220,9 +220,13 @@ class TeamService {
       if (team == null) return false;
 
       final statuses = List<TaskStatus>.from(team.taskStatuses);
-      final statusToDelete = statuses.firstWhere((s) => s.id == statusId);
+      // Find status to delete
+      final statusToDeleteIndex = statuses.indexWhere((s) => s.id == statusId);
+      if (statusToDeleteIndex == -1) return false;
+      
+      final statusToDelete = statuses[statusToDeleteIndex];
       if (!statusToDelete.isDefault) {
-        statuses.removeWhere((s) => s.id == statusId);
+        statuses.removeAt(statusToDeleteIndex);
         final updatedTeam = team.copyWith(
           customTaskStatuses: statuses,
           updatedAt: DateTime.now(),
