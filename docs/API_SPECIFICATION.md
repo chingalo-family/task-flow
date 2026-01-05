@@ -1151,8 +1151,8 @@ The API uses URL versioning:
 
 - [Authentication Guide](AUTHENTICATION.md)
 - [Database Schema](DATABASE_SCHEMA.md)
-- [Error Codes Reference](ERROR_CODES.md)
-- [API Client Examples](examples/)
+- [Architecture Overview](ARCHITECTURE.md)
+- [Getting Started Guide](GETTING_STARTED.md)
 
 ---
 

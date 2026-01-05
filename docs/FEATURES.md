@@ -359,7 +359,7 @@ See [ROADMAP.md](ROADMAP.md) for planned features including:
 
 ---
 
-For detailed implementation guides, see:
-- [Task Management Guide](features/TASK_MANAGEMENT.md)
-- [Team Collaboration Guide](features/TEAM_COLLABORATION.md)
-- [Notifications Guide](features/NOTIFICATIONS.md)
+For more information, see:
+- [Getting Started Guide](GETTING_STARTED.md)
+- [API Specification](API_SPECIFICATION.md)
+- [Architecture Overview](ARCHITECTURE.md)
