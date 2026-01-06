@@ -78,6 +78,110 @@ class TaskState extends ChangeNotifier {
     return completed / myTasks.length;
   }
 
+  /// Get pending tasks count for a specific user
+  int getMyPendingTasksCount(String userId) {
+    return getMyTasks(userId)
+        .where((task) => task.status == TaskConstants.statusPending)
+        .length;
+  }
+
+  /// Get in-progress tasks count for a specific user
+  int getMyInProgressTasksCount(String userId) {
+    return getMyTasks(userId)
+        .where((task) => task.status == TaskConstants.statusInProgress)
+        .length;
+  }
+
+  /// Get overdue tasks for a specific user
+  List<Task> getMyOverdueTasks(String userId) {
+    return getMyTasks(userId)
+        .where((task) => task.dueDate != null && task.isOverdue)
+        .toList()
+      ..sort((a, b) {
+        // Sort by completion status first (uncompleted first)
+        if (a.isCompleted != b.isCompleted) {
+          return a.isCompleted ? 1 : -1;
+        }
+        // Then by due date (oldest overdue first)
+        return a.dueDate!.compareTo(b.dueDate!);
+      });
+  }
+
+  /// Get tasks due today for a specific user
+  List<Task> getMyTasksDueToday(String userId) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final tomorrow = today.add(Duration(days: 1));
+    return getMyTasks(userId)
+        .where((task) {
+          if (task.dueDate == null) return false;
+          return task.dueDate!.isAfter(today) && task.dueDate!.isBefore(tomorrow);
+        })
+        .toList()
+      ..sort((a, b) {
+        // Sort by completion status first (uncompleted first)
+        if (a.isCompleted != b.isCompleted) {
+          return a.isCompleted ? 1 : -1;
+        }
+        // Then by priority
+        final priorityOrder = {
+          TaskConstants.priorityHigh: 0,
+          TaskConstants.priorityMedium: 1,
+          TaskConstants.priorityLow: 2,
+        };
+        final priorityCompare = (priorityOrder[a.priority] ?? 3).compareTo(
+          priorityOrder[b.priority] ?? 3,
+        );
+        if (priorityCompare != 0) return priorityCompare;
+        // Then by due date/time
+        if (a.dueDate != null && b.dueDate != null) {
+          return a.dueDate!.compareTo(b.dueDate!);
+        }
+        return 0;
+      });
+  }
+
+  /// Get upcoming tasks for a specific user (due after today)
+  List<Task> getMyUpcomingTasks(String userId) {
+    final now = DateTime.now();
+    final tomorrow = DateTime(now.year, now.month, now.day).add(Duration(days: 1));
+    return getMyTasks(userId)
+        .where((task) => task.dueDate != null && task.dueDate!.isAfter(tomorrow))
+        .toList()
+      ..sort((a, b) {
+        // Sort by completion status first (uncompleted first)
+        if (a.isCompleted != b.isCompleted) {
+          return a.isCompleted ? 1 : -1;
+        }
+        // Then by due date
+        return a.dueDate!.compareTo(b.dueDate!);
+      });
+  }
+
+  /// Get focus tasks for a specific user (prioritized, uncompleted tasks)
+  List<Task> getMyFocusTasks(String userId) {
+    return getMyTasks(userId)
+        .where((task) => !task.isCompleted)
+        .toList()
+      ..sort((a, b) {
+        // First sort by priority
+        final priorityOrder = {
+          TaskConstants.priorityHigh: 0,
+          TaskConstants.priorityMedium: 1,
+          TaskConstants.priorityLow: 2,
+        };
+        final priorityCompare = (priorityOrder[a.priority] ?? 3).compareTo(
+          priorityOrder[b.priority] ?? 3,
+        );
+        if (priorityCompare != 0) return priorityCompare;
+        // Then by due date
+        if (a.dueDate == null && b.dueDate == null) return 0;
+        if (a.dueDate == null) return 1;
+        if (b.dueDate == null) return -1;
+        return a.dueDate!.compareTo(b.dueDate!);
+      });
+  }
+
   List<Task> get tasksDueTodayList {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);

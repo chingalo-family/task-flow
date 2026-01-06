@@ -116,5 +116,121 @@ void main() {
       taskState.setFilterStatus(TaskConstants.statusAll);
       expect(taskState.tasks.length, 2);
     });
+
+    group('User-specific task methods', () {
+      final userId = 'user123';
+      final otherUserId = 'user456';
+
+      final userTask1 = Task(
+        id: '1',
+        title: 'User Task 1',
+        status: TaskConstants.statusPending,
+        priority: TaskConstants.priorityHigh,
+        assignedUserIds: [userId],
+        dueDate: DateTime.now().add(const Duration(hours: 2)), // Due today
+      );
+
+      final userTask2 = Task(
+        id: '2',
+        title: 'User Task 2',
+        status: TaskConstants.statusInProgress,
+        priority: TaskConstants.priorityMedium,
+        assignedUserIds: [userId],
+        dueDate: DateTime.now().add(const Duration(days: 2)), // Upcoming
+      );
+
+      final userTask3 = Task(
+        id: '3',
+        title: 'User Task 3',
+        status: TaskConstants.statusCompleted,
+        priority: TaskConstants.priorityLow,
+        assignedUserIds: [userId],
+        dueDate: DateTime.now().subtract(const Duration(days: 1)), // Overdue (but completed)
+      );
+
+      final overdueTask = Task(
+        id: '4',
+        title: 'Overdue Task',
+        status: TaskConstants.statusPending,
+        priority: TaskConstants.priorityHigh,
+        assignedUserIds: [userId],
+        dueDate: DateTime.now().subtract(const Duration(days: 2)), // Overdue
+      );
+
+      final otherUserTask = Task(
+        id: '5',
+        title: 'Other User Task',
+        status: TaskConstants.statusPending,
+        assignedUserIds: [otherUserId],
+      );
+
+      setUp(() async {
+        when(mockTaskService.getAllTasks()).thenAnswer(
+          (_) async => [userTask1, userTask2, userTask3, overdueTask, otherUserTask],
+        );
+        await taskState.initialize();
+      });
+
+      test('getMyTasks returns only user assigned tasks', () {
+        final myTasks = taskState.getMyTasks(userId);
+        expect(myTasks.length, 4);
+        expect(myTasks.every((t) => t.assignedUserIds?.contains(userId) ?? false), true);
+      });
+
+      test('getMyTotalTasksCount returns correct count', () {
+        final count = taskState.getMyTotalTasksCount(userId);
+        expect(count, 4);
+      });
+
+      test('getMyCompletedTasksCount returns correct count', () {
+        final count = taskState.getMyCompletedTasksCount(userId);
+        expect(count, 1); // Only userTask3 is completed
+      });
+
+      test('getMyPendingTasksCount returns correct count', () {
+        final count = taskState.getMyPendingTasksCount(userId);
+        expect(count, 2); // userTask1 and overdueTask are pending
+      });
+
+      test('getMyInProgressTasksCount returns correct count', () {
+        final count = taskState.getMyInProgressTasksCount(userId);
+        expect(count, 1); // Only userTask2 is in progress
+      });
+
+      test('getMyCompletionProgress calculates correctly', () {
+        final progress = taskState.getMyCompletionProgress(userId);
+        expect(progress, 0.25); // 1 completed out of 4 total
+      });
+
+      test('getMyOverdueTasks returns only overdue uncompleted tasks', () {
+        final overdue = taskState.getMyOverdueTasks(userId);
+        expect(overdue.length, 1);
+        expect(overdue.first.id, '4'); // Only overdueTask (userTask3 is completed)
+      });
+
+      test('getMyTasksDueToday returns tasks due today', () {
+        final dueToday = taskState.getMyTasksDueToday(userId);
+        expect(dueToday.length, 1);
+        expect(dueToday.first.id, '1'); // Only userTask1 is due today
+      });
+
+      test('getMyUpcomingTasks returns tasks due after today', () {
+        final upcoming = taskState.getMyUpcomingTasks(userId);
+        expect(upcoming.length, 1);
+        expect(upcoming.first.id, '2'); // Only userTask2 is upcoming
+      });
+
+      test('getMyFocusTasks returns uncompleted tasks sorted by priority', () {
+        final focus = taskState.getMyFocusTasks(userId);
+        expect(focus.length, 3); // All except completed task
+        expect(focus.first.priority, TaskConstants.priorityHigh);
+        expect(focus.last.priority, TaskConstants.priorityMedium);
+      });
+
+      test('getMyFocusTasks excludes completed tasks', () {
+        final focus = taskState.getMyFocusTasks(userId);
+        expect(focus.every((t) => !t.isCompleted), true);
+      });
+    });
   });
 }
