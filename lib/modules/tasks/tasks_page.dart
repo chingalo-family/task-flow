@@ -63,9 +63,13 @@ class _TasksPageState extends State<TasksPage> {
               );
             }
 
-            final tasksDueToday = taskState.tasksDueTodayList.take(2).toList();
-            final overdueTasks = taskState.overdueTasks.take(2).toList();
-            final upcomingTasks = taskState.upcomingTasks.take(2).toList();
+            // Get current user ID
+            final currentUserId = context.watch<UserState>().currentUser?.id ?? '';
+            
+            // Get user-specific task lists
+            final tasksDueToday = taskState.getMyTasksDueToday(currentUserId);
+            final overdueTasks = taskState.getMyOverdueTasks(currentUserId);
+            final upcomingTasks = taskState.getMyUpcomingTasks(currentUserId);
 
             return CustomScrollView(
               slivers: [
@@ -139,6 +143,8 @@ class _TasksPageState extends State<TasksPage> {
                             user?.fullName?.split(' ').first ??
                             user?.username ??
                             'User';
+                        final userId = user?.id ?? '';
+                        final myTasksDueTodayCount = taskState.getMyTasksDueToday(userId).length;
 
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,7 +159,7 @@ class _TasksPageState extends State<TasksPage> {
                             ),
                             SizedBox(height: AppConstant.spacing8),
                             Text(
-                              'You have ${taskState.tasksDueToday} tasks pending today.',
+                              'You have $myTasksDueTodayCount tasks pending today.',
                               style: TextStyle(
                                 fontSize: 14,
                                 color: AppConstant.textSecondary,
