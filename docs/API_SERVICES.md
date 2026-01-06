@@ -943,6 +943,165 @@ if (user != null) {
 
 ---
 
+### Building User-Specific Task Views
+
+Here are practical examples of using TaskService to build personalized task views:
+
+#### Get User's Pending Tasks
+
+```dart
+Future<List<Task>> getMyPendingTasks(String userId) async {
+  final myTasks = await TaskService().getMyTasks(userId);
+  return myTasks.where((task) => task.status == 'pending').toList();
+}
+```
+
+#### Get User's Tasks Due Today
+
+```dart
+Future<List<Task>> getMyTasksDueToday(String userId) async {
+  final myTasks = await TaskService().getMyTasks(userId);
+  final today = DateTime.now();
+  final startOfDay = DateTime(today.year, today.month, today.day);
+  final endOfDay = startOfDay.add(Duration(days: 1));
+  
+  return myTasks.where((task) {
+    if (task.dueDate == null) return false;
+    return task.dueDate!.isAfter(startOfDay) && 
+           task.dueDate!.isBefore(endOfDay);
+  }).toList();
+}
+```
+
+#### Get User's Overdue Tasks
+
+```dart
+Future<List<Task>> getMyOverdueTasks(String userId) async {
+  final myTasks = await TaskService().getMyTasks(userId);
+  final now = DateTime.now();
+  
+  return myTasks.where((task) {
+    if (task.dueDate == null || task.isCompleted) return false;
+    return task.dueDate!.isBefore(now);
+  }).toList()..sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
+}
+```
+
+#### Get User's Upcoming Tasks
+
+```dart
+Future<List<Task>> getMyUpcomingTasks(String userId) async {
+  final myTasks = await TaskService().getMyTasks(userId);
+  final tomorrow = DateTime.now().add(Duration(days: 1));
+  final startOfTomorrow = DateTime(
+    tomorrow.year, 
+    tomorrow.month, 
+    tomorrow.day
+  );
+  
+  return myTasks.where((task) {
+    if (task.dueDate == null) return false;
+    return task.dueDate!.isAfter(startOfTomorrow);
+  }).toList()..sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
+}
+```
+
+#### Get User's Focus Tasks (Prioritized)
+
+```dart
+Future<List<Task>> getMyFocusTasks(String userId) async {
+  final myTasks = await TaskService().getMyTasks(userId);
+  
+  // Filter to uncompleted tasks only
+  final active = myTasks.where((task) => !task.isCompleted).toList();
+  
+  // Sort by priority and due date
+  active.sort((a, b) {
+    // Priority order
+    final priorityOrder = {'high': 0, 'medium': 1, 'low': 2};
+    final priorityCompare = (priorityOrder[a.priority] ?? 3)
+        .compareTo(priorityOrder[b.priority] ?? 3);
+    
+    if (priorityCompare != 0) return priorityCompare;
+    
+    // Then by due date
+    if (a.dueDate == null && b.dueDate == null) return 0;
+    if (a.dueDate == null) return 1;
+    if (b.dueDate == null) return -1;
+    return a.dueDate!.compareTo(b.dueDate!);
+  });
+  
+  return active;
+}
+```
+
+#### Calculate User Progress
+
+```dart
+Future<Map<String, dynamic>> getUserProgress(String userId) async {
+  final myTasks = await TaskService().getMyTasks(userId);
+  
+  final totalTasks = myTasks.length;
+  final completedTasks = myTasks.where((t) => t.isCompleted).length;
+  final pendingTasks = myTasks.where((t) => t.status == 'pending').length;
+  final inProgressTasks = myTasks.where((t) => t.status == 'in_progress').length;
+  
+  final completionRate = totalTasks > 0 
+      ? (completedTasks / totalTasks * 100).toStringAsFixed(1)
+      : '0.0';
+  
+  return {
+    'totalTasks': totalTasks,
+    'completedTasks': completedTasks,
+    'pendingTasks': pendingTasks,
+    'inProgressTasks': inProgressTasks,
+    'completionRate': '$completionRate%',
+  };
+}
+
+// Usage
+final progress = await getUserProgress(currentUser.id);
+print('You have ${progress['pendingTasks']} pending tasks');
+print('Completion rate: ${progress['completionRate']}');
+```
+
+#### Build Complete User Dashboard Data
+
+```dart
+Future<Map<String, dynamic>> buildUserDashboard(String userId) async {
+  // Get all user tasks
+  final myTasks = await TaskService().getMyTasks(userId);
+  
+  // Calculate progress
+  final progress = await getUserProgress(userId);
+  
+  // Get different views
+  final overdue = await getMyOverdueTasks(userId);
+  final dueToday = await getMyTasksDueToday(userId);
+  final upcoming = await getMyUpcomingTasks(userId);
+  final focusList = await getMyFocusTasks(userId);
+  
+  return {
+    'progress': progress,
+    'overdueTasks': overdue,
+    'dueTodayTasks': dueToday,
+    'upcomingTasks': upcoming,
+    'focusTasks': focusList.take(5).toList(), // Top 5 focus tasks
+    'allMyTasks': myTasks,
+  };
+}
+
+// Usage in UI
+final dashboard = await buildUserDashboard(currentUser.id);
+print('Overdue: ${dashboard['overdueTasks'].length}');
+print('Due Today: ${dashboard['dueTodayTasks'].length}');
+print('Focus on: ${dashboard['focusTasks'].length} tasks');
+```
+
+**Note**: For better performance in production, consider using TaskState (state management layer) which caches these results instead of making repeated service calls.
+
+---
+
 ## 🔍 Testing Services
 
 ### Unit Testing Example

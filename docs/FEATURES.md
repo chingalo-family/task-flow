@@ -76,6 +76,40 @@ Task Flow is packed with powerful features designed to enhance productivity and 
 - **Visual Progress Bars**: Quick view of task completion
 - **Progress Reports**: See overall progress across tasks
 
+### Personal Task Views
+
+#### 📋 My Tasks
+- **Assigned to Me**: View all tasks assigned to you
+- **Task Count**: See total number of your tasks
+- **Completion Tracking**: Monitor your completed vs pending tasks
+- **Personal Progress**: Visual progress indicator showing completion percentage
+
+#### 🎯 Focus of the Day
+- **Priority-Based**: High-priority tasks shown first
+- **Smart Sorting**: Automatically sorts by priority and due date
+- **Uncompleted Only**: Shows only active tasks needing attention
+- **Quick Access**: Helps you focus on what matters most today
+
+#### ⏰ Due Date Management
+- **Tasks Due Today**: See all tasks due today with countdown
+- **Overdue Tasks**: Highlighted list of overdue tasks
+- **Coming Soon**: Upcoming tasks (due after today)
+- **Visual Indicators**: Color-coded badges for urgency
+
+#### 📈 My Progress Metrics
+- **Total Tasks**: Count of all tasks assigned to you
+- **Pending Tasks**: Number of incomplete tasks
+- **Completed Tasks**: Track your accomplishments
+- **Completion Rate**: Percentage of completed vs total tasks
+- **Tasks Completed Today**: Daily productivity tracking
+
+#### 🔍 User-Specific Filtering
+- **My Pending Tasks**: Filter to show only your pending work
+- **My In-Progress**: Tasks you're currently working on
+- **My Completed**: Review your completed tasks
+- **By Team**: Filter your tasks by team
+- **By Priority**: Focus on high/medium/low priority tasks
+
 ## 👥 Team Collaboration
 
 ### Team Management

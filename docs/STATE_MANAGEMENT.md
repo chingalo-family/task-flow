@@ -255,6 +255,122 @@ print('${(progress * 100).toStringAsFixed(1)}% complete');
 
 ---
 
+##### `getMyPendingTasksCount(String userId) → int`
+Gets count of user's pending (not completed) tasks.
+
+**Example**:
+```dart
+final pending = context.read<TaskState>().getMyPendingTasksCount(userId);
+print('You have $pending pending tasks');
+```
+
+---
+
+#### Task View Getters
+
+##### `overdueTasks → List<Task>`
+Gets all overdue tasks (past due date, not completed).
+
+**Features**:
+- Excludes completed tasks
+- Sorted by completion status, then due date
+- Shows oldest overdue tasks first
+
+**Example**:
+```dart
+final overdue = context.watch<TaskState>().overdueTasks;
+if (overdue.isNotEmpty) {
+  print('You have ${overdue.length} overdue tasks!');
+}
+```
+
+---
+
+##### `tasksDueTodayList → List<Task>`
+Gets tasks due today.
+
+**Features**:
+- Includes tasks due within today (00:00 to 23:59)
+- Sorted by completion status, priority, then due time
+- Uncompleted tasks shown first
+
+**Example**:
+```dart
+final todayTasks = context.watch<TaskState>().tasksDueTodayList;
+return Column(
+  children: [
+    Text('Due Today: ${todayTasks.length}'),
+    ...todayTasks.map((task) => TaskCard(task: task)),
+  ],
+);
+```
+
+---
+
+##### `upcomingTasks → List<Task>`
+Gets upcoming tasks (due after today).
+
+**Features**:
+- Tasks with due dates after tomorrow
+- Sorted by completion status, then due date
+- Helps with future planning
+
+**Example**:
+```dart
+final upcoming = context.watch<TaskState>().upcomingTasks;
+print('${upcoming.length} tasks coming up');
+```
+
+---
+
+##### `focusTasks → List<Task>`
+Gets prioritized tasks for focus (smart daily view).
+
+**Features**:
+- Shows only uncompleted tasks
+- Sorted by priority (High → Medium → Low)
+- Then by due date (earliest first)
+- Perfect for "Focus of the Day" view
+
+**Example**:
+```dart
+final focusList = context.watch<TaskState>().focusTasks;
+// Display top 5 tasks to focus on today
+final top5 = focusList.take(5).toList();
+```
+
+---
+
+#### Computed Statistics
+
+##### `totalTasks → int`
+Total count of all tasks.
+
+##### `completedTasks → int`
+Count of completed tasks.
+
+##### `inProgressTasks → int`
+Count of in-progress tasks.
+
+##### `tasksDueToday → int`
+Count of tasks due today.
+
+##### `tasksCompletedToday → int`
+Count of tasks completed today.
+
+**Example**:
+```dart
+final stats = context.watch<TaskState>();
+return StatsCard(
+  total: stats.totalTasks,
+  completed: stats.completedTasks,
+  inProgress: stats.inProgressTasks,
+  dueToday: stats.tasksDueToday,
+);
+```
+
+---
+
 ### Usage in Widgets
 
 #### Consuming State
@@ -294,6 +410,159 @@ onPressed: () {
   context.read<TaskState>().addTask(newTask);
 }
 ```
+
+---
+
+### Building a Personal Dashboard
+
+Here's a complete example of building a user's personal task dashboard using TaskState:
+
+```dart
+class PersonalDashboard extends StatelessWidget {
+  final String userId;
+  
+  const PersonalDashboard({required this.userId});
+  
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<TaskState>(
+      builder: (context, taskState, child) {
+        // Get user-specific data
+        final myTasks = taskState.getMyTasks(userId);
+        final myProgress = taskState.getMyCompletionProgress(userId);
+        final pendingCount = myTasks.where((t) => !t.isCompleted).length;
+        final completedCount = taskState.getMyCompletedTasksCount(userId);
+        
+        // Get task views
+        final overdue = taskState.overdueTasks.where(
+          (t) => t.assignedUserIds?.contains(userId) ?? false
+        ).toList();
+        final todayTasks = taskState.tasksDueTodayList.where(
+          (t) => t.assignedUserIds?.contains(userId) ?? false
+        ).toList();
+        final focusList = taskState.focusTasks.where(
+          (t) => t.assignedUserIds?.contains(userId) ?? false
+        ).take(5).toList();
+        
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              // Progress Card
+              ProgressCard(
+                totalTasks: myTasks.length,
+                completedTasks: completedCount,
+                pendingTasks: pendingCount,
+                progress: myProgress,
+              ),
+              
+              // Overdue Tasks Alert
+              if (overdue.isNotEmpty)
+                OverdueAlert(
+                  count: overdue.length,
+                  tasks: overdue,
+                ),
+              
+              // Tasks Due Today
+              TaskSection(
+                title: 'Due Today',
+                count: todayTasks.length,
+                tasks: todayTasks,
+                icon: Icons.today,
+              ),
+              
+              // Focus of the Day
+              TaskSection(
+                title: 'Focus of the Day',
+                subtitle: 'Top priority tasks',
+                tasks: focusList,
+                icon: Icons.wb_sunny,
+              ),
+              
+              // All My Tasks
+              TaskSection(
+                title: 'All My Tasks',
+                count: myTasks.length,
+                tasks: myTasks,
+                icon: Icons.list,
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+// Example ProgressCard widget
+class ProgressCard extends StatelessWidget {
+  final int totalTasks;
+  final int completedTasks;
+  final int pendingTasks;
+  final double progress;
+  
+  const ProgressCard({
+    required this.totalTasks,
+    required this.completedTasks,
+    required this.pendingTasks,
+    required this.progress,
+  });
+  
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('My Progress', style: Theme.of(context).textTheme.headlineSmall),
+            SizedBox(height: 16),
+            LinearProgressIndicator(
+              value: progress,
+              minHeight: 8,
+              borderRadius: BorderRadius.circular(4),
+            ),
+            SizedBox(height: 8),
+            Text('${(progress * 100).toStringAsFixed(0)}% Complete'),
+            SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _StatItem('Total', totalTasks, Colors.blue),
+                _StatItem('Pending', pendingTasks, Colors.orange),
+                _StatItem('Completed', completedTasks, Colors.green),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  Widget _StatItem(String label, int value, Color color) {
+    return Column(
+      children: [
+        Text(
+          value.toString(),
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: color,
+          ),
+        ),
+        Text(label),
+      ],
+    );
+  }
+}
+```
+
+This example demonstrates:
+- Getting user-specific tasks and metrics
+- Filtering global task views for current user
+- Building a comprehensive personal dashboard
+- Using multiple TaskState getters together
+- Creating reusable UI components
 
 ---
 

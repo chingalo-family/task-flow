@@ -145,6 +145,127 @@ Break large tasks into smaller pieces:
 3. Confirm deletion
 4. Task is removed permanently
 
+## 📋 My Tasks & Personal Views
+
+### Viewing My Tasks
+
+See all tasks assigned to you:
+
+1. Go to **Tasks** tab
+2. Use the filter to show **"Assigned to Me"** or **"My Tasks"**
+3. View your complete task list
+
+**What You'll See**:
+- All tasks where you're an assignee
+- Both individual and team tasks
+- Tasks across all teams you're part of
+
+### Focus of the Day
+
+Focus on your most important tasks:
+
+**How It Works**:
+- Shows uncompleted tasks only
+- Automatically sorted by:
+  1. **Priority** (High → Medium → Low)
+  2. **Due Date** (Earliest first)
+- Helps you plan your day effectively
+
+**Accessing Focus View**:
+1. Go to Home screen
+2. Find "Focus of the Day" section
+3. See your prioritized task list
+
+### My Progress Dashboard
+
+Track your productivity:
+
+**Metrics Available**:
+- **Total Tasks**: All tasks assigned to you
+- **Pending Tasks**: Tasks not yet started
+- **In Progress**: Tasks you're currently working on
+- **Completed**: Finished tasks
+- **Completion Rate**: Percentage complete (e.g., 65%)
+
+**View Your Progress**:
+1. Go to Home screen or Profile
+2. Check your progress section
+3. See visual progress indicators
+
+### Due Date Views
+
+#### Tasks Due Today
+
+See what's due today:
+1. Home screen → "Due Today" section
+2. Shows tasks with today's due date
+3. Sorted by priority
+4. Countdown to end of day
+
+#### Overdue Tasks
+
+Never miss important deadlines:
+1. Home screen → "Overdue" section (highlighted in red)
+2. Shows all tasks past their due date
+3. Excludes completed tasks
+4. Sorted by how overdue (oldest first)
+
+**Features**:
+- Red highlighting for visibility
+- Overdue badge on each task
+- Shows days overdue
+
+#### Coming Soon (Upcoming Tasks)
+
+Plan ahead:
+1. View tasks due in the future
+2. See upcoming deadlines
+3. Prepare in advance
+
+**What's Included**:
+- Tasks due tomorrow or later
+- Sorted by due date
+- Helps with long-term planning
+
+### Filtering My Tasks
+
+Filter your tasks by various criteria:
+
+**By Status**:
+- **My Pending**: Tasks not yet started
+- **My In Progress**: Tasks you're working on
+- **My Completed**: Finished tasks
+
+**By Priority**:
+- High priority only
+- Medium priority only
+- Low priority only
+
+**By Team**:
+- Filter to see tasks from specific teams
+- Useful when working with multiple teams
+
+**How to Filter**:
+1. Go to Tasks tab
+2. Tap the filter icon
+3. Select your criteria
+4. View filtered results
+
+### Task Count & Statistics
+
+Quick stats always available:
+
+**On Home Screen**:
+- Total pending tasks
+- Tasks due today
+- Overdue tasks
+- Completion percentage
+
+**On Tasks Tab**:
+- Total tasks assigned to you
+- Filtered task counts
+- Team-specific counts
+
 ## 👥 Team Collaboration
 
 ### Creating a Team
