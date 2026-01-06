@@ -3,7 +3,9 @@ import 'package:task_flow/core/models/models.dart';
 import 'package:task_flow/core/services/team_service.dart';
 
 class TeamState extends ChangeNotifier {
-  final _service = TeamService();
+  final TeamService _service;
+
+  TeamState({TeamService? service}) : _service = service ?? TeamService();
 
   List<Team> _teams = [];
   bool _loading = false;
