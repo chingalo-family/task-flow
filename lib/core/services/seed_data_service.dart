@@ -303,6 +303,8 @@ class SeedDataService {
         assignedUserIds: [users[0].id],
         assignedToUserId: users[0].id,
         assignedToUsername: users[0].username,
+        teamId: teams[0].id,
+        teamName: teams[0].name,
         dueDate: today.subtract(const Duration(days: 2)),
         progress: 70,
         tags: ['report', 'overdue'],
