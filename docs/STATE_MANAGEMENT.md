@@ -256,7 +256,7 @@ print('${(progress * 100).toStringAsFixed(1)}% complete');
 ---
 
 ##### `getMyPendingTasksCount(String userId) → int`
-Gets count of user's pending (not completed) tasks.
+Gets count of user's pending tasks.
 
 **Example**:
 ```dart
@@ -264,7 +264,111 @@ final pending = context.read<TaskState>().getMyPendingTasksCount(userId);
 print('You have $pending pending tasks');
 ```
 
+---
 
+##### `getMyInProgressTasksCount(String userId) → int`
+Gets count of user's in-progress tasks.
+
+**Example**:
+```dart
+final inProgress = context.read<TaskState>().getMyInProgressTasksCount(userId);
+print('You have $inProgress tasks in progress');
+```
+
+---
+
+#### Task View Getters
+
+##### `getMyOverdueTasks(String userId) → List<Task>`
+Gets user's overdue tasks (past due date, not completed).
+
+**Features**:
+- Excludes completed tasks
+- Sorted by completion status, then due date
+- Shows oldest overdue tasks first
+
+**Example**:
+```dart
+final overdue = context.watch<TaskState>().getMyOverdueTasks(userId);
+if (overdue.isNotEmpty) {
+  print('You have ${overdue.length} overdue tasks!');
+}
+```
+
+---
+
+##### `getMyTasksDueToday(String userId) → List<Task>`
+Gets user's tasks due today.
+
+**Features**:
+- Includes tasks due within today (00:00 to 23:59)
+- Sorted by completion status, priority, then due time
+- Uncompleted tasks shown first
+
+**Example**:
+```dart
+final todayTasks = context.watch<TaskState>().getMyTasksDueToday(userId);
+return Column(
+  children: [
+    Text('Due Today: ${todayTasks.length}'),
+    ...todayTasks.map((task) => TaskCard(task: task)),
+  ],
+);
+```
+
+---
+
+##### `getMyUpcomingTasks(String userId) → List<Task>`
+Gets user's upcoming tasks (due after today).
+
+**Features**:
+- Tasks with due dates after tomorrow
+- Sorted by completion status, then due date
+- Helps with future planning
+
+**Example**:
+```dart
+final upcoming = context.watch<TaskState>().getMyUpcomingTasks(userId);
+print('${upcoming.length} tasks coming up');
+```
+
+---
+
+##### `getMyFocusTasks(String userId) → List<Task>`
+Gets prioritized tasks for user's focus (smart daily view).
+
+**Features**:
+- Shows only uncompleted tasks
+- Sorted by priority (High → Medium → Low)
+- Then by due date (earliest first)
+- Perfect for "Focus of the Day" view
+
+**Example**:
+```dart
+final focusList = context.watch<TaskState>().getMyFocusTasks(userId);
+// Display top 5 tasks to focus on today
+final top5 = focusList.take(5).toList();
+```
+
+---
+
+#### Global Task View Getters
+
+##### `overdueTasks → List<Task>`
+Gets all overdue tasks across all users.
+
+##### `tasksDueTodayList → List<Task>`
+Gets all tasks due today across all users.
+
+##### `upcomingTasks → List<Task>`
+Gets all upcoming tasks across all users.
+
+##### `focusTasks → List<Task>`
+Gets all focus tasks across all users.
+
+**Note**: For user-specific views, use the `getMy*` methods documented above instead of filtering these global getters manually.
+
+---
 
 #### Computed Statistics
 
@@ -340,7 +444,7 @@ onPressed: () {
 
 ### Building a Personal Dashboard
 
-Here's a complete example of building a user's personal task dashboard using TaskState:
+Here's a complete example of building a user's personal task dashboard using TaskState with user-specific methods:
 
 ```dart
 class PersonalDashboard extends StatelessWidget {
@@ -352,22 +456,18 @@ class PersonalDashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<TaskState>(
       builder: (context, taskState, child) {
-        // Get user-specific data
+        // Get user-specific data using dedicated methods
         final myTasks = taskState.getMyTasks(userId);
         final myProgress = taskState.getMyCompletionProgress(userId);
-        final pendingCount = myTasks.where((t) => !t.isCompleted).length;
+        final pendingCount = taskState.getMyPendingTasksCount(userId);
+        final inProgressCount = taskState.getMyInProgressTasksCount(userId);
         final completedCount = taskState.getMyCompletedTasksCount(userId);
         
-        // Get task views
-        final overdue = taskState.overdueTasks.where(
-          (t) => t.assignedUserIds?.contains(userId) ?? false
-        ).toList();
-        final todayTasks = taskState.tasksDueTodayList.where(
-          (t) => t.assignedUserIds?.contains(userId) ?? false
-        ).toList();
-        final focusList = taskState.focusTasks.where(
-          (t) => t.assignedUserIds?.contains(userId) ?? false
-        ).take(5).toList();
+        // Get user-specific task views
+        final overdueTasks = taskState.getMyOverdueTasks(userId);
+        final todayTasks = taskState.getMyTasksDueToday(userId);
+        final upcomingTasks = taskState.getMyUpcomingTasks(userId);
+        final focusList = taskState.getMyFocusTasks(userId).take(5).toList();
         
         return SingleChildScrollView(
           child: Column(
@@ -377,14 +477,15 @@ class PersonalDashboard extends StatelessWidget {
                 totalTasks: myTasks.length,
                 completedTasks: completedCount,
                 pendingTasks: pendingCount,
+                inProgressTasks: inProgressCount,
                 progress: myProgress,
               ),
               
               // Overdue Tasks Alert
-              if (overdue.isNotEmpty)
+              if (overdueTasks.isNotEmpty)
                 OverdueAlert(
-                  count: overdue.length,
-                  tasks: overdue,
+                  count: overdueTasks.length,
+                  tasks: overdueTasks,
                 ),
               
               // Tasks Due Today
@@ -398,9 +499,17 @@ class PersonalDashboard extends StatelessWidget {
               // Focus of the Day
               TaskSection(
                 title: 'Focus of the Day',
-                subtitle: 'Top priority tasks',
+                subtitle: 'Top 5 priority tasks',
                 tasks: focusList,
                 icon: Icons.wb_sunny,
+              ),
+              
+              // Upcoming Tasks
+              TaskSection(
+                title: 'Upcoming',
+                count: upcomingTasks.length,
+                tasks: upcomingTasks,
+                icon: Icons.calendar_month,
               ),
               
               // All My Tasks
@@ -423,12 +532,14 @@ class ProgressCard extends StatelessWidget {
   final int totalTasks;
   final int completedTasks;
   final int pendingTasks;
+  final int inProgressTasks;
   final double progress;
   
   const ProgressCard({
     required this.totalTasks,
     required this.completedTasks,
     required this.pendingTasks,
+    required this.inProgressTasks,
     required this.progress,
   });
   
@@ -455,6 +566,7 @@ class ProgressCard extends StatelessWidget {
               children: [
                 _StatItem('Total', totalTasks, Colors.blue),
                 _StatItem('Pending', pendingTasks, Colors.orange),
+                _StatItem('In Progress', inProgressTasks, Colors.amber),
                 _StatItem('Completed', completedTasks, Colors.green),
               ],
             ),
@@ -475,7 +587,7 @@ class ProgressCard extends StatelessWidget {
             color: color,
           ),
         ),
-        Text(label),
+        Text(label, style: TextStyle(fontSize: 12)),
       ],
     );
   }
@@ -483,11 +595,19 @@ class ProgressCard extends StatelessWidget {
 ```
 
 This example demonstrates:
-- Getting user-specific tasks and metrics
-- Filtering global task views for current user
+- Using dedicated user-specific methods instead of manual filtering
+- Getting user tasks with `getMyTasks(userId)`
+- Getting progress metrics with `getMyCompletionProgress(userId)`
+- Getting status counts with `getMyPendingTasksCount()` and `getMyInProgressTasksCount()`
+- Getting task views with `getMyOverdueTasks()`, `getMyTasksDueToday()`, `getMyUpcomingTasks()`, `getMyFocusTasks()`
 - Building a comprehensive personal dashboard
-- Using multiple TaskState getters together
 - Creating reusable UI components
+
+**Key Benefits**:
+- ✅ No manual filtering needed - methods handle it automatically
+- ✅ Efficient - filters only once per method call
+- ✅ Type-safe - returns properly typed lists and counts
+- ✅ Maintainable - centralized filtering logic in state class
 
 ---
 
