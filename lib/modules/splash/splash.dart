@@ -6,7 +6,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_flow/app_state/app_info_state/app_info_state.dart';
 import 'package:task_flow/app_state/notification_state/notification_state.dart';
 import 'package:task_flow/app_state/user_list_state/user_list_state.dart';
+import 'package:task_flow/app_state/task_state/task_state.dart';
+import 'package:task_flow/app_state/team_state/team_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
+import 'package:task_flow/core/services/seed_data_service.dart';
 import 'package:task_flow/modules/splash/components/app_logo.dart';
 import 'package:task_flow/modules/onboarding/onboarding_screen.dart';
 import 'package:task_flow/modules/login/login_page.dart';
@@ -48,14 +51,25 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       Provider.of<AppInfoState>(context, listen: false).initiatizeAppInfo();
+      
+      // Initialize seed data service
+      final seedDataService = SeedDataService();
+      await seedDataService.initializeSeedData();
+      
       // Initialize notifications early for badge count
       final notificationState = Provider.of<NotificationState>(
         context,
         listen: false,
       );
       final userListState = Provider.of<UserListState>(context, listen: false);
+      final taskState = Provider.of<TaskState>(context, listen: false);
+      final teamState = Provider.of<TeamState>(context, listen: false);
+      
       await notificationState.initialize();
       await userListState.reSyncUserList();
+      await taskState.initialize();
+      await teamState.initialize();
+      
       for (int count = 0; count <= 100; count += 5) {
         await Future.delayed(const Duration(milliseconds: 80));
         if (mounted) {
