@@ -266,9 +266,9 @@ class SeedDataService {
         progress: 0,
         tags: ['research', 'user-feedback'],
         subtasks: [
-          Subtask(id: 'st4', title: 'Prepare interview questions'),
-          Subtask(id: 'st5', title: 'Schedule interviews'),
-          Subtask(id: 'st6', title: 'Conduct interviews'),
+          Subtask(id: 'st4', title: 'Prepare interview questions', isCompleted: false),
+          Subtask(id: 'st5', title: 'Schedule interviews', isCompleted: false),
+          Subtask(id: 'st6', title: 'Conduct interviews', isCompleted: false),
         ],
         createdAt: now.subtract(const Duration(days: 4)),
         updatedAt: now.subtract(const Duration(days: 4)),
