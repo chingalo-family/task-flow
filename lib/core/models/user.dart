@@ -5,8 +5,6 @@ class User {
   String? password;
   String? email;
   String? phoneNumber;
-  List<String>? userGroups;
-  List<String>? userOrgUnitIds;
   bool isLogin;
 
   User({
@@ -16,8 +14,6 @@ class User {
     this.password,
     this.email,
     this.phoneNumber,
-    this.userGroups,
-    this.userOrgUnitIds,
     this.isLogin = false,
   });
 
@@ -28,12 +24,6 @@ class User {
       fullName: json['displayName'] ?? json['name'] ?? '',
       email: json['email'] ?? '',
       phoneNumber: json['phone'] ?? '',
-      userGroups: (json['userGroups'] as List?)
-          ?.map((e) => e.toString())
-          .toList(),
-      userOrgUnitIds: (json['organisationUnits'] as List?)
-          ?.map((e) => e['id'].toString())
-          .toList(),
     );
   }
 
@@ -43,8 +33,6 @@ class User {
     'fullName': fullName,
     'email': email,
     'phone': phoneNumber,
-    'userGroups': userGroups,
-    'organisationUnits': userOrgUnitIds,
   };
 
   @override

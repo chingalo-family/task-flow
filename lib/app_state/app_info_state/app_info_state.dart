@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import 'package:task_flow/core/services/system_info_service.dart';
+
 class AppInfoState extends ChangeNotifier {
+  final SystemInfoService _service;
+
+  AppInfoState({SystemInfoService? service})
+    : _service = service ?? SystemInfoService();
   bool _loading = true;
   String _appName = '';
   String _packageName = '';
@@ -18,7 +24,7 @@ class AppInfoState extends ChangeNotifier {
     _loading = true;
     notifyListeners();
     try {
-      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      PackageInfo packageInfo = await _service.getPackageInfo();
       _packageName = packageInfo.packageName;
       _appName = packageInfo.appName;
       _version = packageInfo.version;

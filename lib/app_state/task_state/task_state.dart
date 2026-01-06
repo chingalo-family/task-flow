@@ -4,8 +4,10 @@ import 'package:task_flow/core/constants/task_constants.dart';
 import 'package:task_flow/core/services/task_service.dart';
 
 class TaskState extends ChangeNotifier {
-  final _service = TaskService();
-  
+  final TaskService _service;
+
+  TaskState({TaskService? service}) : _service = service ?? TaskService();
+
   List<Task> _tasks = [];
   bool _loading = false;
   String _filterStatus = TaskConstants.defaultFilterStatus;
@@ -328,5 +330,4 @@ class TaskState extends ChangeNotifier {
       }
     }
   }
-
 }

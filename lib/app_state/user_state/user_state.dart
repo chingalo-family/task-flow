@@ -5,7 +5,9 @@ import '../../core/services/user_service.dart';
 
 class UserState extends ChangeNotifier {
   User? _currentUser;
-  final UserService _service = UserService();
+  final UserService _service;
+
+  UserState({UserService? service}) : _service = service ?? UserService();
 
   User? get currentUser => _currentUser;
   bool get isAuthenticated => _currentUser != null;

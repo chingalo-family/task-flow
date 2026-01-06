@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/user_list_state/user_list_state.dart';
+import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/models/user.dart';
 import 'package:task_flow/core/services/user_service.dart';
@@ -57,9 +58,12 @@ class _LoginFormContainerState extends State<LoginFormContainer> {
       });
       currentUser!.username = username;
       currentUser!.password = password;
-      var user = await UserService().login(username, password);
-      if (user != null) {
-        await UserService().setCurrentUser(user);
+      final userState = Provider.of<UserState>(context, listen: false);
+      final success = await userState.signIn(username, password);
+
+      if (success) {
+        final user = userState.currentUser!;
+        // UserState already sets current user
 
         await refreshAppMetadata(user: user);
         onSuccessLogin(user);

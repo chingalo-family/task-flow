@@ -45,7 +45,7 @@ Before contributing, ensure you have:
    flutter pub get
    ```
 
-4. **Generate ObjectBox Files**
+4. **Generate Code (ObjectBox, Mocks)**
    ```bash
    flutter pub run build_runner build --delete-conflicting-outputs
    ```
