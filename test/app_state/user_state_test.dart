@@ -75,7 +75,7 @@ void main() {
       await userState.signIn('u', 'p');
       expect(userState.currentUser, isNotNull);
 
-      when(mockUserService.logout()).thenAnswer((_) async => null);
+      when(mockUserService.logout()).thenAnswer((_) async {});
 
       await userState.logout();
 
