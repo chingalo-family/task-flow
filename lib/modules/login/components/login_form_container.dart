@@ -64,19 +64,25 @@ class _LoginFormContainerState extends State<LoginFormContainer> {
       if (success) {
         final user = userState.currentUser!;
         // UserState already sets current user
+        
+        AppUtil.showToastMessage(
+          message: 'Login successful! Welcome back, ${user.fullName ?? user.username}',
+        );
 
         await refreshAppMetadata(user: user);
         onSuccessLogin(user);
       } else {
         AppUtil.showToastMessage(
-          message: 'Wrong username or password, try again',
+          message: 'Login failed. Please check your username and password.',
         );
         setState(() {
           isSaving = false;
         });
       }
     } catch (e) {
-      AppUtil.showToastMessage(message: e.toString());
+      AppUtil.showToastMessage(
+        message: 'Error: ${e.toString().replaceAll('Exception: ', '')}',
+      );
       setState(() {
         isSaving = false;
       });
@@ -96,18 +102,25 @@ class _LoginFormContainerState extends State<LoginFormContainer> {
         isSaving = true;
       });
       
+      // Combine first name and surname into full name
+      final fullName = '$firstName $surname'.trim();
+      
       final userState = Provider.of<UserState>(context, listen: false);
       final success = await userState.register(
         username: username,
         email: email,
         password: password,
-        firstName: firstName,
-        surname: surname,
+        name: fullName,
         phoneNumber: phoneNumber,
       );
 
       if (success) {
         final user = userState.currentUser!;
+        
+        AppUtil.showToastMessage(
+          message: 'Registration successful! Welcome, ${user.fullName ?? user.username}!',
+        );
+        
         await refreshAppMetadata(user: user);
         onSuccessLogin(user);
       } else {
@@ -119,7 +132,13 @@ class _LoginFormContainerState extends State<LoginFormContainer> {
         });
       }
     } catch (e) {
-      AppUtil.showToastMessage(message: e.toString());
+      String errorMessage = e.toString().replaceAll('Exception: ', '');
+      // Make error messages more user-friendly
+      if (errorMessage.contains('already exists')) {
+        errorMessage = 'This email or username is already registered. Please try logging in or use a different email/username.';
+      }
+      
+      AppUtil.showToastMessage(message: errorMessage);
       setState(() {
         isSaving = false;
       });

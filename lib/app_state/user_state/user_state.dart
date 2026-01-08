@@ -65,8 +65,7 @@ class UserState extends ChangeNotifier {
     required String username,
     required String email,
     required String password,
-    required String firstName,
-    required String surname,
+    required String name,
     String? phoneNumber,
   }) async {
     try {
@@ -74,8 +73,7 @@ class UserState extends ChangeNotifier {
         username: username,
         email: email,
         password: password,
-        firstName: firstName,
-        surname: surname,
+        name: name,
         phoneNumber: phoneNumber,
       );
       

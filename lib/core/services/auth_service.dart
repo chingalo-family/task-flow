@@ -67,8 +67,7 @@ class AuthService {
     required String username,
     required String email,
     required String password,
-    required String firstName,
-    required String surname,
+    required String name,
     String? phoneNumber,
   }) async {
     try {
@@ -78,16 +77,41 @@ class AuthService {
           'username': username,
           'email': email,
           'password': password,
-          'firstName': firstName,
-          'surname': surname,
+          'name': name,
           if (phoneNumber != null) 'phoneNumber': phoneNumber,
         },
         requireAuth: false,
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        // Auto-login after successful registration
-        return await login(username, password);
+        final data = json.decode(response.body);
+        
+        // Check for success flag
+        if (data['success'] == false) {
+          throw Exception(data['message'] ?? 'Registration failed');
+        }
+        
+        // Store token and expiry
+        final token = data['token'] as String?;
+        final expiresAt = data['expiresAt'] as String?;
+        
+        if (token != null) {
+          await _api.setToken(token);
+          if (expiresAt != null) {
+            await _prefs.setString(ApiConfig.tokenExpiryKey, expiresAt);
+          }
+        }
+        
+        // Parse user data
+        final userData = data['user'];
+        final user = User.fromJson(userData);
+        user.password = password;
+        user.isLogin = true;
+        
+        // Store user ID
+        await _prefs.setString(ApiConfig.userIdKey, user.id);
+        
+        return user;
       } else {
         final error = json.decode(response.body);
         throw Exception(error['message'] ?? 'Registration failed');
