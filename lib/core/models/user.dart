@@ -21,19 +21,11 @@ class User {
     return User(
       id: json['id']?.toString() ?? '',
       username: json['username'] ?? '',
-      fullName: json['displayName'] ?? json['name'] ?? '',
+      fullName: json['name'] ?? '',
       email: json['email'] ?? '',
-      phoneNumber: json['phone'] ?? '',
+      phoneNumber: json['phoneNumber'] ?? '',
     );
   }
-
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'username': username,
-    'fullName': fullName,
-    'email': email,
-    'phone': phoneNumber,
-  };
 
   @override
   String toString() {

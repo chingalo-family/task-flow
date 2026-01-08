@@ -4,13 +4,13 @@ import 'package:http/http.dart' as http;
 import 'package:task_flow/core/constants/api_config.dart';
 import 'package:task_flow/core/services/preference_service.dart';
 
-class TaskFlowApiService {
+class ApiService {
   final PreferenceService _prefs = PreferenceService();
   String? _authToken;
 
-  TaskFlowApiService._();
-  static final TaskFlowApiService _instance = TaskFlowApiService._();
-  factory TaskFlowApiService() => _instance;
+  ApiService._();
+  static final ApiService _instance = ApiService._();
+  factory ApiService() => _instance;
 
   String? get token => _authToken;
 
@@ -21,6 +21,15 @@ class TaskFlowApiService {
   Future<void> setToken(String token) async {
     _authToken = token;
     await _prefs.setString(ApiConfig.tokenKey, token);
+  }
+
+  Future<void> setUserId(String userId) async {
+    _authToken = userId;
+    await _prefs.setString(ApiConfig.userIdKey, userId);
+  }
+
+  Future<void> setTokenExpireDate(String tokenExpiryDate) async {
+    await _prefs.setString(ApiConfig.tokenExpiryKey, tokenExpiryDate);
   }
 
   Future<void> clearToken() async {
