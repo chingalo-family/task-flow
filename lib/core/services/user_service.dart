@@ -46,7 +46,6 @@ class UserService {
         await apiService.setToken(token);
         await apiService.setTokenExpireDate(expiresAt);
         user = User.fromJson(userData);
-        user.isLogin = true;
         await _offline.addOrUpdateUser(user);
         await apiService.setUserId(user.id);
       }
@@ -78,7 +77,6 @@ class UserService {
         await apiService.setToken(token);
         await apiService.setTokenExpireDate(expiresAt);
         user = User.fromJson(userData);
-        user.isLogin = true;
         await _offline.addOrUpdateUser(user);
         await apiService.setUserId(user.id);
       }
@@ -116,6 +114,7 @@ class UserService {
 
   Future<User?> getCurrentUser() async {
     final id = await _prefs.getString(ApiConfig.userIdKey);
+    print('id current user: $id');
     if (id == null) return null;
     return _offline.getUserById(id);
   }
@@ -127,11 +126,6 @@ class UserService {
 
   Future<void> logout() async {
     final apiService = ApiService();
-    User? currentUser = await getCurrentUser();
-    if (currentUser != null) {
-      currentUser.isLogin = false;
-      await _offline.addOrUpdateUser(currentUser);
-    }
     apiService.clearToken();
   }
 

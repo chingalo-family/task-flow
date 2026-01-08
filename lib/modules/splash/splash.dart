@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_flow/app_state/app_info_state/app_info_state.dart';
-import 'package:task_flow/app_state/notification_state/notification_state.dart';
 import 'package:task_flow/app_state/user_list_state/user_list_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/modules/splash/components/app_logo.dart';
@@ -33,32 +32,22 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
-
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
-
     _scaleAnimation = Tween<double>(
       begin: 0.8,
       end: 1.0,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
-
     _controller.forward();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       Provider.of<AppInfoState>(context, listen: false).initiatizeAppInfo();
-      // Initialize notifications early for badge count
-      final notificationState = Provider.of<NotificationState>(
-        context,
-        listen: false,
-      );
       final userState = Provider.of<UserState>(context, listen: false);
       final userListState = Provider.of<UserListState>(context, listen: false);
-      await notificationState.initialize();
-      await userListState.reSyncUserList();
       for (int count = 0; count <= 100; count += 5) {
-        await Future.delayed(const Duration(milliseconds: 80));
+        await Future.delayed(const Duration(milliseconds: 70));
         if (mounted) {
           setState(() {
             _progress = count / 100;
@@ -70,17 +59,21 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
       final onboardingComplete = prefs.getBool('onboarding_complete') ?? false;
       await Future.delayed(const Duration(milliseconds: 500));
       if (mounted) {
-        _redirectToPages(userState, onboardingComplete);
+        _redirectToPages(userState, userListState, onboardingComplete);
       }
     });
   }
 
-  void _redirectToPages(UserState userState, bool onboardingComplete) {
+  void _redirectToPages(
+    UserState userState,
+    UserListState userListState,
+    bool onboardingComplete,
+  ) {
     Widget destination;
-
     if (!onboardingComplete) {
       destination = const OnboardingScreen();
     } else if (userState.isAuthenticated) {
+      userListState.reSyncUserList();
       destination = const Home();
     } else {
       destination = const LoginPage();

@@ -45,7 +45,6 @@ class UserOfflineProvider {
       password: user.password,
       email: user.email,
       phoneNumber: user.phoneNumber,
-      isLogin: user.isLogin,
     );
     box.put(entity);
   }
@@ -72,7 +71,6 @@ class UserOfflineProvider {
       password: entity.password,
       email: entity.email,
       phoneNumber: entity.phoneNumber,
-      isLogin: entity.isLogin,
     );
   }
 }
