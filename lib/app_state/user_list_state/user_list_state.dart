@@ -22,10 +22,7 @@ class UserListState extends ChangeNotifier {
     notifyListeners();
     User? currentUser = await UserService().getCurrentUser();
     if (currentUser != null) {
-      await UserService().syncAvailableUsersInformations(
-        username: currentUser.username,
-        password: currentUser.password ?? '',
-      );
+      await UserService().syncAvailableUsersInformations();
     }
     await _loadUsers();
     _loading = false;

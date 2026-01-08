@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
+import 'package:task_flow/core/utils/app_modal_util.dart';
+import 'package:task_flow/modules/login/components/forgot_password_modal.dart';
 import 'modern_input_field.dart';
 import 'modern_primary_button.dart';
 
@@ -56,6 +58,16 @@ class _ModernLoginFormState extends State<ModernLoginForm> {
     }
   }
 
+  void _handleForgotPassword() {
+    const maxHeightRatio = 0.60;
+    AppModalUtil.showActionSheetModal(
+      context: context,
+      initialHeightRatio: maxHeightRatio,
+      maxHeightRatio: maxHeightRatio,
+      actionSheetContainer: ForgotPasswordModal(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -65,11 +77,11 @@ class _ModernLoginFormState extends State<ModernLoginForm> {
         children: [
           ModernInputField(
             controller: _usernameController,
-            hintText: 'Username or Email',
+            hintText: 'Username',
             icon: Icons.person_outline_rounded,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter your username or email';
+                return 'Please enter your username';
               }
               return null;
             },
@@ -106,28 +118,23 @@ class _ModernLoginFormState extends State<ModernLoginForm> {
               ),
             ),
           ),
-          
+
           SizedBox(height: AppConstant.spacing12),
-          
+
           // Forgot password link
           Align(
             alignment: Alignment.centerRight,
             child: TextButton(
-              onPressed: () {
-                // TODO: Implement forgot password
-              },
+              onPressed: _handleForgotPassword,
               child: Text(
                 'Forgot password?',
-                style: TextStyle(
-                  color: AppConstant.primaryBlue,
-                  fontSize: 14,
-                ),
+                style: TextStyle(color: AppConstant.primaryBlue, fontSize: 14),
               ),
             ),
           ),
-          
+
           SizedBox(height: AppConstant.spacing24),
-          
+
           ModernPrimaryButton(
             onPressed: (!_isFormValid || widget.isSaving) ? null : _handleLogin,
             loading: widget.isSaving,

@@ -17,7 +17,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
   final _currentPasswordController = TextEditingController();
   final _newPasswordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  
+
   bool _obscureCurrentPassword = true;
   bool _obscureNewPassword = true;
   bool _obscureConfirmPassword = true;
@@ -75,17 +75,17 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
     try {
       final userState = Provider.of<UserState>(context, listen: false);
       final success = await userState.changeCurrentUserPassword(
-        _currentPasswordController.text,
         _newPasswordController.text,
       );
-      
+
       if (mounted) {
         if (success) {
           AppUtil.showToastMessage(message: 'Password changed successfully!');
           Navigator.pop(context);
         } else {
           AppUtil.showToastMessage(
-            message: 'Failed to change password. Please check your current password.',
+            message:
+                'Failed to change password. Please check your current password.',
           );
         }
       }

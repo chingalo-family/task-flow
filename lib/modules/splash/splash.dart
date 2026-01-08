@@ -53,6 +53,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
         context,
         listen: false,
       );
+      final userState = Provider.of<UserState>(context, listen: false);
       final userListState = Provider.of<UserListState>(context, listen: false);
       await notificationState.initialize();
       await userListState.reSyncUserList();
@@ -64,7 +65,6 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
           });
         }
       }
-      final userState = Provider.of<UserState>(context, listen: false);
       await userState.initialize();
       final prefs = await SharedPreferences.getInstance();
       final onboardingComplete = prefs.getBool('onboarding_complete') ?? false;

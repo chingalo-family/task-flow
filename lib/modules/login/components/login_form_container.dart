@@ -13,11 +13,13 @@ class LoginFormContainer extends StatefulWidget {
   const LoginFormContainer({
     super.key,
     required this.onSuccessLogin,
+    required this.onSuccessSignUp,
     this.showSignUp = false,
     this.onToggleAuthMode,
   });
 
   final Function onSuccessLogin;
+  final Function onSuccessSignUp;
   final bool showSignUp;
   final VoidCallback? onToggleAuthMode;
 
@@ -59,12 +61,12 @@ class _LoginFormContainerState extends State<LoginFormContainer> {
       currentUser!.username = username;
       currentUser!.password = password;
       final userState = Provider.of<UserState>(context, listen: false);
-      final success = await userState.signIn(username, password);
-
+      final success = await userState.signIn(
+        username: username,
+        password: password,
+      );
       if (success) {
         final user = userState.currentUser!;
-        // UserState already sets current user
-
         await refreshAppMetadata(user: user);
         onSuccessLogin(user);
       } else {
@@ -84,9 +86,9 @@ class _LoginFormContainerState extends State<LoginFormContainer> {
   }
 
   void onSignUp(
-    String firstName,
-    String surname,
+    String fullName,
     String email,
+    String username,
     String phoneNumber,
     String password,
   ) async {
@@ -94,20 +96,18 @@ class _LoginFormContainerState extends State<LoginFormContainer> {
       setState(() {
         isSaving = true;
       });
-      // For now, we'll just show a success message
-      // In a real app, this would make an API call to create the account
-      AppUtil.showToastMessage(
-        message: 'Account created successfully! Please log in.',
+      final userState = Provider.of<UserState>(context, listen: false);
+      User? user = await userState.signUp(
+        name: fullName,
+        email: email,
+        username: username,
+        phoneNumber: phoneNumber,
+        password: password,
       );
-
-      // Switch to login mode
-      if (widget.onToggleAuthMode != null) {
-        widget.onToggleAuthMode!();
+      if (user != null) {
+        await refreshAppMetadata(user: user);
+        widget.onSuccessSignUp(user);
       }
-
-      setState(() {
-        isSaving = false;
-      });
     } catch (e) {
       AppUtil.showToastMessage(message: e.toString());
       setState(() {

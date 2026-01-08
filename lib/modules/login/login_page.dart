@@ -38,6 +38,24 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  void onSuccessSignUp(BuildContext context, User user) async {
+    Provider.of<UserState>(context, listen: false).setCurrent(user);
+    Provider.of<NotificationState>(context, listen: false).initialize();
+    Timer(
+      const Duration(seconds: 1),
+      () => Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => const Home(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+          transitionDuration: const Duration(milliseconds: 500),
+        ),
+      ),
+    );
+  }
+
   void toggleAuthMode() {
     setState(() {
       _showSignUp = !_showSignUp;
@@ -86,6 +104,8 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: AppConstant.spacing32),
                     // Login/Signup Form
                     LoginFormContainer(
+                      onSuccessSignUp: (User user) =>
+                          onSuccessSignUp(context, user),
                       onSuccessLogin: (User user) =>
                           onSuccessLogin(context, user),
                       showSignUp: _showSignUp,
