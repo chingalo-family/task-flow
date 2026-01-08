@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:task_flow/core/constants/api_config.dart';
 import 'package:task_flow/core/models/user.dart';
 import 'package:task_flow/core/services/preference_service.dart';
@@ -56,7 +57,7 @@ class AuthService {
       
       return null;
     } catch (e) {
-      print('Login error: $e');
+      debugPrint('Login error: $e');
       return null;
     }
   }
@@ -117,7 +118,7 @@ class AuthService {
         throw Exception(error['message'] ?? 'Registration failed');
       }
     } catch (e) {
-      print('Registration error: $e');
+      debugPrint('Registration error: $e');
       rethrow;
     }
   }
@@ -134,7 +135,7 @@ class AuthService {
 
       return response.statusCode == 200;
     } catch (e) {
-      print('Forgot password error: $e');
+      debugPrint('Forgot password error: $e');
       return false;
     }
   }
@@ -161,7 +162,7 @@ class AuthService {
       
       return null;
     } catch (e) {
-      print('Get current user error: $e');
+      debugPrint('Get current user error: $e');
       return null;
     }
   }
@@ -190,7 +191,7 @@ class AuthService {
       
       return false;
     } catch (e) {
-      print('Refresh token error: $e');
+      debugPrint('Refresh token error: $e');
       return false;
     }
   }

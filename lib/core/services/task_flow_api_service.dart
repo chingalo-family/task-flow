@@ -179,25 +179,4 @@ class TaskFlowApiService {
       throw Exception('Network error: $e');
     }
   }
-
-  /// Handle API response
-  dynamic handleResponse(http.Response response) {
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      if (response.body.isEmpty) return null;
-      return json.decode(response.body);
-    } else if (response.statusCode == 401) {
-      throw Exception('Unauthorized. Please login again.');
-    } else if (response.statusCode == 404) {
-      throw Exception('Resource not found.');
-    } else if (response.statusCode >= 500) {
-      throw Exception('Server error. Please try again later.');
-    } else {
-      try {
-        final error = json.decode(response.body);
-        throw Exception(error['message'] ?? 'Request failed');
-      } catch (e) {
-        throw Exception('Request failed with status: ${response.statusCode}');
-      }
-    }
-  }
 }

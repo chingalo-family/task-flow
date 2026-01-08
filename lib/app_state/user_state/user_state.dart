@@ -27,7 +27,7 @@ class UserState extends ChangeNotifier {
           return;
         }
       } catch (e) {
-        print('Failed to get user from API: $e');
+        debugPrint('Failed to get user from API: $e');
       }
     }
     
@@ -48,7 +48,7 @@ class UserState extends ChangeNotifier {
         return true;
       }
     } catch (e) {
-      print('API login failed, trying local: $e');
+      debugPrint('API login failed, trying local: $e');
     }
     
     // Fall back to local authentication
@@ -85,7 +85,7 @@ class UserState extends ChangeNotifier {
         return true;
       }
     } catch (e) {
-      print('Registration failed: $e');
+      debugPrint('Registration failed: $e');
       rethrow;
     }
     return false;
