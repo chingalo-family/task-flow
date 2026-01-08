@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'modern_input_field.dart';
 import 'modern_primary_button.dart';
+import 'forgot_password_modal.dart';
 
 class ModernLoginForm extends StatefulWidget {
   final void Function(String username, String password) onLogin;
@@ -113,9 +114,14 @@ class _ModernLoginFormState extends State<ModernLoginForm> {
           Align(
             alignment: Alignment.centerRight,
             child: TextButton(
-              onPressed: () {
-                // TODO: Implement forgot password
-              },
+              onPressed: widget.isSaving
+                  ? null
+                  : () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => const ForgotPasswordModal(),
+                      );
+                    },
               child: Text(
                 'Forgot password?',
                 style: TextStyle(

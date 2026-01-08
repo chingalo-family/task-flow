@@ -121,6 +121,7 @@ class Task {
   bool get isInProgress => status == TaskConstants.statusInProgress;
   bool get isPending => status == TaskConstants.statusPending;
 
+  bool get isUrgentPriority => priority == TaskConstants.priorityUrgent;
   bool get isHighPriority => priority == TaskConstants.priorityHigh;
   bool get isMediumPriority => priority == TaskConstants.priorityMedium;
   bool get isLowPriority => priority == TaskConstants.priorityLow;

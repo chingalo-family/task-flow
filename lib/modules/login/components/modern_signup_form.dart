@@ -11,6 +11,7 @@ class ModernSignupForm extends StatefulWidget {
     String email,
     String phoneNumber,
     String password,
+    String username,
   )
   onSignUp;
   final bool isSaving;
@@ -27,6 +28,7 @@ class ModernSignupForm extends StatefulWidget {
 
 class _ModernSignupFormState extends State<ModernSignupForm> {
   final _formKey = GlobalKey<FormState>();
+  final _usernameController = TextEditingController();
   final _firstNameController = TextEditingController();
   final _surnameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -40,6 +42,7 @@ class _ModernSignupFormState extends State<ModernSignupForm> {
   @override
   void initState() {
     super.initState();
+    _usernameController.addListener(_validateForm);
     _firstNameController.addListener(_validateForm);
     _surnameController.addListener(_validateForm);
     _emailController.addListener(_validateForm);
@@ -50,6 +53,7 @@ class _ModernSignupFormState extends State<ModernSignupForm> {
 
   @override
   void dispose() {
+    _usernameController.dispose();
     _firstNameController.dispose();
     _surnameController.dispose();
     _phoneNumberController.dispose();
@@ -62,6 +66,7 @@ class _ModernSignupFormState extends State<ModernSignupForm> {
   void _validateForm() {
     setState(() {
       _isFormValid =
+          _usernameController.text.isNotEmpty &&
           _firstNameController.text.isNotEmpty &&
           _surnameController.text.isNotEmpty &&
           _emailController.text.isNotEmpty &&
@@ -83,6 +88,7 @@ class _ModernSignupFormState extends State<ModernSignupForm> {
         _emailController.text,
         _phoneNumberController.text,
         _passwordController.text,
+        _usernameController.text,
       );
     }
   }
@@ -94,6 +100,22 @@ class _ModernSignupFormState extends State<ModernSignupForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          ModernInputField(
+            controller: _usernameController,
+            hintText: 'Username',
+            icon: Icons.account_circle_outlined,
+            enabled: !widget.isSaving,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter a username';
+              }
+              if (value.length < 3) {
+                return 'Username must be at least 3 characters';
+              }
+              return null;
+            },
+          ),
+          SizedBox(height: AppConstant.spacing16),
           ModernInputField(
             controller: _firstNameController,
             hintText: 'First Name',
@@ -150,9 +172,6 @@ class _ModernSignupFormState extends State<ModernSignupForm> {
               }
               if (!AppUtil.isPhoneNumberValid(value)) {
                 return 'Please enter a valid phone number';
-              }
-              if (!AppUtil.isPasswordValid(value)) {
-                return 'Password must be at least 8, include an uppercase letter, number and special character';
               }
               return null;
             },

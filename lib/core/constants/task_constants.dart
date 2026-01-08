@@ -18,6 +18,7 @@ class TaskConstants {
 
   // Task Priority values
   static const String priorityAll = 'all';
+  static const String priorityUrgent = 'urgent';
   static const String priorityHigh = 'high';
   static const String priorityMedium = 'medium';
   static const String priorityLow = 'low';
@@ -48,6 +49,7 @@ class TaskConstants {
   // Priority lists
   static const List<String> allPriorities = [
     priorityAll,
+    priorityUrgent,
     priorityHigh,
     priorityMedium,
     priorityLow,

@@ -89,25 +89,35 @@ class _LoginFormContainerState extends State<LoginFormContainer> {
     String email,
     String phoneNumber,
     String password,
+    String username,
   ) async {
     try {
       setState(() {
         isSaving = true;
       });
-      // For now, we'll just show a success message
-      // In a real app, this would make an API call to create the account
-      AppUtil.showToastMessage(
-        message: 'Account created successfully! Please log in.',
+      
+      final userState = Provider.of<UserState>(context, listen: false);
+      final success = await userState.register(
+        username: username,
+        email: email,
+        password: password,
+        firstName: firstName,
+        surname: surname,
+        phoneNumber: phoneNumber,
       );
 
-      // Switch to login mode
-      if (widget.onToggleAuthMode != null) {
-        widget.onToggleAuthMode!();
+      if (success) {
+        final user = userState.currentUser!;
+        await refreshAppMetadata(user: user);
+        onSuccessLogin(user);
+      } else {
+        AppUtil.showToastMessage(
+          message: 'Registration failed. Please try again.',
+        );
+        setState(() {
+          isSaving = false;
+        });
       }
-
-      setState(() {
-        isSaving = false;
-      });
     } catch (e) {
       AppUtil.showToastMessage(message: e.toString());
       setState(() {

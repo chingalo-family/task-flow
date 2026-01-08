@@ -7,11 +7,13 @@ import 'package:task_flow/app_state/app_info_state/app_info_state.dart';
 import 'package:task_flow/app_state/notification_state/notification_state.dart';
 import 'package:task_flow/app_state/user_list_state/user_list_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
+import 'package:task_flow/core/constants/api_config.dart';
 import 'package:task_flow/modules/splash/components/app_logo.dart';
 import 'package:task_flow/modules/onboarding/onboarding_screen.dart';
 import 'package:task_flow/modules/login/login_page.dart';
 import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/modules/home/home.dart';
+import 'package:task_flow/core/services/preference_service.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
@@ -75,15 +77,25 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     });
   }
 
-  void _redirectToPages(UserState userState, bool onboardingComplete) {
+  void _redirectToPages(UserState userState, bool onboardingComplete) async {
     Widget destination;
 
     if (!onboardingComplete) {
       destination = const OnboardingScreen();
-    } else if (userState.isAuthenticated) {
-      destination = const Home();
     } else {
-      destination = const LoginPage();
+      // Check if token has expired
+      final prefs = PreferenceService();
+      final tokenExpiry = await prefs.getString(ApiConfig.tokenExpiryKey);
+      
+      if (tokenExpiry != null && ApiConfig.isTokenExpired(tokenExpiry)) {
+        // Token expired, logout and redirect to login
+        await userState.logout();
+        destination = const LoginPage();
+      } else if (userState.isAuthenticated) {
+        destination = const Home();
+      } else {
+        destination = const LoginPage();
+      }
     }
 
     Navigator.pushReplacement(
