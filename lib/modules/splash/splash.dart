@@ -5,7 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_flow/app_state/app_info_state/app_info_state.dart';
 import 'package:task_flow/app_state/user_list_state/user_list_state.dart';
+import 'package:task_flow/core/constants/api_config.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
+import 'package:task_flow/core/services/preference_service.dart';
 import 'package:task_flow/modules/splash/components/app_logo.dart';
 import 'package:task_flow/modules/onboarding/onboarding_screen.dart';
 import 'package:task_flow/modules/login/login_page.dart';
@@ -68,15 +70,22 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     UserState userState,
     UserListState userListState,
     bool onboardingComplete,
-  ) {
+  ) async {
     Widget destination;
     if (!onboardingComplete) {
       destination = const OnboardingScreen();
-    } else if (userState.isAuthenticated) {
-      userListState.reSyncUserList();
-      destination = const Home();
     } else {
-      destination = const LoginPage();
+      final prefs = PreferenceService();
+      final tokenExpiry = await prefs.getString(ApiConfig.tokenExpiryKey);
+      if (tokenExpiry != null && ApiConfig.isTokenExpired(tokenExpiry)) {
+        await userState.logout();
+        destination = const LoginPage();
+      } else if (userState.isAuthenticated) {
+        userListState.reSyncUserList();
+        destination = const Home();
+      } else {
+        destination = const LoginPage();
+      }
     }
 
     Navigator.pushReplacement(

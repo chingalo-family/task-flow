@@ -114,7 +114,6 @@ class UserService {
 
   Future<User?> getCurrentUser() async {
     final id = await _prefs.getString(ApiConfig.userIdKey);
-    print('id current user: $id');
     if (id == null) return null;
     return _offline.getUserById(id);
   }
