@@ -94,8 +94,14 @@ class StatusPicker extends StatelessWidget {
                       ),
                       SizedBox(height: AppConstant.spacing16),
                       _buildStatusOption(context, TaskConstants.statusPending),
-                      _buildStatusOption(context, TaskConstants.statusInProgress),
-                      _buildStatusOption(context, TaskConstants.statusCompleted),
+                      _buildStatusOption(
+                        context,
+                        TaskConstants.statusInProgress,
+                      ),
+                      _buildStatusOption(
+                        context,
+                        TaskConstants.statusCompleted,
+                      ),
                       SizedBox(height: AppConstant.spacing16),
                     ],
                   ),
@@ -109,10 +115,10 @@ class StatusPicker extends StatelessWidget {
           vertical: AppConstant.spacing12,
         ),
         decoration: BoxDecoration(
-          color: _getStatusColor(currentStatus).withOpacity(0.1),
+          color: _getStatusColor(currentStatus).withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(AppConstant.borderRadius8),
           border: Border.all(
-            color: _getStatusColor(currentStatus).withOpacity(0.3),
+            color: _getStatusColor(currentStatus).withValues(alpha: 0.3),
           ),
         ),
         child: Row(
@@ -161,7 +167,7 @@ class StatusPicker extends StatelessWidget {
         margin: EdgeInsets.only(bottom: AppConstant.spacing8),
         decoration: BoxDecoration(
           color: isSelected
-              ? _getStatusColor(status).withOpacity(0.1)
+              ? _getStatusColor(status).withValues(alpha: 0.1)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(AppConstant.borderRadius8),
         ),
@@ -183,11 +189,7 @@ class StatusPicker extends StatelessWidget {
             ),
             Spacer(),
             if (isSelected)
-              Icon(
-                Icons.check,
-                color: _getStatusColor(status),
-                size: 24,
-              ),
+              Icon(Icons.check, color: _getStatusColor(status), size: 24),
           ],
         ),
       ),

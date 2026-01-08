@@ -1,4 +1,4 @@
-import 'package:task_flow/core/models/models.dart' as appNotification;
+import 'package:task_flow/core/models/models.dart' as app_notification;
 
 /// Utility class for creating and managing dynamic notifications
 /// Supports different notification types that can be triggered by various events
@@ -18,12 +18,12 @@ class NotificationUtils {
   ///   taskId: 'task123',
   /// );
   /// ```
-  static appNotification.Notification createTaskAssignedNotification({
+  static app_notification.Notification createTaskAssignedNotification({
     required String taskTitle,
     required String assignedBy,
     String? taskId,
   }) {
-    return appNotification.Notification(
+    return app_notification.Notification(
       id: _generateId(),
       title: 'New task assigned',
       body: '$assignedBy assigned you to "$taskTitle"',
@@ -46,12 +46,12 @@ class NotificationUtils {
   ///   taskId: 'task456',
   /// );
   /// ```
-  static appNotification.Notification createTaskCompletedNotification({
+  static app_notification.Notification createTaskCompletedNotification({
     required String taskTitle,
     required String completedBy,
     String? taskId,
   }) {
-    return appNotification.Notification(
+    return app_notification.Notification(
       id: _generateId(),
       title: 'Task completed',
       body: '$completedBy marked "$taskTitle" as complete',
@@ -74,12 +74,12 @@ class NotificationUtils {
   ///   teamId: 'team789',
   /// );
   /// ```
-  static appNotification.Notification createTeamInviteNotification({
+  static app_notification.Notification createTeamInviteNotification({
     required String teamName,
     required String invitedBy,
     String? teamId,
   }) {
-    return appNotification.Notification(
+    return app_notification.Notification(
       id: _generateId(),
       title: 'Team invitation',
       body: 'You\'ve been invited to join $teamName',
@@ -102,13 +102,13 @@ class NotificationUtils {
   ///   entityId: 'comment123',
   /// );
   /// ```
-  static appNotification.Notification createMentionNotification({
+  static app_notification.Notification createMentionNotification({
     required String mentionedBy,
     required String context,
     String? entityId,
     String? preview,
   }) {
-    return appNotification.Notification(
+    return app_notification.Notification(
       id: _generateId(),
       title: 'Mentioned in $context',
       body: preview ?? '$mentionedBy mentioned you in a $context',
@@ -131,7 +131,7 @@ class NotificationUtils {
   ///   taskId: 'task999',
   /// );
   /// ```
-  static appNotification.Notification createDeadlineReminderNotification({
+  static app_notification.Notification createDeadlineReminderNotification({
     required String taskTitle,
     required DateTime dueDate,
     String? taskId,
@@ -148,7 +148,7 @@ class NotificationUtils {
       timeText = 'in ${difference.inDays} days';
     }
 
-    return appNotification.Notification(
+    return app_notification.Notification(
       id: _generateId(),
       title: 'Deadline reminder',
       body: '"$taskTitle" is due $timeText',
@@ -171,13 +171,13 @@ class NotificationUtils {
   ///   taskId: 'task111',
   /// );
   /// ```
-  static appNotification.Notification createTaskCommentNotification({
+  static app_notification.Notification createTaskCommentNotification({
     required String taskTitle,
     required String commentedBy,
     String? commentPreview,
     String? taskId,
   }) {
-    return appNotification.Notification(
+    return app_notification.Notification(
       id: _generateId(),
       title: '$commentedBy commented',
       body: commentPreview ?? '$commentedBy commented on "$taskTitle"',
@@ -201,13 +201,13 @@ class NotificationUtils {
   ///   taskId: 'task222',
   /// );
   /// ```
-  static appNotification.Notification createTaskStatusChangeNotification({
+  static app_notification.Notification createTaskStatusChangeNotification({
     required String taskTitle,
     required String newStatus,
     required String changedBy,
     String? taskId,
   }) {
-    return appNotification.Notification(
+    return app_notification.Notification(
       id: _generateId(),
       title: 'Task status updated',
       body: '$changedBy changed "$taskTitle" to $newStatus',
@@ -229,11 +229,11 @@ class NotificationUtils {
   ///   message: 'Scheduled maintenance on Sunday at 2 AM',
   /// );
   /// ```
-  static appNotification.Notification createSystemNotification({
+  static app_notification.Notification createSystemNotification({
     required String title,
     required String message,
   }) {
-    return appNotification.Notification(
+    return app_notification.Notification(
       id: _generateId(),
       title: title,
       body: message,
@@ -254,7 +254,7 @@ class NotificationUtils {
   ///   actorUsername: 'User Name',
   /// );
   /// ```
-  static appNotification.Notification createCustomNotification({
+  static app_notification.Notification createCustomNotification({
     required String title,
     required String body,
     required String type,
@@ -262,7 +262,7 @@ class NotificationUtils {
     String? relatedEntityId,
     String? relatedEntityType,
   }) {
-    return appNotification.Notification(
+    return app_notification.Notification(
       id: _generateId(),
       title: title,
       body: body,
@@ -284,8 +284,8 @@ class NotificationUtils {
   ///   () => NotificationUtils.createDeadlineReminderNotification(...),
   /// ]);
   /// ```
-  static List<appNotification.Notification> batchCreateNotifications(
-    List<appNotification.Notification Function()> notificationFactories,
+  static List<app_notification.Notification> batchCreateNotifications(
+    List<app_notification.Notification Function()> notificationFactories,
   ) {
     return notificationFactories.map((factory) => factory()).toList();
   }
