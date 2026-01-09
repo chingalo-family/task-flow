@@ -86,13 +86,13 @@ If you want to connect to the Task Flow API backend:
    ```
 
 2. Edit `lib/core/constants/api_config.dart` with your API details:
-   - Set `baseUrl` to your API domain (e.g., `https://vmi2503861.contaboserver.net`)
+   - Set `baseUrl` to your API domain (e.g., `vmi2503861.contaboserver.net`)
    - Set `apiPath` to your API path (default: `/task-flow-api`)
 
 **Example Configuration:**
 ```dart
 class ApiConfig {
-  static const String baseUrl = 'https://vmi2503861.contaboserver.net';
+  static const String baseUrl = 'vmi2503861.contaboserver.net';
   static const String apiPath = '/task-flow-api';
   
   // Other configuration remains the same...
