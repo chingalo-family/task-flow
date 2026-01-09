@@ -7,13 +7,13 @@ After the recent changes to `TaskEntity`, you need to regenerate the ObjectBox c
 ### Run this command:
 
 ```bash
-flutter pub run build_runner build --delete-conflicting-outputs
+dart run build_runner build --delete-conflicting-outputs
 ```
 
-Or if using dart directly:
+Or using flutter pub run (older method):
 
 ```bash
-dart run build_runner build --delete-conflicting-outputs
+flutter pub run build_runner build --delete-conflicting-outputs
 ```
 
 ## Changes Made to TaskEntity

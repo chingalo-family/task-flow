@@ -56,6 +56,15 @@ This documentation is organized to help different audiences:
 - Review the [User Guide](./USER_GUIDE.md) for detailed instructions
 - See [Getting Started](./GETTING_STARTED.md) for setup issues
 
+## 🌐 Related Resources
+
+- **Website**: [https://chingalo-family.github.io/task-flow-website/](https://chingalo-family.github.io/task-flow-website/)
+- **Website Source Code**: [https://github.com/chingalo-family/task-flow-website](https://github.com/chingalo-family/task-flow-website)
+- **API**: [https://vmi2503861.contaboserver.net/task-flow-api/](https://vmi2503861.contaboserver.net/task-flow-api/)
+- **API Documentation**: [https://vmi2503861.contaboserver.net/task-flow-api-docs/](https://vmi2503861.contaboserver.net/task-flow-api-docs/)
+- **API Source Code**: [https://github.com/chingalo-family/task-flow-api](https://github.com/chingalo-family/task-flow-api)
+- **Design Resources**: [https://stitch.withgoogle.com/projects/14437076708101911838](https://stitch.withgoogle.com/projects/14437076708101911838)
+
 ## 📝 Contributing to Documentation
 
 Found an error or want to improve the docs? See our [Contributing Guide](./CONTRIBUTING.md) for information on how to help improve this documentation.
