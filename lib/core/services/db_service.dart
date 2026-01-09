@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:task_flow/core/entities/user_entity.dart';
 import 'package:task_flow/core/entities/task_entity.dart';
@@ -27,8 +28,15 @@ class DBService {
     if (_opened) return;
 
     try {
-      final dir = await getApplicationDocumentsDirectory();
-      _store = await openStore(directory: dir.path);
+      final dir = Platform.isMacOS
+          ? await getApplicationSupportDirectory()
+          : await getApplicationDocumentsDirectory();
+      final storeDir = Directory(dir.path);
+      if (!await storeDir.exists()) {
+        await storeDir.create(recursive: true);
+      }
+      debugPrint('Opening ObjectBox store at: ${storeDir.path}');
+      _store = await openStore(directory: storeDir.path);
       _userBox = Box<UserEntity>(_store!);
       _taskBox = Box<TaskEntity>(_store!);
       _teamBox = Box<TeamEntity>(_store!);
