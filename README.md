@@ -188,7 +188,7 @@ For connecting to the Task Flow API backend:
    ```
 
 2. **Edit the configuration** with your API details:
-   - Set `baseUrl` to your API domain (e.g., `https://vmi2503861.contaboserver.net`)
+   - Set `baseUrl` to your API domain (e.g., `vmi2503861.contaboserver.net`)
    - Set `apiPath` to your API path (default: `/task-flow-api`)
 
 **⚠️ Security Warning**: Never commit real API credentials to version control. The `.gitignore` file is configured to exclude this file.
