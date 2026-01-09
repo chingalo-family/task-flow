@@ -39,7 +39,14 @@ A modern, cross-platform task management and team collaboration application buil
    dart run build_runner build --delete-conflicting-outputs
    ```
 
-4. **Run the app**
+4. **Run tests** (optional but recommended)
+   ```bash
+   flutter test
+   # Or use the test runner script
+   ./run_tests.sh
+   ```
+
+5. **Run the app**
    ```bash
    flutter run
    ```
@@ -110,6 +117,27 @@ Built with ❤️ using Flutter and open-source technologies.
 ---
 
 ## 🔧 Developer Notes
+
+### Testing
+
+Task Flow includes a comprehensive test suite covering models, utilities, state management, and widgets.
+
+**Run all tests:**
+```bash
+flutter test
+```
+
+**Run with coverage:**
+```bash
+flutter test --coverage
+```
+
+**Use the test runner script:**
+```bash
+./run_tests.sh
+```
+
+For detailed testing documentation, see [test/README.md](test/README.md).
 
 ### ObjectBox Setup
 
