@@ -12,7 +12,8 @@ class UserOfflineProvider {
     await DBService().init();
     final box = DBService().userBox;
     if (box == null) return [];
-    return box.getAll().map(_toUser).toList();
+    return box.getAll().map(_toUser).toList()
+      ..sort((a, b) => a.fullName!.compareTo(b.fullName!));
   }
 
   Future<User?> getUserById(String apiUserId) async {

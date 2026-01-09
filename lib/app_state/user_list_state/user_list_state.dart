@@ -53,6 +53,6 @@ class UserListState extends ChangeNotifier {
       return user.username.toLowerCase().contains(lowerQuery) ||
           (user.fullName?.toLowerCase().contains(lowerQuery) ?? false) ||
           (user.email?.toLowerCase().contains(lowerQuery) ?? false);
-    }).toList();
+    }).toList()..sort((a, b) => a.fullName!.compareTo(b.fullName!));
   }
 }

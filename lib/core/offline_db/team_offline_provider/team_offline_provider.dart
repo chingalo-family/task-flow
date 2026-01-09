@@ -83,7 +83,8 @@ class TeamOfflineProvider {
 
       return entities
           .map((entity) => TeamEntityMapper.fromEntity(entity))
-          .toList();
+          .toList()
+        ..sort((a, b) => a.name.compareTo(b.name));
     } catch (e) {
       debugPrint('Error getting all teams: $e');
       return [];
