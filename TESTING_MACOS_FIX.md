@@ -11,19 +11,57 @@ This document provides instructions for verifying that the ObjectBox storage err
 
 ## Verification Steps
 
-### 1. Clean Build
+### 1. Clean Build (CRITICAL)
 
-First, ensure you have a clean build environment:
+**Use the provided clean build script** - this is essential for applying new entitlements:
+
+```bash
+cd /path/to/task-flow
+chmod +x macos_clean_build.sh
+./macos_clean_build.sh
+```
+
+This script will:
+- Clean Flutter cache
+- Get dependencies
+- Generate ObjectBox files
+- Clean Xcode derived data (critical for entitlements)
+- Clean macOS build artifacts
+- Reinstall CocoaPods
+
+**Or manual clean build** (if script doesn't work):
 
 ```bash
 cd /path/to/task-flow
 flutter clean
 flutter pub get
+dart run build_runner build --delete-conflicting-outputs
+rm -rf ~/Library/Developer/Xcode/DerivedData
+rm -rf build/macos
+cd macos && rm -rf Pods && pod install && cd ..
 ```
 
-### 2. Generate ObjectBox Files
+**Why this is important**: Xcode caches entitlements. If you built the app before the fix, Xcode may still use the old (sandboxed) entitlements even after updating the files. Cleaning derived data forces Xcode to re-read the entitlements.
 
-Regenerate the ObjectBox files to ensure they're up to date:
+### 2. Verify Entitlements in Xcode (Recommended)
+
+Open the project in Xcode to confirm entitlements are applied:
+
+```bash
+open macos/Runner.xcworkspace
+```
+
+Then:
+1. Select 'Runner' in the project navigator (left panel)
+2. Select the 'Runner' target
+3. Go to 'Signing & Capabilities' tab
+4. **Verify**: 'App Sandbox' should show as **OFF** or completely disabled
+5. If App Sandbox is still showing as ON, manually disable it
+6. Clean Build Folder: Product → Clean Build Folder (⌘⇧K)
+
+### 3. Generate ObjectBox Files
+
+If you didn't use the script, regenerate ObjectBox files:
 
 ```bash
 dart run build_runner build --delete-conflicting-outputs
@@ -54,41 +92,26 @@ Expected output:
 [INFO] Succeeded after 15.8s with 2 outputs
 ```
 
-### 3. Verify Entitlements
-
-Check that the entitlements files have been updated correctly:
-
-#### DebugProfile.entitlements
-
-```bash
-cat macos/Runner/DebugProfile.entitlements | grep -A1 "app-sandbox"
-```
-
-Expected output:
-```xml
-<key>com.apple.security.app-sandbox</key>
-<false/>
-```
-
-#### Release.entitlements
-
-```bash
-cat macos/Runner/Release.entitlements | grep -A1 "app-sandbox"
-```
-
-Expected output:
-```xml
-<key>com.apple.security.app-sandbox</key>
-<false/>
-```
-
 ### 4. Run the Application
+
+**From Terminal**:
 
 #### Debug Mode
 
 ```bash
 flutter run -d macos --debug
 ```
+
+**Or from Xcode** (recommended to verify entitlements):
+
+```bash
+open macos/Runner.xcworkspace
+```
+
+Then in Xcode:
+1. Select a scheme (Debug or Release)
+2. Clean Build Folder (⌘⇧K)
+3. Run (⌘R)
 
 #### Release Mode
 
@@ -102,15 +125,20 @@ Look for the following success messages in the console:
 
 **Success Indicators:**
 ```
-Opening ObjectBox store at: /Users/[your-username]/Library/Application Support/chingalo.family.task-flow
+Opening ObjectBox store at: /Users/[your-username]/Library/Documents/objectbox
 ✅ ObjectBox initialized successfully
 ```
+
+**Note**: The path is now `Documents/objectbox` for better compatibility with macOS when sandboxing is disabled.
 
 **Error Indicators (if something is still wrong):**
 ```
 ⚠️ ObjectBox initialization failed: StorageException...
+Storage error "Operation not permitted" (code 1)
 📱 App will run without offline database support
 ```
+
+If you still see errors, see the "Common Issues" section below.
 
 ### 6. Test Database Functionality
 
@@ -141,7 +169,7 @@ Once the app is running, test that ObjectBox is working properly:
 Verify that ObjectBox has created its database files:
 
 ```bash
-ls -la ~/Library/Application\ Support/chingalo.family.task-flow/
+ls -la ~/Library/Documents/objectbox/
 ```
 
 Expected output (file names may vary):
@@ -153,22 +181,68 @@ drwx------  123 username  staff   3936 Jan  9 12:00 ..
 -rw-r--r--   1 username  staff   8192 Jan  9 12:00 lock.mdb
 ```
 
+**Note**: The database is now in `~/Library/Documents/objectbox/` instead of Application Support.
+
 ## Common Issues and Solutions
 
-### Issue: "Operation not permitted" error persists
+### Issue: "Operation not permitted" error STILL persists after applying the fix
 
-**Solution:**
-1. Ensure you're using the latest code from the PR
-2. Run `flutter clean` and rebuild
-3. Check that entitlements files are correctly updated
-4. Try running with `sudo` (not recommended for production, but useful for debugging)
+This is usually caused by Xcode's build cache not being properly cleared. Try these solutions:
+
+**Solution 1: Use the clean build script** (Most reliable)
+```bash
+./macos_clean_build.sh
+flutter run -d macos
+```
+
+**Solution 2: Manual deep clean**
+```bash
+# Clean everything
+flutter clean
+rm -rf ~/Library/Developer/Xcode/DerivedData
+rm -rf build
+rm -rf macos/Pods
+rm -rf macos/.symlinks
+rm -f macos/Podfile.lock
+
+# Rebuild
+flutter pub get
+cd macos && pod install --repo-update && cd ..
+dart run build_runner build --delete-conflicting-outputs
+flutter run -d macos
+```
+
+**Solution 3: Build in Xcode** (Ensures entitlements are applied)
+```bash
+open macos/Runner.xcworkspace
+```
+Then in Xcode:
+1. Select 'Runner' target
+2. Go to 'Signing & Capabilities'
+3. **VERIFY**: App Sandbox is OFF (this is critical!)
+4. If it's ON, click the '-' button to remove it
+5. Clean Build Folder (⌘⇧K)
+6. Build and Run (⌘R)
+
+**Solution 4: Check file permissions**
+```bash
+# Ensure Documents directory is writable
+ls -la ~/Library/Documents/
+chmod 755 ~/Library/Documents/
+
+# Remove old database if it exists
+rm -rf ~/Library/Documents/objectbox
+```
+
+## Common Issues and Solutions (continued)
 
 ### Issue: Database files not created
 
 **Solution:**
-1. Check directory permissions: `ls -la ~/Library/Application\ Support/`
+1. Check directory permissions: `ls -la ~/Library/Documents/`
 2. Ensure the app has necessary permissions in System Preferences > Security & Privacy
-3. Try manually creating the directory: `mkdir -p ~/Library/Application\ Support/chingalo.family.task-flow`
+3. Try manually creating the directory: `mkdir -p ~/Library/Documents/objectbox`
+4. Verify sandboxing is disabled in Xcode (see Solution 3 above)
 
 ### Issue: App crashes on startup
 

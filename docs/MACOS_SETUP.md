@@ -41,24 +41,45 @@ For non-App Store distribution (direct downloads, enterprise distribution, etc.)
 
 After applying this configuration, ObjectBox should initialize successfully. You can verify this by:
 
-1. Building and running the app:
+1. **Run the clean build script** (recommended):
    ```bash
+   chmod +x macos_clean_build.sh
+   ./macos_clean_build.sh
+   flutter run -d macos
+   ```
+   
+   This script ensures all caches are cleared and entitlements are properly applied.
+
+2. **Or manually clean and build**:
+   ```bash
+   flutter clean
+   flutter pub get
+   dart run build_runner build --delete-conflicting-outputs
+   rm -rf ~/Library/Developer/Xcode/DerivedData
+   rm -rf build/macos
    flutter run -d macos
    ```
 
-2. Check the console output for:
+3. Check the console output for:
    ```
    ✅ ObjectBox initialized successfully
-   Opening ObjectBox store at: /Users/username/Library/Application Support/chingalo.family.task-flow
+   Opening ObjectBox store at: /Users/username/Library/Documents/objectbox
    ```
    
-   Note: The exact path may vary depending on whether sandboxing is disabled. With sandboxing disabled, it uses the system Application Support directory. With sandboxing enabled (not recommended for ObjectBox), it uses the container directory.
+   **Important**: The database is now stored in the Documents directory for better compatibility with macOS when sandboxing is disabled.
 
-3. If you still see errors, ensure:
-   - You're running a clean build: `flutter clean && flutter pub get`
-   - The ObjectBox generated files are up to date: `dart run build_runner build --delete-conflicting-outputs`
-   - You've restarted Xcode (if using it)
-   - The entitlements files are correctly applied (check `macos/Runner/DebugProfile.entitlements` and `macos/Runner/Release.entitlements`)
+4. If you still see "Operation not permitted" errors:
+   - **Clean Xcode's derived data**: `rm -rf ~/Library/Developer/Xcode/DerivedData`
+   - **Clean pods**: `cd macos && rm -rf Pods && pod install && cd ..`
+   - **Open in Xcode** and verify entitlements:
+     - Open `macos/Runner.xcworkspace` in Xcode
+     - Select 'Runner' target
+     - Go to 'Signing & Capabilities' tab
+     - Verify 'App Sandbox' shows as **OFF** or **disabled**
+     - Clean Build Folder (⌘⇧K)
+     - Build and Run (⌘R)
+   - **Check directory permissions**: `ls -la ~/Library/Documents/`
+   - **Try removing old database**: `rm -rf ~/Library/Documents/objectbox`
 
 ## Development vs Production Builds
 
@@ -98,19 +119,27 @@ Even with sandboxing disabled, Task Flow maintains security through:
 
 ### Database Location
 
-ObjectBox stores its database files in the Application Support directory:
+ObjectBox stores its database files in a dedicated subdirectory:
 
-**With sandboxing disabled (current configuration)**:
-- macOS: `~/Library/Application Support/chingalo.family.task-flow/`
+**Current configuration (sandboxing disabled)**:
+- macOS: `~/Library/Documents/objectbox/`
 
-**With sandboxing enabled (not recommended for ObjectBox)**:
-- macOS: `~/Library/Containers/chingalo.family.task-flow/Data/Library/Application Support/chingalo.family.task-flow/`
+This location is used because:
+- Documents directory has better compatibility with ObjectBox when sandboxing is disabled
+- Avoids permission issues that can occur with Application Support directory
+- Provides reliable read/write access for ObjectBox's memory-mapped files
+
+**Previous locations (if you're migrating)**:
+- Application Support: `~/Library/Application Support/chingalo.family.task-flow/`
+- Sandboxed: `~/Library/Containers/chingalo.family.task-flow/Data/Library/Application Support/`
+
+**Note**: If you have existing data in a previous location, you may need to migrate it manually or start fresh. The database files are in the `objectbox` subdirectory.
 
 This directory is:
 - Automatically created by the app
 - Backed up by Time Machine (unless user excludes it)
 - Preserved during app updates
-- Removed when the app is uninstalled (sandboxed) or remains on system (non-sandboxed, manual removal needed)
+- Remains on system after uninstall (manual cleanup needed for complete removal)
 
 ### Entitlements Granted
 

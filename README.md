@@ -169,6 +169,19 @@ Task Flow uses ObjectBox for local database storage. You must generate the Objec
    flutter run
    ```
 
+#### macOS Users - Important!
+
+If you encounter "Operation not permitted" errors on macOS, use the clean build script:
+
+```bash
+chmod +x macos_clean_build.sh
+./macos_clean_build.sh
+flutter run -d macos
+```
+
+This ensures Xcode properly applies the entitlements that allow ObjectBox to work. See [macOS Setup Guide](docs/MACOS_SETUP.md) for detailed troubleshooting.
+
+
 ### Email Configuration (Optional)
 
 For email notifications:
