@@ -17,7 +17,27 @@ class UserState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> signIn(String username, String password) async {
+  Future<User?> signUp({
+    required String name,
+    required String email,
+    required String username,
+    required String phoneNumber,
+    required String password,
+  }) async {
+    User? user = await _service.signUpUser(
+      username: username,
+      password: password,
+      email: email,
+      name: name,
+      phoneNumber: phoneNumber,
+    );
+    return user;
+  }
+
+  Future<bool> signIn({
+    required String username,
+    required String password,
+  }) async {
     final user = await _service.login(username, password);
     if (user != null) {
       _currentUser = user;
@@ -39,19 +59,11 @@ class UserState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> changeCurrentUserPassword(
-    String oldPassword,
-    String newPassword,
-  ) async {
-    final success = await _service.changeCurrentUserPassword(
-      oldPassword,
-      newPassword,
-    );
-    if (success) {
-      // Update current user with new password
-      _currentUser = await _service.getCurrentUser();
-      notifyListeners();
-    }
-    return success;
+  Future<bool> requestForgetPassword(String email) async {
+    return await _service.requestForgetPassword(email);
+  }
+
+  Future<bool> changeCurrentUserPassword(String newPassword) async {
+    return await _service.changeCurrentUserPassword(newPassword);
   }
 }

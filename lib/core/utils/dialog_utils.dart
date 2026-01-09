@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 
 class DialogUtils {
-  /// Show a confirmation dialog
   static Future<bool> showConfirmationDialog({
     required BuildContext context,
     required String title,
@@ -40,7 +39,6 @@ class DialogUtils {
     return result ?? false;
   }
 
-  /// Show a simple alert dialog
   static Future<void> showAlertDialog({
     required BuildContext context,
     required String title,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 
-/// Reusable read-only information display field
 class InfoDisplayField extends StatelessWidget {
   final String label;
   final String value;
@@ -38,16 +37,11 @@ class InfoDisplayField extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             color: AppConstant.cardBackground,
-            borderRadius: BorderRadius.circular(
-              AppConstant.borderRadius12,
-            ),
+            borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
           ),
           child: Text(
             value,
-            style: TextStyle(
-              color: AppConstant.textPrimary,
-              fontSize: 16,
-            ),
+            style: TextStyle(color: AppConstant.textPrimary, fontSize: 16),
           ),
         ),
       ],

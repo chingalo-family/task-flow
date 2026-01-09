@@ -889,11 +889,7 @@ class _TeamPickerContainerState extends State<_TeamPickerContainer> {
             ),
             child: Row(
               children: [
-                Icon(
-                  Icons.search,
-                  color: AppConstant.textSecondary,
-                  size: 20,
-                ),
+                Icon(Icons.search, color: AppConstant.textSecondary, size: 20),
                 SizedBox(width: AppConstant.spacing12),
                 Expanded(
                   child: TextField(
@@ -1020,13 +1016,14 @@ class _UserPickerContainerState extends State<_UserPickerContainer> {
     final uniqueMemberIds = widget.memberIds.toSet().toList();
 
     // Sort members alphabetically by name
-    final sortedMemberIds = List<String>.from(uniqueMemberIds)..sort((a, b) {
-      final userA = userListState.getUserById(a);
-      final userB = userListState.getUserById(b);
-      final nameA = userA?.fullName ?? 'User $a';
-      final nameB = userB?.fullName ?? 'User $b';
-      return nameA.toLowerCase().compareTo(nameB.toLowerCase());
-    });
+    final sortedMemberIds = List<String>.from(uniqueMemberIds)
+      ..sort((a, b) {
+        final userA = userListState.getUserById(a);
+        final userB = userListState.getUserById(b);
+        final nameA = userA?.fullName ?? 'User $a';
+        final nameB = userB?.fullName ?? 'User $b';
+        return nameA.toLowerCase().compareTo(nameB.toLowerCase());
+      });
 
     // Filter members based on search query
     final filteredMemberIds = sortedMemberIds.where((memberId) {
@@ -1069,11 +1066,7 @@ class _UserPickerContainerState extends State<_UserPickerContainer> {
             ),
             child: Row(
               children: [
-                Icon(
-                  Icons.search,
-                  color: AppConstant.textSecondary,
-                  size: 20,
-                ),
+                Icon(Icons.search, color: AppConstant.textSecondary, size: 20),
                 SizedBox(width: AppConstant.spacing12),
                 Expanded(
                   child: TextField(

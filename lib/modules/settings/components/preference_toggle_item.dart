@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 
-/// Reusable preference toggle item for settings
 class PreferenceToggleItem extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
@@ -28,9 +27,7 @@ class PreferenceToggleItem extends StatelessWidget {
       margin: EdgeInsets.only(bottom: AppConstant.spacing12),
       decoration: BoxDecoration(
         color: AppConstant.cardBackground,
-        borderRadius: BorderRadius.circular(
-          AppConstant.borderRadius12,
-        ),
+        borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
       ),
       child: ListTile(
         leading: Container(
@@ -38,15 +35,9 @@ class PreferenceToggleItem extends StatelessWidget {
           height: 40,
           decoration: BoxDecoration(
             color: iconColor.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(
-              AppConstant.borderRadius8,
-            ),
+            borderRadius: BorderRadius.circular(AppConstant.borderRadius8),
           ),
-          child: Icon(
-            icon,
-            color: iconColor,
-            size: 20,
-          ),
+          child: Icon(icon, color: iconColor, size: 20),
         ),
         title: Text(
           title,

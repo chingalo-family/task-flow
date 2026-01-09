@@ -55,7 +55,11 @@ class InputField extends StatelessWidget {
           hintText: hintText,
           hintStyle: TextStyle(color: AppConstant.textSecondary, fontSize: 16),
           prefixIcon: Padding(
-            padding: EdgeInsets.only(left: 20, right: 12, top: maxLines != null && maxLines! > 1 ? 12 : 0),
+            padding: EdgeInsets.only(
+              left: 20,
+              right: 12,
+              top: maxLines != null && maxLines! > 1 ? 12 : 0,
+            ),
             child: Icon(icon, color: AppConstant.textSecondary, size: 22),
           ),
           prefixIconConstraints: const BoxConstraints(

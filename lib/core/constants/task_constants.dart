@@ -1,14 +1,3 @@
-/// Task module constants
-///
-/// This file contains all constants used in the task module to ensure
-/// consistency and ease of maintenance across the application.
-///
-/// Contains definitions for:
-/// - Task status values (pending, in_progress, completed)
-/// - Task priority values (high, medium, low)
-/// - Sort options (by due date, priority, created date, status)
-/// - Task categories (design, dev, marketing, research, bug, general, meeting)
-/// - Default filter and sort values
 class TaskConstants {
   // Task Status values
   static const String statusAll = 'all';
@@ -29,6 +18,7 @@ class TaskConstants {
   static const String sortByStatus = 'status';
 
   // Task Categories
+  //TODO handling being generic categories and user-defined categories
   static const String categoryDesign = 'design';
   static const String categoryDev = 'dev';
   static const String categoryMarketing = 'marketing';

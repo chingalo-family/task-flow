@@ -235,7 +235,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             child: Text(
                               _pages[_currentPage].isLastPage
                                   ? 'Create Free Account'
-                                  : (_currentPage == 0 ? 'Get Started' : 'Next'),
+                                  : (_currentPage == 0
+                                        ? 'Get Started'
+                                        : 'Next'),
                               style: TextStyle(
                                 fontSize: isSmallScreen ? 14 : 16,
                                 fontWeight: FontWeight.w600,

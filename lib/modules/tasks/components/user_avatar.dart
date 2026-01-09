@@ -41,10 +41,7 @@ class UserAvatar extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppConstant.successGreen,
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: AppConstant.darkBackground,
-                  width: 2,
-                ),
+                border: Border.all(color: AppConstant.darkBackground, width: 2),
               ),
               child: Text(
                 'ME',
@@ -87,13 +84,8 @@ class UserAvatarList extends StatelessWidget {
       children: [
         ...List.generate(displayCount, (index) {
           return Padding(
-            padding: EdgeInsets.only(
-              right: index < displayCount - 1 ? 8 : 0,
-            ),
-            child: UserAvatar(
-              initials: userInitials[index],
-              size: size,
-            ),
+            padding: EdgeInsets.only(right: index < displayCount - 1 ? 8 : 0),
+            child: UserAvatar(initials: userInitials[index], size: size),
           );
         }),
         if (remaining > 0)

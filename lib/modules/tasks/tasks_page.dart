@@ -64,8 +64,9 @@ class _TasksPageState extends State<TasksPage> {
             }
 
             // Get current user ID
-            final currentUserId = context.watch<UserState>().currentUser?.id ?? '';
-            
+            final currentUserId =
+                context.watch<UserState>().currentUser?.id ?? '';
+
             // Get user-specific task lists
             final tasksDueToday = taskState.getMyTasksDueToday(currentUserId);
             final overdueTasks = taskState.getMyOverdueTasks(currentUserId);
@@ -144,7 +145,9 @@ class _TasksPageState extends State<TasksPage> {
                             user?.username ??
                             'User';
                         final userId = user?.id ?? '';
-                        final myTasksDueTodayCount = taskState.getMyTasksDueToday(userId).length;
+                        final myTasksDueTodayCount = taskState
+                            .getMyTasksDueToday(userId)
+                            .length;
 
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

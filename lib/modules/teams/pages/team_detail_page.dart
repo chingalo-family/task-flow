@@ -126,7 +126,7 @@ class _TeamDetailPageState extends State<TeamDetailPage>
                         ),
                       );
                     }
-                    
+
                     // Individual members
                     final member = members[index - 1];
                     return Padding(
@@ -494,7 +494,7 @@ class _TeamDetailPageState extends State<TeamDetailPage>
               ],
             ),
             SizedBox(height: AppConstant.spacing16),
-            
+
             // Filter options
             _buildFilterOption('All Tasks', _selectedFilter == 'All Tasks', () {
               setState(() {
@@ -523,9 +523,9 @@ class _TeamDetailPageState extends State<TeamDetailPage>
               });
               Navigator.pop(context);
             }),
-            
+
             SizedBox(height: AppConstant.spacing24),
-            
+
             // Reset filter
             SizedBox(
               width: double.infinity,
@@ -565,9 +565,7 @@ class _TeamDetailPageState extends State<TeamDetailPage>
               : AppConstant.cardBackground,
           borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
           border: Border.all(
-            color: isSelected
-                ? AppConstant.primaryBlue
-                : Colors.transparent,
+            color: isSelected ? AppConstant.primaryBlue : Colors.transparent,
             width: 2,
           ),
         ),

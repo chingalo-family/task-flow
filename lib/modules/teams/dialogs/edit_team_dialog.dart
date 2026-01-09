@@ -389,9 +389,11 @@ class _EditTeamDialogState extends State<EditTeamDialog> {
                           builder: (context, userListState, child) {
                             return Row(
                               children: [
-                                for (int i = 0;
-                                    i < _selectedMemberIds.length && i < 3;
-                                    i++)
+                                for (
+                                  int i = 0;
+                                  i < _selectedMemberIds.length && i < 3;
+                                  i++
+                                )
                                   _buildMemberAvatar(
                                     _selectedMemberIds.elementAt(i),
                                     userListState,
@@ -662,7 +664,9 @@ class _EditTeamDialogState extends State<EditTeamDialog> {
     String initials;
     if (isCurrentUser) {
       initials = 'ME';
-    } else if (user != null && user.fullName != null && user.fullName!.isNotEmpty) {
+    } else if (user != null &&
+        user.fullName != null &&
+        user.fullName!.isNotEmpty) {
       initials = user.fullName!.length >= 2
           ? user.fullName!.substring(0, 2).toUpperCase()
           : user.fullName!.substring(0, 1).toUpperCase();
@@ -703,7 +707,8 @@ class _EditTeamDialogState extends State<EditTeamDialog> {
     }
 
     // Convert color to hex string
-    final colorHex = '#${_selectedColor.value.toRadixString(16).substring(2).toUpperCase()}';
+    final colorHex =
+        '#${_selectedColor.value.toRadixString(16).substring(2).toUpperCase()}';
 
     final updatedTeam = widget.team.copyWith(
       name: _nameController.text.trim(),

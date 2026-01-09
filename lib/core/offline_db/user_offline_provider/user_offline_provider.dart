@@ -12,7 +12,8 @@ class UserOfflineProvider {
     await DBService().init();
     final box = DBService().userBox;
     if (box == null) return [];
-    return box.getAll().map(_toUser).toList();
+    return box.getAll().map(_toUser).toList()
+      ..sort((a, b) => a.fullName!.compareTo(b.fullName!));
   }
 
   Future<User?> getUserById(String apiUserId) async {
@@ -45,7 +46,6 @@ class UserOfflineProvider {
       password: user.password,
       email: user.email,
       phoneNumber: user.phoneNumber,
-      isLogin: user.isLogin,
     );
     box.put(entity);
   }
@@ -54,13 +54,13 @@ class UserOfflineProvider {
     await DBService().init();
     final box = DBService().userBox;
     if (box == null) return;
-    final q = box
+    final query = box
         .query(
           UserEntity_.apiUserId.equals(apiUserId) as Condition<UserEntity>?,
         )
         .build();
-    final found = q.findFirst();
-    q.close();
+    final found = query.findFirst();
+    query.close();
     if (found != null) box.remove(found.id);
   }
 
@@ -72,7 +72,6 @@ class UserOfflineProvider {
       password: entity.password,
       email: entity.email,
       phoneNumber: entity.phoneNumber,
-      isLogin: entity.isLogin,
     );
   }
 }

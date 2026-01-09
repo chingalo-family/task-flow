@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 
-/// Reusable profile avatar widget with edit button overlay
 class ProfileAvatarWithEdit extends StatelessWidget {
-  // Size ratio constants for consistent scaling
   static const double _fontSizeRatio = 0.72;
   static const double _editButtonSizeRatio = 0.64;
   static const double _editIconSizeRatio = 0.32;

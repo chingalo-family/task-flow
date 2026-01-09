@@ -22,10 +22,7 @@ class UserListState extends ChangeNotifier {
     notifyListeners();
     User? currentUser = await UserService().getCurrentUser();
     if (currentUser != null) {
-      await UserService().syncAvailableUsersInformations(
-        username: currentUser.username,
-        password: currentUser.password ?? '',
-      );
+      await UserService().syncAvailableUsersInformations();
     }
     await _loadUsers();
     _loading = false;
@@ -50,12 +47,11 @@ class UserListState extends ChangeNotifier {
 
   List<User> searchUsers(String query) {
     if (query.isEmpty) return _allUsers;
-
     final lowerQuery = query.toLowerCase();
     return _allUsers.where((user) {
       return user.username.toLowerCase().contains(lowerQuery) ||
           (user.fullName?.toLowerCase().contains(lowerQuery) ?? false) ||
           (user.email?.toLowerCase().contains(lowerQuery) ?? false);
-    }).toList();
+    }).toList()..sort((a, b) => a.fullName!.compareTo(b.fullName!));
   }
 }

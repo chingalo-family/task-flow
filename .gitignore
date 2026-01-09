@@ -48,3 +48,4 @@ app.*.map.json
 # default contants for the app
 lib/core/constants/dhis2_connection.dart
 lib/core/constants/email_connection.dart
+lib/core/constants/api_config.dart

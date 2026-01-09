@@ -217,7 +217,6 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
       message: 'Are you sure you want to delete "${status.name}" status?',
       confirmText: 'Delete',
     );
-
     if (isConfirmed) {
       await teamState.deleteTaskStatus(team.id, status.id);
       if (mounted) {

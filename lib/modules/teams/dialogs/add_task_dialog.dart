@@ -208,8 +208,10 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
     taskState.addTask(task);
 
     // Also add the task to the team
-    Provider.of<TeamState>(context, listen: false)
-        .addTaskToTeam(widget.team.id, taskId);
+    Provider.of<TeamState>(
+      context,
+      listen: false,
+    ).addTaskToTeam(widget.team.id, taskId);
 
     if (mounted) {
       Navigator.pop(context, true);

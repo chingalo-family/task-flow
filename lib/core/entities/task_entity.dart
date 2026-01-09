@@ -7,7 +7,7 @@ class TaskEntity {
   int id; // ObjectBox id
 
   @Index()
-  String taskId; // API task id
+  String taskId;
   String title;
   String? description;
   String status; // 'pending', 'in_progress', 'completed'
@@ -16,9 +16,9 @@ class TaskEntity {
 
   String? assignedToUserId;
   String? assignedToUsername;
-  String? assignedUserIdsJson; // JSON array of assigned user IDs
+  String? assignedUserIdsJson;
 
-  String? teamId; // Team this task belongs to
+  String? teamId;
   String? teamName;
 
   @Property(type: PropertyType.date)
@@ -30,9 +30,9 @@ class TaskEntity {
   String? projectId;
   String? projectName;
 
-  String? tagsJson; // JSON array of tags
-  String? attachmentsJson; // JSON array of attachment URLs
-  String? subtasksJson; // JSON array of subtasks
+  String? tagsJson;
+  String? attachmentsJson;
+  String? subtasksJson;
 
   bool? remindMe;
   int progress; // 0-100

@@ -3,29 +3,17 @@ import 'package:task_flow/core/models/team.dart';
 import 'package:task_flow/core/models/task_status.dart';
 import 'package:task_flow/core/offline_db/team_offline_provider/team_offline_provider.dart';
 
-/// Service layer for team management
-///
-/// Handles business logic, validation, and coordinates between state and data layers.
-/// Follows singleton pattern for consistent access across the application.
 class TeamService {
   TeamService._();
   static final TeamService _instance = TeamService._();
   factory TeamService() => _instance;
-
   final _offline = TeamOfflineProvider();
 
-  /// Create a new team
-  ///
-  /// Validates and saves team to database.
-  /// Returns the created team or null if creation fails.
   Future<Team?> createTeam(Team team) async {
     try {
-      // Validate team has required fields
       if (team.name.trim().isEmpty) {
         throw Exception('Team name cannot be empty');
       }
-
-      // Save to database
       await _offline.addOrUpdateTeam(team);
       return team;
     } catch (e) {
@@ -34,7 +22,6 @@ class TeamService {
     }
   }
 
-  /// Get team by ID
   Future<Team?> getTeamById(String id) async {
     try {
       return await _offline.getTeamById(id);
@@ -44,7 +31,6 @@ class TeamService {
     }
   }
 
-  /// Get all teams
   Future<List<Team>> getAllTeams() async {
     try {
       return await _offline.getAllTeams();
@@ -54,7 +40,6 @@ class TeamService {
     }
   }
 
-  /// Update existing team
   Future<bool> updateTeam(Team team) async {
     try {
       await _offline.addOrUpdateTeam(team);
@@ -65,7 +50,6 @@ class TeamService {
     }
   }
 
-  /// Delete team
   Future<bool> deleteTeam(String id) async {
     try {
       await _offline.deleteTeam(id);
@@ -76,7 +60,6 @@ class TeamService {
     }
   }
 
-  /// Get teams by member
   Future<List<Team>> getTeamsByMember(String userId) async {
     try {
       return await _offline.getTeamsByMemberId(userId);
@@ -86,7 +69,6 @@ class TeamService {
     }
   }
 
-  /// Add member to team
   Future<bool> addMemberToTeam(String teamId, String userId) async {
     try {
       final team = await getTeamById(teamId);
@@ -109,12 +91,10 @@ class TeamService {
     }
   }
 
-  /// Remove member from team
   Future<bool> removeMemberFromTeam(String teamId, String userId) async {
     try {
       final team = await getTeamById(teamId);
       if (team == null) return false;
-
       final memberIds = List<String>.from(team.memberIds ?? []);
       memberIds.remove(userId);
       final updatedTeam = team.copyWith(
@@ -129,12 +109,10 @@ class TeamService {
     }
   }
 
-  /// Add task to team
   Future<bool> addTaskToTeam(String teamId, String taskId) async {
     try {
       final team = await getTeamById(teamId);
       if (team == null) return false;
-
       final taskIds = List<String>.from(team.taskIds ?? []);
       if (!taskIds.contains(taskId)) {
         taskIds.add(taskId);
@@ -151,12 +129,10 @@ class TeamService {
     }
   }
 
-  /// Remove task from team
   Future<bool> removeTaskFromTeam(String teamId, String taskId) async {
     try {
       final team = await getTeamById(teamId);
       if (team == null) return false;
-
       final taskIds = List<String>.from(team.taskIds ?? []);
       taskIds.remove(taskId);
       final updatedTeam = team.copyWith(
@@ -170,12 +146,10 @@ class TeamService {
     }
   }
 
-  /// Add task status to team
   Future<bool> addTaskStatus(String teamId, TaskStatus status) async {
     try {
       final team = await getTeamById(teamId);
       if (team == null) return false;
-
       final statuses = List<TaskStatus>.from(team.taskStatuses);
       statuses.add(status);
       final updatedTeam = team.copyWith(
@@ -189,7 +163,6 @@ class TeamService {
     }
   }
 
-  /// Update task status
   Future<bool> updateTaskStatus(
     String teamId,
     String statusId,
@@ -198,9 +171,8 @@ class TeamService {
     try {
       final team = await getTeamById(teamId);
       if (team == null) return false;
-
       final statuses = List<TaskStatus>.from(team.taskStatuses);
-      final index = statuses.indexWhere((s) => s.id == statusId);
+      final index = statuses.indexWhere((status) => status.id == statusId);
       if (index != -1) {
         statuses[index] = updatedStatus;
         final updatedTeam = team.copyWith(
@@ -216,17 +188,15 @@ class TeamService {
     }
   }
 
-  /// Delete task status
   Future<bool> deleteTaskStatus(String teamId, String statusId) async {
     try {
       final team = await getTeamById(teamId);
       if (team == null) return false;
-
       final statuses = List<TaskStatus>.from(team.taskStatuses);
-      // Find status to delete
-      final statusToDeleteIndex = statuses.indexWhere((s) => s.id == statusId);
+      final statusToDeleteIndex = statuses.indexWhere(
+        (status) => status.id == statusId,
+      );
       if (statusToDeleteIndex == -1) return false;
-
       final statusToDelete = statuses[statusToDeleteIndex];
       if (!statusToDelete.isDefault) {
         statuses.removeAt(statusToDeleteIndex);
@@ -243,7 +213,6 @@ class TeamService {
     }
   }
 
-  /// Reorder task statuses
   Future<bool> reorderTaskStatuses(
     String teamId,
     List<TaskStatus> reorderedStatuses,
@@ -251,7 +220,6 @@ class TeamService {
     try {
       final team = await getTeamById(teamId);
       if (team == null) return false;
-
       final updatedTeam = team.copyWith(
         customTaskStatuses: reorderedStatuses,
         updatedAt: DateTime.now(),
@@ -263,7 +231,6 @@ class TeamService {
     }
   }
 
-  /// Update sync status
   Future<bool> updateSyncStatus(String teamId, bool isSynced) async {
     try {
       await _offline.updateSyncStatus(teamId, isSynced);
@@ -274,7 +241,6 @@ class TeamService {
     }
   }
 
-  /// Delete all teams (for testing/reset purposes)
   Future<bool> deleteAllTeams() async {
     try {
       await _offline.deleteAllTeams();
