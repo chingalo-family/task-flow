@@ -23,7 +23,12 @@ jobs:
         with:
           flutter-version: '3.24.5'
           channel: 'stable'
+      - name: disable analytics
+        run: flutter config --no-analytics
 
+      - name: disaable animations
+        run: flutter config --no-cli-animations
+        
       - name: Install dependencies
         run: flutter pub get
 
