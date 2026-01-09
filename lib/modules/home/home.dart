@@ -17,6 +17,18 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final notificationState = Provider.of<NotificationState>(
+        context,
+        listen: false,
+      );
+      await notificationState.initialize();
+    });
+  }
+
   final List<Widget> _pages = [
     const TasksPage(),
     const TeamsPage(),

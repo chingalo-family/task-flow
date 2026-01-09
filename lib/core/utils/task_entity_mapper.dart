@@ -3,11 +3,8 @@ import 'package:flutter/rendering.dart';
 import 'package:task_flow/core/entities/task_entity.dart';
 import 'package:task_flow/core/models/models.dart';
 
-/// Utility class to convert between Task model and TaskEntity
 class TaskEntityMapper {
-  /// Convert Task model to TaskEntity for ObjectBox storage
   static TaskEntity toEntity(Task task, {int objectBoxId = 0}) {
-    // Properly encode assignedUserIds - handle both null and empty list
     String? assignedUserIdsJson;
     if (task.assignedUserIds != null && task.assignedUserIds!.isNotEmpty) {
       try {
@@ -18,7 +15,6 @@ class TaskEntityMapper {
       }
     }
 
-    // Properly encode tags
     String? tagsJson;
     if (task.tags != null && task.tags!.isNotEmpty) {
       try {
@@ -29,7 +25,6 @@ class TaskEntityMapper {
       }
     }
 
-    // Properly encode attachments
     String? attachmentsJson;
     if (task.attachments != null && task.attachments!.isNotEmpty) {
       try {
@@ -40,7 +35,6 @@ class TaskEntityMapper {
       }
     }
 
-    // Properly encode subtasks
     String? subtasksJson;
     if (task.subtasks != null && task.subtasks!.isNotEmpty) {
       try {
@@ -89,9 +83,7 @@ class TaskEntityMapper {
     );
   }
 
-  /// Convert TaskEntity from ObjectBox to Task model
   static Task fromEntity(TaskEntity entity) {
-    // Decode assignedUserIds with proper error handling
     List<String>? assignedUserIds;
     if (entity.assignedUserIdsJson != null &&
         entity.assignedUserIdsJson!.isNotEmpty &&
@@ -107,7 +99,6 @@ class TaskEntityMapper {
       }
     }
 
-    // Decode tags with proper error handling
     List<String>? tags;
     if (entity.tagsJson != null &&
         entity.tagsJson!.isNotEmpty &&
@@ -123,7 +114,6 @@ class TaskEntityMapper {
       }
     }
 
-    // Decode attachments with proper error handling
     List<String>? attachments;
     if (entity.attachmentsJson != null &&
         entity.attachmentsJson!.isNotEmpty &&
@@ -139,7 +129,6 @@ class TaskEntityMapper {
       }
     }
 
-    // Decode subtasks with proper error handling
     List<Subtask>? subtasks;
     if (entity.subtasksJson != null &&
         entity.subtasksJson!.isNotEmpty &&
@@ -148,10 +137,10 @@ class TaskEntityMapper {
         final List<dynamic> subtasksData = jsonDecode(entity.subtasksJson!);
         subtasks = subtasksData
             .map(
-              (s) => Subtask(
-                id: s['id'] ?? '',
-                title: s['title'] ?? '',
-                isCompleted: s['isCompleted'] ?? false,
+              (subtask) => Subtask(
+                id: subtask['id'] ?? '',
+                title: subtask['title'] ?? '',
+                isCompleted: subtask['isCompleted'] ?? false,
               ),
             )
             .toList();

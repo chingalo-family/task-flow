@@ -1,22 +1,30 @@
-import 'package:task_flow/core/models/models.dart' as app_notif;
+import 'package:task_flow/core/models/models.dart' as app_notification;
 
-/// Utility class for filtering and grouping notifications
 class NotificationFilterUtils {
-  /// Filter notifications based on the selected filter
-  static List<app_notif.Notification> filterNotifications(
-    List<app_notif.Notification> notifications,
+  static List<app_notification.Notification> filterNotifications(
+    List<app_notification.Notification> notifications,
     String filter,
   ) {
     switch (filter) {
       case 'Unread':
-        return notifications.where((n) => !n.isRead).toList();
+        return notifications
+            .where((notification) => !notification.isRead)
+            .toList();
       case 'Mentions':
-        return notifications.where((n) => n.type == 'mention').toList();
+        return notifications
+            .where((notification) => notification.type == 'mention')
+            .toList();
       case 'Assigned to Me':
-        return notifications.where((n) => n.type == 'task_assigned').toList();
+        return notifications
+            .where((notification) => notification.type == 'task_assigned')
+            .toList();
       case 'System':
         return notifications
-            .where((n) => n.type == 'system' || n.type == 'deadline_reminder')
+            .where(
+              (notification) =>
+                  notification.type == 'system' ||
+                  notification.type == 'deadline_reminder',
+            )
             .toList();
       case 'All':
       default:
@@ -24,16 +32,15 @@ class NotificationFilterUtils {
     }
   }
 
-  /// Group notifications by time (Recent < 24hrs, Earlier >= 24hrs)
-  static Map<String, List<app_notif.Notification>> groupNotificationsByTime(
-    List<app_notif.Notification> notifications, {
+  static Map<String, List<app_notification.Notification>>
+  groupNotificationsByTime(
+    List<app_notification.Notification> notifications, {
     int recentHoursThreshold = 24,
   }) {
-    final Map<String, List<app_notif.Notification>> grouped = {
+    final Map<String, List<app_notification.Notification>> grouped = {
       'Recent': [],
       'Earlier': [],
     };
-
     final now = DateTime.now();
     for (var notification in notifications) {
       final difference = now.difference(notification.createdAt);
@@ -47,26 +54,27 @@ class NotificationFilterUtils {
     return grouped;
   }
 
-  /// Get count of unread notifications
-  static int getUnreadCount(List<app_notif.Notification> notifications) {
-    return notifications.where((n) => !n.isRead).length;
+  static int getUnreadCount(List<app_notification.Notification> notifications) {
+    return notifications.where((notification) => !notification.isRead).length;
   }
 
-  /// Get notifications by type
-  static List<app_notif.Notification> getNotificationsByType(
-    List<app_notif.Notification> notifications,
-    String type,
-  ) {
-    return notifications.where((n) => n.type == type).toList();
-  }
-
-  /// Get unread notifications by type
-  static List<app_notif.Notification> getUnreadNotificationsByType(
-    List<app_notif.Notification> notifications,
+  static List<app_notification.Notification> getNotificationsByType(
+    List<app_notification.Notification> notifications,
     String type,
   ) {
     return notifications
-        .where((n) => n.type == type && !n.isRead)
+        .where((notification) => notification.type == type)
+        .toList();
+  }
+
+  static List<app_notification.Notification> getUnreadNotificationsByType(
+    List<app_notification.Notification> notifications,
+    String type,
+  ) {
+    return notifications
+        .where(
+          (notification) => notification.type == type && !notification.isRead,
+        )
         .toList();
   }
 }

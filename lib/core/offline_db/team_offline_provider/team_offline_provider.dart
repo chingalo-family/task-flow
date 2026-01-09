@@ -4,43 +4,29 @@ import 'package:task_flow/core/models/team.dart';
 import 'package:task_flow/core/services/db_service.dart';
 import 'package:task_flow/core/utils/team_entity_mapper.dart';
 
-/// Offline provider for team persistence
-///
-/// Handles all ObjectBox database operations for teams.
-/// Follows singleton pattern for efficient database access.
 class TeamOfflineProvider {
   TeamOfflineProvider._();
   static final TeamOfflineProvider _instance = TeamOfflineProvider._();
   factory TeamOfflineProvider() => _instance;
 
-  /// Add or update team in database
   Future<void> addOrUpdateTeam(Team team) async {
     try {
       await DBService().init();
       final box = DBService().teamBox;
       if (box == null) return;
-
-      // Convert Team model to TeamEntity
       final entity = TeamEntityMapper.toEntity(team);
-
-      // Check if team already exists by iterating through all teams
-      // NOTE: This is a temporary solution until ObjectBox indexing is optimized
       // TODO: Add index on teamId field for better performance
       final allEntities = box.getAll();
       TeamEntity? existing;
-      for (var e in allEntities) {
-        if (e.teamId == team.id) {
-          existing = e;
+      for (var entity in allEntities) {
+        if (entity.teamId == team.id) {
+          existing = entity;
           break;
         }
       }
-
       if (existing != null) {
-        // Update existing team
         entity.id = existing.id;
       }
-
-      // Save to database
       box.put(entity);
     } catch (e) {
       debugPrint('Error adding/updating team: $e');
@@ -48,16 +34,11 @@ class TeamOfflineProvider {
     }
   }
 
-  /// Get team by API team ID
   Future<Team?> getTeamById(String apiTeamId) async {
     try {
       await DBService().init();
       final box = DBService().teamBox;
       if (box == null) return null;
-
-      // Find team by iterating through all teams
-      // NOTE: This is a temporary solution until ObjectBox indexing is optimized
-      // TODO: Add index on teamId field for better performance
       final allEntities = box.getAll();
       for (var entity in allEntities) {
         if (entity.teamId == apiTeamId) {
@@ -83,7 +64,8 @@ class TeamOfflineProvider {
 
       return entities
           .map((entity) => TeamEntityMapper.fromEntity(entity))
-          .toList();
+          .toList()
+        ..sort((a, b) => a.name.compareTo(b.name));
     } catch (e) {
       debugPrint('Error getting all teams: $e');
       return [];

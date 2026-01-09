@@ -22,18 +22,11 @@ class EmptyStateWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            size: 64,
-            color: AppConstant.textSecondary,
-          ),
+          Icon(icon, size: 64, color: AppConstant.textSecondary),
           SizedBox(height: AppConstant.spacing16),
           Text(
             message,
-            style: TextStyle(
-              color: AppConstant.textSecondary,
-              fontSize: 16,
-            ),
+            style: TextStyle(color: AppConstant.textSecondary, fontSize: 16),
             textAlign: TextAlign.center,
           ),
           if (actionText != null && onAction != null) ...[
@@ -48,7 +41,9 @@ class EmptyStateWidget extends StatelessWidget {
                   vertical: AppConstant.spacing12,
                 ),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppConstant.borderRadius8),
+                  borderRadius: BorderRadius.circular(
+                    AppConstant.borderRadius8,
+                  ),
                 ),
               ),
               child: Text(actionText!),
@@ -98,10 +93,7 @@ class ConfirmationDialog extends StatelessWidget {
       ),
       content: Text(
         message,
-        style: TextStyle(
-          color: AppConstant.textSecondary,
-          fontSize: 14,
-        ),
+        style: TextStyle(color: AppConstant.textSecondary, fontSize: 14),
       ),
       actions: [
         TextButton(
@@ -111,9 +103,7 @@ class ConfirmationDialog extends StatelessWidget {
           },
           child: Text(
             cancelText,
-            style: TextStyle(
-              color: AppConstant.textSecondary,
-            ),
+            style: TextStyle(color: AppConstant.textSecondary),
           ),
         ),
         TextButton(
@@ -243,10 +233,7 @@ class ProgressIndicatorWidget extends StatelessWidget {
         if (label != null) ...[
           Text(
             label!,
-            style: TextStyle(
-              color: AppConstant.textSecondary,
-              fontSize: 12,
-            ),
+            style: TextStyle(color: AppConstant.textSecondary, fontSize: 12),
           ),
           SizedBox(height: 4),
         ],
@@ -254,7 +241,7 @@ class ProgressIndicatorWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(height / 2),
           child: LinearProgressIndicator(
             value: progress,
-            backgroundColor: AppConstant.textSecondary.withOpacity(0.2),
+            backgroundColor: AppConstant.textSecondary.withValues(alpha: 0.2),
             valueColor: AlwaysStoppedAnimation<Color>(
               color ?? AppConstant.primaryBlue,
             ),

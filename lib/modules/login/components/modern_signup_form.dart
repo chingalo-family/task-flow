@@ -7,8 +7,8 @@ import 'package:task_flow/modules/login/components/modern_primary_button.dart';
 class ModernSignupForm extends StatefulWidget {
   final Function(
     String firstName,
-    String surname,
     String email,
+    String username,
     String phoneNumber,
     String password,
   )
@@ -27,9 +27,9 @@ class ModernSignupForm extends StatefulWidget {
 
 class _ModernSignupFormState extends State<ModernSignupForm> {
   final _formKey = GlobalKey<FormState>();
-  final _firstNameController = TextEditingController();
-  final _surnameController = TextEditingController();
+  final _fullNameController = TextEditingController();
   final _emailController = TextEditingController();
+  final _usernameController = TextEditingController();
   final _phoneNumberController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -40,9 +40,9 @@ class _ModernSignupFormState extends State<ModernSignupForm> {
   @override
   void initState() {
     super.initState();
-    _firstNameController.addListener(_validateForm);
-    _surnameController.addListener(_validateForm);
+    _fullNameController.addListener(_validateForm);
     _emailController.addListener(_validateForm);
+    _usernameController.addListener(_validateForm);
     _phoneNumberController.addListener(_validateForm);
     _passwordController.addListener(_validateForm);
     _confirmPasswordController.addListener(_validateForm);
@@ -50,10 +50,10 @@ class _ModernSignupFormState extends State<ModernSignupForm> {
 
   @override
   void dispose() {
-    _firstNameController.dispose();
-    _surnameController.dispose();
+    _fullNameController.dispose();
     _phoneNumberController.dispose();
     _emailController.dispose();
+    _usernameController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
@@ -62,9 +62,9 @@ class _ModernSignupFormState extends State<ModernSignupForm> {
   void _validateForm() {
     setState(() {
       _isFormValid =
-          _firstNameController.text.isNotEmpty &&
-          _surnameController.text.isNotEmpty &&
-          _emailController.text.isNotEmpty &&
+          _fullNameController.text.isNotEmpty &
+              _emailController.text.isNotEmpty &&
+          _usernameController.text.isNotEmpty &&
           _phoneNumberController.text.isNotEmpty &&
           _passwordController.text.isNotEmpty &&
           _confirmPasswordController.text.isNotEmpty;
@@ -78,9 +78,9 @@ class _ModernSignupFormState extends State<ModernSignupForm> {
         return;
       }
       widget.onSignUp(
-        _firstNameController.text,
-        _surnameController.text,
+        _fullNameController.text,
         _emailController.text,
+        _usernameController.text,
         _phoneNumberController.text,
         _passwordController.text,
       );
@@ -95,13 +95,13 @@ class _ModernSignupFormState extends State<ModernSignupForm> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           ModernInputField(
-            controller: _firstNameController,
-            hintText: 'First Name',
+            controller: _fullNameController,
+            hintText: 'Full Name',
             icon: Icons.person_outline_rounded,
             enabled: !widget.isSaving,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter a first name';
+                return 'Please enter a full name';
               }
 
               return null;
@@ -109,13 +109,13 @@ class _ModernSignupFormState extends State<ModernSignupForm> {
           ),
           SizedBox(height: AppConstant.spacing16),
           ModernInputField(
-            controller: _surnameController,
-            hintText: 'Surname',
+            controller: _usernameController,
+            hintText: 'Username',
             icon: Icons.person_outline_rounded,
             enabled: !widget.isSaving,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter a surname';
+                return 'Please enter a username';
               }
               return null;
             },
@@ -150,9 +150,6 @@ class _ModernSignupFormState extends State<ModernSignupForm> {
               }
               if (!AppUtil.isPhoneNumberValid(value)) {
                 return 'Please enter a valid phone number';
-              }
-              if (!AppUtil.isPasswordValid(value)) {
-                return 'Password must be at least 8, include an uppercase letter, number and special character';
               }
               return null;
             },

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_flow/core/models/models.dart' as app_notif;
+import 'package:task_flow/core/models/models.dart' as app_notification;
 import 'package:task_flow/core/services/preference_service.dart';
 import 'package:task_flow/core/services/notification_service.dart';
 
@@ -11,13 +11,14 @@ class NotificationState extends ChangeNotifier {
     : _service = service ?? NotificationService(),
       _prefs = prefs ?? PreferenceService();
 
-  List<app_notif.Notification> _notifications = [];
+  List<app_notification.Notification> _notifications = [];
   bool _loading = false;
   bool _notificationsEnabled = true;
 
-  List<app_notif.Notification> get notifications => _notifications;
-  List<app_notif.Notification> get unreadNotifications =>
-      _notifications.where((n) => n.isRead == false).toList();
+  List<app_notification.Notification> get notifications => _notifications;
+  List<app_notification.Notification> get unreadNotifications => _notifications
+      .where((notification) => notification.isRead == false)
+      .toList();
   bool get loading => _loading;
   bool get notificationsEnabled => _notificationsEnabled;
 
@@ -27,13 +28,8 @@ class NotificationState extends ChangeNotifier {
   Future<void> initialize() async {
     _loading = true;
     notifyListeners();
-
-    // Load notification preference
     await _loadNotificationPreference();
-
-    // Load notifications from database via service
     await _loadNotifications();
-
     _loading = false;
     notifyListeners();
   }
@@ -65,7 +61,9 @@ class NotificationState extends ChangeNotifier {
   Future<void> markAsRead(String notificationId) async {
     final success = await _service.markAsRead(notificationId);
     if (success) {
-      final index = _notifications.indexWhere((n) => n.id == notificationId);
+      final index = _notifications.indexWhere(
+        (notification) => notification.id == notificationId,
+      );
       if (index != -1) {
         _notifications[index] = _notifications[index].copyWith(isRead: true);
         notifyListeners();
@@ -76,9 +74,14 @@ class NotificationState extends ChangeNotifier {
   Future<void> markAllAsRead() async {
     final success = await _service.markAllAsRead();
     if (success) {
-      for (var i = 0; i < _notifications.length; i++) {
-        if (_notifications[i].isRead == false) {
-          _notifications[i] = _notifications[i].copyWith(isRead: true);
+      for (
+        var notificationIndex = 0;
+        notificationIndex < _notifications.length;
+        notificationIndex++
+      ) {
+        if (_notifications[notificationIndex].isRead == false) {
+          _notifications[notificationIndex] = _notifications[notificationIndex]
+              .copyWith(isRead: true);
         }
       }
       notifyListeners();
@@ -93,27 +96,26 @@ class NotificationState extends ChangeNotifier {
     }
   }
 
-  /// Add a new notification to the list
-  /// This is used to dynamically create notifications as events occur
-  Future<void> addNotification(app_notif.Notification notification) async {
+  Future<void> addNotification(
+    app_notification.Notification notification,
+  ) async {
+    //TODO sync the notification with API if needed later
     final created = await _service.createNotification(notification);
     if (created != null) {
-      _notifications.insert(0, created); // Add to the beginning
+      _notifications.insert(0, created);
       notifyListeners();
     }
   }
 
-  /// Add multiple notifications at once
   Future<void> addNotifications(
-    List<app_notif.Notification> notifications,
+    List<app_notification.Notification> notifications,
   ) async {
     for (final notification in notifications) {
       await _service.createNotification(notification);
     }
-    await _loadNotifications(); // Reload all to ensure proper sorting
+    await _loadNotifications();
   }
 
-  /// Clear all notifications
   Future<void> clearAllNotifications() async {
     final success = await _service.deleteAll();
     if (success) {
@@ -122,15 +124,21 @@ class NotificationState extends ChangeNotifier {
     }
   }
 
-  /// Get notifications by type
-  List<app_notif.Notification> getNotificationsByType(String type) {
-    return _notifications.where((n) => n.type == type).toList();
+  List<app_notification.Notification> getNotificationsByType(String type) {
+    return _notifications
+        .where((notification) => notification.type == type)
+        .toList();
   }
 
   /// Get unread notifications by type
-  List<app_notif.Notification> getUnreadNotificationsByType(String type) {
+  List<app_notification.Notification> getUnreadNotificationsByType(
+    String type,
+  ) {
     return _notifications
-        .where((n) => n.type == type && n.isRead == false)
+        .where(
+          (notification) =>
+              notification.type == type && notification.isRead == false,
+        )
         .toList();
   }
 }

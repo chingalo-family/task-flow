@@ -3,10 +3,6 @@ import 'package:task_flow/core/models/notification.dart';
 import 'package:task_flow/core/offline_db/notification_offline_provider/notification_offline_provider.dart';
 import 'package:task_flow/core/utils/utils.dart';
 
-/// Service layer for notification management
-///
-/// Handles business logic, validation, and coordinates between state and data layers.
-/// Follows singleton pattern for consistent access across the application.
 class NotificationService {
   NotificationService._();
   static final NotificationService _instance = NotificationService._();
@@ -14,20 +10,13 @@ class NotificationService {
 
   final _offline = NotificationOfflineProvider();
 
-  /// Create a new notification
-  ///
-  /// Auto-generates ID if not provided.
-  /// Returns the created notification or null if creation fails.
   Future<Notification?> createNotification(Notification notification) async {
     try {
-      // Auto-generate ID if not provided
       final notificationToSave = notification.id.isEmpty
           ? notification.copyWith(
               id: 'notif_${DateTime.now().millisecondsSinceEpoch}',
             )
           : notification;
-
-      // Save to database
       await _offline.addOrUpdateNotification(notificationToSave);
       return notificationToSave;
     } catch (e) {
@@ -36,7 +25,6 @@ class NotificationService {
     }
   }
 
-  /// Get notification by ID
   Future<Notification?> getNotificationById(String id) async {
     try {
       return await _offline.getNotificationById(id);
@@ -46,13 +34,9 @@ class NotificationService {
     }
   }
 
-  /// Get all notifications
-  ///
-  /// Returns notifications sorted by creation date (newest first).
   Future<List<Notification>> getAllNotifications() async {
     try {
       final notifications = await _offline.getAllNotifications();
-      // Sort by creation date, newest first
       notifications.sort((a, b) {
         return b.createdAt.compareTo(a.createdAt);
       });
@@ -74,7 +58,6 @@ class NotificationService {
     }
   }
 
-  /// Delete notification
   Future<bool> deleteNotification(String id) async {
     try {
       await _offline.deleteNotification(id);
@@ -85,7 +68,6 @@ class NotificationService {
     }
   }
 
-  /// Get unread notifications
   Future<List<Notification>> getUnreadNotifications() async {
     try {
       final notifications = await getAllNotifications();
@@ -98,7 +80,6 @@ class NotificationService {
     }
   }
 
-  /// Get notifications by type
   Future<List<Notification>> getNotificationsByType(String type) async {
     try {
       final notifications = await getAllNotifications();
@@ -111,7 +92,6 @@ class NotificationService {
     }
   }
 
-  /// Get unread notifications by type
   Future<List<Notification>> getUnreadNotificationsByType(String type) async {
     try {
       final notifications = await getAllNotifications();
@@ -127,7 +107,6 @@ class NotificationService {
     }
   }
 
-  /// Mark notification as read
   Future<bool> markAsRead(String id) async {
     try {
       final notification = await getNotificationById(id);
@@ -141,7 +120,6 @@ class NotificationService {
     }
   }
 
-  /// Mark all notifications as read
   Future<bool> markAllAsRead() async {
     try {
       final notifications = await getAllNotifications();
@@ -157,7 +135,6 @@ class NotificationService {
     }
   }
 
-  /// Delete all notifications
   Future<bool> deleteAll() async {
     try {
       await _offline.deleteAllNotifications();
@@ -168,7 +145,6 @@ class NotificationService {
     }
   }
 
-  /// Get unread count
   Future<int> getUnreadCount() async {
     try {
       final unread = await getUnreadNotifications();
@@ -179,7 +155,6 @@ class NotificationService {
     }
   }
 
-  /// Create task assigned notification
   Future<Notification?> createTaskAssignedNotification({
     required String taskTitle,
     required String taskId,
@@ -197,7 +172,6 @@ class NotificationService {
     return await createNotification(notification);
   }
 
-  /// Create team invite notification
   Future<Notification?> createTeamInviteNotification({
     required String teamName,
     required String teamId,
@@ -215,7 +189,6 @@ class NotificationService {
     return await createNotification(notification);
   }
 
-  /// Create task completed notification
   Future<Notification?> createTaskCompletedNotification({
     required String taskTitle,
     required String taskId,

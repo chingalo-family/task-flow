@@ -3,27 +3,25 @@ import 'package:objectbox/objectbox.dart';
 @Entity()
 class NotificationEntity {
   @Id()
-  int id; // ObjectBox id
+  int id;
 
   @Index()
-  String notificationId; // API notification id
+  String notificationId;
   String title;
   String? body;
   String
   type; // 'task_assigned', 'team_invite', 'task_completed', 'mention', etc.
 
   bool isRead;
-  String? relatedEntityId; // ID of related task, team, etc.
+  String? relatedEntityId;
   String? relatedEntityType; // 'task', 'team', 'user', etc.
 
-  String? actorUserId; // User who triggered the notification
+  String? actorUserId;
   String? actorUsername;
   String? actorAvatarUrl;
 
   @Property(type: PropertyType.date)
   DateTime createdAt;
-
-  String? metadataJson; // Additional metadata stored as JSON
 
   bool isSynced;
 

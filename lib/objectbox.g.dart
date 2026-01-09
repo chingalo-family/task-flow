@@ -177,12 +177,6 @@ final _entities = <obx_int.ModelEntity>[
         type: 1,
         flags: 0,
       ),
-      obx_int.ModelProperty(
-        id: const obx_int.IdUid(14, 3863776433235736798),
-        name: 'metadataJson',
-        type: 9,
-        flags: 0,
-      ),
     ],
     relations: <obx_int.ModelRelation>[],
     backlinks: <obx_int.ModelBacklink>[],
@@ -502,7 +496,11 @@ obx_int.ModelDefinition getObjectBoxModel() {
     lastSequenceId: const obx_int.IdUid(0, 0),
     retiredEntityUids: const [],
     retiredIndexUids: const [],
-    retiredPropertyUids: const [836196098256066830, 4360288102706087886],
+    retiredPropertyUids: const [
+      836196098256066830,
+      4360288102706087886,
+      3863776433235736798,
+    ],
     retiredRelationUids: const [],
     modelVersion: 5,
     modelVersionParserMinimum: 5,
@@ -632,9 +630,6 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final actorAvatarUrlOffset = object.actorAvatarUrl == null
             ? null
             : fbb.writeString(object.actorAvatarUrl!);
-        final metadataJsonOffset = object.metadataJson == null
-            ? null
-            : fbb.writeString(object.metadataJson!);
         fbb.startTable(15);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, notificationIdOffset);
@@ -649,7 +644,6 @@ obx_int.ModelDefinition getObjectBoxModel() {
         fbb.addOffset(10, actorAvatarUrlOffset);
         fbb.addInt64(11, object.createdAt.millisecondsSinceEpoch);
         fbb.addBool(12, object.isSynced);
-        fbb.addOffset(13, metadataJsonOffset);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -704,9 +698,6 @@ obx_int.ModelDefinition getObjectBoxModel() {
           28,
           false,
         );
-        final metadataJsonParam = const fb.StringReader(
-          asciiOptimization: true,
-        ).vTableGetNullable(buffer, rootOffset, 30);
         final object = NotificationEntity(
           id: idParam,
           notificationId: notificationIdParam,
@@ -721,7 +712,6 @@ obx_int.ModelDefinition getObjectBoxModel() {
           actorAvatarUrl: actorAvatarUrlParam,
           createdAt: createdAtParam,
           isSynced: isSyncedParam,
-          metadataJson: metadataJsonParam,
         );
 
         return object;
@@ -1194,11 +1184,6 @@ class NotificationEntity_ {
   /// See [NotificationEntity.isSynced].
   static final isSynced = obx.QueryBooleanProperty<NotificationEntity>(
     _entities[1].properties[12],
-  );
-
-  /// See [NotificationEntity.metadataJson].
-  static final metadataJson = obx.QueryStringProperty<NotificationEntity>(
-    _entities[1].properties[13],
   );
 }
 

@@ -1,5 +1,4 @@
 class TimeUtils {
-  /// Convert DateTime to a human-readable "time ago" format
   static String getTimeAgo(DateTime dateTime) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
@@ -17,13 +16,11 @@ class TimeUtils {
     }
   }
 
-  /// Format a DateTime to a readable date string
   static String formatDate(DateTime dateTime) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = DateTime(now.year, now.month, now.day - 1);
     final date = DateTime(dateTime.year, dateTime.month, dateTime.day);
-
     if (date == today) {
       return 'Today';
     } else if (date == yesterday) {
@@ -33,7 +30,6 @@ class TimeUtils {
     }
   }
 
-  /// Check if a date is overdue
   static bool isOverdue(DateTime? dueDate, {bool isCompleted = false}) {
     if (dueDate == null || isCompleted) return false;
     return DateTime.now().isAfter(dueDate);

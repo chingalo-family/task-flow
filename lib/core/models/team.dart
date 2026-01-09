@@ -7,15 +7,14 @@ class Team {
   final String? avatarUrl;
   final int memberCount;
   final List<String>? memberIds;
-  final List<String>? taskIds; // List of task IDs belonging to this team
-  final List<TaskStatus>?
-  customTaskStatuses; // Custom task statuses for this team
+  final List<String>? taskIds;
+  final List<TaskStatus>? customTaskStatuses;
   final String? createdByUserId;
   final String? createdByUsername;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final String? teamIcon; // Icon key for the team (e.g., 'rocket', 'computer')
-  final String? teamColor; // Hex color string for the team (e.g., '#2E90FA')
+  final String? teamIcon;
+  final String? teamColor;
 
   Team({
     required this.id,
@@ -35,7 +34,6 @@ class Team {
   }) : createdAt = createdAt ?? DateTime.now(),
        updatedAt = updatedAt ?? DateTime.now();
 
-  // Get task statuses (custom or default)
   List<TaskStatus> get taskStatuses =>
       customTaskStatuses ?? TaskStatus.getDefaultStatuses();
 
