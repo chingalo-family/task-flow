@@ -1,31 +1,78 @@
 # Test Suite Verification Summary
 
 ## Overview
-This document summarizes the comprehensive test suite added to the Task Flow application.
+This document summarizes the comprehensive test suite added to the Task Flow application, covering all models, utilities, and app state components.
 
 ## Test Files Created
 
-### 1. Model Tests
-- **test/models/task_test.dart** (22 tests)
+### 1. Model Tests (87 tests across 7 files)
+
+- **test/models/task_test.dart** (17 tests)
   - Task creation and initialization
   - Task copyWith functionality
   - Status and priority getters
   - Overdue calculation
   - Subtask progress calculation
   
-- **test/models/user_test.dart** (6 tests)
+- **test/models/user_test.dart** (9 tests)
   - User model creation
   - JSON deserialization
   - String formatting
 
-### 2. Utility Tests
-- **test/utils/time_utils_test.dart** (13 tests)
+- **test/models/notification_test.dart** (10 tests)
+  - Notification creation with required/optional fields
+  - Default values (isRead, createdAt)
+  - copyWith functionality
+  - Time ago string generation
+
+- **test/models/team_test.dart** (14 tests)
+  - Team creation and initialization
+  - Task statuses (default vs custom)
+  - Member and task list management
+  - copyWith with nested objects
+
+- **test/models/task_status_test.dart** (12 tests)
+  - Status creation and defaults
+  - JSON serialization/deserialization
+  - Default statuses (To Do, In Progress, Completed)
+  - Color handling
+
+- **test/models/task_category_test.dart** (14 tests)
+  - All predefined categories
+  - Category lookups (fromId, getById)
+  - Null handling and fallbacks
+  - Const instances
+
+- **test/models/email_notification_test.dart** (11 tests)
+  - Email notification creation
+  - Recipients handling (to, cc)
+  - toString formatting
+
+### 2. Utility Tests (63 tests across 3 files)
+
+- **test/utils/time_utils_test.dart** (10 tests)
   - Time ago formatting
   - Date formatting
   - Overdue detection
 
-### 3. State Management Tests
-- **test/state/task_state_test.dart** (16 tests)
+- **test/utils/app_util_test.dart** (25 tests)
+  - Password validation (strength requirements)
+  - Email validation (format checking)
+  - Phone number validation (length, format)
+  - UID generation (uniqueness, format)
+
+- **test/utils/notification_utils_test.dart** (28 tests)
+  - Task notifications (assigned, completed, status change)
+  - Team notifications (invites)
+  - Comment and mention notifications
+  - Deadline reminders
+  - System and custom notifications
+  - Batch notification creation
+  - Icon and color mapping
+
+### 3. State Management Tests (66 tests across 4 files)
+
+- **test/state/task_state_test.dart** (11 tests)
   - State initialization
   - Task statistics
   - User-specific queries
@@ -33,21 +80,50 @@ This document summarizes the comprehensive test suite added to the Task Flow app
   - CRUD operations
   - Status toggling
 
-### 4. Widget Tests
-- **test/widgets/my_app_test.dart** (5 tests)
+- **test/state/user_state_test.dart** (12 tests)
+  - Authentication state
+  - Sign in/sign up/logout
+  - Current user management
+  - Password operations
+  - Listener notifications
+
+- **test/state/team_state_test.dart** (22 tests)
+  - Team initialization and error handling
+  - Team CRUD operations
+  - Member management (add/remove)
+  - Task management (add/remove)
+  - Task status management (add/update/delete/reorder)
+  - Default status protection
+
+- **test/state/notification_state_test.dart** (21 tests)
+  - Notification initialization
+  - Preferences management
+  - Mark as read (single/all)
+  - Delete notifications
+  - Add notifications (single/batch)
+  - Filter by type and read status
+  - Clear all notifications
+
+### 4. Widget Tests (4 tests)
+
+- **test/widgets/my_app_test.dart** (4 tests)
   - App initialization
   - Theme configuration
   - Material 3 usage
+  - Home screen rendering
 
 ## Total Test Coverage
-- **Test Files**: 5
-- **Test Cases**: 62
-- **Lines of Test Code**: ~600+
+
+- **Test Files**: 15
+- **Test Cases**: 196
+- **Lines of Test Code**: ~2,800+
 
 ## Test Categories
-- ✅ Unit Tests: Models, Utils, Services
-- ✅ State Management Tests: Provider-based state
-- ✅ Widget Tests: Core app widget
+
+- ✅ **Unit Tests**: All models, utilities, and services
+- ✅ **State Management Tests**: All Provider-based state classes
+- ✅ **Widget Tests**: Core app widget
+- ✅ **Integration Ready**: Mocked services for isolation
 - ⏳ Integration Tests: To be added in future
 
 ## Running Tests

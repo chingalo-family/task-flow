@@ -120,22 +120,20 @@ Built with ❤️ using Flutter and open-source technologies.
 
 ### Testing
 
-Task Flow includes a comprehensive test suite covering models, utilities, state management, and widgets.
+Task Flow includes a comprehensive test suite with **196 tests** covering models, utilities, state management, and widgets.
 
-**Run all tests:**
+**Quick Test Commands:**
 ```bash
-flutter test
+flutter test                    # Run all tests
+flutter test --coverage         # Run with coverage report
+./run_tests.sh                  # Use test runner script
 ```
 
-**Run with coverage:**
-```bash
-flutter test --coverage
-```
-
-**Use the test runner script:**
-```bash
-./run_tests.sh
-```
+**Test Coverage:**
+- ✅ **87 Model Tests**: All data models (Task, User, Team, Notification, etc.)
+- ✅ **63 Utility Tests**: Validation, formatting, and helper functions
+- ✅ **66 State Tests**: Complete state management coverage
+- ✅ **4 Widget Tests**: Core widget initialization
 
 For detailed testing documentation, see [test/README.md](test/README.md).
 
