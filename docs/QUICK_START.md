@@ -12,7 +12,7 @@ Get up and running with Task Flow in 5 minutes!
    git clone https://github.com/chingalo-family/task-flow.git
    cd task-flow
    flutter pub get
-   flutter pub run build_runner build --delete-conflicting-outputs
+   dart run build_runner build --delete-conflicting-outputs
    flutter run
    ```
 

@@ -52,13 +52,13 @@ flutter pub get
 Task Flow uses ObjectBox for local database storage. Generate the required files:
 
 ```bash
-flutter pub run build_runner build --delete-conflicting-outputs
+dart run build_runner build --delete-conflicting-outputs
 ```
 
-Or using dart directly:
+Or using flutter pub run (older method):
 
 ```bash
-dart run build_runner build --delete-conflicting-outputs
+flutter pub run build_runner build --delete-conflicting-outputs
 ```
 
 **Note**: This step is crucial. Without it, the app will not compile. See [ObjectBox Setup](./OBJECTBOX_BUILD_REQUIRED.md) for more details.
@@ -76,7 +76,40 @@ If you want to enable email notifications:
 
 **⚠️ Security Warning**: Never commit real credentials to version control. The `.gitignore` file is configured to exclude this file.
 
-### 5. Verify Installation
+### 5. Configure API (Optional)
+
+If you want to connect to the Task Flow API backend:
+
+1. Copy the example configuration:
+   ```bash
+   cp lib/core/constants/api_config.example.dart lib/core/constants/api_config.dart
+   ```
+
+2. Edit `lib/core/constants/api_config.dart` with your API details:
+   - Set `baseUrl` to your API domain (e.g., `https://vmi2503861.contaboserver.net`)
+   - Set `apiPath` to your API path (default: `/task-flow-api`)
+
+**Example Configuration:**
+```dart
+class ApiConfig {
+  static const String baseUrl = 'https://vmi2503861.contaboserver.net';
+  static const String apiPath = '/task-flow-api';
+  
+  // Other configuration remains the same...
+}
+```
+
+**⚠️ Security Warning**: Never commit real API credentials to version control. The `.gitignore` file is configured to exclude this file.
+
+**Related API Resources:**
+- **API**: [https://vmi2503861.contaboserver.net/task-flow-api/](https://vmi2503861.contaboserver.net/task-flow-api/)
+- **API Documentation**: [https://vmi2503861.contaboserver.net/task-flow-api-docs/](https://vmi2503861.contaboserver.net/task-flow-api-docs/)
+- **API Source Code**: [https://github.com/chingalo-family/task-flow-api](https://github.com/chingalo-family/task-flow-api)
+
+**Design Resources:**
+- **Application Design**: [https://stitch.withgoogle.com/projects/14437076708101911838](https://stitch.withgoogle.com/projects/14437076708101911838)
+
+### 6. Verify Installation
 
 Check if everything is set up correctly:
 
@@ -201,7 +234,7 @@ flutter test test/widget_test.dart
 
 **Solution**: Run the build_runner command:
 ```bash
-flutter pub run build_runner build --delete-conflicting-outputs
+dart run build_runner build --delete-conflicting-outputs
 ```
 
 #### 2. Flutter Doctor Issues

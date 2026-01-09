@@ -69,6 +69,15 @@ Comprehensive documentation is available in the [`docs/`](docs/) directory:
 - **[FAQ](docs/FAQ.md)** - Frequently asked questions
 - **[Changelog](docs/CHANGELOG.md)** - Version history
 
+## 🌐 Related Resources
+
+- **Website**: [https://chingalo-family.github.io/task-flow-website/](https://chingalo-family.github.io/task-flow-website/)
+- **Website Source Code**: [https://github.com/chingalo-family/task-flow-website](https://github.com/chingalo-family/task-flow-website)
+- **API**: [https://vmi2503861.contaboserver.net/task-flow-api/](https://vmi2503861.contaboserver.net/task-flow-api/)
+- **API Documentation**: [https://vmi2503861.contaboserver.net/task-flow-api-docs/](https://vmi2503861.contaboserver.net/task-flow-api-docs/)
+- **API Source Code**: [https://github.com/chingalo-family/task-flow-api](https://github.com/chingalo-family/task-flow-api)
+- **Design Resources**: [https://stitch.withgoogle.com/projects/14437076708101911838](https://stitch.withgoogle.com/projects/14437076708101911838)
+
 ## 🎯 Why Task Flow?
 
 Task Flow helps you:
@@ -148,7 +157,7 @@ Task Flow uses ObjectBox for local database storage. You must generate the Objec
 
 2. **Generate ObjectBox code:**
    ```bash
-   flutter pub run build_runner build --delete-conflicting-outputs
+   dart run build_runner build --delete-conflicting-outputs
    ```
    
    The generated `lib/objectbox.g.dart` file is required for the app to run.
@@ -168,6 +177,21 @@ For email notifications:
    ```
 
 2. **Edit with your credentials** (⚠️ Never commit real credentials!)
+
+### API Configuration (Optional)
+
+For connecting to the Task Flow API backend:
+
+1. **Copy example configuration:**
+   ```bash
+   cp lib/core/constants/api_config.example.dart lib/core/constants/api_config.dart
+   ```
+
+2. **Edit the configuration** with your API details:
+   - Set `baseUrl` to your API domain (e.g., `https://vmi2503861.contaboserver.net`)
+   - Set `apiPath` to your API path (default: `/task-flow-api`)
+
+**⚠️ Security Warning**: Never commit real API credentials to version control. The `.gitignore` file is configured to exclude this file.
 
 See [Getting Started](docs/GETTING_STARTED.md) for complete setup instructions.
 

@@ -246,7 +246,7 @@ Please report it:
 
 Run the code generation command:
 ```bash
-flutter pub run build_runner build --delete-conflicting-outputs
+dart run build_runner build --delete-conflicting-outputs
 ```
 
 See [Getting Started](./GETTING_STARTED.md) for details.

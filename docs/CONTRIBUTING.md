@@ -47,7 +47,7 @@ Before contributing, ensure you have:
 
 4. **Generate Code (ObjectBox, Mocks)**
    ```bash
-   flutter pub run build_runner build --delete-conflicting-outputs
+   dart run build_runner build --delete-conflicting-outputs
    ```
 
 5. **Run the App**
@@ -477,6 +477,13 @@ Need help contributing?
 - Comment on the issue you're working on
 - Reach out to maintainers
 - Check the [FAQ](./FAQ.md)
+
+## 🌐 Related Resources
+
+- **Website**: [https://chingalo-family.github.io/task-flow-website/](https://chingalo-family.github.io/task-flow-website/)
+- **API**: [https://vmi2503861.contaboserver.net/task-flow-api/](https://vmi2503861.contaboserver.net/task-flow-api/)
+- **API Documentation**: [https://vmi2503861.contaboserver.net/task-flow-api-docs/](https://vmi2503861.contaboserver.net/task-flow-api-docs/)
+- **Design Resources**: [https://stitch.withgoogle.com/projects/14437076708101911838](https://stitch.withgoogle.com/projects/14437076708101911838)
 
 ## 🎉 Recognition
 
