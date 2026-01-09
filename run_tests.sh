@@ -31,9 +31,10 @@ echo ""
 echo "🧪 Running tests..."
 echo "========================================="
 flutter test --coverage
+TEST_EXIT_CODE=$?
 
 # Check if tests passed
-if [ $? -eq 0 ]; then
+if [ $TEST_EXIT_CODE -eq 0 ]; then
     echo ""
     echo "========================================="
     echo "✅ All tests passed successfully!"
