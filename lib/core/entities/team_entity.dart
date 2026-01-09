@@ -6,31 +6,31 @@ class TeamEntity {
 
   @Index() // TODO: Add index on teamId for faster lookups by team ID
   String teamId; // API team id
-  
+
   @Index() // TODO: Add index on name for faster search by team name
   String name;
-  
+
   String? description;
   String? avatarUrl;
-  
+
   int memberCount;
   String? createdByUserId;
   String? createdByUsername;
-  
+
   @Property(type: PropertyType.date)
   DateTime createdAt;
-  
+
   @Property(type: PropertyType.date)
   DateTime updatedAt;
-  
+
   @Index() // TODO: Add index on isSynced for filtering synced/unsynced teams
   bool isSynced;
-  
-  String? memberIdsJson; // JSON array of member user IDs
-  String? taskIdsJson; // JSON array of task IDs
-  String? customTaskStatusesJson; // JSON array of custom task statuses
-  String? teamIcon; // Icon key (e.g., 'rocket', 'computer')
-  String? teamColor; // Hex color string (e.g., '#2E90FA')
+
+  String? memberIdsJson;
+  String? taskIdsJson;
+  String? customTaskStatusesJson;
+  String? teamIcon;
+  String? teamColor;
 
   TeamEntity({
     this.id = 0,
@@ -49,6 +49,6 @@ class TeamEntity {
     this.customTaskStatusesJson,
     this.teamIcon,
     this.teamColor,
-  })  : createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 }

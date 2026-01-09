@@ -11,7 +11,6 @@ class UserService {
   UserService._();
   static final UserService _instance = UserService._();
   factory UserService() => _instance;
-
   final _offline = UserOfflineProvider();
   final _prefs = PreferenceService();
 

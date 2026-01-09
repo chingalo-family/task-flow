@@ -40,12 +40,12 @@ class TeamState extends ChangeNotifier {
     }
   }
 
-  Future<void> updateTeam(Team team) async {
-    final success = await _service.updateTeam(team);
+  Future<void> updateTeam(Team updateTeam) async {
+    final success = await _service.updateTeam(updateTeam);
     if (success) {
-      final index = _teams.indexWhere((t) => t.id == team.id);
+      final index = _teams.indexWhere((team) => team.id == updateTeam.id);
       if (index != -1) {
-        _teams[index] = team;
+        _teams[index] = updateTeam;
         notifyListeners();
       }
     }
@@ -54,14 +54,14 @@ class TeamState extends ChangeNotifier {
   Future<void> deleteTeam(String teamId) async {
     final success = await _service.deleteTeam(teamId);
     if (success) {
-      _teams.removeWhere((t) => t.id == teamId);
+      _teams.removeWhere((team) => team.id == teamId);
       notifyListeners();
     }
   }
 
   Team? getTeamById(String teamId) {
     try {
-      return _teams.firstWhere((t) => t.id == teamId);
+      return _teams.firstWhere((team) => team.id == teamId);
     } catch (e) {
       return null;
     }
@@ -162,10 +162,11 @@ class TeamState extends ChangeNotifier {
     final team = getTeamById(teamId);
     if (team != null) {
       final statuses = List<TaskStatus>.from(team.taskStatuses);
-      // Don't allow deleting default statuses
-      final statusToDelete = statuses.firstWhere((s) => s.id == statusId);
+      final statusToDelete = statuses.firstWhere(
+        (status) => status.id == statusId,
+      );
       if (!statusToDelete.isDefault) {
-        statuses.removeWhere((s) => s.id == statusId);
+        statuses.removeWhere((status) => status.id == statusId);
         final updatedTeam = team.copyWith(
           customTaskStatuses: statuses,
           updatedAt: DateTime.now(),

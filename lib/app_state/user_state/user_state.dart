@@ -60,17 +60,10 @@ class UserState extends ChangeNotifier {
   }
 
   Future<bool> requestForgetPassword(String email) async {
-    final success = await _service.requestForgetPassword(email);
-    return success;
+    return await _service.requestForgetPassword(email);
   }
 
   Future<bool> changeCurrentUserPassword(String newPassword) async {
-    final success = await _service.changeCurrentUserPassword(newPassword);
-    if (success) {
-      // Update current user with new password
-      _currentUser = await _service.getCurrentUser();
-      notifyListeners();
-    }
-    return success;
+    return await _service.changeCurrentUserPassword(newPassword);
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 
-/// Reusable filter chip for notification filters
 class FilterChip extends StatelessWidget {
   final String label;
   final bool isSelected;

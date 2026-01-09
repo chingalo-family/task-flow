@@ -3,11 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:task_flow/core/entities/team_entity.dart';
 import 'package:task_flow/core/models/models.dart';
 
-/// Utility class to convert between Team model and TeamEntity
 class TeamEntityMapper {
-  /// Convert Team model to TeamEntity for ObjectBox storage
   static TeamEntity toEntity(Team team, {int objectBoxId = 0}) {
-    // Encode memberIds as JSON
     String? memberIdsJson;
     if (team.memberIds != null && team.memberIds!.isNotEmpty) {
       try {
@@ -17,8 +14,6 @@ class TeamEntityMapper {
         memberIdsJson = null;
       }
     }
-
-    // Encode taskIds as JSON
     String? taskIdsJson;
     if (team.taskIds != null && team.taskIds!.isNotEmpty) {
       try {
@@ -28,20 +23,21 @@ class TeamEntityMapper {
         taskIdsJson = null;
       }
     }
-
-    // Encode customTaskStatuses as JSON
     String? customTaskStatusesJson;
-    if (team.customTaskStatuses != null && team.customTaskStatuses!.isNotEmpty) {
+    if (team.customTaskStatuses != null &&
+        team.customTaskStatuses!.isNotEmpty) {
       try {
         customTaskStatusesJson = jsonEncode(
           team.customTaskStatuses!
-              .map((s) => {
-                    'id': s.id,
-                    'name': s.name,
-                    'color': s.color,
-                    'order': s.order,
-                    'isDefault': s.isDefault,
-                  })
+              .map(
+                (status) => {
+                  'id': status.id,
+                  'name': status.name,
+                  'color': status.color,
+                  'order': status.order,
+                  'isDefault': status.isDefault,
+                },
+              )
               .toList(),
         );
       } catch (e) {
@@ -70,9 +66,7 @@ class TeamEntityMapper {
     );
   }
 
-  /// Convert TeamEntity to Team model
   static Team fromEntity(TeamEntity entity) {
-    // Decode memberIds from JSON
     List<String>? memberIds;
     if (entity.memberIdsJson != null && entity.memberIdsJson!.isNotEmpty) {
       try {
@@ -83,8 +77,6 @@ class TeamEntityMapper {
         memberIds = null;
       }
     }
-
-    // Decode taskIds from JSON
     List<String>? taskIds;
     if (entity.taskIdsJson != null && entity.taskIdsJson!.isNotEmpty) {
       try {
@@ -96,20 +88,21 @@ class TeamEntityMapper {
       }
     }
 
-    // Decode customTaskStatuses from JSON
     List<TaskStatus>? customTaskStatuses;
     if (entity.customTaskStatusesJson != null &&
         entity.customTaskStatusesJson!.isNotEmpty) {
       try {
         final decoded = jsonDecode(entity.customTaskStatusesJson!) as List;
         customTaskStatuses = decoded
-            .map((s) => TaskStatus(
-                  id: s['id'] ?? '',
-                  name: s['name'] ?? '',
-                  color: s['color'] ?? '',
-                  order: s['order'] ?? 0,
-                  isDefault: s['isDefault'] ?? false,
-                ))
+            .map(
+              (status) => TaskStatus(
+                id: status['id'] ?? '',
+                name: status['name'] ?? '',
+                color: status['color'] ?? '',
+                order: status['order'] ?? 0,
+                isDefault: status['isDefault'] ?? false,
+              ),
+            )
             .toList();
       } catch (e) {
         debugPrint('Error decoding customTaskStatuses: $e');

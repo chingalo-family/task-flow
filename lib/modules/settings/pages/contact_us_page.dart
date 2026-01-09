@@ -32,31 +32,24 @@ class _ContactUsPageState extends State<ContactUsPage> {
   }
 
   Future<void> _sendMessage() async {
-    // Validate form
     if (_subjectController.text.trim().isEmpty) {
       AppUtil.showToastMessage(message: 'Please enter a subject');
       return;
     }
-
     if (_messageController.text.trim().isEmpty) {
       AppUtil.showToastMessage(message: 'Please enter a message');
       return;
     }
-
     setState(() {
       _isSending = true;
     });
-
     try {
       final userState = Provider.of<UserState>(context, listen: false);
       final appInfoState = Provider.of<AppInfoState>(context, listen: false);
-
-      // Ensure user is authenticated
       if (userState.currentUser == null) {
         AppUtil.showToastMessage(message: 'Please log in to send a message');
         return;
       }
-
       final userEmail = userState.currentUser!.email ?? '';
       if (userEmail.isEmpty) {
         AppUtil.showToastMessage(
@@ -66,7 +59,6 @@ class _ContactUsPageState extends State<ContactUsPage> {
       }
       final userName =
           userState.currentUser!.fullName ?? userState.currentUser!.username;
-      // Create HTML email using template
       final htmlBody = EmailTemplates.getContactFormEmail(
         category: selectedCategory,
         subject: _subjectController.text.trim(),
@@ -75,18 +67,13 @@ class _ContactUsPageState extends State<ContactUsPage> {
         appName: appInfoState.appName,
         currentAppVersion: appInfoState.version,
       );
-
-      // Create plain text version
       final textBody =
           '''
           Contact Form Submission
-
           Category: $selectedCategory
           Subject: ${_subjectController.text.trim()}
-
           Message:
           ${_messageController.text.trim()}
-
           Reply to: $userEmail
           Sent by: $userName
                 ''';

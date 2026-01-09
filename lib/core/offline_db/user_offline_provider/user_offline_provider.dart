@@ -54,13 +54,13 @@ class UserOfflineProvider {
     await DBService().init();
     final box = DBService().userBox;
     if (box == null) return;
-    final q = box
+    final query = box
         .query(
           UserEntity_.apiUserId.equals(apiUserId) as Condition<UserEntity>?,
         )
         .build();
-    final found = q.findFirst();
-    q.close();
+    final found = query.findFirst();
+    query.close();
     if (found != null) box.remove(found.id);
   }
 

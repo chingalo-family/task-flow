@@ -134,11 +134,6 @@
           "id": "13:1049038385883546181",
           "name": "isSynced",
           "type": 1
-        },
-        {
-          "id": "14:3863776433235736798",
-          "name": "metadataJson",
-          "type": 9
         }
       ],
       "relations": []
@@ -380,7 +375,8 @@
   "retiredIndexUids": [],
   "retiredPropertyUids": [
     836196098256066830,
-    4360288102706087886
+    4360288102706087886,
+    3863776433235736798
   ],
   "retiredRelationUids": [],
   "version": 1

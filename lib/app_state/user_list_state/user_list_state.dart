@@ -47,7 +47,6 @@ class UserListState extends ChangeNotifier {
 
   List<User> searchUsers(String query) {
     if (query.isEmpty) return _allUsers;
-
     final lowerQuery = query.toLowerCase();
     return _allUsers.where((user) {
       return user.username.toLowerCase().contains(lowerQuery) ||

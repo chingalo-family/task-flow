@@ -13,7 +13,7 @@ class TaskState extends ChangeNotifier {
   String _filterStatus = TaskConstants.defaultFilterStatus;
   String _filterPriority = TaskConstants.defaultFilterPriority;
   String _sortBy = TaskConstants.defaultSortBy;
-  String? _filterTeamId; // Filter tasks by team
+  String? _filterTeamId;
 
   List<Task> get tasks => _getFilteredTasks();
   List<Task> get allTasks => _tasks;
@@ -47,11 +47,8 @@ class TaskState extends ChangeNotifier {
     }).length;
   }
 
-  /// Get all tasks assigned to a specific user
-  /// Includes both personal tasks and team tasks where the user is assigned
   List<Task> getMyTasks(String userId) {
     return _tasks.where((task) {
-      // Check if user is in assignedUserIds
       if (task.assignedUserIds != null &&
           task.assignedUserIds!.contains(userId)) {
         return true;
@@ -60,17 +57,14 @@ class TaskState extends ChangeNotifier {
     }).toList();
   }
 
-  /// Get completed tasks for a specific user
   int getMyCompletedTasksCount(String userId) {
     return getMyTasks(userId).where((task) => task.isCompleted).length;
   }
 
-  /// Get total tasks assigned to a specific user
   int getMyTotalTasksCount(String userId) {
     return getMyTasks(userId).length;
   }
 
-  /// Get completion percentage for a specific user (0.0 to 1.0)
   double getMyCompletionProgress(String userId) {
     final myTasks = getMyTasks(userId);
     if (myTasks.isEmpty) return 0.0;
@@ -92,22 +86,18 @@ class TaskState extends ChangeNotifier {
     ).where((task) => task.status == TaskConstants.statusInProgress).length;
   }
 
-  /// Get overdue tasks for a specific user
   List<Task> getMyOverdueTasks(String userId) {
     return getMyTasks(
         userId,
       ).where((task) => task.dueDate != null && task.isOverdue).toList()
       ..sort((a, b) {
-        // Sort by completion status first (uncompleted first)
         if (a.isCompleted != b.isCompleted) {
           return a.isCompleted ? 1 : -1;
         }
-        // Then by due date (oldest overdue first)
         return a.dueDate!.compareTo(b.dueDate!);
       });
   }
 
-  /// Get tasks due today for a specific user
   List<Task> getMyTasksDueToday(String userId) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -116,11 +106,9 @@ class TaskState extends ChangeNotifier {
       if (task.dueDate == null) return false;
       return task.dueDate!.isAfter(today) && task.dueDate!.isBefore(tomorrow);
     }).toList()..sort((a, b) {
-      // Sort by completion status first (uncompleted first)
       if (a.isCompleted != b.isCompleted) {
         return a.isCompleted ? 1 : -1;
       }
-      // Then by priority
       final priorityOrder = {
         TaskConstants.priorityHigh: 0,
         TaskConstants.priorityMedium: 1,
@@ -130,7 +118,6 @@ class TaskState extends ChangeNotifier {
         priorityOrder[b.priority] ?? 3,
       );
       if (priorityCompare != 0) return priorityCompare;
-      // Then by due date/time
       if (a.dueDate != null && b.dueDate != null) {
         return a.dueDate!.compareTo(b.dueDate!);
       }
@@ -138,7 +125,6 @@ class TaskState extends ChangeNotifier {
     });
   }
 
-  /// Get upcoming tasks for a specific user (due after today)
   List<Task> getMyUpcomingTasks(String userId) {
     final now = DateTime.now();
     final tomorrow = DateTime(
@@ -152,20 +138,16 @@ class TaskState extends ChangeNotifier {
         )
         .toList()
       ..sort((a, b) {
-        // Sort by completion status first (uncompleted first)
         if (a.isCompleted != b.isCompleted) {
           return a.isCompleted ? 1 : -1;
         }
-        // Then by due date
         return a.dueDate!.compareTo(b.dueDate!);
       });
   }
 
-  /// Get focus tasks for a specific user (prioritized, uncompleted tasks)
   List<Task> getMyFocusTasks(String userId) {
     return getMyTasks(userId).where((task) => !task.isCompleted).toList()
       ..sort((a, b) {
-        // First sort by priority
         final priorityOrder = {
           TaskConstants.priorityHigh: 0,
           TaskConstants.priorityMedium: 1,
@@ -175,7 +157,6 @@ class TaskState extends ChangeNotifier {
           priorityOrder[b.priority] ?? 3,
         );
         if (priorityCompare != 0) return priorityCompare;
-        // Then by due date
         if (a.dueDate == null && b.dueDate == null) return 0;
         if (a.dueDate == null) return 1;
         if (b.dueDate == null) return -1;
@@ -186,10 +167,7 @@ class TaskState extends ChangeNotifier {
   Future<void> initialize() async {
     _loading = true;
     notifyListeners();
-
-    // Load tasks from service
     await _loadTasks();
-
     _loading = false;
     notifyListeners();
   }
@@ -215,20 +193,15 @@ class TaskState extends ChangeNotifier {
           .where((task) => task.status == _filterStatus)
           .toList();
     }
-    // Filter by priority
     if (_filterPriority != TaskConstants.priorityAll) {
       filtered = filtered
           .where((task) => task.priority == _filterPriority)
           .toList();
     }
-    // Sort
     filtered.sort((a, b) {
-      // Always sort by completion status first (uncompleted first)
       if (a.isCompleted != b.isCompleted) {
         return a.isCompleted ? 1 : -1;
       }
-
-      // Then by the selected sort option
       switch (_sortBy) {
         case TaskConstants.sortByDueDate:
           if (a.dueDate == null && b.dueDate == null) return 0;
@@ -321,15 +294,12 @@ class TaskState extends ChangeNotifier {
       final newStatus = task.isCompleted
           ? TaskConstants.statusPending
           : TaskConstants.statusCompleted;
-
-      // If completing the task, also complete all subtasks
       List<Subtask>? updatedSubtasks = task.subtasks;
       if (newStatus == TaskConstants.statusCompleted && task.subtasks != null) {
         updatedSubtasks = task.subtasks!
             .map((st) => st.copyWith(isCompleted: true))
             .toList();
       }
-
       final updatedTask = task.copyWith(
         status: newStatus,
         progress: newStatus == TaskConstants.statusCompleted
@@ -341,7 +311,6 @@ class TaskState extends ChangeNotifier {
         subtasks: updatedSubtasks,
         updatedAt: DateTime.now(),
       );
-
       final success = await _service.updateTask(updatedTask);
       if (success) {
         _tasks[index] = updatedTask;
