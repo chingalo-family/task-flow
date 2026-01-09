@@ -13,7 +13,7 @@ class TeamCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userListState = Provider.of<UserListState>(context);
-    
+
     // Use saved team color and icon if available, otherwise generate from ID/name
     final teamColor = team.teamColor != null
         ? _parseColor(team.teamColor!)
@@ -22,7 +22,7 @@ class TeamCard extends StatelessWidget {
         ? _getIconFromKey(team.teamIcon!)
         : _getTeamIcon(team.name);
     final isSyncing = team.id == '2'; // Mock syncing status for demo
-    
+
     // Get actual team members from memberIds
     final teamMembers = team.memberIds != null && team.memberIds!.isNotEmpty
         ? userListState.getUsersByIds(team.memberIds!)
@@ -154,7 +154,7 @@ class TeamCard extends StatelessWidget {
                         width: teamMembers.length > 3
                             ? 88 // 3 avatars with overlap: 32 + 24 + 24 + 8
                             : (teamMembers.length * 32) -
-                                ((teamMembers.length - 1) * 8),
+                                  ((teamMembers.length - 1) * 8),
                         child: Stack(
                           children: List.generate(
                             teamMembers.length > 3 ? 3 : teamMembers.length,
@@ -302,7 +302,7 @@ class TeamCard extends StatelessWidget {
     // Get initials from full name or username
     final name = user.fullName ?? user.username;
     if (name.isEmpty) return '?';
-    
+
     final parts = name.trim().split(' ');
     if (parts.length >= 2) {
       return '${parts[0][0]}${parts[1][0]}'.toUpperCase();

@@ -33,8 +33,8 @@ class Task {
     this.progress = 0,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   Task copyWith({
     String? id,
@@ -77,11 +77,11 @@ class Task {
   bool get isCompleted => status == 'completed';
   bool get isInProgress => status == 'in_progress';
   bool get isPending => status == 'pending';
-  
+
   bool get isHighPriority => priority == 'high';
   bool get isMediumPriority => priority == 'medium';
   bool get isLowPriority => priority == 'low';
-  
+
   bool get isOverdue {
     if (dueDate == null || isCompleted) return false;
     return DateTime.now().isAfter(dueDate!);

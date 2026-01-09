@@ -311,9 +311,11 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
                           builder: (context, userListState, child) {
                             return Row(
                               children: [
-                                for (int i = 0;
-                                    i < _selectedMemberIds.length && i < 3;
-                                    i++)
+                                for (
+                                  int i = 0;
+                                  i < _selectedMemberIds.length && i < 3;
+                                  i++
+                                )
                                   _buildMemberAvatar(
                                     _selectedMemberIds.elementAt(i),
                                     userListState,
@@ -526,7 +528,9 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
     String initials;
     if (isCurrentUser) {
       initials = 'ME';
-    } else if (user != null && user.fullName != null && user.fullName!.isNotEmpty) {
+    } else if (user != null &&
+        user.fullName != null &&
+        user.fullName!.isNotEmpty) {
       initials = user.fullName!.length >= 2
           ? user.fullName!.substring(0, 2).toUpperCase()
           : user.fullName!.substring(0, 1).toUpperCase();
@@ -570,7 +574,8 @@ class _CreateTeamDialogState extends State<CreateTeamDialog> {
     final currentUser = userState.currentUser;
 
     // Convert color to hex string
-    final colorHex = '#${_selectedColor.value.toRadixString(16).substring(2).toUpperCase()}';
+    final colorHex =
+        '#${_selectedColor.value.toRadixString(16).substring(2).toUpperCase()}';
 
     final team = Team(
       id: DateTime.now().millisecondsSinceEpoch.toString(),

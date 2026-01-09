@@ -21,8 +21,8 @@ class Team {
     this.createdByUsername,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   Team copyWith({
     String? id,

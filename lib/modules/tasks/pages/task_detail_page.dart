@@ -418,7 +418,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                   final team = teamState.getTeamById(_task.teamId!);
                   final teamIcon = _getTeamIcon(team);
                   final teamColor = _getTeamColor(team);
-                  
+
                   return Container(
                     padding: EdgeInsets.all(AppConstant.spacing16),
                     decoration: BoxDecoration(
@@ -439,11 +439,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                             color: teamColor.withValues(alpha: 0.2),
                             shape: BoxShape.circle,
                           ),
-                          child: Icon(
-                            teamIcon,
-                            color: teamColor,
-                            size: 20,
-                          ),
+                          child: Icon(teamIcon, color: teamColor, size: 20),
                         ),
                         SizedBox(width: AppConstant.spacing12),
                         Expanded(
@@ -800,8 +796,8 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               updatedSubtasks = _task.subtasks!.map((subtask) {
                 return subtask.copyWith(isCompleted: true);
               }).toList();
-            } else if (_task.status == TaskConstants.statusCompleted && 
-                       status != TaskConstants.statusCompleted) {
+            } else if (_task.status == TaskConstants.statusCompleted &&
+                status != TaskConstants.statusCompleted) {
               // When changing from completed to other status, unmark subtasks
               updatedSubtasks = _task.subtasks!.map((subtask) {
                 return subtask.copyWith(isCompleted: false);
@@ -811,8 +807,12 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
           _task = _task.copyWith(
             status: status,
-            completedAt: status == TaskConstants.statusCompleted ? DateTime.now() : null,
-            progress: status == TaskConstants.statusCompleted ? 100 : _task.progress,
+            completedAt: status == TaskConstants.statusCompleted
+                ? DateTime.now()
+                : null,
+            progress: status == TaskConstants.statusCompleted
+                ? 100
+                : _task.progress,
             subtasks: updatedSubtasks ?? _task.subtasks,
           );
           taskState.updateTask(_task);
@@ -887,7 +887,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
         userState.currentUser?.id.toString() ?? 'current_user';
 
     // Get team if task has one
-    final team = _task.teamId != null 
+    final team = _task.teamId != null
         ? teamState.getTeamById(_task.teamId!)
         : null;
 
@@ -964,7 +964,8 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                           _task.teamId ==
                           null, // Hide if parent task has no team
                       isSubtask: true,
-                      lockTeam: _task.teamId != null, // Lock team if parent has team
+                      lockTeam:
+                          _task.teamId != null, // Lock team if parent has team
                     ),
                   ),
                 ),

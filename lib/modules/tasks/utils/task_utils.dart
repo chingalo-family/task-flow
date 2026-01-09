@@ -22,13 +22,13 @@ class TaskUtils {
   /// Formats a DateTime to include relative time (Today, Tomorrow, etc.)
   static String formatDateRelative(DateTime? date) {
     if (date == null) return 'No due date';
-    
+
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final dateOnly = DateTime(date.year, date.month, date.day);
-    
+
     final difference = dateOnly.difference(today).inDays;
-    
+
     if (difference == 0) {
       return 'Today, ${DateFormat('h:mm a').format(date)}';
     } else if (difference == 1) {
