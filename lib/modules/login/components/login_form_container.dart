@@ -71,14 +71,16 @@ class _LoginFormContainerState extends State<LoginFormContainer> {
         onSuccessLogin(user);
       } else {
         AppUtil.showToastMessage(
-          message: 'Wrong username or password, try again',
+          message: 'Login failed. Please check your username and password',
         );
         setState(() {
           isSaving = false;
         });
       }
     } catch (e) {
-      AppUtil.showToastMessage(message: e.toString());
+      AppUtil.showToastMessage(
+        message: 'Error: ${e.toString().replaceAll('Exception: ', '')}',
+      );
       setState(() {
         isSaving = false;
       });

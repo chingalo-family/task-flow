@@ -14,30 +14,18 @@ class ChangePasswordForm extends StatefulWidget {
 
 class _ChangePasswordFormState extends State<ChangePasswordForm> {
   final _formKey = GlobalKey<FormState>();
-  final _currentPasswordController = TextEditingController();
   final _newPasswordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
-  bool _obscureCurrentPassword = true;
   bool _obscureNewPassword = true;
   bool _obscureConfirmPassword = true;
   bool _isLoading = false;
 
   @override
   void dispose() {
-    _currentPasswordController.dispose();
     _newPasswordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
-  }
-
-  String? _validateCurrentPassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Current password is required';
-    }
-    // Note: Password validation is done server-side during the change password request
-    // This is just a client-side check for non-empty input
-    return null;
   }
 
   String? _validateNewPassword(String? value) {
@@ -46,9 +34,6 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
     }
     if (!AppUtil.isPasswordValid(value)) {
       return 'Password must be at least 8 characters with uppercase, lowercase, number and special character';
-    }
-    if (value == _currentPasswordController.text) {
-      return 'New password must be different from current password';
     }
     return null;
   }
@@ -218,20 +203,6 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                 ),
               ),
               SizedBox(height: AppConstant.spacing32),
-
-              // Current Password Field
-              _buildPasswordField(
-                controller: _currentPasswordController,
-                hintText: 'Current Password',
-                obscureText: _obscureCurrentPassword,
-                onToggleVisibility: () {
-                  setState(() {
-                    _obscureCurrentPassword = !_obscureCurrentPassword;
-                  });
-                },
-                validator: _validateCurrentPassword,
-              ),
-              SizedBox(height: AppConstant.spacing16),
 
               // New Password Field
               _buildPasswordField(

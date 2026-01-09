@@ -131,12 +131,18 @@ class UserService {
   Future<bool> changeCurrentUserPassword(String newPassword) async {
     final apiService = ApiService();
     final response = await apiService.post(
-      ApiConfig.resetPasswordEndpoint,
-      body: {'password': newPassword},
+      ApiConfig.changePasswordEndpoint,
+      body: {'newPassword': newPassword, "token": apiService.token},
     );
     final body = jsonDecode(response.body);
     final success = body['success'] as bool;
     final message = body['message'] as String;
+    if (success) {
+      final token = body['token'] as String;
+      final expiresAt = body['expiresAt'] as String;
+      await apiService.setToken(token);
+      await apiService.setTokenExpireDate(expiresAt);
+    }
     if (message.isNotEmpty) {
       AppUtil.showToastMessage(message: message);
     }
