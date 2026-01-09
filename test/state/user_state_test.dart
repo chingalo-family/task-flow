@@ -26,11 +26,11 @@ void main() {
     test('should initialize with current user', () async {
       final user = User(
         id: 'user1',
-        name: 'Test User',
+        fullName: 'Test User',
         email: 'test@example.com',
         username: 'testuser',
       );
-      
+
       when(mockService.getCurrentUser()).thenAnswer((_) async => user);
 
       await userState.initialize();
@@ -43,13 +43,14 @@ void main() {
     test('should sign in successfully', () async {
       final user = User(
         id: 'user1',
-        name: 'Test User',
+        fullName: 'Test User',
         email: 'test@example.com',
         username: 'testuser',
       );
 
-      when(mockService.login('testuser', 'password'))
-          .thenAnswer((_) async => user);
+      when(
+        mockService.login('testuser', 'password'),
+      ).thenAnswer((_) async => user);
 
       final result = await userState.signIn(
         username: 'testuser',
@@ -63,8 +64,7 @@ void main() {
     });
 
     test('should fail to sign in with invalid credentials', () async {
-      when(mockService.login('invalid', 'wrong'))
-          .thenAnswer((_) async => null);
+      when(mockService.login('invalid', 'wrong')).thenAnswer((_) async => null);
 
       final result = await userState.signIn(
         username: 'invalid',
@@ -79,18 +79,20 @@ void main() {
     test('should sign up user', () async {
       final user = User(
         id: 'user1',
-        name: 'New User',
+        fullName: 'New User',
         email: 'new@example.com',
         username: 'newuser',
       );
 
-      when(mockService.signUpUser(
-        username: 'newuser',
-        password: 'password',
-        email: 'new@example.com',
-        name: 'New User',
-        phoneNumber: '1234567890',
-      )).thenAnswer((_) async => user);
+      when(
+        mockService.signUpUser(
+          username: 'newuser',
+          password: 'password',
+          email: 'new@example.com',
+          name: 'New User',
+          phoneNumber: '1234567890',
+        ),
+      ).thenAnswer((_) async => user);
 
       final result = await userState.signUp(
         name: 'New User',
@@ -101,25 +103,28 @@ void main() {
       );
 
       expect(result, user);
-      verify(mockService.signUpUser(
-        username: 'newuser',
-        password: 'password',
-        email: 'new@example.com',
-        name: 'New User',
-        phoneNumber: '1234567890',
-      )).called(1);
+      verify(
+        mockService.signUpUser(
+          username: 'newuser',
+          password: 'password',
+          email: 'new@example.com',
+          name: 'New User',
+          phoneNumber: '1234567890',
+        ),
+      ).called(1);
     });
 
     test('should logout user', () async {
       final user = User(
         id: 'user1',
-        name: 'Test User',
+        fullName: 'Test User',
         email: 'test@example.com',
         username: 'testuser',
       );
 
-      when(mockService.login('testuser', 'password'))
-          .thenAnswer((_) async => user);
+      when(
+        mockService.login('testuser', 'password'),
+      ).thenAnswer((_) async => user);
       when(mockService.logout()).thenAnswer((_) async => {});
 
       await userState.signIn(username: 'testuser', password: 'password');
@@ -135,7 +140,7 @@ void main() {
     test('should set current user', () async {
       final user = User(
         id: 'user1',
-        name: 'Test User',
+        fullName: 'Test User',
         email: 'test@example.com',
         username: 'testuser',
       );
@@ -150,8 +155,9 @@ void main() {
     });
 
     test('should request forget password', () async {
-      when(mockService.requestForgetPassword('test@example.com'))
-          .thenAnswer((_) async => true);
+      when(
+        mockService.requestForgetPassword('test@example.com'),
+      ).thenAnswer((_) async => true);
 
       final result = await userState.requestForgetPassword('test@example.com');
 
@@ -160,8 +166,9 @@ void main() {
     });
 
     test('should change current user password', () async {
-      when(mockService.changeCurrentUserPassword('newPassword'))
-          .thenAnswer((_) async => true);
+      when(
+        mockService.changeCurrentUserPassword('newPassword'),
+      ).thenAnswer((_) async => true);
 
       final result = await userState.changeCurrentUserPassword('newPassword');
 
@@ -172,13 +179,14 @@ void main() {
     test('should notify listeners on state changes', () async {
       final user = User(
         id: 'user1',
-        name: 'Test User',
+        fullName: 'Test User',
         email: 'test@example.com',
         username: 'testuser',
       );
 
-      when(mockService.login('testuser', 'password'))
-          .thenAnswer((_) async => user);
+      when(
+        mockService.login('testuser', 'password'),
+      ).thenAnswer((_) async => user);
 
       int notificationCount = 0;
       userState.addListener(() {
