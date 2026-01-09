@@ -1,11 +1,11 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:task_flow/core/constants/api_config.dart';
 import 'package:task_flow/core/models/user.dart';
 import 'package:task_flow/core/offline_db/user_offline_provider/user_offline_provider.dart';
 import 'package:task_flow/core/services/preference_service.dart';
 import 'package:task_flow/core/services/api_service.dart';
-import 'package:task_flow/core/utils/app_util.dart';
 
 class UserService {
   UserService._();
@@ -20,6 +20,7 @@ class UserService {
     required String username,
     required String phoneNumber,
     required String password,
+    BuildContext? context,
   }) async {
     User? user;
     final apiService = ApiService();
@@ -48,8 +49,8 @@ class UserService {
         await _offline.addOrUpdateUser(user);
         await apiService.setUserId(user.id);
       }
-      if (message.isNotEmpty) {
-        AppUtil.showToastMessage(message: message);
+      if (message.isNotEmpty && context != null) {
+        _showToastMessage(message: message, context: context);
       }
     } catch (e) {
       ///
@@ -57,7 +58,11 @@ class UserService {
     return user;
   }
 
-  Future<User?> login(String username, String password) async {
+  Future<User?> login(
+    String username,
+    String password, {
+    BuildContext? context,
+  }) async {
     User? user;
     final apiService = ApiService();
     try {
@@ -79,8 +84,8 @@ class UserService {
         await _offline.addOrUpdateUser(user);
         await apiService.setUserId(user.id);
       }
-      if (message.isNotEmpty && !success) {
-        AppUtil.showToastMessage(message: message);
+      if (message.isNotEmpty && !success && context != null) {
+        _showToastMessage(message: message, context: context);
       }
     } catch (e) {
       //
@@ -127,7 +132,10 @@ class UserService {
     apiService.clearToken();
   }
 
-  Future<bool> changeCurrentUserPassword(String newPassword) async {
+  Future<bool> changeCurrentUserPassword(
+    String newPassword, {
+    BuildContext? context,
+  }) async {
     final apiService = ApiService();
     final response = await apiService.post(
       ApiConfig.changePasswordEndpoint,
@@ -142,8 +150,8 @@ class UserService {
       await apiService.setToken(token);
       await apiService.setTokenExpireDate(expiresAt);
     }
-    if (message.isNotEmpty) {
-      AppUtil.showToastMessage(message: message);
+    if (message.isNotEmpty && context != null) {
+      _showToastMessage(message: message, context: context);
     }
     return success;
   }
@@ -162,5 +170,12 @@ class UserService {
 
   Future<List<User>> getAllUsers() async {
     return await _offline.getUsers() as List<User>;
+  }
+
+  void _showToastMessage({required String message, BuildContext? context}) {
+    if (context == null) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 }

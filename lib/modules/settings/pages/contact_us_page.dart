@@ -7,7 +7,6 @@ import 'package:task_flow/core/constants/email_connection.dart';
 import 'package:task_flow/core/models/email_notification.dart';
 import 'package:task_flow/core/services/email_service.dart';
 import 'package:task_flow/core/services/email_templates.dart';
-import 'package:task_flow/core/utils/utils.dart';
 import 'package:task_flow/modules/login/components/modern_input_field.dart';
 import 'package:task_flow/modules/login/components/modern_primary_button.dart';
 
@@ -33,11 +32,11 @@ class _ContactUsPageState extends State<ContactUsPage> {
 
   Future<void> _sendMessage() async {
     if (_subjectController.text.trim().isEmpty) {
-      AppUtil.showToastMessage(message: 'Please enter a subject');
+      _showToastMessage(message: 'Please enter a subject');
       return;
     }
     if (_messageController.text.trim().isEmpty) {
-      AppUtil.showToastMessage(message: 'Please enter a message');
+      _showToastMessage(message: 'Please enter a message');
       return;
     }
     setState(() {
@@ -47,12 +46,12 @@ class _ContactUsPageState extends State<ContactUsPage> {
       final userState = Provider.of<UserState>(context, listen: false);
       final appInfoState = Provider.of<AppInfoState>(context, listen: false);
       if (userState.currentUser == null) {
-        AppUtil.showToastMessage(message: 'Please log in to send a message');
+        _showToastMessage(message: 'Please log in to send a message');
         return;
       }
       final userEmail = userState.currentUser!.email ?? '';
       if (userEmail.isEmpty) {
-        AppUtil.showToastMessage(
+        _showToastMessage(
           message: 'Email address not found. Please update your profile.',
         );
         return;
@@ -88,13 +87,13 @@ class _ContactUsPageState extends State<ContactUsPage> {
       await EmailService.sendEmail(emailNotification: emailNotification);
 
       if (mounted) {
-        AppUtil.showToastMessage(message: 'Message sent successfully!');
+        _showToastMessage(message: 'Message sent successfully!');
         Navigator.pop(context);
       }
     } on Exception catch (e) {
       debugPrint('Failed to send contact form email: $e');
       if (mounted) {
-        AppUtil.showToastMessage(
+        _showToastMessage(
           message:
               'Failed to send message. Please check your internet connection and try again.',
         );
@@ -102,7 +101,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
     } catch (e) {
       debugPrint('Unexpected error sending contact form: $e');
       if (mounted) {
-        AppUtil.showToastMessage(
+        _showToastMessage(
           message: 'An unexpected error occurred. Please try again later.',
         );
       }
@@ -113,6 +112,12 @@ class _ContactUsPageState extends State<ContactUsPage> {
         });
       }
     }
+  }
+
+  void _showToastMessage({required String message}) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override

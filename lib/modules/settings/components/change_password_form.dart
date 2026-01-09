@@ -65,10 +65,10 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
 
       if (mounted) {
         if (success) {
-          AppUtil.showToastMessage(message: 'Password changed successfully!');
+          _showToastMessage(message: 'Password changed successfully!');
           Navigator.pop(context);
         } else {
-          AppUtil.showToastMessage(
+          _showToastMessage(
             message:
                 'Failed to change password. Please check your current password.',
           );
@@ -76,7 +76,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
       }
     } catch (e) {
       if (mounted) {
-        AppUtil.showToastMessage(message: 'Failed to change password: $e');
+        _showToastMessage(message: 'Failed to change password: $e');
       }
     } finally {
       if (mounted) {
@@ -85,6 +85,12 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
         });
       }
     }
+  }
+
+  void _showToastMessage({required String message}) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   Widget _buildPasswordField({
