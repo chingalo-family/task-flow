@@ -117,11 +117,7 @@ void main() {
             assignedUserIds: ['user1'],
             status: TaskConstants.statusCompleted,
           ),
-          Task(
-            id: '3',
-            title: 'User 2 Task',
-            assignedUserIds: ['user2'],
-          ),
+          Task(id: '3', title: 'User 2 Task', assignedUserIds: ['user2']),
           Task(
             id: '4',
             title: 'User 1 Overdue',
@@ -138,7 +134,10 @@ void main() {
       test('getMyTasks returns tasks for specific user', () {
         final myTasks = taskState.getMyTasks('user1');
         expect(myTasks.length, 3);
-        expect(myTasks.every((task) => task.assignedUserIds!.contains('user1')), true);
+        expect(
+          myTasks.every((task) => task.assignedUserIds!.contains('user1')),
+          true,
+        );
       });
 
       test('getMyCompletedTasksCount returns correct count', () {
@@ -175,11 +174,7 @@ void main() {
       test('getMyTasksDueToday returns tasks due today', () {
         // Add a task due today
         final tasksWithDueToday = [
-          Task(
-            id: '1',
-            title: 'User 1 Task',
-            assignedUserIds: ['user1'],
-          ),
+          Task(id: '1', title: 'User 1 Task', assignedUserIds: ['user1']),
           Task(
             id: '2',
             title: 'Due Today',
@@ -188,9 +183,11 @@ void main() {
           ),
         ];
 
-        when(mockTaskService.getAllTasks()).thenAnswer((_) async => tasksWithDueToday);
+        when(
+          mockTaskService.getAllTasks(),
+        ).thenAnswer((_) async => tasksWithDueToday);
         taskState = TaskState(service: mockTaskService);
-        
+
         taskState.initialize().then((_) {
           final dueToday = taskState.getMyTasksDueToday('user1');
           expect(dueToday.length, greaterThanOrEqualTo(0));
@@ -277,7 +274,9 @@ void main() {
 
       test('updateTask updates existing task', () async {
         final originalTask = Task(id: '1', title: 'Original');
-        when(mockTaskService.getAllTasks()).thenAnswer((_) async => [originalTask]);
+        when(
+          mockTaskService.getAllTasks(),
+        ).thenAnswer((_) async => [originalTask]);
         await taskState.initialize();
 
         final updatedTask = originalTask.copyWith(title: 'Updated');
@@ -302,63 +301,75 @@ void main() {
         verify(mockTaskService.deleteTask('1')).called(1);
       });
 
-      test('toggleTaskStatus changes status from pending to completed', () async {
-        final task = Task(
-          id: '1',
-          title: 'Task',
-          status: TaskConstants.statusPending,
-        );
-        when(mockTaskService.getAllTasks()).thenAnswer((_) async => [task]);
-        await taskState.initialize();
+      test(
+        'toggleTaskStatus changes status from pending to completed',
+        () async {
+          final task = Task(
+            id: '1',
+            title: 'Task',
+            status: TaskConstants.statusPending,
+          );
+          when(mockTaskService.getAllTasks()).thenAnswer((_) async => [task]);
+          await taskState.initialize();
 
-        when(mockTaskService.updateTask(any)).thenAnswer((_) async => true);
+          when(mockTaskService.updateTask(any)).thenAnswer((_) async => true);
 
-        await taskState.toggleTaskStatus('1');
+          await taskState.toggleTaskStatus('1');
 
-        expect(taskState.allTasks.first.status, TaskConstants.statusCompleted);
-        expect(taskState.allTasks.first.progress, 100);
-        expect(taskState.allTasks.first.completedAt, isNotNull);
-      });
+          expect(
+            taskState.allTasks.first.status,
+            TaskConstants.statusCompleted,
+          );
+          expect(taskState.allTasks.first.progress, 100);
+          expect(taskState.allTasks.first.completedAt, isNotNull);
+        },
+      );
 
-      test('toggleTaskStatus changes status from completed to pending', () async {
-        final task = Task(
-          id: '1',
-          title: 'Task',
-          status: TaskConstants.statusCompleted,
-          progress: 100,
-          completedAt: DateTime.now(),
-        );
-        when(mockTaskService.getAllTasks()).thenAnswer((_) async => [task]);
-        await taskState.initialize();
+      test(
+        'toggleTaskStatus changes status from completed to pending',
+        () async {
+          final task = Task(
+            id: '1',
+            title: 'Task',
+            status: TaskConstants.statusCompleted,
+            progress: 100,
+            completedAt: DateTime.now(),
+          );
+          when(mockTaskService.getAllTasks()).thenAnswer((_) async => [task]);
+          await taskState.initialize();
 
-        when(mockTaskService.updateTask(any)).thenAnswer((_) async => true);
+          when(mockTaskService.updateTask(any)).thenAnswer((_) async => true);
 
-        await taskState.toggleTaskStatus('1');
+          await taskState.toggleTaskStatus('1');
 
-        expect(taskState.allTasks.first.status, TaskConstants.statusPending);
-      });
+          expect(taskState.allTasks.first.status, TaskConstants.statusPending);
+        },
+      );
 
-      test('toggleTaskStatus marks all subtasks as completed when completing task', () async {
-        final task = Task(
-          id: '1',
-          title: 'Task',
-          status: TaskConstants.statusPending,
-          subtasks: [
-            Subtask(id: 'st1', title: 'Subtask 1', isCompleted: false),
-            Subtask(id: 'st2', title: 'Subtask 2', isCompleted: true),
-          ],
-        );
-        when(mockTaskService.getAllTasks()).thenAnswer((_) async => [task]);
-        await taskState.initialize();
+      test(
+        'toggleTaskStatus marks all subtasks as completed when completing task',
+        () async {
+          final task = Task(
+            id: '1',
+            title: 'Task',
+            status: TaskConstants.statusPending,
+            subtasks: [
+              Subtask(id: 'st1', title: 'Subtask 1', isCompleted: false),
+              Subtask(id: 'st2', title: 'Subtask 2', isCompleted: true),
+            ],
+          );
+          when(mockTaskService.getAllTasks()).thenAnswer((_) async => [task]);
+          await taskState.initialize();
 
-        when(mockTaskService.updateTask(any)).thenAnswer((_) async => true);
+          when(mockTaskService.updateTask(any)).thenAnswer((_) async => true);
 
-        await taskState.toggleTaskStatus('1');
+          await taskState.toggleTaskStatus('1');
 
-        final updatedTask = taskState.allTasks.first;
-        expect(updatedTask.status, TaskConstants.statusCompleted);
-        expect(updatedTask.subtasks!.every((st) => st.isCompleted), true);
-      });
+          final updatedTask = taskState.allTasks.first;
+          expect(updatedTask.status, TaskConstants.statusCompleted);
+          expect(updatedTask.subtasks!.every((st) => st.isCompleted), true);
+        },
+      );
     });
 
     group('getTasksByTeamId', () {
