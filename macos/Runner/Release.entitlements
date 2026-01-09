@@ -2,15 +2,37 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<!-- Disable app sandbox to allow ObjectBox native code to create database files.
+	     ObjectBox currently has limitations with macOS sandboxing that prevent it from
+	     creating lock files and memory-mapped database files properly.
+	     
+	     IMPORTANT: If you plan to distribute this app through the Mac App Store,
+	     you MUST re-enable sandboxing and implement an alternative database solution
+	     or use ObjectBox's sandbox-compatible configuration when available.
+	     
+	     For direct distribution outside the App Store, this configuration works fine.
+	-->
 	<key>com.apple.security.app-sandbox</key>
-	<true/>
+	<false/>
+	
+	<!-- Allow JIT compilation (required for Flutter) -->
 	<key>com.apple.security.cs.allow-jit</key>
 	<true/>
-	<key>com.apple.security.files.application-support</key>
+	
+	<!-- Allow network server (for API communications) -->
+	<key>com.apple.security.network.server</key>
 	<true/>
+	
+	<!-- Allow network client (for API communications) -->
+	<key>com.apple.security.network.client</key>
+	<true/>
+	
+	<!-- Allow read-write access to files (needed when sandbox is disabled) -->
 	<key>com.apple.security.files.user-selected.read-write</key>
 	<true/>
-	<key>com.apple.security.network.server</key>
+	
+	<!-- Allow access to Application Support directory -->
+	<key>com.apple.security.files.application-support</key>
 	<true/>
 </dict>
 </plist>
