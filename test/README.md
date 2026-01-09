@@ -25,8 +25,6 @@ test/
 │   ├── user_state_test.dart         # Tests for UserState (auth state)
 │   ├── team_state_test.dart         # Tests for TeamState (team management)
 │   └── notification_state_test.dart # Tests for NotificationState
-└── widgets/
-    └── my_app_test.dart             # Tests for MyApp widget
 ```
 
 ## Running Tests
