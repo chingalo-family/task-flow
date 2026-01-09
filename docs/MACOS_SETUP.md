@@ -49,8 +49,10 @@ After applying this configuration, ObjectBox should initialize successfully. You
 2. Check the console output for:
    ```
    ✅ ObjectBox initialized successfully
-   Opening ObjectBox store at: /Users/username/Library/Containers/chingalo.family.task-flow/Data/Library/Application Support
+   Opening ObjectBox store at: /Users/username/Library/Application Support/chingalo.family.task-flow
    ```
+   
+   Note: The exact path may vary depending on whether sandboxing is disabled. With sandboxing disabled, it uses the system Application Support directory. With sandboxing enabled (not recommended for ObjectBox), it uses the container directory.
 
 3. If you still see errors, ensure:
    - You're running a clean build: `flutter clean && flutter pub get`
@@ -96,14 +98,19 @@ Even with sandboxing disabled, Task Flow maintains security through:
 
 ### Database Location
 
-ObjectBox stores its database files in:
-- macOS: `~/Library/Containers/chingalo.family.task-flow/Data/Library/Application Support/`
+ObjectBox stores its database files in the Application Support directory:
+
+**With sandboxing disabled (current configuration)**:
+- macOS: `~/Library/Application Support/chingalo.family.task-flow/`
+
+**With sandboxing enabled (not recommended for ObjectBox)**:
+- macOS: `~/Library/Containers/chingalo.family.task-flow/Data/Library/Application Support/chingalo.family.task-flow/`
 
 This directory is:
 - Automatically created by the app
 - Backed up by Time Machine (unless user excludes it)
 - Preserved during app updates
-- Removed when the app is uninstalled
+- Removed when the app is uninstalled (sandboxed) or remains on system (non-sandboxed, manual removal needed)
 
 ### Entitlements Granted
 

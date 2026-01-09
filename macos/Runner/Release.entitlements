@@ -19,12 +19,12 @@
 	<key>com.apple.security.cs.allow-jit</key>
 	<true/>
 	
-	<!-- Allow network server (for API communications) -->
-	<key>com.apple.security.network.server</key>
+	<!-- Allow outgoing network connections (for API communications and sync) -->
+	<key>com.apple.security.network.client</key>
 	<true/>
 	
-	<!-- Allow network client (for API communications) -->
-	<key>com.apple.security.network.client</key>
+	<!-- Allow incoming network connections (reserved for future features like local server/sync) -->
+	<key>com.apple.security.network.server</key>
 	<true/>
 	
 	<!-- Allow read-write access to files (needed when sandbox is disabled) -->
