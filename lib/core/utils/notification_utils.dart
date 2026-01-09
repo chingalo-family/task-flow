@@ -1,17 +1,14 @@
 import 'package:task_flow/core/models/models.dart' as app_notification;
+import 'package:task_flow/core/utils/utils.dart';
 
 class NotificationUtils {
-  static String _generateId() {
-    return DateTime.now().millisecondsSinceEpoch.toString();
-  }
-
   static app_notification.Notification createTaskAssignedNotification({
     required String taskTitle,
     required String assignedBy,
     String? taskId,
   }) {
     return app_notification.Notification(
-      id: _generateId(),
+      id: AppUtil.getUid(),
       title: 'New task assigned',
       body: '$assignedBy assigned you to "$taskTitle"',
       type: 'task_assigned',
@@ -29,7 +26,7 @@ class NotificationUtils {
     String? taskId,
   }) {
     return app_notification.Notification(
-      id: _generateId(),
+      id: AppUtil.getUid(),
       title: 'Task completed',
       body: '$completedBy marked "$taskTitle" as complete',
       type: 'task_completed',
@@ -47,7 +44,7 @@ class NotificationUtils {
     String? teamId,
   }) {
     return app_notification.Notification(
-      id: _generateId(),
+      id: AppUtil.getUid(),
       title: 'Team invitation',
       body: 'You\'ve been invited to join $teamName',
       type: 'team_invite',
@@ -66,7 +63,7 @@ class NotificationUtils {
     String? preview,
   }) {
     return app_notification.Notification(
-      id: _generateId(),
+      id: AppUtil.getUid(),
       title: 'Mentioned in $context',
       body: preview ?? '$mentionedBy mentioned you in a $context',
       type: 'mention',
@@ -94,7 +91,7 @@ class NotificationUtils {
       timeText = 'in ${difference.inDays} days';
     }
     return app_notification.Notification(
-      id: _generateId(),
+      id: AppUtil.getUid(),
       title: 'Deadline reminder',
       body: '"$taskTitle" is due $timeText',
       type: 'deadline_reminder',
@@ -112,7 +109,7 @@ class NotificationUtils {
     String? taskId,
   }) {
     return app_notification.Notification(
-      id: _generateId(),
+      id: AppUtil.getUid(),
       title: '$commentedBy commented',
       body: commentPreview ?? '$commentedBy commented on "$taskTitle"',
       type: 'task_comment',
@@ -131,7 +128,7 @@ class NotificationUtils {
     String? taskId,
   }) {
     return app_notification.Notification(
-      id: _generateId(),
+      id: AppUtil.getUid(),
       title: 'Task status updated',
       body: '$changedBy changed "$taskTitle" to $newStatus',
       type: 'task_status_change',
@@ -148,7 +145,7 @@ class NotificationUtils {
     required String message,
   }) {
     return app_notification.Notification(
-      id: _generateId(),
+      id: AppUtil.getUid(),
       title: title,
       body: message,
       type: 'system',
@@ -166,7 +163,7 @@ class NotificationUtils {
     String? relatedEntityType,
   }) {
     return app_notification.Notification(
-      id: _generateId(),
+      id: AppUtil.getUid(),
       title: title,
       body: body,
       type: type,
