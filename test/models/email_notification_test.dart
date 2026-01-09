@@ -90,7 +90,7 @@ void main() {
 
       final result = email.toString();
       
-      expect(result, 'null> [test@example.com]');
+      expect(result, '<null> [test@example.com]');
     });
 
     test('should allow null text body', () {

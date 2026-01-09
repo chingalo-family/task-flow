@@ -26,7 +26,7 @@ jobs:
       - name: disable analytics
         run: flutter config --no-analytics
 
-      - name: disaable animations
+      - name: disable animations
         run: flutter config --no-cli-animations
         
       - name: Install dependencies
