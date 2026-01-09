@@ -15,8 +15,6 @@ test/
 │   └── time_utils_test.dart   # Tests for TimeUtils utility functions
 ├── state/
 │   └── task_state_test.dart   # Tests for TaskState (state management)
-└── widgets/
-    └── my_app_test.dart       # Widget tests for MyApp
 ```
 
 ## Running Tests
@@ -195,7 +193,6 @@ Current test coverage by area:
 - Models: ~95% (comprehensive coverage)
 - Utils: ~90% (core utilities covered)
 - State: ~85% (main state management covered)
-- Widgets: ~30% (basic widget tests, can be expanded)
 
 ## Future Test Improvements
 
