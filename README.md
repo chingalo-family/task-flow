@@ -60,6 +60,7 @@ Comprehensive documentation is available in the [`docs/`](docs/) directory:
 - **[Overview](docs/OVERVIEW.md)** - Introduction and key benefits
 - **[Quick Start](docs/QUICK_START.md)** - Get up and running in 5 minutes
 - **[Getting Started](docs/GETTING_STARTED.md)** - Detailed installation guide
+- **[macOS Setup](docs/MACOS_SETUP.md)** - macOS-specific setup and troubleshooting
 - **[Features](docs/FEATURES.md)** - Complete feature list
 - **[User Guide](docs/USER_GUIDE.md)** - How to use Task Flow
 - **[Architecture](docs/ARCHITECTURE.md)** - Technical architecture
@@ -68,6 +69,7 @@ Comprehensive documentation is available in the [`docs/`](docs/) directory:
 - **[Roadmap](docs/ROADMAP.md)** - Future plans
 - **[FAQ](docs/FAQ.md)** - Frequently asked questions
 - **[Changelog](docs/CHANGELOG.md)** - Version history
+
 
 ## 🌐 Related Resources
 
@@ -166,6 +168,19 @@ Task Flow uses ObjectBox for local database storage. You must generate the Objec
    ```bash
    flutter run
    ```
+
+#### macOS Users - Important!
+
+If you encounter "Operation not permitted" errors on macOS, use the clean build script:
+
+```bash
+chmod +x macos_clean_build.sh
+./macos_clean_build.sh
+flutter run -d macos
+```
+
+This ensures Xcode properly applies the entitlements that allow ObjectBox to work. See [macOS Setup Guide](docs/MACOS_SETUP.md) for detailed troubleshooting.
+
 
 ### Email Configuration (Optional)
 

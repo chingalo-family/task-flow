@@ -7,6 +7,7 @@ Welcome to the **Task Flow** documentation! This directory contains comprehensiv
 ### Getting Started
 - [**Installation & Setup**](./GETTING_STARTED.md) - Step-by-step guide to set up and run the application
 - [**Quick Start Guide**](./QUICK_START.md) - Get up and running quickly
+- [**macOS Setup**](./MACOS_SETUP.md) - macOS-specific setup and troubleshooting
 
 ### Core Documentation
 - [**Overview**](./OVERVIEW.md) - Introduction to Task Flow, its purpose, and key benefits
