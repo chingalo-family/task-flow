@@ -74,7 +74,7 @@ class _ModernSignupFormState extends State<ModernSignupForm> {
   void _handleSignup() {
     if (_formKey.currentState!.validate()) {
       if (_passwordController.text != _confirmPasswordController.text) {
-        AppUtil.showToastMessage(message: 'Passwords do not match');
+        _showToastMessage(message: 'Passwords do not match');
         return;
       }
       widget.onSignUp(
@@ -85,6 +85,12 @@ class _ModernSignupFormState extends State<ModernSignupForm> {
         _passwordController.text,
       );
     }
+  }
+
+  void _showToastMessage({required String message}) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override

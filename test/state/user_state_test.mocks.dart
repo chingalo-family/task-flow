@@ -5,6 +5,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
 
+import 'package:flutter/material.dart' as _i5;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:task_flow/core/models/user.dart' as _i4;
 import 'package:task_flow/core/services/user_service.dart' as _i2;
@@ -39,6 +40,7 @@ class MockUserService extends _i1.Mock implements _i2.UserService {
     required String? username,
     required String? phoneNumber,
     required String? password,
+    _i5.BuildContext? context,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#signUpUser, [], {
@@ -47,15 +49,24 @@ class MockUserService extends _i1.Mock implements _i2.UserService {
               #username: username,
               #phoneNumber: phoneNumber,
               #password: password,
+              #context: context,
             }),
             returnValue: _i3.Future<_i4.User?>.value(),
           )
           as _i3.Future<_i4.User?>);
 
   @override
-  _i3.Future<_i4.User?> login(String? username, String? password) =>
+  _i3.Future<_i4.User?> login(
+    String? username,
+    String? password, {
+    _i5.BuildContext? context,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#login, [username, password]),
+            Invocation.method(
+              #login,
+              [username, password],
+              {#context: context},
+            ),
             returnValue: _i3.Future<_i4.User?>.value(),
           )
           as _i3.Future<_i4.User?>);
@@ -98,9 +109,16 @@ class MockUserService extends _i1.Mock implements _i2.UserService {
           as _i3.Future<void>);
 
   @override
-  _i3.Future<bool> changeCurrentUserPassword(String? newPassword) =>
+  _i3.Future<bool> changeCurrentUserPassword(
+    String? newPassword, {
+    _i5.BuildContext? context,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#changeCurrentUserPassword, [newPassword]),
+            Invocation.method(
+              #changeCurrentUserPassword,
+              [newPassword],
+              {#context: context},
+            ),
             returnValue: _i3.Future<bool>.value(false),
           )
           as _i3.Future<bool>);

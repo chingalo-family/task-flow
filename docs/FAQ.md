@@ -246,10 +246,27 @@ Please report it:
 
 Run the code generation command:
 ```bash
-flutter pub run build_runner build --delete-conflicting-outputs
+dart run build_runner build --delete-conflicting-outputs
 ```
 
 See [Getting Started](./GETTING_STARTED.md) for details.
+
+### ObjectBox "Operation not permitted" error on macOS
+
+If you see an error like "Storage error 'Operation not permitted'" when running on macOS, this is due to macOS app sandboxing restrictions with ObjectBox.
+
+**Solution**: The app has been configured to disable sandboxing for non-App Store distribution, which resolves this issue. Ensure you:
+
+1. Clean and rebuild the app:
+   ```bash
+   flutter clean
+   flutter pub get
+   dart run build_runner build --delete-conflicting-outputs
+   flutter run -d macos
+   ```
+
+2. For detailed information about macOS-specific setup and sandboxing, see the [macOS Setup Guide](./MACOS_SETUP.md).
+
 
 ## 🌐 Web & Desktop
 

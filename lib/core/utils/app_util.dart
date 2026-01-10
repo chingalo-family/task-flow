@@ -1,6 +1,4 @@
 import 'dart:math';
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class AppUtil {
   static bool isPasswordValid(String password) {
@@ -37,19 +35,5 @@ class AppUtil {
       uid += allowedChars.substring(charIndex, charIndex + 1);
     }
     return uid;
-  }
-
-  static void showToastMessage({
-    required String message,
-    ToastGravity position = ToastGravity.BOTTOM,
-  }) {
-    if (message.isNotEmpty) {
-      Fluttertoast.showToast(
-        msg: message,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: position,
-        backgroundColor: const Color(0xFF656565),
-      );
-    }
   }
 }

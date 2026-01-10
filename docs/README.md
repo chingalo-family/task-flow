@@ -7,6 +7,7 @@ Welcome to the **Task Flow** documentation! This directory contains comprehensiv
 ### Getting Started
 - [**Installation & Setup**](./GETTING_STARTED.md) - Step-by-step guide to set up and run the application
 - [**Quick Start Guide**](./QUICK_START.md) - Get up and running quickly
+- [**macOS Setup**](./MACOS_SETUP.md) - macOS-specific setup and troubleshooting
 
 ### Core Documentation
 - [**Overview**](./OVERVIEW.md) - Introduction to Task Flow, its purpose, and key benefits
@@ -55,6 +56,15 @@ This documentation is organized to help different audiences:
 - Check the [FAQ](./FAQ.md) for common questions
 - Review the [User Guide](./USER_GUIDE.md) for detailed instructions
 - See [Getting Started](./GETTING_STARTED.md) for setup issues
+
+## 🌐 Related Resources
+
+- **Website**: [https://chingalo-family.github.io/task-flow-website/](https://chingalo-family.github.io/task-flow-website/)
+- **Website Source Code**: [https://github.com/chingalo-family/task-flow-website](https://github.com/chingalo-family/task-flow-website)
+- **API**: [https://vmi2503861.contaboserver.net/task-flow-api/](https://vmi2503861.contaboserver.net/task-flow-api/)
+- **API Documentation**: [https://vmi2503861.contaboserver.net/task-flow-api-docs/](https://vmi2503861.contaboserver.net/task-flow-api-docs/)
+- **API Source Code**: [https://github.com/chingalo-family/task-flow-api](https://github.com/chingalo-family/task-flow-api)
+- **Design Resources**: [https://stitch.withgoogle.com/projects/14437076708101911838](https://stitch.withgoogle.com/projects/14437076708101911838)
 
 ## 📝 Contributing to Documentation
 

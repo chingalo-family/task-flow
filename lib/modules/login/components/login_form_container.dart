@@ -5,7 +5,6 @@ import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/models/user.dart';
 import 'package:task_flow/core/services/user_service.dart';
-import 'package:task_flow/core/utils/app_util.dart';
 import 'package:task_flow/modules/login/components/modern_login_form.dart';
 import 'package:task_flow/modules/login/components/modern_signup_form.dart';
 
@@ -70,7 +69,7 @@ class _LoginFormContainerState extends State<LoginFormContainer> {
         await refreshAppMetadata(user: user);
         onSuccessLogin(user);
       } else {
-        AppUtil.showToastMessage(
+        _showToastMessage(
           message: 'Login failed. Please check your username and password',
         );
         setState(() {
@@ -78,13 +77,19 @@ class _LoginFormContainerState extends State<LoginFormContainer> {
         });
       }
     } catch (e) {
-      AppUtil.showToastMessage(
+      _showToastMessage(
         message: 'Error: ${e.toString().replaceAll('Exception: ', '')}',
       );
       setState(() {
         isSaving = false;
       });
     }
+  }
+
+  void _showToastMessage({required String message}) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   void onSignUp(
@@ -111,7 +116,7 @@ class _LoginFormContainerState extends State<LoginFormContainer> {
         widget.onSuccessSignUp(user);
       }
     } catch (e) {
-      AppUtil.showToastMessage(message: e.toString());
+      _showToastMessage(message: e.toString());
       setState(() {
         isSaving = false;
       });

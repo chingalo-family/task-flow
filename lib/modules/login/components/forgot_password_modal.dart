@@ -37,20 +37,20 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
         if (success) {
           if (mounted) {
             Navigator.of(context).pop();
-            AppUtil.showToastMessage(
+            _showToastMessage(
               message: 'Password reset instructions sent to your email',
             );
           }
         } else {
           if (mounted) {
-            AppUtil.showToastMessage(
+            _showToastMessage(
               message: 'Failed to send reset email. Please try again.',
             );
           }
         }
       } catch (e) {
         if (mounted) {
-          AppUtil.showToastMessage(message: 'Error: ${e.toString()}');
+          _showToastMessage(message: 'Error: ${e.toString()}');
         }
       } finally {
         if (mounted) {
@@ -60,6 +60,12 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
         }
       }
     }
+  }
+
+  void _showToastMessage({required String message}) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override

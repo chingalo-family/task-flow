@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 import '../../core/models/user.dart';
 import '../../core/services/user_service.dart';
@@ -23,6 +24,7 @@ class UserState extends ChangeNotifier {
     required String username,
     required String phoneNumber,
     required String password,
+    BuildContext? context,
   }) async {
     User? user = await _service.signUpUser(
       username: username,
@@ -30,6 +32,7 @@ class UserState extends ChangeNotifier {
       email: email,
       name: name,
       phoneNumber: phoneNumber,
+      context: context,
     );
     return user;
   }
@@ -37,8 +40,9 @@ class UserState extends ChangeNotifier {
   Future<bool> signIn({
     required String username,
     required String password,
+    BuildContext? context,
   }) async {
-    final user = await _service.login(username, password);
+    final user = await _service.login(username, password, context: context);
     if (user != null) {
       _currentUser = user;
       notifyListeners();
@@ -63,7 +67,13 @@ class UserState extends ChangeNotifier {
     return await _service.requestForgetPassword(email);
   }
 
-  Future<bool> changeCurrentUserPassword(String newPassword) async {
-    return await _service.changeCurrentUserPassword(newPassword);
+  Future<bool> changeCurrentUserPassword(
+    String newPassword, {
+    BuildContext? context,
+  }) async {
+    return await _service.changeCurrentUserPassword(
+      newPassword,
+      context: context,
+    );
   }
 }
