@@ -29,7 +29,7 @@ class TaskCategory {
 
   static const marketing = TaskCategory(
     id: 'marketing',
-    name: 'Mktg',
+    name: 'Marketing',
     icon: Icons.campaign,
     color: Color(0xFFF59E0B), // Orange
   );
