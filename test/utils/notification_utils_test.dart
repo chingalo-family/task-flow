@@ -263,6 +263,116 @@ void main() {
       });
     });
 
+    group('createTeamMemberAddedNotification', () {
+      test('should create team member added notification', () {
+        final notification = NotificationUtils.createTeamMemberAddedNotification(
+          teamName: 'Dev Team',
+          memberUsername: 'john_doe',
+          addedBy: 'Admin',
+          teamId: 'team123',
+        );
+
+        expect(notification.title, 'New team member');
+        expect(notification.body, 'Admin added john_doe to Dev Team');
+        expect(notification.type, 'team_member_added');
+        expect(notification.isRead, false);
+        expect(notification.actorUsername, 'Admin');
+        expect(notification.relatedEntityId, 'team123');
+        expect(notification.relatedEntityType, 'team');
+      });
+    });
+
+    group('createTeamMemberRemovedNotification', () {
+      test('should create team member removed notification', () {
+        final notification = NotificationUtils.createTeamMemberRemovedNotification(
+          teamName: 'Dev Team',
+          memberUsername: 'john_doe',
+          removedBy: 'Admin',
+          teamId: 'team123',
+        );
+
+        expect(notification.title, 'Team member removed');
+        expect(notification.body, 'Admin removed john_doe from Dev Team');
+        expect(notification.type, 'team_member_removed');
+        expect(notification.isRead, false);
+        expect(notification.actorUsername, 'Admin');
+        expect(notification.relatedEntityId, 'team123');
+        expect(notification.relatedEntityType, 'team');
+      });
+    });
+
+    group('createTaskPriorityChangeNotification', () {
+      test('should create task priority change notification', () {
+        final notification = NotificationUtils.createTaskPriorityChangeNotification(
+          taskTitle: 'Fix bug',
+          newPriority: 'High',
+          changedBy: 'Manager',
+          taskId: 'task456',
+        );
+
+        expect(notification.title, 'Task priority changed');
+        expect(notification.body, 'Manager changed "Fix bug" priority to High');
+        expect(notification.type, 'task_priority_change');
+        expect(notification.isRead, false);
+        expect(notification.actorUsername, 'Manager');
+        expect(notification.relatedEntityId, 'task456');
+        expect(notification.relatedEntityType, 'task');
+      });
+    });
+
+    group('createTaskOverdueNotification', () {
+      test('should create overdue notification for tasks due days ago', () {
+        final dueDate = DateTime.now().subtract(const Duration(days: 3));
+        final notification = NotificationUtils.createTaskOverdueNotification(
+          taskTitle: 'Submit report',
+          dueDate: dueDate,
+          taskId: 'task789',
+        );
+
+        expect(notification.title, 'Task overdue');
+        expect(notification.body, '"Submit report" was due 3 days ago');
+        expect(notification.type, 'task_overdue');
+        expect(notification.relatedEntityId, 'task789');
+        expect(notification.relatedEntityType, 'task');
+      });
+    });
+
+    group('createTaskAssignmentChangeNotification', () {
+      test('should create task reassignment notification', () {
+        final notification = NotificationUtils.createTaskAssignmentChangeNotification(
+          taskTitle: 'Review code',
+          newAssignee: 'Jane',
+          changedBy: 'Manager',
+          taskId: 'task999',
+        );
+
+        expect(notification.title, 'Task reassigned');
+        expect(notification.body, 'Manager reassigned "Review code" to Jane');
+        expect(notification.type, 'task_assignment_change');
+        expect(notification.actorUsername, 'Manager');
+        expect(notification.relatedEntityId, 'task999');
+        expect(notification.relatedEntityType, 'task');
+      });
+    });
+
+    group('createTaskDueDateChangeNotification', () {
+      test('should create due date change notification', () {
+        final newDueDate = DateTime.now().add(const Duration(days: 3));
+        final notification = NotificationUtils.createTaskDueDateChangeNotification(
+          taskTitle: 'Project deadline',
+          newDueDate: newDueDate,
+          changedBy: 'Manager',
+          taskId: 'task111',
+        );
+
+        expect(notification.title, 'Due date changed');
+        expect(notification.body, contains('Manager changed "Project deadline" due date'));
+        expect(notification.type, 'task_due_date_change');
+        expect(notification.actorUsername, 'Manager');
+        expect(notification.relatedEntityId, 'task111');
+      });
+    });
+
     test('all created notifications should have unique IDs', () {
       final n1 = NotificationUtils.createSystemNotification(
         title: 'Test',

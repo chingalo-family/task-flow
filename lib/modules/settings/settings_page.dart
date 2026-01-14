@@ -10,6 +10,7 @@ import 'package:task_flow/core/utils/utils.dart';
 import 'package:task_flow/modules/login/login_page.dart';
 import 'package:task_flow/modules/settings/pages/privacy_policy_page.dart';
 import 'package:task_flow/modules/settings/pages/contact_us_page.dart';
+import 'package:task_flow/modules/settings/pages/notification_preferences_page.dart';
 import 'package:task_flow/modules/settings/components/change_password_form.dart';
 import 'package:task_flow/modules/settings/components/profile_avatar_with_edit.dart';
 import 'package:task_flow/modules/settings/components/info_display_field.dart';
@@ -194,6 +195,22 @@ class _SettingsPageState extends State<SettingsPage> {
                         );
                       },
                     ),
+
+                    // Notification Preferences
+                    SettingsTile(
+                      icon: Icons.tune,
+                      title: 'Notification Preferences',
+                      subtitle: 'Customize notification types',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const NotificationPreferencesPage(),
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(height: AppConstant.spacing12),
 
                     // Offline Access Toggle
                     PreferenceToggleItem(
