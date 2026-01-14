@@ -169,8 +169,8 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
       initialHeightRatio: 0.85,
       actionSheetContainer: _UserPickerContainer(
         memberIds: memberIds,
-        selectedUserId: widget.selectedAssignees.isNotEmpty 
-            ? widget.selectedAssignees.first 
+        selectedUserId: widget.selectedAssignees.isNotEmpty
+            ? widget.selectedAssignees.first
             : null,
         currentUserId: userState.currentUser?.id.toString() ?? 'current_user',
         onUserSelected: (userId) {
@@ -1225,7 +1225,6 @@ class _UserPickerContainerState extends State<_UserPickerContainer> {
             ...filteredMemberIds.map((memberId) {
               final user = userListState.getUserById(memberId);
               final isCurrentUser = memberId == widget.currentUserId;
-              final isSelected = _tempSelectedUser == memberId;
               return RadioListTile<String>(
                 value: memberId,
                 groupValue: _tempSelectedUser,

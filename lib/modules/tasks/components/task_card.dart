@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/task_state/task_state.dart';
 import 'package:task_flow/app_state/user_list_state/user_list_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
-import 'package:task_flow/core/constants/task_constants.dart';
 import 'package:task_flow/core/models/models.dart';
 import 'package:task_flow/modules/tasks/pages/task_detail_page.dart';
 import 'package:intl/intl.dart';
@@ -18,25 +17,32 @@ class TaskCard extends StatelessWidget {
     final taskState = Provider.of<TaskState>(context, listen: false);
     final category = TaskCategory.getById(task.category);
     final isCompleted = task.isCompleted;
-    
+
     // Get the first assignee if available
     final userListState = Provider.of<UserListState>(context, listen: false);
-    final assignedUserId = (task.assignedUserIds != null && task.assignedUserIds!.isNotEmpty) 
-        ? task.assignedUserIds!.first 
+    final assignedUserId =
+        (task.assignedUserIds != null && task.assignedUserIds!.isNotEmpty)
+        ? task.assignedUserIds!.first
         : null;
-    final assignedUser = assignedUserId != null 
-        ? userListState.getUserById(assignedUserId) 
+    final assignedUser = assignedUserId != null
+        ? userListState.getUserById(assignedUserId)
         : null;
 
     return Container(
       decoration: BoxDecoration(
         color: AppConstant.cardBackground,
-        borderRadius: BorderRadius.circular(AppConstant.borderRadius16),
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(AppConstant.borderRadius16),
+          bottomRight: Radius.circular(AppConstant.borderRadius16),
+        ),
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(AppConstant.borderRadius16),
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(AppConstant.borderRadius16),
+            bottomRight: Radius.circular(AppConstant.borderRadius16),
+          ),
           onTap: () {
             Navigator.push(
               context,
@@ -50,10 +56,10 @@ class TaskCard extends StatelessWidget {
             children: [
               // Colored left border
               Container(
-                width: 4,
+                width: AppConstant.borderRadius8,
                 height: 120,
                 decoration: BoxDecoration(
-                  color: isCompleted 
+                  color: isCompleted
                       ? AppConstant.textSecondary.withValues(alpha: 0.4)
                       : category.color,
                   borderRadius: BorderRadius.only(
@@ -76,15 +82,18 @@ class TaskCard extends StatelessWidget {
                           Expanded(
                             child: Text(
                               task.title,
-                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: isCompleted 
-                                    ? AppConstant.textSecondary.withValues(alpha: 0.6)
-                                    : AppConstant.textPrimary,
-                                decoration: isCompleted 
-                                    ? TextDecoration.lineThrough 
-                                    : null,
-                              ),
+                              style: Theme.of(context).textTheme.bodyLarge
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: isCompleted
+                                        ? AppConstant.textSecondary.withValues(
+                                            alpha: 0.6,
+                                          )
+                                        : AppConstant.textPrimary,
+                                    decoration: isCompleted
+                                        ? TextDecoration.lineThrough
+                                        : null,
+                                  ),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -97,7 +106,9 @@ class TaskCard extends StatelessWidget {
                                 vertical: 4,
                               ),
                               decoration: BoxDecoration(
-                                color: AppConstant.successGreen.withValues(alpha: 0.2),
+                                color: AppConstant.successGreen.withValues(
+                                  alpha: 0.2,
+                                ),
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(
@@ -113,18 +124,23 @@ class TaskCard extends StatelessWidget {
                       ),
                       SizedBox(height: AppConstant.spacing8),
                       // Description
-                      if (task.description != null && task.description!.isNotEmpty)
+                      if (task.description != null &&
+                          task.description!.isNotEmpty)
                         Padding(
-                          padding: EdgeInsets.only(bottom: AppConstant.spacing8),
+                          padding: EdgeInsets.only(
+                            bottom: AppConstant.spacing8,
+                          ),
                           child: Text(
                             task.description!,
                             style: TextStyle(
                               color: isCompleted
-                                  ? AppConstant.textSecondary.withValues(alpha: 0.5)
+                                  ? AppConstant.textSecondary.withValues(
+                                      alpha: 0.5,
+                                    )
                                   : AppConstant.textSecondary,
                               fontSize: 13,
-                              decoration: isCompleted 
-                                  ? TextDecoration.lineThrough 
+                              decoration: isCompleted
+                                  ? TextDecoration.lineThrough
                                   : null,
                             ),
                             maxLines: 2,
@@ -207,14 +223,19 @@ class TaskCard extends StatelessWidget {
                                   height: 24,
                                   decoration: BoxDecoration(
                                     color: isCompleted
-                                        ? AppConstant.textSecondary.withValues(alpha: 0.4)
+                                        ? AppConstant.textSecondary.withValues(
+                                            alpha: 0.4,
+                                          )
                                         : AppConstant.primaryBlue,
                                     shape: BoxShape.circle,
                                   ),
                                   child: Center(
                                     child: Text(
-                                      assignedUser.fullName != null && assignedUser.fullName!.isNotEmpty
-                                          ? assignedUser.fullName!.substring(0, 1).toUpperCase()
+                                      assignedUser.fullName != null &&
+                                              assignedUser.fullName!.isNotEmpty
+                                          ? assignedUser.fullName!
+                                                .substring(0, 1)
+                                                .toUpperCase()
                                           : 'U',
                                       style: TextStyle(
                                         color: Colors.white,
@@ -226,14 +247,17 @@ class TaskCard extends StatelessWidget {
                                 ),
                                 SizedBox(width: AppConstant.spacing8),
                                 Text(
-                                  assignedUser.fullName ?? assignedUser.username,
+                                  assignedUser.fullName ??
+                                      assignedUser.username,
                                   style: TextStyle(
                                     color: isCompleted
-                                        ? AppConstant.textSecondary.withValues(alpha: 0.5)
+                                        ? AppConstant.textSecondary.withValues(
+                                            alpha: 0.5,
+                                          )
                                         : AppConstant.textSecondary,
                                     fontSize: 12,
-                                    decoration: isCompleted 
-                                        ? TextDecoration.lineThrough 
+                                    decoration: isCompleted
+                                        ? TextDecoration.lineThrough
                                         : null,
                                   ),
                                 ),
@@ -247,26 +271,30 @@ class TaskCard extends StatelessWidget {
                                   Icons.calendar_today,
                                   size: 14,
                                   color: isCompleted
-                                      ? AppConstant.textSecondary.withValues(alpha: 0.5)
-                                      : (task.isOverdue 
-                                          ? AppConstant.errorRed 
-                                          : AppConstant.textSecondary),
+                                      ? AppConstant.textSecondary.withValues(
+                                          alpha: 0.5,
+                                        )
+                                      : (task.isOverdue
+                                            ? AppConstant.errorRed
+                                            : AppConstant.textSecondary),
                                 ),
                                 SizedBox(width: 4),
                                 Text(
                                   _formatDueDate(task.dueDate!),
                                   style: TextStyle(
                                     color: isCompleted
-                                        ? AppConstant.textSecondary.withValues(alpha: 0.5)
-                                        : (task.isOverdue 
-                                            ? AppConstant.errorRed 
-                                            : AppConstant.textSecondary),
+                                        ? AppConstant.textSecondary.withValues(
+                                            alpha: 0.5,
+                                          )
+                                        : (task.isOverdue
+                                              ? AppConstant.errorRed
+                                              : AppConstant.textSecondary),
                                     fontSize: 12,
                                     fontWeight: task.isOverdue && !isCompleted
                                         ? FontWeight.bold
                                         : FontWeight.normal,
-                                    decoration: isCompleted 
-                                        ? TextDecoration.lineThrough 
+                                    decoration: isCompleted
+                                        ? TextDecoration.lineThrough
                                         : null,
                                   ),
                                 ),
