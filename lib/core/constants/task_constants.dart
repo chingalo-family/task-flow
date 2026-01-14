@@ -17,16 +17,6 @@ class TaskConstants {
   static const String sortByCreatedAt = 'createdAt';
   static const String sortByStatus = 'status';
 
-  // Task Categories
-  //TODO handling being generic categories and user-defined categories
-  static const String categoryDesign = 'design';
-  static const String categoryDev = 'dev';
-  static const String categoryMarketing = 'marketing';
-  static const String categoryResearch = 'research';
-  static const String categoryBug = 'bug';
-  static const String categoryGeneral = 'general';
-  static const String categoryMeeting = 'meeting';
-
   // Status lists
   static const List<String> allStatuses = [
     statusAll,
@@ -61,7 +51,6 @@ class TaskConstants {
     'urgent',
     'important',
     'blocked',
-    'review',
     'documentation',
     'testing',
     'backend',
