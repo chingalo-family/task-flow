@@ -27,6 +27,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
   DateTime? _selectedDueDate;
   bool _remindMe = false;
   String? _selectedAssignee; // Changed to single assignee
+  List<String> _selectedTags = []; // Added tags support
 
   @override
   void initState() {
@@ -102,6 +103,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
               remindMe: _remindMe,
               selectedTeam: widget.team,
               selectedAssignees: _selectedAssignee != null ? [_selectedAssignee!] : [],
+              selectedTags: _selectedTags, // Added tags
               onPriorityChanged: (priority) {
                 setState(() {
                   _selectedPriority = priority;
@@ -128,6 +130,11 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
               onAssigneeChanged: (assignee) {
                 setState(() {
                   _selectedAssignee = assignee;
+                });
+              },
+              onTagsChanged: (tags) { // Added tags callback
+                setState(() {
+                  _selectedTags = tags;
                 });
               },
               hideTeamAndAssignee: false,
@@ -199,6 +206,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
       teamId: widget.team.id,
       teamName: widget.team.name,
       assignedUserIds: _selectedAssignee != null ? [_selectedAssignee!] : null,
+      tags: _selectedTags.isEmpty ? null : _selectedTags, // Save tags
       status: TaskConstants.statusPending,
       progress: 0,
       createdAt: DateTime.now(),

@@ -19,12 +19,14 @@ class TaskFormFields extends StatefulWidget {
   final bool remindMe;
   final Team? selectedTeam;
   final List<String> selectedAssignees;
+  final List<String> selectedTags; // Added tags support
   final Function(String) onPriorityChanged;
   final Function(String) onCategoryChanged;
   final Function(DateTime) onDueDateChanged;
   final Function(bool) onRemindMeChanged;
   final Function(Team?) onTeamChanged;
   final Function(String?) onAssigneeChanged; // Changed to single assignee
+  final Function(List<String>) onTagsChanged; // Added tags callback
   final bool hideTeamAndAssignee; // Hide team and assignee fields
   final bool isSubtask; // Indicates if this is a subtask form
   final bool lockTeam; // Lock team selection (disable interaction)
@@ -40,12 +42,14 @@ class TaskFormFields extends StatefulWidget {
     required this.remindMe,
     required this.selectedTeam,
     required this.selectedAssignees,
+    required this.selectedTags, // Added
     required this.onPriorityChanged,
     required this.onCategoryChanged,
     required this.onDueDateChanged,
     required this.onRemindMeChanged,
     required this.onTeamChanged,
     required this.onAssigneeChanged, // Changed to single assignee
+    required this.onTagsChanged, // Added
     this.hideTeamAndAssignee = false,
     this.isSubtask = false,
     this.lockTeam = false,
@@ -692,6 +696,127 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
 
             SizedBox(height: AppConstant.spacing24),
           ],
+
+          // Tags Section
+          Text(
+            'Tags',
+            style: TextStyle(
+              color: AppConstant.textPrimary,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: AppConstant.spacing12),
+          
+          // Selected tags display
+          if (widget.selectedTags.isNotEmpty)
+            Wrap(
+              spacing: AppConstant.spacing8,
+              runSpacing: AppConstant.spacing8,
+              children: widget.selectedTags.map((tag) {
+                return Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppConstant.primaryBlue.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: AppConstant.primaryBlue,
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        tag,
+                        style: TextStyle(
+                          color: AppConstant.primaryBlue,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(width: 4),
+                      GestureDetector(
+                        onTap: () {
+                          final updatedTags = List<String>.from(widget.selectedTags);
+                          updatedTags.remove(tag);
+                          widget.onTagsChanged(updatedTags);
+                        },
+                        child: Icon(
+                          Icons.close,
+                          size: 14,
+                          color: AppConstant.primaryBlue,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+          
+          if (widget.selectedTags.isNotEmpty)
+            SizedBox(height: AppConstant.spacing12),
+
+          // Common tags suggestions
+          Text(
+            'Common Tags',
+            style: TextStyle(
+              color: AppConstant.textSecondary,
+              fontSize: 14,
+            ),
+          ),
+          SizedBox(height: AppConstant.spacing8),
+          Wrap(
+            spacing: AppConstant.spacing8,
+            runSpacing: AppConstant.spacing8,
+            children: TaskConstants.commonTags.map((tag) {
+              final isSelected = widget.selectedTags.contains(tag);
+              return GestureDetector(
+                onTap: () {
+                  final updatedTags = List<String>.from(widget.selectedTags);
+                  if (isSelected) {
+                    updatedTags.remove(tag);
+                  } else {
+                    updatedTags.add(tag);
+                  }
+                  widget.onTagsChanged(updatedTags);
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? AppConstant.primaryBlue.withValues(alpha: 0.1)
+                        : AppConstant.cardBackground,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: isSelected
+                          ? AppConstant.primaryBlue
+                          : AppConstant.textSecondary.withValues(alpha: 0.2),
+                      width: 1,
+                    ),
+                  ),
+                  child: Text(
+                    tag,
+                    style: TextStyle(
+                      color: isSelected
+                          ? AppConstant.primaryBlue
+                          : AppConstant.textSecondary,
+                      fontSize: 12,
+                      fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+
+          SizedBox(height: AppConstant.spacing24),
         ],
       ),
     );

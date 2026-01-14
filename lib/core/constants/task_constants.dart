@@ -55,4 +55,26 @@ class TaskConstants {
   static const String defaultFilterStatus = statusAll;
   static const String defaultFilterPriority = priorityAll;
   static const String defaultSortBy = sortByDueDate;
+
+  // Common tags for tasks
+  static const List<String> commonTags = [
+    'urgent',
+    'important',
+    'blocked',
+    'review',
+    'documentation',
+    'testing',
+    'backend',
+    'frontend',
+    'mobile',
+    'web',
+    'api',
+    'ui',
+    'ux',
+    'performance',
+    'security',
+    'refactor',
+    'enhancement',
+    'feature',
+  ];
 }

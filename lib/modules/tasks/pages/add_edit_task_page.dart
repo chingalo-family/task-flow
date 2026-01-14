@@ -27,6 +27,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
   bool _remindMe = false;
   Team? _selectedTeam;
   String? _selectedAssignee; // Changed to single assignee
+  List<String> _selectedTags = []; // Added tags support
 
   @override
   void initState() {
@@ -42,6 +43,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
       _selectedAssignee = (widget.task!.assignedUserIds != null && widget.task!.assignedUserIds!.isNotEmpty)
           ? widget.task!.assignedUserIds!.first
           : null;
+      _selectedTags = widget.task!.tags ?? []; // Load existing tags
       _selectedTeam = widget.task!.teamId != null
           ? Team(id: widget.task!.teamId!, name: widget.task!.teamName!)
           : null;
@@ -100,7 +102,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
         assignedUserIds: _selectedAssignee != null ? [_selectedAssignee!] : null,
         status: widget.task?.status ?? TaskConstants.statusPending,
         progress: widget.task?.progress ?? 0,
-        tags: widget.task?.tags,
+        tags: _selectedTags.isEmpty ? null : _selectedTags, // Save tags
         attachments: widget.task?.attachments,
         subtasks: widget.task?.subtasks,
         createdAt: widget.task?.createdAt,
@@ -175,6 +177,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
           remindMe: _remindMe,
           selectedTeam: _selectedTeam,
           selectedAssignees: _selectedAssignee != null ? [_selectedAssignee!] : [],
+          selectedTags: _selectedTags, // Added tags
           onPriorityChanged: (value) {
             setState(() {
               _selectedPriority = value;
@@ -213,6 +216,11 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
           onAssigneeChanged: (value) {
             setState(() {
               _selectedAssignee = value;
+            });
+          },
+          onTagsChanged: (value) { // Added tags callback
+            setState(() {
+              _selectedTags = value;
             });
           },
           hideTeamAndAssignee: false, // Show all fields for main task form

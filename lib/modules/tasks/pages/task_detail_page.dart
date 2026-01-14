@@ -401,6 +401,48 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
             SizedBox(height: AppConstant.spacing32),
 
+            // Tags (if applicable)
+            if (_task.tags != null && _task.tags!.isNotEmpty) ...[
+              Text(
+                'Tags',
+                style: TextStyle(
+                  color: AppConstant.textPrimary,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: AppConstant.spacing12),
+              Wrap(
+                spacing: AppConstant.spacing8,
+                runSpacing: AppConstant.spacing8,
+                children: _task.tags!.map((tag) {
+                  return Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppConstant.primaryBlue.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: AppConstant.primaryBlue.withValues(alpha: 0.3),
+                        width: 1,
+                      ),
+                    ),
+                    child: Text(
+                      tag,
+                      style: TextStyle(
+                        color: AppConstant.primaryBlue,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+              SizedBox(height: AppConstant.spacing32),
+            ],
+
             // Team (if applicable)
             if (_task.teamId != null) ...[
               Text(
