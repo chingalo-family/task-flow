@@ -59,7 +59,7 @@ class TaskCategory {
     id: 'meeting',
     name: 'Meeting',
     icon: Icons.groups,
-    color: Color(0xFF14B8A6), // Teal
+    color: Color(0xFFEC4899), // Teal
   );
 
   static List<TaskCategory> get all => [

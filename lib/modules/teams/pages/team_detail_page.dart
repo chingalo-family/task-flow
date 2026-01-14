@@ -406,11 +406,20 @@ class _TeamDetailPageState extends State<TeamDetailPage>
             )
             .toList();
 
+        final completedTasks = tasks
+            .where(
+              (task) =>
+                  task.status.toLowerCase() == 'done' ||
+                  task.status.toLowerCase() == 'completed',
+            )
+            .toList();
+
         return SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: AppConstant.spacing16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Active Tasks Section
               Text(
                 'Active Tasks (${activeTasks.length})',
                 style: TextStyle(
@@ -435,7 +444,7 @@ class _TeamDetailPageState extends State<TeamDetailPage>
                         ),
                         SizedBox(height: AppConstant.spacing16),
                         Text(
-                          'No tasks found',
+                          'No active tasks',
                           style: TextStyle(
                             fontSize: 16,
                             color: AppConstant.textSecondary,
@@ -452,6 +461,27 @@ class _TeamDetailPageState extends State<TeamDetailPage>
                     child: TaskCard(task: task),
                   );
                 }),
+              
+              // Completed Tasks Section
+              if (completedTasks.isNotEmpty) ...[
+                SizedBox(height: AppConstant.spacing24),
+                Text(
+                  'Completed Tasks (${completedTasks.length})',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: AppConstant.textSecondary.withValues(alpha: 0.7),
+                  ),
+                ),
+                SizedBox(height: AppConstant.spacing12),
+                ...completedTasks.map((task) {
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: AppConstant.spacing12),
+                    child: TaskCard(task: task),
+                  );
+                }),
+                SizedBox(height: AppConstant.spacing16),
+              ],
             ],
           ),
         );

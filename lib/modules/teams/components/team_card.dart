@@ -32,7 +32,9 @@ class TeamCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppConstant.cardBackground,
         borderRadius: BorderRadius.circular(AppConstant.borderRadius16),
-        border: Border(left: BorderSide(color: teamColor, width: 4)),
+        border: Border(
+          left: BorderSide(color: teamColor, width: AppConstant.borderRadius8),
+        ),
       ),
       child: Material(
         color: Colors.transparent,

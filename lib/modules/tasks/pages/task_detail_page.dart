@@ -9,7 +9,6 @@ import 'package:task_flow/core/constants/task_constants.dart';
 import 'package:task_flow/core/models/models.dart';
 import 'package:task_flow/core/utils/app_modal_util.dart';
 import 'package:task_flow/modules/tasks/pages/add_edit_task_page.dart';
-import 'package:task_flow/modules/tasks/components/task_form_fields.dart';
 import 'package:intl/intl.dart';
 
 class TaskDetailPage extends StatefulWidget {
@@ -401,6 +400,48 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
             ),
 
             SizedBox(height: AppConstant.spacing32),
+
+            // Tags (if applicable)
+            if (_task.tags != null && _task.tags!.isNotEmpty) ...[
+              Text(
+                'Tags',
+                style: TextStyle(
+                  color: AppConstant.textPrimary,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: AppConstant.spacing12),
+              Wrap(
+                spacing: AppConstant.spacing8,
+                runSpacing: AppConstant.spacing8,
+                children: _task.tags!.map((tag) {
+                  return Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppConstant.primaryBlue.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: AppConstant.primaryBlue.withValues(alpha: 0.3),
+                        width: 1,
+                      ),
+                    ),
+                    child: Text(
+                      tag,
+                      style: TextStyle(
+                        color: AppConstant.primaryBlue,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+              SizedBox(height: AppConstant.spacing32),
+            ],
 
             // Team (if applicable)
             if (_task.teamId != null) ...[
@@ -881,279 +922,251 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   }
 
   void _showAddSubtaskDialog() {
-    final userState = Provider.of<UserState>(context, listen: false);
-    final teamState = Provider.of<TeamState>(context, listen: false);
-    final currentUserId =
-        userState.currentUser?.id.toString() ?? 'current_user';
-
-    // Get team if task has one
-    final team = _task.teamId != null
-        ? teamState.getTeamById(_task.teamId!)
-        : null;
-
-    // Form controllers and state
     final formKey = GlobalKey<FormState>();
     final titleController = TextEditingController();
-    final descriptionController = TextEditingController();
-    String selectedPriority = 'medium';
-    String selectedCategory = 'general';
-    final now = DateTime.now();
-    DateTime selectedDueDate = DateTime(now.year, now.month, now.day, 23, 59);
-    bool remindMe = false;
-    List<String> selectedAssignees = [
-      currentUserId,
-    ]; // Auto-assign to current user
 
     AppModalUtil.showActionSheetModal(
       context: context,
-      maxHeightRatio: 0.85,
-      initialHeightRatio: 0.85,
-      actionSheetContainer: StatefulBuilder(
-        builder: (context, setState) {
-          return Container(
-            padding: EdgeInsets.all(AppConstant.spacing24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+      maxHeightRatio: 0.4,
+      initialHeightRatio: 0.4,
+      actionSheetContainer: Container(
+        padding: EdgeInsets.all(AppConstant.spacing24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Header
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Add Subtask',
-                      style: TextStyle(
-                        color: AppConstant.textPrimary,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.close, color: AppConstant.textSecondary),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ],
-                ),
-                SizedBox(height: AppConstant.spacing16),
-
-                // Task Form Fields
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: TaskFormFields(
-                      formKey: formKey,
-                      titleController: titleController,
-                      descriptionController: descriptionController,
-                      selectedPriority: selectedPriority,
-                      selectedCategory: selectedCategory,
-                      selectedDueDate: selectedDueDate,
-                      remindMe: remindMe,
-                      selectedTeam: team, // Use parent task's team
-                      selectedAssignees: selectedAssignees,
-                      onPriorityChanged: (value) =>
-                          setState(() => selectedPriority = value),
-                      onCategoryChanged: (value) =>
-                          setState(() => selectedCategory = value),
-                      onDueDateChanged: (value) =>
-                          setState(() => selectedDueDate = value),
-                      onRemindMeChanged: (value) =>
-                          setState(() => remindMe = value),
-                      onTeamChanged: (value) {}, // Not used for subtasks
-                      onAssigneesChanged: (value) =>
-                          setState(() => selectedAssignees = value),
-                      hideTeamAndAssignee:
-                          _task.teamId ==
-                          null, // Hide if parent task has no team
-                      isSubtask: true,
-                      lockTeam:
-                          _task.teamId != null, // Lock team if parent has team
-                    ),
+                Text(
+                  'Add Subtask',
+                  style: TextStyle(
+                    color: AppConstant.textPrimary,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-
-                SizedBox(height: AppConstant.spacing24),
-
-                // Save button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        final taskState = Provider.of<TaskState>(
-                          context,
-                          listen: false,
-                        );
-                        final subtasks = List<Subtask>.from(
-                          _task.subtasks ?? [],
-                        );
-                        subtasks.add(
-                          Subtask(
-                            id: '${DateTime.now().millisecondsSinceEpoch}_${subtasks.length}',
-                            title: titleController.text.trim(),
-                            isCompleted: false,
-                          ),
-                        );
-                        Navigator.pop(context);
-                        // Update parent widget state after dialog closes
-                        this.setState(() {
-                          _task = _task.copyWith(subtasks: subtasks);
-                          taskState.updateTask(_task);
-                        });
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppConstant.primaryBlue,
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          AppConstant.borderRadius12,
-                        ),
-                      ),
-                    ),
-                    child: Text(
-                      'Add Subtask',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
+                IconButton(
+                  icon: Icon(Icons.close, color: AppConstant.textSecondary),
+                  onPressed: () => Navigator.pop(context),
                 ),
               ],
             ),
-          );
-        },
+            SizedBox(height: AppConstant.spacing16),
+
+            // Simple title field
+            Form(
+              key: formKey,
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppConstant.spacing16,
+                  vertical: AppConstant.spacing4,
+                ),
+                decoration: BoxDecoration(
+                  color: AppConstant.cardBackground,
+                  borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                  border: Border.all(
+                    color: AppConstant.textSecondary.withValues(alpha: 0.1),
+                  ),
+                ),
+                child: TextFormField(
+                  controller: titleController,
+                  style: TextStyle(color: AppConstant.textPrimary, fontSize: 16),
+                  decoration: InputDecoration(
+                    hintText: 'Enter subtask title...',
+                    hintStyle: TextStyle(
+                      color: AppConstant.textSecondary,
+                      fontSize: 16,
+                    ),
+                    border: InputBorder.none,
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please enter a title';
+                    }
+                    return null;
+                  },
+                  autofocus: true,
+                  maxLines: null,
+                ),
+              ),
+            ),
+
+            SizedBox(height: AppConstant.spacing24),
+
+            // Save button
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {
+                    final taskState = Provider.of<TaskState>(
+                      context,
+                      listen: false,
+                    );
+                    final subtasks = List<Subtask>.from(
+                      _task.subtasks ?? [],
+                    );
+                    subtasks.add(
+                      Subtask(
+                        id: '${DateTime.now().millisecondsSinceEpoch}_${subtasks.length}',
+                        title: titleController.text.trim(),
+                        isCompleted: false,
+                      ),
+                    );
+                    Navigator.pop(context);
+                    // Update parent widget state after dialog closes
+                    setState(() {
+                      _task = _task.copyWith(subtasks: subtasks);
+                      taskState.updateTask(_task);
+                    });
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppConstant.primaryBlue,
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      AppConstant.borderRadius12,
+                    ),
+                  ),
+                ),
+                child: Text(
+                  'Add Subtask',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   void _showEditSubtaskDialog(Subtask subtask, int index) {
-    final userState = Provider.of<UserState>(context, listen: false);
-    final currentUserId =
-        userState.currentUser?.id.toString() ?? 'current_user';
-
-    // Form controllers and state - pre-fill with subtask data
     final formKey = GlobalKey<FormState>();
     final titleController = TextEditingController(text: subtask.title);
-    final descriptionController = TextEditingController();
-    String selectedPriority = 'medium';
-    String selectedCategory = 'general';
-    final now = DateTime.now();
-    DateTime selectedDueDate = DateTime(now.year, now.month, now.day, 23, 59);
-    bool remindMe = false;
-    List<String> selectedAssignees = [currentUserId];
 
     AppModalUtil.showActionSheetModal(
       context: context,
-      maxHeightRatio: 0.85,
-      initialHeightRatio: 0.85,
-      actionSheetContainer: StatefulBuilder(
-        builder: (context, setState) {
-          return Container(
-            padding: EdgeInsets.all(AppConstant.spacing24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+      maxHeightRatio: 0.4,
+      initialHeightRatio: 0.4,
+      actionSheetContainer: Container(
+        padding: EdgeInsets.all(AppConstant.spacing24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Header
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Edit Subtask',
-                      style: TextStyle(
-                        color: AppConstant.textPrimary,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.close, color: AppConstant.textSecondary),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ],
-                ),
-                SizedBox(height: AppConstant.spacing16),
-
-                // Task Form Fields
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: TaskFormFields(
-                      formKey: formKey,
-                      titleController: titleController,
-                      descriptionController: descriptionController,
-                      selectedPriority: selectedPriority,
-                      selectedCategory: selectedCategory,
-                      selectedDueDate: selectedDueDate,
-                      remindMe: remindMe,
-                      selectedTeam: null,
-                      selectedAssignees: selectedAssignees,
-                      onPriorityChanged: (value) =>
-                          setState(() => selectedPriority = value),
-                      onCategoryChanged: (value) =>
-                          setState(() => selectedCategory = value),
-                      onDueDateChanged: (value) =>
-                          setState(() => selectedDueDate = value),
-                      onRemindMeChanged: (value) =>
-                          setState(() => remindMe = value),
-                      onTeamChanged: (value) {},
-                      onAssigneesChanged: (value) =>
-                          setState(() => selectedAssignees = value),
-                      hideTeamAndAssignee: _task.teamId == null,
-                      isSubtask: true,
-                    ),
+                Text(
+                  'Edit Subtask',
+                  style: TextStyle(
+                    color: AppConstant.textPrimary,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-
-                SizedBox(height: AppConstant.spacing24),
-
-                // Save button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        final taskState = Provider.of<TaskState>(
-                          context,
-                          listen: false,
-                        );
-                        final subtasks = List<Subtask>.from(
-                          _task.subtasks ?? [],
-                        );
-                        subtasks[index] = subtask.copyWith(
-                          title: titleController.text.trim(),
-                        );
-                        Navigator.pop(context);
-                        // Update parent widget state after dialog closes
-                        this.setState(() {
-                          _task = _task.copyWith(subtasks: subtasks);
-                          taskState.updateTask(_task);
-                        });
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppConstant.primaryBlue,
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          AppConstant.borderRadius12,
-                        ),
-                      ),
-                    ),
-                    child: Text(
-                      'Save Changes',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
+                IconButton(
+                  icon: Icon(Icons.close, color: AppConstant.textSecondary),
+                  onPressed: () => Navigator.pop(context),
                 ),
               ],
             ),
-          );
-        },
+            SizedBox(height: AppConstant.spacing16),
+
+            // Simple title field
+            Form(
+              key: formKey,
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppConstant.spacing16,
+                  vertical: AppConstant.spacing4,
+                ),
+                decoration: BoxDecoration(
+                  color: AppConstant.cardBackground,
+                  borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                  border: Border.all(
+                    color: AppConstant.textSecondary.withValues(alpha: 0.1),
+                  ),
+                ),
+                child: TextFormField(
+                  controller: titleController,
+                  style: TextStyle(color: AppConstant.textPrimary, fontSize: 16),
+                  decoration: InputDecoration(
+                    hintText: 'Enter subtask title...',
+                    hintStyle: TextStyle(
+                      color: AppConstant.textSecondary,
+                      fontSize: 16,
+                    ),
+                    border: InputBorder.none,
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please enter a title';
+                    }
+                    return null;
+                  },
+                  autofocus: true,
+                  maxLines: null,
+                ),
+              ),
+            ),
+
+            SizedBox(height: AppConstant.spacing24),
+
+            // Save button
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {
+                    final taskState = Provider.of<TaskState>(
+                      context,
+                      listen: false,
+                    );
+                    final subtasks = List<Subtask>.from(
+                      _task.subtasks ?? [],
+                    );
+                    subtasks[index] = subtask.copyWith(
+                      title: titleController.text.trim(),
+                    );
+                    Navigator.pop(context);
+                    // Update parent widget state after dialog closes
+                    setState(() {
+                      _task = _task.copyWith(subtasks: subtasks);
+                      taskState.updateTask(_task);
+                    });
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppConstant.primaryBlue,
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      AppConstant.borderRadius12,
+                    ),
+                  ),
+                ),
+                child: Text(
+                  'Save Changes',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

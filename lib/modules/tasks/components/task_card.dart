@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:task_flow/app_state/task_state/task_state.dart';
+import 'package:task_flow/app_state/user_list_state/user_list_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
-import 'package:task_flow/core/constants/task_constants.dart';
 import 'package:task_flow/core/models/models.dart';
 import 'package:task_flow/modules/tasks/pages/task_detail_page.dart';
+import 'package:task_flow/modules/tasks/utils/task_utils.dart';
 
 class TaskCard extends StatelessWidget {
   final Task task;
@@ -13,23 +13,32 @@ class TaskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final taskState = Provider.of<TaskState>(context, listen: false);
     final category = TaskCategory.getById(task.category);
+    final isCompleted = task.isCompleted;
+
+    // Get the first assignee if available
+    final userListState = Provider.of<UserListState>(context, listen: false);
+    final assignedUserId =
+        (task.assignedUserIds != null && task.assignedUserIds!.isNotEmpty)
+        ? task.assignedUserIds!.first
+        : null;
+    final assignedUser = assignedUserId != null
+        ? userListState.getUserById(assignedUserId)
+        : null;
 
     return Container(
       decoration: BoxDecoration(
         color: AppConstant.cardBackground,
-        borderRadius: BorderRadius.circular(AppConstant.borderRadius16),
-        border: Border.all(
-          color: task.isOverdue
-              ? AppConstant.errorRed.withValues(alpha: 0.3)
-              : Colors.transparent,
+        borderRadius: BorderRadius.all(
+          Radius.circular(AppConstant.borderRadius16),
         ),
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(AppConstant.borderRadius16),
+          borderRadius: BorderRadius.all(
+            Radius.circular(AppConstant.borderRadius16),
+          ),
           onTap: () {
             Navigator.push(
               context,
@@ -38,96 +47,283 @@ class TaskCard extends StatelessWidget {
               ),
             );
           },
-          child: Padding(
-            padding: EdgeInsets.all(AppConstant.spacing16),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(
+                Radius.circular(AppConstant.borderRadius16),
+              ),
+              border: Border(
+                left: BorderSide(
+                  color: isCompleted
+                      ? AppConstant.textSecondary.withValues(alpha: 0.4)
+                      : (category.color),
+                  width: AppConstant.borderRadius8,
+                ),
+              ),
+            ),
             child: Row(
               children: [
-                // Category icon
-                Container(
-                  width: 56,
-                  height: 56,
-                  decoration: BoxDecoration(
-                    color: category.color.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(category.icon, color: category.color, size: 28),
-                ),
-                SizedBox(width: AppConstant.spacing16),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Title
-                      Text(
-                        task.title,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: AppConstant.textPrimary,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      SizedBox(height: AppConstant.spacing4),
-                      // Category label and task ID
-                      Row(
-                        children: [
-                          Text(
-                            category.name.toUpperCase(),
-                            style: TextStyle(
-                              color: category.color,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                          SizedBox(width: AppConstant.spacing8),
-                          Text(
-                            '#TSK-${task.id.length <= 3 ? task.id.padLeft(3, '0') : task.id.substring(0, 6)}',
-                            style: TextStyle(
-                              color: AppConstant.textSecondary,
-                              fontSize: 10,
-                            ),
-                          ),
-                          if (task.priority == TaskConstants.priorityHigh) ...[
-                            SizedBox(width: AppConstant.spacing8),
-                            Text(
-                              '• High Priority',
-                              style: TextStyle(
-                                color: AppConstant.errorRed,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w600,
+                  child: Padding(
+                    padding: EdgeInsets.all(AppConstant.spacing16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Title with category badge and DONE badge
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                task.title,
+                                style: Theme.of(context).textTheme.bodyLarge
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: isCompleted
+                                          ? AppConstant.textSecondary
+                                                .withValues(alpha: 0.6)
+                                          : AppConstant.textPrimary,
+                                      decoration: isCompleted
+                                          ? TextDecoration.lineThrough
+                                          : null,
+                                    ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
+                            SizedBox(width: AppConstant.spacing8),
+                            // Category badge (always show if category exists)
+                            if (!isCompleted && task.category != null)
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: category.color.withValues(alpha: 0.2),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Text(
+                                  category.name.toUpperCase(),
+                                  style: TextStyle(
+                                    color: category.color,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 0.5,
+                                  ),
+                                ),
+                              ),
+                            // DONE badge for completed tasks
+                            if (isCompleted)
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppConstant.successGreen.withValues(
+                                    alpha: 0.2,
+                                  ),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Text(
+                                  'DONE',
+                                  style: TextStyle(
+                                    color: AppConstant.successGreen,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
                           ],
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(width: AppConstant.spacing12),
-                // Checkbox/Status indicator
-                GestureDetector(
-                  onTap: () {
-                    taskState.toggleTaskStatus(task.id);
-                  },
-                  child: Container(
-                    width: 28,
-                    height: 28,
-                    decoration: BoxDecoration(
-                      color: task.isCompleted
-                          ? AppConstant.primaryBlue
-                          : Colors.transparent,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: task.isCompleted
-                            ? AppConstant.primaryBlue
-                            : AppConstant.textSecondary.withValues(alpha: 0.3),
-                        width: 2,
-                      ),
+                        ),
+                        SizedBox(height: AppConstant.spacing8),
+                        // Description
+                        if (task.description != null &&
+                            task.description!.isNotEmpty)
+                          Padding(
+                            padding: EdgeInsets.only(
+                              bottom: AppConstant.spacing8,
+                            ),
+                            child: Text(
+                              task.description!,
+                              style: TextStyle(
+                                color: isCompleted
+                                    ? AppConstant.textSecondary.withValues(
+                                        alpha: 0.5,
+                                      )
+                                    : AppConstant.textSecondary,
+                                fontSize: 13,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        // Tags display
+                        if (task.tags != null && task.tags!.isNotEmpty)
+                          Padding(
+                            padding: EdgeInsets.only(
+                              bottom: AppConstant.spacing8,
+                            ),
+                            child: Wrap(
+                              spacing: 4,
+                              runSpacing: 4,
+                              children:
+                                  task.tags!.take(3).map((tag) {
+                                    return Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: isCompleted
+                                            ? AppConstant.textSecondary
+                                                  .withValues(alpha: 0.2)
+                                            : AppConstant.primaryBlue
+                                                  .withValues(alpha: 0.15),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Text(
+                                        tag,
+                                        style: TextStyle(
+                                          color: isCompleted
+                                              ? AppConstant.textSecondary
+                                                    .withValues(alpha: 0.6)
+                                              : AppConstant.primaryBlue,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList()..addAll(
+                                    task.tags!.length > 3
+                                        ? [
+                                            Container(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 8,
+                                                vertical: 4,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: isCompleted
+                                                    ? AppConstant.textSecondary
+                                                          .withValues(
+                                                            alpha: 0.2,
+                                                          )
+                                                    : AppConstant.primaryBlue
+                                                          .withValues(
+                                                            alpha: 0.15,
+                                                          ),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                              child: Text(
+                                                '+${task.tags!.length - 3}',
+                                                style: TextStyle(
+                                                  color: isCompleted
+                                                      ? AppConstant
+                                                            .textSecondary
+                                                            .withValues(
+                                                              alpha: 0.6,
+                                                            )
+                                                      : AppConstant.primaryBlue,
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                          ]
+                                        : [],
+                                  ),
+                            ),
+                          ),
+                        SizedBox(height: AppConstant.spacing4),
+                        // Assignee and Due Date row
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // Assignee
+                            if (assignedUser != null)
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 24,
+                                    height: 24,
+                                    decoration: BoxDecoration(
+                                      color: isCompleted
+                                          ? AppConstant.textSecondary
+                                                .withValues(alpha: 0.4)
+                                          : AppConstant.primaryBlue,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        assignedUser.fullName != null &&
+                                                assignedUser
+                                                    .fullName!
+                                                    .isNotEmpty
+                                            ? assignedUser.fullName!
+                                                  .substring(0, 1)
+                                                  .toUpperCase()
+                                            : 'U',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: AppConstant.spacing8),
+                                  Text(
+                                    assignedUser.fullName ??
+                                        assignedUser.username,
+                                    style: TextStyle(
+                                      color: isCompleted
+                                          ? AppConstant.textSecondary
+                                                .withValues(alpha: 0.5)
+                                          : AppConstant.textSecondary,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            // Due Date
+                            if (task.dueDate != null)
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.calendar_today,
+                                    size: 14,
+                                    color: isCompleted
+                                        ? AppConstant.textSecondary.withValues(
+                                            alpha: 0.5,
+                                          )
+                                        : (task.isOverdue
+                                              ? AppConstant.errorRed
+                                              : AppConstant.textSecondary),
+                                  ),
+                                  SizedBox(width: 4),
+                                  Text(
+                                    TaskUtils.formatDateRelative(task.dueDate!),
+                                    style: TextStyle(
+                                      color: isCompleted
+                                          ? AppConstant.textSecondary
+                                                .withValues(alpha: 0.5)
+                                          : (task.isOverdue
+                                                ? AppConstant.errorRed
+                                                : AppConstant.textSecondary),
+                                      fontSize: 12,
+                                      fontWeight: task.isOverdue && !isCompleted
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                          ],
+                        ),
+                      ],
                     ),
-                    child: task.isCompleted
-                        ? Icon(Icons.check, size: 18, color: Colors.white)
-                        : null,
                   ),
                 ),
               ],
