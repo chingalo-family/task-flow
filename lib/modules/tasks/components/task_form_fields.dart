@@ -181,6 +181,75 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
     );
   }
 
+  void _showAddCustomTagDialog() {
+    final controller = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppConstant.cardBackground,
+        title: Text(
+          'Add Custom Tag',
+          style: TextStyle(color: AppConstant.textPrimary),
+        ),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          style: TextStyle(color: AppConstant.textPrimary),
+          decoration: InputDecoration(
+            hintText: 'Enter tag name...',
+            hintStyle: TextStyle(color: AppConstant.textSecondary),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: AppConstant.textSecondary.withValues(alpha: 0.3)),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: AppConstant.primaryBlue),
+            ),
+          ),
+          onSubmitted: (value) {
+            if (value.trim().isNotEmpty) {
+              final customTag = value.trim().toLowerCase();
+              if (!widget.selectedTags.contains(customTag)) {
+                final updatedTags = List<String>.from(widget.selectedTags);
+                updatedTags.add(customTag);
+                widget.onTagsChanged(updatedTags);
+              }
+              Navigator.pop(context);
+            }
+          },
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: AppConstant.textSecondary),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (controller.text.trim().isNotEmpty) {
+                final customTag = controller.text.trim().toLowerCase();
+                if (!widget.selectedTags.contains(customTag)) {
+                  final updatedTags = List<String>.from(widget.selectedTags);
+                  updatedTags.add(customTag);
+                  widget.onTagsChanged(updatedTags);
+                }
+                Navigator.pop(context);
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppConstant.primaryBlue,
+            ),
+            child: Text(
+              'Add',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final userState = Provider.of<UserState>(context);
@@ -814,6 +883,76 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
                 ),
               );
             }).toList(),
+          ),
+
+          SizedBox(height: AppConstant.spacing16),
+
+          // Custom tag input
+          Text(
+            'Add Custom Tag',
+            style: TextStyle(
+              color: AppConstant.textSecondary,
+              fontSize: 14,
+            ),
+          ),
+          SizedBox(height: AppConstant.spacing8),
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppConstant.spacing12,
+                    vertical: AppConstant.spacing4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppConstant.cardBackground,
+                    borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                    border: Border.all(
+                      color: AppConstant.textSecondary.withValues(alpha: 0.1),
+                    ),
+                  ),
+                  child: TextField(
+                    style: TextStyle(
+                      color: AppConstant.textPrimary,
+                      fontSize: 14,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: 'Type custom tag...',
+                      hintStyle: TextStyle(
+                        color: AppConstant.textSecondary,
+                        fontSize: 14,
+                      ),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    onSubmitted: (value) {
+                      if (value.trim().isNotEmpty) {
+                        final customTag = value.trim().toLowerCase();
+                        if (!widget.selectedTags.contains(customTag)) {
+                          final updatedTags = List<String>.from(widget.selectedTags);
+                          updatedTags.add(customTag);
+                          widget.onTagsChanged(updatedTags);
+                        }
+                      }
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(width: AppConstant.spacing8),
+              Container(
+                decoration: BoxDecoration(
+                  color: AppConstant.primaryBlue,
+                  borderRadius: BorderRadius.circular(AppConstant.borderRadius8),
+                ),
+                child: IconButton(
+                  icon: Icon(Icons.add, color: Colors.white, size: 20),
+                  onPressed: () {
+                    // Show dialog to add custom tag
+                    _showAddCustomTagDialog();
+                  },
+                ),
+              ),
+            ],
           ),
 
           SizedBox(height: AppConstant.spacing24),

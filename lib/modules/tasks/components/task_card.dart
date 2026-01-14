@@ -99,6 +99,28 @@ class TaskCard extends StatelessWidget {
                             ),
                           ),
                           SizedBox(width: AppConstant.spacing8),
+                          // Category badge (always show if category exists)
+                          if (!isCompleted && task.category != null)
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: category.color.withValues(alpha: 0.2),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                category.name.toUpperCase(),
+                                style: TextStyle(
+                                  color: category.color,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                            ),
+                          // DONE badge for completed tasks
                           if (isCompleted)
                             Container(
                               padding: EdgeInsets.symmetric(
