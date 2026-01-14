@@ -172,63 +172,79 @@ class TaskCard extends StatelessWidget {
                       // Tags display
                       if (task.tags != null && task.tags!.isNotEmpty)
                         Padding(
-                          padding: EdgeInsets.only(bottom: AppConstant.spacing8),
+                          padding: EdgeInsets.only(
+                            bottom: AppConstant.spacing8,
+                          ),
                           child: Wrap(
                             spacing: 4,
                             runSpacing: 4,
-                            children: task.tags!.take(3).map((tag) {
-                              return Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: isCompleted
-                                      ? AppConstant.textSecondary.withValues(alpha: 0.2)
-                                      : AppConstant.primaryBlue.withValues(alpha: 0.15),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Text(
-                                  tag,
-                                  style: TextStyle(
-                                    color: isCompleted
-                                        ? AppConstant.textSecondary.withValues(alpha: 0.6)
-                                        : AppConstant.primaryBlue,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w500,
-                                    decoration: isCompleted 
-                                        ? TextDecoration.lineThrough 
-                                        : null,
-                                  ),
-                                ),
-                              );
-                            }).toList()
-                              ..addAll(task.tags!.length > 3
-                                  ? [
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 8,
-                                          vertical: 4,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: isCompleted
-                                              ? AppConstant.textSecondary.withValues(alpha: 0.2)
-                                              : AppConstant.primaryBlue.withValues(alpha: 0.15),
-                                          borderRadius: BorderRadius.circular(12),
-                                        ),
-                                        child: Text(
-                                          '+${task.tags!.length - 3}',
-                                          style: TextStyle(
-                                            color: isCompleted
-                                                ? AppConstant.textSecondary.withValues(alpha: 0.6)
-                                                : AppConstant.primaryBlue,
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
+                            children:
+                                task.tags!.take(3).map((tag) {
+                                  return Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: isCompleted
+                                          ? AppConstant.textSecondary
+                                                .withValues(alpha: 0.2)
+                                          : AppConstant.primaryBlue.withValues(
+                                              alpha: 0.15,
+                                            ),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Text(
+                                      tag,
+                                      style: TextStyle(
+                                        color: isCompleted
+                                            ? AppConstant.textSecondary
+                                                  .withValues(alpha: 0.6)
+                                            : AppConstant.primaryBlue,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w500,
+                                        decoration: isCompleted
+                                            ? TextDecoration.lineThrough
+                                            : null,
                                       ),
-                                    ]
-                                  : []),
+                                    ),
+                                  );
+                                }).toList()..addAll(
+                                  task.tags!.length > 3
+                                      ? [
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 8,
+                                              vertical: 4,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: isCompleted
+                                                  ? AppConstant.textSecondary
+                                                        .withValues(alpha: 0.2)
+                                                  : AppConstant.primaryBlue
+                                                        .withValues(
+                                                          alpha: 0.15,
+                                                        ),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            child: Text(
+                                              '+${task.tags!.length - 3}',
+                                              style: TextStyle(
+                                                color: isCompleted
+                                                    ? AppConstant.textSecondary
+                                                          .withValues(
+                                                            alpha: 0.6,
+                                                          )
+                                                    : AppConstant.primaryBlue,
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        ]
+                                      : [],
+                                ),
                           ),
                         ),
                       SizedBox(height: AppConstant.spacing4),
