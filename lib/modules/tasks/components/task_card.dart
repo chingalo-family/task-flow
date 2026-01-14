@@ -50,12 +50,11 @@ class TaskCard extends StatelessWidget {
             );
           },
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // Colored left border
               Container(
                 width: AppConstant.borderRadius8,
-                height: 120,
                 decoration: BoxDecoration(
                   color: isCompleted
                       ? AppConstant.textSecondary.withValues(alpha: 0.4)

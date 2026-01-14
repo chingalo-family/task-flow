@@ -60,6 +60,14 @@ class TaskFormFields extends StatefulWidget {
 }
 
 class _TaskFormFieldsState extends State<TaskFormFields> {
+  final _customTagController = TextEditingController();
+
+  @override
+  void dispose() {
+    _customTagController.dispose();
+    super.dispose();
+  }
+
   Future<void> _selectDueDate() async {
     final date = await showDatePicker(
       context: context,
@@ -837,6 +845,7 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
                     ),
                   ),
                   child: TextField(
+                    controller: _customTagController,
                     style: TextStyle(
                       color: AppConstant.textPrimary,
                       fontSize: 14,
@@ -860,6 +869,8 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
                           updatedTags.add(customTag);
                           widget.onTagsChanged(updatedTags);
                         }
+                        // Clear the input field after submission
+                        _customTagController.clear();
                       }
                     },
                   ),
