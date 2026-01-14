@@ -27,13 +27,7 @@ class NotificationService {
         return null;
       }
 
-      final notificationToSave = notification.id.isEmpty
-          ? notification.copyWith(
-              id: 'notif_${DateTime.now().millisecondsSinceEpoch}',
-            )
-          : notification;
-      await _offline.addOrUpdateNotification(notificationToSave);
-      return notificationToSave;
+      return await _saveNotification(notification);
     } catch (e) {
       debugPrint('Error creating notification: $e');
       return null;
@@ -61,9 +55,25 @@ class NotificationService {
         return null;
       }
 
-      return await createNotification(notification);
+      return await _saveNotification(notification);
     } catch (e) {
       debugPrint('Error creating team notification: $e');
+      return null;
+    }
+  }
+
+  /// Internal method to save notification without preference checks
+  Future<Notification?> _saveNotification(Notification notification) async {
+    try {
+      final notificationToSave = notification.id.isEmpty
+          ? notification.copyWith(
+              id: 'notif_${DateTime.now().millisecondsSinceEpoch}',
+            )
+          : notification;
+      await _offline.addOrUpdateNotification(notificationToSave);
+      return notificationToSave;
+    } catch (e) {
+      debugPrint('Error saving notification: $e');
       return null;
     }
   }

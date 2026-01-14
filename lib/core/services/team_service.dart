@@ -72,7 +72,7 @@ class TeamService {
     }
   }
 
-  Future<bool> addMemberToTeam(String teamId, String userId) async {
+  Future<bool> addMemberToTeam(String teamId, String userId, {String? addedBy}) async {
     try {
       final team = await getTeamById(teamId);
       if (team == null) return false;
@@ -89,10 +89,11 @@ class TeamService {
 
         // Create notification for team member added
         if (success) {
+          final actor = addedBy ?? team.createdByUsername ?? 'Team Admin';
           final notification = NotificationUtils.createTeamMemberAddedNotification(
             teamName: team.name,
             memberUsername: userId,
-            addedBy: team.createdByUsername ?? 'Team Admin',
+            addedBy: actor,
             teamId: teamId,
           );
           await _notificationService.createNotificationForTeam(
@@ -110,7 +111,7 @@ class TeamService {
     }
   }
 
-  Future<bool> removeMemberFromTeam(String teamId, String userId) async {
+  Future<bool> removeMemberFromTeam(String teamId, String userId, {String? removedBy}) async {
     try {
       final team = await getTeamById(teamId);
       if (team == null) return false;
@@ -125,10 +126,11 @@ class TeamService {
 
       // Create notification for team member removed
       if (success) {
+        final actor = removedBy ?? team.createdByUsername ?? 'Team Admin';
         final notification = NotificationUtils.createTeamMemberRemovedNotification(
           teamName: team.name,
           memberUsername: userId,
-          removedBy: team.createdByUsername ?? 'Team Admin',
+          removedBy: actor,
           teamId: teamId,
         );
         await _notificationService.createNotificationForTeam(

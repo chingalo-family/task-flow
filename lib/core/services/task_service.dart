@@ -12,7 +12,7 @@ class TaskService {
   final _offline = TaskOfflineProvider();
   final _notificationService = NotificationService();
 
-  Future<Task?> createTask(Task task) async {
+  Future<Task?> createTask(Task task, {String? createdBy}) async {
     try {
       if (task.title.trim().isEmpty) {
         throw Exception('Task title cannot be empty');
@@ -21,9 +21,10 @@ class TaskService {
 
       // Create notification for assigned user(s)
       if (task.assignedToUsername != null) {
+        final assignedBy = createdBy ?? task.createdByUsername ?? 'Someone';
         final notification = NotificationUtils.createTaskAssignedNotification(
           taskTitle: task.title,
-          assignedBy: task.assignedToUsername ?? 'Someone',
+          assignedBy: assignedBy,
           taskId: task.id,
         );
         if (task.teamId != null) {
@@ -136,7 +137,7 @@ class TaskService {
     }
   }
 
-  Future<bool> updateTaskStatus(String id, String status) async {
+  Future<bool> updateTaskStatus(String id, String status, {String? changedBy}) async {
     try {
       final task = await getTaskById(id);
       if (task == null) return false;
@@ -152,13 +153,15 @@ class TaskService {
 
       final success = await updateTask(updatedTask);
       if (success) {
+        final actor = changedBy ?? task.assignedToUsername ?? 'Someone';
+        
         // Create notification for status change
         if (oldStatus != status) {
           final notification =
               NotificationUtils.createTaskStatusChangeNotification(
             taskTitle: task.title,
             newStatus: status,
-            changedBy: task.assignedToUsername ?? 'Someone',
+            changedBy: actor,
             taskId: task.id,
           );
           if (task.teamId != null) {
@@ -175,7 +178,7 @@ class TaskService {
         if (status == TaskConstants.statusCompleted) {
           final notification = NotificationUtils.createTaskCompletedNotification(
             taskTitle: task.title,
-            completedBy: task.assignedToUsername ?? 'Someone',
+            completedBy: actor,
             taskId: task.id,
           );
           if (task.teamId != null) {
@@ -196,12 +199,12 @@ class TaskService {
     }
   }
 
-  Future<bool> markAsCompleted(String id) async {
-    return await updateTaskStatus(id, TaskConstants.statusCompleted);
+  Future<bool> markAsCompleted(String id, {String? completedBy}) async {
+    return await updateTaskStatus(id, TaskConstants.statusCompleted, changedBy: completedBy);
   }
 
-  Future<bool> markAsPending(String id) async {
-    return await updateTaskStatus(id, TaskConstants.statusPending);
+  Future<bool> markAsPending(String id, {String? changedBy}) async {
+    return await updateTaskStatus(id, TaskConstants.statusPending, changedBy: changedBy);
   }
 
   Future<List<Task>> getOverdueTasks() async {
