@@ -158,9 +158,6 @@ class TaskCard extends StatelessWidget {
                                     )
                                   : AppConstant.textSecondary,
                               fontSize: 13,
-                              decoration: isCompleted
-                                  ? TextDecoration.lineThrough
-                                  : null,
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -200,9 +197,6 @@ class TaskCard extends StatelessWidget {
                                             : AppConstant.primaryBlue,
                                         fontSize: 10,
                                         fontWeight: FontWeight.w500,
-                                        decoration: isCompleted
-                                            ? TextDecoration.lineThrough
-                                            : null,
                                       ),
                                     ),
                                   );
@@ -291,9 +285,6 @@ class TaskCard extends StatelessWidget {
                                           )
                                         : AppConstant.textSecondary,
                                     fontSize: 12,
-                                    decoration: isCompleted
-                                        ? TextDecoration.lineThrough
-                                        : null,
                                   ),
                                 ),
                               ],
@@ -328,9 +319,6 @@ class TaskCard extends StatelessWidget {
                                     fontWeight: task.isOverdue && !isCompleted
                                         ? FontWeight.bold
                                         : FontWeight.normal,
-                                    decoration: isCompleted
-                                        ? TextDecoration.lineThrough
-                                        : null,
                                   ),
                                 ),
                               ],
