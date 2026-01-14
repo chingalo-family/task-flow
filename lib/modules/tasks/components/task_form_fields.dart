@@ -24,7 +24,7 @@ class TaskFormFields extends StatefulWidget {
   final Function(DateTime) onDueDateChanged;
   final Function(bool) onRemindMeChanged;
   final Function(Team?) onTeamChanged;
-  final Function(List<String>) onAssigneesChanged;
+  final Function(String?) onAssigneeChanged; // Changed to single assignee
   final bool hideTeamAndAssignee; // Hide team and assignee fields
   final bool isSubtask; // Indicates if this is a subtask form
   final bool lockTeam; // Lock team selection (disable interaction)
@@ -45,7 +45,7 @@ class TaskFormFields extends StatefulWidget {
     required this.onDueDateChanged,
     required this.onRemindMeChanged,
     required this.onTeamChanged,
-    required this.onAssigneesChanged,
+    required this.onAssigneeChanged, // Changed to single assignee
     this.hideTeamAndAssignee = false,
     this.isSubtask = false,
     this.lockTeam = false,
@@ -127,12 +127,12 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
         selectedTeam: widget.selectedTeam,
         onTeamSelected: (team) {
           widget.onTeamChanged(team);
-          widget.onAssigneesChanged([]); // Clear assignees when team changes
+          widget.onAssigneeChanged(null); // Clear assignee when team changes
           Navigator.pop(context);
         },
         onClearTeam: () {
           widget.onTeamChanged(null);
-          widget.onAssigneesChanged([]); // Clear assignees when team is cleared
+          widget.onAssigneeChanged(null); // Clear assignee when team is cleared
           Navigator.pop(context);
         },
       ),
@@ -165,10 +165,12 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
       initialHeightRatio: 0.85,
       actionSheetContainer: _UserPickerContainer(
         memberIds: memberIds,
-        selectedUserIds: widget.selectedAssignees,
+        selectedUserId: widget.selectedAssignees.isNotEmpty 
+            ? widget.selectedAssignees.first 
+            : null,
         currentUserId: userState.currentUser?.id.toString() ?? 'current_user',
-        onUsersSelected: (users) {
-          widget.onAssigneesChanged(users);
+        onUserSelected: (userId) {
+          widget.onAssigneeChanged(userId);
           Navigator.pop(context);
         },
       ),
@@ -671,43 +673,11 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
                         ),
                       ),
                     ),
-                    // Show avatars
+                    // Show avatar for single assignee
                     if (widget.selectedAssignees.isNotEmpty)
-                      Row(
-                        children: [
-                          for (
-                            int i = 0;
-                            i < widget.selectedAssignees.length && i < 3;
-                            i++
-                          )
-                            _buildAssigneeAvatar(
-                              widget.selectedAssignees[i],
-                              currentUserId,
-                              i,
-                            ),
-                          if (widget.selectedAssignees.length > 3)
-                            Container(
-                              margin: EdgeInsets.only(
-                                left: AppConstant.spacing8,
-                              ),
-                              width: 32,
-                              height: 32,
-                              decoration: BoxDecoration(
-                                color: AppConstant.primaryBlue,
-                                shape: BoxShape.circle,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '+${widget.selectedAssignees.length - 3}',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            ),
-                        ],
+                      _buildAssigneeAvatar(
+                        widget.selectedAssignees.first,
+                        currentUserId,
                       ),
                     SizedBox(width: AppConstant.spacing8),
                     Icon(
@@ -727,7 +697,7 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
     );
   }
 
-  Widget _buildAssigneeAvatar(String userId, String currentUserId, int index) {
+  Widget _buildAssigneeAvatar(String userId, String currentUserId) {
     final userListState = Provider.of<UserListState>(context);
     final user = userListState.getUserById(userId);
     final isCurrentUser = userId == currentUserId;
@@ -748,7 +718,6 @@ class _TaskFormFieldsState extends State<TaskFormFields> {
     }
 
     return Container(
-      margin: EdgeInsets.only(left: index == 0 ? 0 : AppConstant.spacing8),
       width: 32,
       height: 32,
       decoration: BoxDecoration(
@@ -973,18 +942,18 @@ class _TeamPickerContainerState extends State<_TeamPickerContainer> {
   }
 }
 
-// User Picker Container
+// User Picker Container - Single Selection
 class _UserPickerContainer extends StatefulWidget {
   final List<String> memberIds;
-  final List<String> selectedUserIds;
+  final String? selectedUserId; // Changed to single selection
   final String currentUserId;
-  final Function(List<String>) onUsersSelected;
+  final Function(String?) onUserSelected; // Changed to single selection
 
   const _UserPickerContainer({
     required this.memberIds,
-    required this.selectedUserIds,
+    required this.selectedUserId,
     required this.currentUserId,
-    required this.onUsersSelected,
+    required this.onUserSelected,
   });
 
   @override
@@ -992,14 +961,14 @@ class _UserPickerContainer extends StatefulWidget {
 }
 
 class _UserPickerContainerState extends State<_UserPickerContainer> {
-  late List<String> _tempSelectedUsers;
+  String? _tempSelectedUser; // Changed to single selection
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
 
   @override
   void initState() {
     super.initState();
-    _tempSelectedUsers = List.from(widget.selectedUserIds);
+    _tempSelectedUser = widget.selectedUserId;
   }
 
   @override
@@ -1043,7 +1012,7 @@ class _UserPickerContainerState extends State<_UserPickerContainer> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Select Team Members',
+            'Select Team Member',
             style: TextStyle(
               color: AppConstant.textPrimary,
               fontSize: 20,
@@ -1103,6 +1072,23 @@ class _UserPickerContainerState extends State<_UserPickerContainer> {
             ),
           ),
           SizedBox(height: AppConstant.spacing16),
+          // Option to clear selection
+          if (_tempSelectedUser != null) ...[
+            ListTile(
+              leading: Icon(Icons.clear, color: Colors.red),
+              title: Text(
+                'Unassign',
+                style: TextStyle(color: AppConstant.textPrimary),
+              ),
+              onTap: () {
+                setState(() {
+                  _tempSelectedUser = null;
+                });
+                widget.onUserSelected(null);
+              },
+            ),
+            Divider(color: AppConstant.textSecondary.withValues(alpha: 0.2)),
+          ],
           if (filteredMemberIds.isEmpty)
             Text(
               _searchQuery.isEmpty
@@ -1114,17 +1100,15 @@ class _UserPickerContainerState extends State<_UserPickerContainer> {
             ...filteredMemberIds.map((memberId) {
               final user = userListState.getUserById(memberId);
               final isCurrentUser = memberId == widget.currentUserId;
-              final isSelected = _tempSelectedUsers.contains(memberId);
-              return CheckboxListTile(
-                value: isSelected,
-                onChanged: (bool? value) {
+              final isSelected = _tempSelectedUser == memberId;
+              return RadioListTile<String>(
+                value: memberId,
+                groupValue: _tempSelectedUser,
+                onChanged: (String? value) {
                   setState(() {
-                    if (value == true) {
-                      _tempSelectedUsers.add(memberId);
-                    } else {
-                      _tempSelectedUsers.remove(memberId);
-                    }
+                    _tempSelectedUser = value;
                   });
+                  widget.onUserSelected(value);
                 },
                 title: Row(
                   children: [
@@ -1158,30 +1142,6 @@ class _UserPickerContainerState extends State<_UserPickerContainer> {
                 activeColor: AppConstant.primaryBlue,
               );
             }),
-          SizedBox(height: AppConstant.spacing16),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () => widget.onUsersSelected(_tempSelectedUsers),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppConstant.primaryBlue,
-                padding: EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                    AppConstant.borderRadius12,
-                  ),
-                ),
-              ),
-              child: Text(
-                'Done',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ),
         ],
       ),
     );

@@ -26,7 +26,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
   DateTime? _selectedDueDate;
   bool _remindMe = false;
   Team? _selectedTeam;
-  List<String> _selectedAssignees = [];
+  String? _selectedAssignee; // Changed to single assignee
 
   @override
   void initState() {
@@ -39,7 +39,9 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
       _selectedCategory = widget.task!.category;
       _selectedDueDate = widget.task!.dueDate;
       _remindMe = widget.task!.remindMe ?? false;
-      _selectedAssignees = widget.task!.assignedUserIds ?? [];
+      _selectedAssignee = (widget.task!.assignedUserIds != null && widget.task!.assignedUserIds!.isNotEmpty)
+          ? widget.task!.assignedUserIds!.first
+          : null;
       _selectedTeam = widget.task!.teamId != null
           ? Team(id: widget.task!.teamId!, name: widget.task!.teamName!)
           : null;
@@ -55,7 +57,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
         final currentUserId =
             userState.currentUser?.id.toString() ?? 'current_user';
         setState(() {
-          _selectedAssignees = [currentUserId];
+          _selectedAssignee = currentUserId;
         });
       });
     }
@@ -95,7 +97,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
         remindMe: _remindMe,
         teamId: _selectedTeam?.id,
         teamName: _selectedTeam?.name,
-        assignedUserIds: _selectedAssignees.isEmpty ? null : _selectedAssignees,
+        assignedUserIds: _selectedAssignee != null ? [_selectedAssignee!] : null,
         status: widget.task?.status ?? TaskConstants.statusPending,
         progress: widget.task?.progress ?? 0,
         tags: widget.task?.tags,
@@ -172,7 +174,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
           selectedDueDate: _selectedDueDate,
           remindMe: _remindMe,
           selectedTeam: _selectedTeam,
-          selectedAssignees: _selectedAssignees,
+          selectedAssignees: _selectedAssignee != null ? [_selectedAssignee!] : [],
           onPriorityChanged: (value) {
             setState(() {
               _selectedPriority = value;
@@ -196,7 +198,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
           onTeamChanged: (value) {
             setState(() {
               _selectedTeam = value;
-              // Clear assignees except current user when team is cleared
+              // Clear assignee except current user when team is cleared
               if (value == null) {
                 final userState = Provider.of<UserState>(
                   context,
@@ -204,13 +206,13 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                 );
                 final currentUserId =
                     userState.currentUser?.id.toString() ?? 'current_user';
-                _selectedAssignees = [currentUserId];
+                _selectedAssignee = currentUserId;
               }
             });
           },
-          onAssigneesChanged: (value) {
+          onAssigneeChanged: (value) {
             setState(() {
-              _selectedAssignees = value;
+              _selectedAssignee = value;
             });
           },
           hideTeamAndAssignee: false, // Show all fields for main task form

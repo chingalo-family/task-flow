@@ -26,7 +26,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
   String? _selectedCategory;
   DateTime? _selectedDueDate;
   bool _remindMe = false;
-  List<String> _selectedAssignees = [];
+  String? _selectedAssignee; // Changed to single assignee
 
   @override
   void initState() {
@@ -42,7 +42,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
       final currentUserId =
           userState.currentUser?.id.toString() ?? 'current_user';
       setState(() {
-        _selectedAssignees = [currentUserId];
+        _selectedAssignee = currentUserId;
       });
     });
   }
@@ -101,7 +101,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
               selectedDueDate: _selectedDueDate,
               remindMe: _remindMe,
               selectedTeam: widget.team,
-              selectedAssignees: _selectedAssignees,
+              selectedAssignees: _selectedAssignee != null ? [_selectedAssignee!] : [],
               onPriorityChanged: (priority) {
                 setState(() {
                   _selectedPriority = priority;
@@ -125,9 +125,9 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
               onTeamChanged: (team) {
                 // Team is locked, so this won't be called
               },
-              onAssigneesChanged: (assignees) {
+              onAssigneeChanged: (assignee) {
                 setState(() {
-                  _selectedAssignees = assignees;
+                  _selectedAssignee = assignee;
                 });
               },
               hideTeamAndAssignee: false,
@@ -198,7 +198,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
       remindMe: _remindMe,
       teamId: widget.team.id,
       teamName: widget.team.name,
-      assignedUserIds: _selectedAssignees.isEmpty ? null : _selectedAssignees,
+      assignedUserIds: _selectedAssignee != null ? [_selectedAssignee!] : null,
       status: TaskConstants.statusPending,
       progress: 0,
       createdAt: DateTime.now(),
