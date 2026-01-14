@@ -900,9 +900,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     final now = DateTime.now();
     DateTime selectedDueDate = DateTime(now.year, now.month, now.day, 23, 59);
     bool remindMe = false;
-    List<String> selectedAssignees = [
-      currentUserId,
-    ]; // Auto-assign to current user
+    String? selectedAssignee = currentUserId; // Auto-assign to current user
 
     AppModalUtil.showActionSheetModal(
       context: context,
@@ -948,7 +946,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                       selectedDueDate: selectedDueDate,
                       remindMe: remindMe,
                       selectedTeam: team, // Use parent task's team
-                      selectedAssignees: selectedAssignees,
+                      selectedAssignees: selectedAssignee != null ? [selectedAssignee] : [],
                       onPriorityChanged: (value) =>
                           setState(() => selectedPriority = value),
                       onCategoryChanged: (value) =>
@@ -958,8 +956,8 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                       onRemindMeChanged: (value) =>
                           setState(() => remindMe = value),
                       onTeamChanged: (value) {}, // Not used for subtasks
-                      onAssigneesChanged: (value) =>
-                          setState(() => selectedAssignees = value),
+                      onAssigneeChanged: (value) =>
+                          setState(() => selectedAssignee = value),
                       hideTeamAndAssignee:
                           _task.teamId ==
                           null, // Hide if parent task has no team
@@ -1041,7 +1039,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     final now = DateTime.now();
     DateTime selectedDueDate = DateTime(now.year, now.month, now.day, 23, 59);
     bool remindMe = false;
-    List<String> selectedAssignees = [currentUserId];
+    String? selectedAssignee = currentUserId;
 
     AppModalUtil.showActionSheetModal(
       context: context,
@@ -1087,7 +1085,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                       selectedDueDate: selectedDueDate,
                       remindMe: remindMe,
                       selectedTeam: null,
-                      selectedAssignees: selectedAssignees,
+                      selectedAssignees: selectedAssignee != null ? [selectedAssignee] : [],
                       onPriorityChanged: (value) =>
                           setState(() => selectedPriority = value),
                       onCategoryChanged: (value) =>
@@ -1097,8 +1095,8 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                       onRemindMeChanged: (value) =>
                           setState(() => remindMe = value),
                       onTeamChanged: (value) {},
-                      onAssigneesChanged: (value) =>
-                          setState(() => selectedAssignees = value),
+                      onAssigneeChanged: (value) =>
+                          setState(() => selectedAssignee = value),
                       hideTeamAndAssignee: _task.teamId == null,
                       isSubtask: true,
                     ),
