@@ -2,12 +2,15 @@ import 'package:flutter/foundation.dart';
 import 'package:task_flow/core/models/team.dart';
 import 'package:task_flow/core/models/task_status.dart';
 import 'package:task_flow/core/offline_db/team_offline_provider/team_offline_provider.dart';
+import 'package:task_flow/core/services/notification_service.dart';
+import 'package:task_flow/core/utils/notification_utils.dart';
 
 class TeamService {
   TeamService._();
   static final TeamService _instance = TeamService._();
   factory TeamService() => _instance;
   final _offline = TeamOfflineProvider();
+  final _notificationService = NotificationService();
 
   Future<Team?> createTeam(Team team) async {
     try {
@@ -82,7 +85,23 @@ class TeamService {
           memberCount: memberIds.length,
           updatedAt: DateTime.now(),
         );
-        return await updateTeam(updatedTeam);
+        final success = await updateTeam(updatedTeam);
+
+        // Create notification for team member added
+        if (success) {
+          final notification = NotificationUtils.createTeamMemberAddedNotification(
+            teamName: team.name,
+            memberUsername: userId,
+            addedBy: team.createdByUsername ?? 'Team Admin',
+            teamId: teamId,
+          );
+          await _notificationService.createNotificationForTeam(
+            notification,
+            teamId,
+          );
+        }
+
+        return success;
       }
       return true;
     } catch (e) {
@@ -102,7 +121,23 @@ class TeamService {
         memberCount: memberIds.length,
         updatedAt: DateTime.now(),
       );
-      return await updateTeam(updatedTeam);
+      final success = await updateTeam(updatedTeam);
+
+      // Create notification for team member removed
+      if (success) {
+        final notification = NotificationUtils.createTeamMemberRemovedNotification(
+          teamName: team.name,
+          memberUsername: userId,
+          removedBy: team.createdByUsername ?? 'Team Admin',
+          teamId: teamId,
+        );
+        await _notificationService.createNotificationForTeam(
+          notification,
+          teamId,
+        );
+      }
+
+      return success;
     } catch (e) {
       debugPrint('Error removing member from team: $e');
       return false;

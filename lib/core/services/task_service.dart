@@ -2,12 +2,15 @@ import 'package:flutter/foundation.dart';
 import 'package:task_flow/core/constants/task_constants.dart';
 import 'package:task_flow/core/models/task.dart';
 import 'package:task_flow/core/offline_db/task_offline_provider/task_offline_provider.dart';
+import 'package:task_flow/core/services/notification_service.dart';
+import 'package:task_flow/core/utils/notification_utils.dart';
 
 class TaskService {
   TaskService._();
   static final TaskService _instance = TaskService._();
   factory TaskService() => _instance;
   final _offline = TaskOfflineProvider();
+  final _notificationService = NotificationService();
 
   Future<Task?> createTask(Task task) async {
     try {
@@ -15,6 +18,24 @@ class TaskService {
         throw Exception('Task title cannot be empty');
       }
       await _offline.addOrUpdateTask(task);
+
+      // Create notification for assigned user(s)
+      if (task.assignedToUsername != null) {
+        final notification = NotificationUtils.createTaskAssignedNotification(
+          taskTitle: task.title,
+          assignedBy: task.assignedToUsername ?? 'Someone',
+          taskId: task.id,
+        );
+        if (task.teamId != null) {
+          await _notificationService.createNotificationForTeam(
+            notification,
+            task.teamId!,
+          );
+        } else {
+          await _notificationService.createNotification(notification);
+        }
+      }
+
       return task;
     } catch (e) {
       debugPrint('Error creating task: $e');
@@ -119,6 +140,8 @@ class TaskService {
     try {
       final task = await getTaskById(id);
       if (task == null) return false;
+
+      final oldStatus = task.status;
       final updatedTask = task.copyWith(
         status: status,
         completedAt: status == TaskConstants.statusCompleted
@@ -126,7 +149,47 @@ class TaskService {
             : null,
         progress: status == TaskConstants.statusCompleted ? 100 : task.progress,
       );
-      return await updateTask(updatedTask);
+
+      final success = await updateTask(updatedTask);
+      if (success) {
+        // Create notification for status change
+        if (oldStatus != status) {
+          final notification =
+              NotificationUtils.createTaskStatusChangeNotification(
+            taskTitle: task.title,
+            newStatus: status,
+            changedBy: task.assignedToUsername ?? 'Someone',
+            taskId: task.id,
+          );
+          if (task.teamId != null) {
+            await _notificationService.createNotificationForTeam(
+              notification,
+              task.teamId!,
+            );
+          } else {
+            await _notificationService.createNotification(notification);
+          }
+        }
+
+        // Create task completed notification
+        if (status == TaskConstants.statusCompleted) {
+          final notification = NotificationUtils.createTaskCompletedNotification(
+            taskTitle: task.title,
+            completedBy: task.assignedToUsername ?? 'Someone',
+            taskId: task.id,
+          );
+          if (task.teamId != null) {
+            await _notificationService.createNotificationForTeam(
+              notification,
+              task.teamId!,
+            );
+          } else {
+            await _notificationService.createNotification(notification);
+          }
+        }
+      }
+
+      return success;
     } catch (e) {
       debugPrint('Error updating task status: $e');
       return false;
@@ -185,6 +248,76 @@ class TaskService {
     } catch (e) {
       debugPrint('Error getting upcoming tasks: $e');
       return [];
+    }
+  }
+
+  /// Check for tasks that need deadline reminders
+  Future<List<Task>> getTasksNeedingDeadlineReminders() async {
+    try {
+      final allTasks = await getAllTasks();
+      final now = DateTime.now();
+      final oneDayFromNow = now.add(const Duration(days: 1));
+
+      return allTasks.where((task) {
+        if (task.dueDate == null) return false;
+        if (task.status == TaskConstants.statusCompleted) return false;
+
+        // Remind if due within 24 hours
+        return task.dueDate!.isBefore(oneDayFromNow) &&
+            task.dueDate!.isAfter(now);
+      }).toList();
+    } catch (e) {
+      debugPrint('Error getting tasks needing deadline reminders: $e');
+      return [];
+    }
+  }
+
+  /// Create deadline reminder notifications for tasks due soon
+  Future<void> createDeadlineReminders() async {
+    try {
+      final tasks = await getTasksNeedingDeadlineReminders();
+      for (final task in tasks) {
+        final notification =
+            NotificationUtils.createDeadlineReminderNotification(
+          taskTitle: task.title,
+          dueDate: task.dueDate!,
+          taskId: task.id,
+        );
+        if (task.teamId != null) {
+          await _notificationService.createNotificationForTeam(
+            notification,
+            task.teamId!,
+          );
+        } else {
+          await _notificationService.createNotification(notification);
+        }
+      }
+    } catch (e) {
+      debugPrint('Error creating deadline reminders: $e');
+    }
+  }
+
+  /// Create overdue task notifications
+  Future<void> createOverdueTaskNotifications() async {
+    try {
+      final overdueTasks = await getOverdueTasks();
+      for (final task in overdueTasks) {
+        final notification = NotificationUtils.createTaskOverdueNotification(
+          taskTitle: task.title,
+          dueDate: task.dueDate!,
+          taskId: task.id,
+        );
+        if (task.teamId != null) {
+          await _notificationService.createNotificationForTeam(
+            notification,
+            task.teamId!,
+          );
+        } else {
+          await _notificationService.createNotification(notification);
+        }
+      }
+    } catch (e) {
+      debugPrint('Error creating overdue task notifications: $e');
     }
   }
 }

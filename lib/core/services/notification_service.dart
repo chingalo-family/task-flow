@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:task_flow/core/models/notification.dart';
 import 'package:task_flow/core/offline_db/notification_offline_provider/notification_offline_provider.dart';
 import 'package:task_flow/core/utils/utils.dart';
+import 'package:task_flow/core/services/notification_preference_service.dart';
 
 class NotificationService {
   NotificationService._();
@@ -9,9 +10,23 @@ class NotificationService {
   factory NotificationService() => _instance;
 
   final _offline = NotificationOfflineProvider();
+  final _prefService = NotificationPreferenceService();
 
   Future<Notification?> createNotification(Notification notification) async {
     try {
+      // Check if notifications are globally enabled
+      final notificationsEnabled = await _prefService.areNotificationsEnabled();
+      if (!notificationsEnabled) {
+        return null;
+      }
+
+      // Check if this notification type is enabled
+      final typeEnabled =
+          await _prefService.isNotificationTypeEnabled(notification.type);
+      if (!typeEnabled) {
+        return null;
+      }
+
       final notificationToSave = notification.id.isEmpty
           ? notification.copyWith(
               id: 'notif_${DateTime.now().millisecondsSinceEpoch}',
@@ -21,6 +36,34 @@ class NotificationService {
       return notificationToSave;
     } catch (e) {
       debugPrint('Error creating notification: $e');
+      return null;
+    }
+  }
+
+  /// Create notification with team-specific preference check
+  Future<Notification?> createNotificationForTeam(
+    Notification notification,
+    String teamId,
+  ) async {
+    try {
+      // Check if notifications are globally enabled
+      final notificationsEnabled = await _prefService.areNotificationsEnabled();
+      if (!notificationsEnabled) {
+        return null;
+      }
+
+      // Check team-specific preferences
+      final typeEnabled = await _prefService.isTeamNotificationTypeEnabled(
+        teamId,
+        notification.type,
+      );
+      if (!typeEnabled) {
+        return null;
+      }
+
+      return await createNotification(notification);
+    } catch (e) {
+      debugPrint('Error creating team notification: $e');
       return null;
     }
   }

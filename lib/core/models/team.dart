@@ -1,4 +1,5 @@
 import 'package:task_flow/core/models/task_status.dart';
+import 'package:task_flow/core/models/notification_preferences.dart';
 
 class Team {
   final String id;
@@ -15,6 +16,7 @@ class Team {
   final DateTime updatedAt;
   final String? teamIcon;
   final String? teamColor;
+  final NotificationPreferences? notificationPreferences;
 
   Team({
     required this.id,
@@ -31,6 +33,7 @@ class Team {
     DateTime? updatedAt,
     this.teamIcon,
     this.teamColor,
+    this.notificationPreferences,
   }) : createdAt = createdAt ?? DateTime.now(),
        updatedAt = updatedAt ?? DateTime.now();
 
@@ -52,6 +55,7 @@ class Team {
     DateTime? updatedAt,
     String? teamIcon,
     String? teamColor,
+    NotificationPreferences? notificationPreferences,
   }) {
     return Team(
       id: id ?? this.id,
@@ -68,6 +72,7 @@ class Team {
       updatedAt: updatedAt ?? this.updatedAt,
       teamIcon: teamIcon ?? this.teamIcon,
       teamColor: teamColor ?? this.teamColor,
+      notificationPreferences: notificationPreferences ?? this.notificationPreferences,
     );
   }
 }
