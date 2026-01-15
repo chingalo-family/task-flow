@@ -11,8 +11,9 @@ class BackgroundNotificationService {
       BackgroundNotificationService._();
   factory BackgroundNotificationService() => _instance;
 
-  static const String _taskCheckTaskName = 'task_check_task';
-  static const String _uniqueTaskName = 'taskflow_notification_check';
+  // Public constants for external use
+  static const String taskCheckTaskName = 'task_check_task';
+  static const String uniqueTaskName = 'taskflow_notification_check';
 
   final FlutterLocalNotificationsPlugin _localNotifications =
       FlutterLocalNotificationsPlugin();
@@ -104,8 +105,8 @@ class BackgroundNotificationService {
 
     // Register periodic task (runs daily)
     await Workmanager().registerPeriodicTask(
-      _uniqueTaskName,
-      _taskCheckTaskName,
+      uniqueTaskName,
+      taskCheckTaskName,
       frequency: const Duration(days: 1),
       initialDelay: initialDelay,
       constraints: Constraints(
@@ -119,7 +120,7 @@ class BackgroundNotificationService {
 
   /// Cancel periodic background checks
   Future<void> cancelPeriodicChecks() async {
-    await Workmanager().cancelByUniqueName(_uniqueTaskName);
+    await Workmanager().cancelByUniqueName(uniqueTaskName);
     debugPrint('Cancelled periodic notification checks');
   }
 
@@ -216,7 +217,7 @@ void callbackDispatcher() {
     debugPrint('Background task started: $task');
 
     try {
-      if (task == BackgroundNotificationService._taskCheckTaskName) {
+      if (task == BackgroundNotificationService.taskCheckTaskName) {
         await _performNotificationCheck();
         return true;
       }
@@ -244,6 +245,7 @@ Future<void> _performNotificationCheck() async {
     await schedulerService.manualTrigger();
     
     // Show a summary notification if there were any notifications created
+    // Note: Using singleton instance consistently
     final backgroundService = BackgroundNotificationService();
     await backgroundService.showLocalNotification(
       id: DateTime.now().millisecondsSinceEpoch ~/ 1000,

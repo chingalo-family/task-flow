@@ -418,6 +418,7 @@ class EmailTemplates {
   static String _formatNotificationType(String type) {
     return type
         .split('_')
+        .where((word) => word.isNotEmpty) // Filter out empty strings
         .map((word) => word[0].toUpperCase() + word.substring(1))
         .join(' ');
   }
