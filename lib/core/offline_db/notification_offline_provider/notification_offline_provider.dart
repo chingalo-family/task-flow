@@ -113,6 +113,7 @@ class NotificationOfflineProvider {
       type: entity.type,
       isRead: entity.isRead,
       actorUsername: entity.actorUsername,
+      recipientUserId: entity.recipientUserId,
       createdAt: entity.createdAt,
     );
   }
@@ -125,6 +126,7 @@ class NotificationOfflineProvider {
       type: notification.type,
       isRead: notification.isRead,
       actorUsername: notification.actorUsername,
+      recipientUserId: notification.recipientUserId,
       createdAt: notification.createdAt,
     );
   }

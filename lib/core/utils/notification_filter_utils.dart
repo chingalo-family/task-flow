@@ -1,39 +1,68 @@
 import 'package:task_flow/core/models/models.dart' as app_notification;
+import 'package:task_flow/core/constants/notification_constants.dart';
 
 class NotificationFilterUtils {
+  /// Filter notifications by category and optionally by current user
   static List<app_notification.Notification> filterNotifications(
     List<app_notification.Notification> notifications,
-    String filter,
-  ) {
+    String filter, {
+    String? currentUserId,
+  }) {
+    // First filter by user if specified (for multi-user devices)
+    var filteredNotifications = notifications;
+    if (currentUserId != null && currentUserId.isNotEmpty) {
+      filteredNotifications = notifications
+          .where((notification) =>
+              notification.recipientUserId == null ||
+              notification.recipientUserId == currentUserId)
+          .toList();
+    }
+
+    // Then apply category filter
     switch (filter) {
       case 'Unread':
-        return notifications
+        return filteredNotifications
             .where((notification) => !notification.isRead)
             .toList();
       case 'Mentions':
-        return notifications
-            .where((notification) => notification.type == 'mention')
+        return filteredNotifications
+            .where((notification) =>
+                notification.type == NotificationConstants.typeMention)
             .toList();
       case 'Assigned to Me':
-        return notifications
-            .where((notification) => notification.type == 'task_assigned')
+        return filteredNotifications
+            .where((notification) =>
+                notification.type == NotificationConstants.typeTaskAssigned)
             .toList();
       case 'System':
-        return notifications
+        return filteredNotifications
             .where(
               (notification) =>
-                  notification.type == 'system' ||
-                  notification.type == 'deadline_reminder',
+                  notification.type == NotificationConstants.typeSystem ||
+                  notification.type ==
+                      NotificationConstants.typeDeadlineReminder,
             )
             .toList();
       case 'All':
       default:
-        return notifications;
+        return filteredNotifications;
     }
   }
 
+  /// Get notifications for current user only (excludes notifications for other users)
+  static List<app_notification.Notification> filterNotificationsForCurrentUser(
+    List<app_notification.Notification> notifications,
+    String currentUserId,
+  ) {
+    return notifications
+        .where((notification) =>
+            notification.recipientUserId == null ||
+            notification.recipientUserId == currentUserId)
+        .toList();
+  }
+
   static Map<String, List<app_notification.Notification>>
-  groupNotificationsByTime(
+      groupNotificationsByTime(
     List<app_notification.Notification> notifications, {
     int recentHoursThreshold = 24,
   }) {

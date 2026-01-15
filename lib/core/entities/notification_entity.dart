@@ -9,8 +9,7 @@ class NotificationEntity {
   String notificationId;
   String title;
   String? body;
-  String
-  type; // 'task_assigned', 'team_invite', 'task_completed', 'mention', etc.
+  String type; // 'task_assigned', 'team_invite', 'task_completed', 'mention', etc.
 
   bool isRead;
   String? relatedEntityId;
@@ -19,6 +18,9 @@ class NotificationEntity {
   String? actorUserId;
   String? actorUsername;
   String? actorAvatarUrl;
+  
+  @Index()
+  String? recipientUserId; // User who should receive this notification
 
   @Property(type: PropertyType.date)
   DateTime createdAt;
@@ -37,6 +39,7 @@ class NotificationEntity {
     this.actorUserId,
     this.actorUsername,
     this.actorAvatarUrl,
+    this.recipientUserId,
     DateTime? createdAt,
     this.isSynced = false,
     String? metadataJson,
