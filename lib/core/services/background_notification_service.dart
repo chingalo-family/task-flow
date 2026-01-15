@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:task_flow/core/services/notification_scheduler_service.dart';
-import 'package:task_flow/core/services/task_service.dart';
 
 /// Service for managing background notifications and tasks
 class BackgroundNotificationService {
@@ -27,7 +27,9 @@ class BackgroundNotificationService {
   /// Initialize flutter_local_notifications
   Future<void> _initializeLocalNotifications() async {
     // Android initialization settings
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
 
     // iOS initialization settings
     const iosSettings = DarwinInitializationSettings(
@@ -50,19 +52,17 @@ class BackgroundNotificationService {
     if (defaultTargetPlatform == TargetPlatform.iOS) {
       await _localNotifications
           .resolvePlatformSpecificImplementation<
-              IOSFlutterLocalNotificationsPlugin>()
-          ?.requestPermissions(
-            alert: true,
-            badge: true,
-            sound: true,
-          );
+            IOSFlutterLocalNotificationsPlugin
+          >()
+          ?.requestPermissions(alert: true, badge: true, sound: true);
     }
 
     // Request permissions for Android 13+
     if (defaultTargetPlatform == TargetPlatform.android) {
       await _localNotifications
           .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin
+          >()
           ?.requestNotificationsPermission();
     }
   }
@@ -85,7 +85,7 @@ class BackgroundNotificationService {
   Future<void> schedulePeriodicChecks() async {
     final schedulerService = NotificationSchedulerService();
     final enabled = await schedulerService.areScheduledNotificationsEnabled();
-    
+
     if (!enabled) {
       await cancelPeriodicChecks();
       return;
@@ -96,7 +96,7 @@ class BackgroundNotificationService {
     // Calculate initial delay to preferred time
     final now = DateTime.now();
     var nextRun = DateTime(now.year, now.month, now.day, preferredHour);
-    
+
     if (nextRun.isBefore(now)) {
       nextRun = nextRun.add(const Duration(days: 1));
     }
@@ -109,13 +109,13 @@ class BackgroundNotificationService {
       taskCheckTaskName,
       frequency: const Duration(days: 1),
       initialDelay: initialDelay,
-      constraints: Constraints(
-        networkType: NetworkType.connected,
-      ),
+      constraints: Constraints(networkType: NetworkType.connected),
       existingWorkPolicy: ExistingWorkPolicy.replace,
     );
 
-    debugPrint('Scheduled periodic notification checks at $preferredHour:00 daily');
+    debugPrint(
+      'Scheduled periodic notification checks at $preferredHour:00 daily',
+    );
   }
 
   /// Cancel periodic background checks
@@ -135,11 +135,12 @@ class BackgroundNotificationService {
     final androidDetails = AndroidNotificationDetails(
       'task_flow_channel',
       'Task Flow Notifications',
-      channelDescription: 'Notifications for tasks, deadlines, and team updates',
+      channelDescription:
+          'Notifications for tasks, deadlines, and team updates',
       importance: _mapPriorityToImportance(priority),
       priority: _mapPriorityToAndroidPriority(priority),
       styleInformation: const BigTextStyleInformation(''),
-      color: const Color(0xFF2E90FA), // Primary blue
+      color: AppConstant.primaryBlue, // Primary blue
     );
 
     const iosDetails = DarwinNotificationDetails(
@@ -153,13 +154,7 @@ class BackgroundNotificationService {
       iOS: iosDetails,
     );
 
-    await _localNotifications.show(
-      id,
-      title,
-      body,
-      details,
-      payload: payload,
-    );
+    await _localNotifications.show(id, title, body, details, payload: payload);
   }
 
   /// Map custom priority to Android importance
@@ -202,12 +197,7 @@ class BackgroundNotificationService {
 }
 
 /// Priority levels for notifications
-enum NotificationPriority {
-  low,
-  defaultPriority,
-  high,
-  max,
-}
+enum NotificationPriority { low, defaultPriority, high, max }
 
 /// Background task callback dispatcher
 /// This must be a top-level function
@@ -233,7 +223,7 @@ void callbackDispatcher() {
 Future<void> _performNotificationCheck() async {
   try {
     final schedulerService = NotificationSchedulerService();
-    
+
     // Check if scheduled notifications are enabled
     final enabled = await schedulerService.areScheduledNotificationsEnabled();
     if (!enabled) {
@@ -243,7 +233,7 @@ Future<void> _performNotificationCheck() async {
 
     // Perform the notification check
     await schedulerService.manualTrigger();
-    
+
     // Show a summary notification if there were any notifications created
     // Note: Using singleton instance consistently
     final backgroundService = BackgroundNotificationService();

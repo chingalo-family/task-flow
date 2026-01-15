@@ -214,43 +214,47 @@ class MockPreferenceService extends _i1.Mock implements _i5.PreferenceService {
   }
 
   @override
-  _i3.Future<void> setString(String? key, String? value) =>
+  _i3.Future<void> setString(
+    String? key,
+    String? value, {
+    bool? global = false,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#setString, [key, value]),
+            Invocation.method(#setString, [key, value], {#global: global}),
             returnValue: _i3.Future<void>.value(),
             returnValueForMissingStub: _i3.Future<void>.value(),
           )
           as _i3.Future<void>);
 
   @override
-  _i3.Future<String?> getString(String? key) =>
+  _i3.Future<String?> getString(String? key, {bool? global = false}) =>
       (super.noSuchMethod(
-            Invocation.method(#getString, [key]),
+            Invocation.method(#getString, [key], {#global: global}),
             returnValue: _i3.Future<String?>.value(),
           )
           as _i3.Future<String?>);
 
   @override
-  _i3.Future<void> setBool(String? key, bool? value) =>
+  _i3.Future<void> setBool(String? key, bool? value, {bool? global = false}) =>
       (super.noSuchMethod(
-            Invocation.method(#setBool, [key, value]),
+            Invocation.method(#setBool, [key, value], {#global: global}),
             returnValue: _i3.Future<void>.value(),
             returnValueForMissingStub: _i3.Future<void>.value(),
           )
           as _i3.Future<void>);
 
   @override
-  _i3.Future<bool?> getBool(String? key) =>
+  _i3.Future<bool?> getBool(String? key, {bool? global = false}) =>
       (super.noSuchMethod(
-            Invocation.method(#getBool, [key]),
+            Invocation.method(#getBool, [key], {#global: global}),
             returnValue: _i3.Future<bool?>.value(),
           )
           as _i3.Future<bool?>);
 
   @override
-  _i3.Future<void> remove(String? key) =>
+  _i3.Future<void> remove(String? key, {bool? global = false}) =>
       (super.noSuchMethod(
-            Invocation.method(#remove, [key]),
+            Invocation.method(#remove, [key], {#global: global}),
             returnValue: _i3.Future<void>.value(),
             returnValueForMissingStub: _i3.Future<void>.value(),
           )

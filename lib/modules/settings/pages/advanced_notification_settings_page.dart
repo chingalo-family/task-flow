@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/services/email_notification_service.dart';
 import 'package:task_flow/core/services/notification_scheduler_service.dart';
 import 'package:task_flow/core/services/background_notification_service.dart';
 import 'package:task_flow/modules/settings/components/preference_toggle_item.dart';
-import 'package:task_flow/core/components/forms/input_field.dart';
 import 'package:task_flow/core/components/cards/section_header.dart';
 import 'package:task_flow/core/components/buttons/primary_button.dart';
 
@@ -68,7 +65,7 @@ class _AdvancedNotificationSettingsPageState
       _scheduledNotificationsEnabled = enabled;
     });
     await _schedulerService.setScheduledNotificationsEnabled(enabled);
-    
+
     // Schedule or cancel background tasks
     final backgroundService = BackgroundNotificationService();
     if (enabled) {
@@ -85,7 +82,7 @@ class _AdvancedNotificationSettingsPageState
       _preferredCheckTime = hour;
     });
     await _schedulerService.setPreferredCheckTime(hour);
-    
+
     // Reschedule background tasks with new time
     if (_scheduledNotificationsEnabled) {
       final backgroundService = BackgroundNotificationService();
