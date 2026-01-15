@@ -1,7 +1,10 @@
 import 'package:flutter/foundation.dart';
+import 'package:task_flow/core/constants/notification_constants.dart';
 import 'package:task_flow/core/models/notification.dart';
 import 'package:task_flow/core/offline_db/notification_offline_provider/notification_offline_provider.dart';
 import 'package:task_flow/core/utils/utils.dart';
+import 'package:task_flow/core/services/notification_preference_service.dart';
+import 'package:task_flow/core/services/email_notification_service.dart';
 
 class NotificationService {
   NotificationService._();
@@ -9,8 +12,62 @@ class NotificationService {
   factory NotificationService() => _instance;
 
   final _offline = NotificationOfflineProvider();
+  final _prefService = NotificationPreferenceService();
+  final _emailService = EmailNotificationService();
 
   Future<Notification?> createNotification(Notification notification) async {
+    try {
+      // Check if notifications are globally enabled
+      final notificationsEnabled = await _prefService.areNotificationsEnabled();
+      if (!notificationsEnabled) {
+        return null;
+      }
+
+      // Check if this notification type is enabled
+      final typeEnabled = await _prefService.isNotificationTypeEnabled(
+        notification.type,
+      );
+      if (!typeEnabled) {
+        return null;
+      }
+
+      return await _saveNotification(notification);
+    } catch (e) {
+      debugPrint('Error creating notification: $e');
+      return null;
+    }
+  }
+
+  /// Create notification with team-specific preference check
+  Future<Notification?> createNotificationForTeam(
+    Notification notification,
+    String teamId,
+  ) async {
+    try {
+      // Check if notifications are globally enabled
+      final notificationsEnabled = await _prefService.areNotificationsEnabled();
+      if (!notificationsEnabled) {
+        return null;
+      }
+
+      // Check team-specific preferences
+      final typeEnabled = await _prefService.isTeamNotificationTypeEnabled(
+        teamId,
+        notification.type,
+      );
+      if (!typeEnabled) {
+        return null;
+      }
+
+      return await _saveNotification(notification);
+    } catch (e) {
+      debugPrint('Error creating team notification: $e');
+      return null;
+    }
+  }
+
+  /// Internal method to save notification without preference checks
+  Future<Notification?> _saveNotification(Notification notification) async {
     try {
       final notificationToSave = notification.id.isEmpty
           ? notification.copyWith(
@@ -18,10 +75,30 @@ class NotificationService {
             )
           : notification;
       await _offline.addOrUpdateNotification(notificationToSave);
+
+      // Send email notification for critical types
+      await _sendEmailNotificationIfNeeded(notificationToSave);
+
       return notificationToSave;
     } catch (e) {
-      debugPrint('Error creating notification: $e');
+      debugPrint('Error saving notification: $e');
       return null;
+    }
+  }
+
+  /// Send email notification if enabled and notification is critical
+  Future<void> _sendEmailNotificationIfNeeded(Notification notification) async {
+    try {
+      final userEmail = await _emailService.getUserEmail();
+      if (userEmail != null && userEmail.isNotEmpty) {
+        await _emailService.sendEmailNotification(
+          notification: notification,
+          recipientEmail: userEmail,
+        );
+      }
+    } catch (e) {
+      debugPrint('Error sending email notification: $e');
+      // Don't fail the notification creation if email fails
     }
   }
 
@@ -159,15 +236,19 @@ class NotificationService {
     required String taskTitle,
     required String taskId,
     required String actorUsername,
+    required String recipientUserId,
+    required String recipientUserName,
   }) async {
     final notification = Notification(
       id: AppUtil.getUid(),
       title: 'New Task Assigned',
       body: '$actorUsername assigned you to "$taskTitle"',
-      type: 'task_assigned',
+      type: NotificationConstants.typeTaskAssigned,
       isRead: false,
       actorUsername: actorUsername,
       createdAt: DateTime.now(),
+      recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
     );
     return await createNotification(notification);
   }
@@ -176,15 +257,19 @@ class NotificationService {
     required String teamName,
     required String teamId,
     required String actorUsername,
+    required String recipientUserId,
+    required String recipientUserName,
   }) async {
     final notification = Notification(
       id: AppUtil.getUid(),
       title: 'Team Invitation',
       body: '$actorUsername invited you to join "$teamName"',
-      type: 'team_invite',
+      type: NotificationConstants.typeTeamInvite,
       isRead: false,
       actorUsername: actorUsername,
       createdAt: DateTime.now(),
+      recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
     );
     return await createNotification(notification);
   }
@@ -193,15 +278,19 @@ class NotificationService {
     required String taskTitle,
     required String taskId,
     required String actorUsername,
+    required String recipientUserId,
+    required String recipientUserName,
   }) async {
     final notification = Notification(
       id: AppUtil.getUid(),
       title: 'Task Completed',
       body: '$actorUsername completed "$taskTitle"',
-      type: 'task_completed',
+      type: NotificationConstants.typeTaskCompleted,
       isRead: false,
       actorUsername: actorUsername,
       createdAt: DateTime.now(),
+      recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
     );
     return await createNotification(notification);
   }

@@ -20,6 +20,10 @@ class NotificationEntity {
   String? actorUsername;
   String? actorAvatarUrl;
 
+  @Index()
+  String recipientUserId; // User who should receive this notification (required)
+  String recipientUserName; // Name of recipient user (required)
+
   @Property(type: PropertyType.date)
   DateTime createdAt;
 
@@ -37,6 +41,8 @@ class NotificationEntity {
     this.actorUserId,
     this.actorUsername,
     this.actorAvatarUrl,
+    required this.recipientUserId,
+    required this.recipientUserName,
     DateTime? createdAt,
     this.isSynced = false,
     String? metadataJson,

@@ -82,17 +82,33 @@ class MockTeamService extends _i1.Mock implements _i2.TeamService {
           as _i3.Future<List<_i4.Team>>);
 
   @override
-  _i3.Future<bool> addMemberToTeam(String? teamId, String? userId) =>
+  _i3.Future<bool> addMemberToTeam(
+    String? teamId,
+    String? userId, {
+    String? addedBy,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#addMemberToTeam, [teamId, userId]),
+            Invocation.method(
+              #addMemberToTeam,
+              [teamId, userId],
+              {#addedBy: addedBy},
+            ),
             returnValue: _i3.Future<bool>.value(false),
           )
           as _i3.Future<bool>);
 
   @override
-  _i3.Future<bool> removeMemberFromTeam(String? teamId, String? userId) =>
+  _i3.Future<bool> removeMemberFromTeam(
+    String? teamId,
+    String? userId, {
+    String? removedBy,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#removeMemberFromTeam, [teamId, userId]),
+            Invocation.method(
+              #removeMemberFromTeam,
+              [teamId, userId],
+              {#removedBy: removedBy},
+            ),
             returnValue: _i3.Future<bool>.value(false),
           )
           as _i3.Future<bool>);

@@ -2,20 +2,47 @@ import 'package:flutter/foundation.dart';
 import 'package:task_flow/core/constants/task_constants.dart';
 import 'package:task_flow/core/models/task.dart';
 import 'package:task_flow/core/offline_db/task_offline_provider/task_offline_provider.dart';
+import 'package:task_flow/core/services/notification_service.dart';
+import 'package:task_flow/core/services/user_service.dart';
+import 'package:task_flow/core/utils/notification_utils.dart';
 
 class TaskService {
   TaskService._();
   static final TaskService _instance = TaskService._();
   factory TaskService() => _instance;
   final _offline = TaskOfflineProvider();
+  final _notificationService = NotificationService();
 
   Future<Task?> createTask(Task task) async {
     try {
       if (task.title.trim().isEmpty) {
         throw Exception('Task title cannot be empty');
       }
-      await _offline.addOrUpdateTask(task);
-      return task;
+      final userId = task.userId ?? '';
+      final userName = task.userName ?? '';
+      final taskWithCreator = task.copyWith(userId: userId, userName: userName);
+      await _offline.addOrUpdateTask(taskWithCreator);
+      // Create notification for assigned user(s)
+      if (taskWithCreator.assignedToUsername != null &&
+          taskWithCreator.assignedToUserId != null) {
+        final notification = NotificationUtils.createTaskAssignedNotification(
+          taskTitle: taskWithCreator.title,
+          assignedBy: userName,
+          taskId: taskWithCreator.id,
+          recipientUserId: taskWithCreator.assignedToUserId!,
+          recipientUserName: taskWithCreator.assignedToUsername!,
+        );
+        if (taskWithCreator.teamId != null) {
+          await _notificationService.createNotificationForTeam(
+            notification,
+            taskWithCreator.teamId!,
+          );
+        } else {
+          await _notificationService.createNotification(notification);
+        }
+      }
+
+      return taskWithCreator;
     } catch (e) {
       debugPrint('Error creating task: $e');
       return null;
@@ -115,10 +142,16 @@ class TaskService {
     }
   }
 
-  Future<bool> updateTaskStatus(String id, String status) async {
+  Future<bool> updateTaskStatus(
+    String id,
+    String status, {
+    String? changedBy,
+  }) async {
     try {
       final task = await getTaskById(id);
       if (task == null) return false;
+
+      final oldStatus = task.status;
       final updatedTask = task.copyWith(
         status: status,
         completedAt: status == TaskConstants.statusCompleted
@@ -126,19 +159,74 @@ class TaskService {
             : null,
         progress: status == TaskConstants.statusCompleted ? 100 : task.progress,
       );
-      return await updateTask(updatedTask);
+
+      final success = await updateTask(updatedTask);
+      if (success) {
+        final actor = changedBy ?? task.assignedToUsername ?? 'Someone';
+        final user = await UserService().getUserById(task.userId ?? '');
+        // Create notification for status change
+        if (oldStatus != status) {
+          final notification =
+              NotificationUtils.createTaskStatusChangeNotification(
+                taskTitle: task.title,
+                newStatus: status,
+                changedBy: actor,
+                taskId: task.id,
+                recipientUserId: task.userId ?? '',
+                recipientUserName: user?.username ?? '',
+              );
+          if (task.teamId != null) {
+            await _notificationService.createNotificationForTeam(
+              notification,
+              task.teamId!,
+            );
+          } else {
+            await _notificationService.createNotification(notification);
+          }
+        }
+
+        // Create task completed notification
+        if (status == TaskConstants.statusCompleted) {
+          final notification =
+              NotificationUtils.createTaskCompletedNotification(
+                taskTitle: task.title,
+                completedBy: actor,
+                taskId: task.id,
+                recipientUserId: task.userId ?? '',
+                recipientUserName: user?.username ?? '',
+              );
+          if (task.teamId != null) {
+            await _notificationService.createNotificationForTeam(
+              notification,
+              task.teamId!,
+            );
+          } else {
+            await _notificationService.createNotification(notification);
+          }
+        }
+      }
+
+      return success;
     } catch (e) {
       debugPrint('Error updating task status: $e');
       return false;
     }
   }
 
-  Future<bool> markAsCompleted(String id) async {
-    return await updateTaskStatus(id, TaskConstants.statusCompleted);
+  Future<bool> markAsCompleted(String id, {String? completedBy}) async {
+    return await updateTaskStatus(
+      id,
+      TaskConstants.statusCompleted,
+      changedBy: completedBy,
+    );
   }
 
-  Future<bool> markAsPending(String id) async {
-    return await updateTaskStatus(id, TaskConstants.statusPending);
+  Future<bool> markAsPending(String id, {String? changedBy}) async {
+    return await updateTaskStatus(
+      id,
+      TaskConstants.statusPending,
+      changedBy: changedBy,
+    );
   }
 
   Future<List<Task>> getOverdueTasks() async {
@@ -185,6 +273,82 @@ class TaskService {
     } catch (e) {
       debugPrint('Error getting upcoming tasks: $e');
       return [];
+    }
+  }
+
+  /// Check for tasks that need deadline reminders
+  Future<List<Task>> getTasksNeedingDeadlineReminders() async {
+    try {
+      final allTasks = await getAllTasks();
+      final now = DateTime.now();
+      final oneDayFromNow = now.add(const Duration(days: 1));
+
+      return allTasks.where((task) {
+        if (task.dueDate == null) return false;
+        if (task.status == TaskConstants.statusCompleted) return false;
+
+        // Remind if due within 24 hours
+        return task.dueDate!.isBefore(oneDayFromNow) &&
+            task.dueDate!.isAfter(now);
+      }).toList();
+    } catch (e) {
+      debugPrint('Error getting tasks needing deadline reminders: $e');
+      return [];
+    }
+  }
+
+  /// Create deadline reminder notifications for tasks due soon
+  Future<void> createDeadlineReminders() async {
+    try {
+      final tasks = await getTasksNeedingDeadlineReminders();
+      for (final task in tasks) {
+        final user = await UserService().getUserById(task.userId ?? '');
+        final notification =
+            NotificationUtils.createDeadlineReminderNotification(
+              taskTitle: task.title,
+              dueDate: task.dueDate!,
+              taskId: task.id,
+              recipientUserId: task.userId ?? '',
+              recipientUserName: user?.username ?? '',
+            );
+        if (task.teamId != null) {
+          await _notificationService.createNotificationForTeam(
+            notification,
+            task.teamId!,
+          );
+        } else {
+          await _notificationService.createNotification(notification);
+        }
+      }
+    } catch (e) {
+      debugPrint('Error creating deadline reminders: $e');
+    }
+  }
+
+  /// Create overdue task notifications
+  Future<void> createOverdueTaskNotifications() async {
+    try {
+      final overdueTasks = await getOverdueTasks();
+      for (final task in overdueTasks) {
+        final user = await UserService().getUserById(task.userId ?? '');
+        final notification = NotificationUtils.createTaskOverdueNotification(
+          taskTitle: task.title,
+          dueDate: task.dueDate!,
+          taskId: task.id,
+          recipientUserId: task.userId ?? '',
+          recipientUserName: user?.username ?? '',
+        );
+        if (task.teamId != null) {
+          await _notificationService.createNotificationForTeam(
+            notification,
+            task.teamId!,
+          );
+        } else {
+          await _notificationService.createNotification(notification);
+        }
+      }
+    } catch (e) {
+      debugPrint('Error creating overdue task notifications: $e');
     }
   }
 }

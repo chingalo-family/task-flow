@@ -75,7 +75,13 @@ void main() {
 
       test('handles different times on yesterday', () {
         final now = DateTime.now();
-        final yesterdayDate = DateTime(now.year, now.month, now.day - 1, 23, 59);
+        final yesterdayDate = DateTime(
+          now.year,
+          now.month,
+          now.day - 1,
+          23,
+          59,
+        );
         final result = TimeUtils.formatDate(yesterdayDate);
         expect(result, 'Yesterday');
       });

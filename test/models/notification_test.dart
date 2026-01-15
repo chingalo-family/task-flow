@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:task_flow/core/constants/notification_constants.dart';
 import 'package:task_flow/core/models/notification.dart';
 
 void main() {
@@ -7,12 +8,14 @@ void main() {
       final notification = Notification(
         id: '1',
         title: 'Test Notification',
-        type: 'task_assigned',
+        type: NotificationConstants.typeTaskAssigned,
+        recipientUserId: '',
+        recipientUserName: '',
       );
 
       expect(notification.id, '1');
       expect(notification.title, 'Test Notification');
-      expect(notification.type, 'task_assigned');
+      expect(notification.type, NotificationConstants.typeTaskAssigned);
       expect(notification.isRead, false);
       expect(notification.body, null);
     });
@@ -23,7 +26,7 @@ void main() {
         id: '1',
         title: 'Test Notification',
         body: 'This is a test',
-        type: 'task_assigned',
+        type: NotificationConstants.typeTaskAssigned,
         isRead: true,
         relatedEntityId: 'task123',
         relatedEntityType: 'task',
@@ -31,12 +34,14 @@ void main() {
         actorUsername: 'testuser',
         actorAvatarUrl: 'https://example.com/avatar.png',
         createdAt: createdAt,
+        recipientUserId: '',
+        recipientUserName: '',
       );
 
       expect(notification.id, '1');
       expect(notification.title, 'Test Notification');
       expect(notification.body, 'This is a test');
-      expect(notification.type, 'task_assigned');
+      expect(notification.type, NotificationConstants.typeTaskAssigned);
       expect(notification.isRead, true);
       expect(notification.relatedEntityId, 'task123');
       expect(notification.relatedEntityType, 'task');
@@ -51,6 +56,8 @@ void main() {
         id: '1',
         title: 'Test',
         type: 'system',
+        recipientUserId: '',
+        recipientUserName: '',
       );
 
       expect(notification.isRead, false);
@@ -62,30 +69,37 @@ void main() {
         id: '1',
         title: 'Test',
         type: 'system',
+        recipientUserId: '',
+        recipientUserName: '',
       );
       final after = DateTime.now();
 
-      expect(notification.createdAt.isAfter(before) || 
-             notification.createdAt.isAtSameMomentAs(before), true);
-      expect(notification.createdAt.isBefore(after) || 
-             notification.createdAt.isAtSameMomentAs(after), true);
+      expect(
+        notification.createdAt.isAfter(before) ||
+            notification.createdAt.isAtSameMomentAs(before),
+        true,
+      );
+      expect(
+        notification.createdAt.isBefore(after) ||
+            notification.createdAt.isAtSameMomentAs(after),
+        true,
+      );
     });
 
     test('should copy notification with updated fields', () {
       final original = Notification(
         id: '1',
         title: 'Original',
-        type: 'task_assigned',
+        type: NotificationConstants.typeTaskAssigned,
+        recipientUserId: '',
+        recipientUserName: '',
       );
 
-      final copied = original.copyWith(
-        title: 'Updated',
-        isRead: true,
-      );
+      final copied = original.copyWith(title: 'Updated', isRead: true);
 
       expect(copied.id, '1');
       expect(copied.title, 'Updated');
-      expect(copied.type, 'task_assigned');
+      expect(copied.type, NotificationConstants.typeTaskAssigned);
       expect(copied.isRead, true);
     });
 
@@ -95,6 +109,8 @@ void main() {
         title: 'Test',
         type: 'system',
         isRead: true,
+        recipientUserId: '',
+        recipientUserName: '',
       );
 
       final copied = original.copyWith();
@@ -111,10 +127,12 @@ void main() {
         title: 'Test',
         type: 'system',
         createdAt: DateTime.now(),
+        recipientUserId: '',
+        recipientUserName: '',
       );
 
       final timeAgo = notification.getTimeAgo();
-      
+
       expect(timeAgo, isNotNull);
       expect(timeAgo, isA<String>());
     });
@@ -126,11 +144,11 @@ void main() {
         type: 'system',
         body: 'Original body',
         actorUsername: 'user1',
+        recipientUserId: '',
+        recipientUserName: '',
       );
 
-      final copied = original.copyWith(
-        body: 'New body',
-      );
+      final copied = original.copyWith(body: 'New body');
 
       expect(copied.body, 'New body');
       expect(copied.actorUsername, 'user1');

@@ -1,3 +1,5 @@
+import 'package:task_flow/core/constants/notification_constants.dart';
+
 class EmailTemplates {
   // App theme colors matching the dark theme
   static const String _primaryBlue = '#2E90FA';
@@ -282,5 +284,169 @@ class EmailTemplates {
       appName: appName,
       currentAppVersion: currentAppVersion,
     );
+  }
+
+  /// In-app notification email template
+  static String getInAppNotificationEmail({
+    required String notificationTitle,
+    required String notificationBody,
+    required String notificationType,
+    required DateTime createdAt,
+    required String appName,
+    required String currentAppVersion,
+    String? actorUsername,
+  }) {
+    // Determine notification color based on type
+    final typeColor = _getNotificationTypeColor(notificationType);
+    final typeIcon = _getNotificationTypeIcon(notificationType);
+
+    final actorInfo = actorUsername != null
+        ? '''
+        <div style="background-color: $_darkBackground; border-left: 4px solid $typeColor; padding: 20px; margin-bottom: 16px; border-radius: 8px;">
+            <p style="margin: 0 0 8px; color: $_textSecondary; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">From</p>
+            <p style="margin: 0; color: $_textPrimary; font-size: 16px; font-weight: 500;">$actorUsername</p>
+        </div>
+        '''
+        : '';
+
+    final content =
+        '''
+        <h2 style="margin: 0 0 24px; color: $_textPrimary; font-size: 24px; font-weight: 600;">$notificationTitle</h2>
+
+        <div style="background: linear-gradient(135deg, $typeColor 0%, ${_getDarkerShade(typeColor)} 100%); padding: 20px; border-radius: 12px; margin: 24px 0;">
+            <div style="margin-bottom: 12px;">
+                <span style="display: inline-block; width: 40px; height: 40px; line-height: 40px; text-align: center; font-size: 20px; background-color: rgba(255,255,255,0.2); border-radius: 8px;">$typeIcon</span>
+            </div>
+            <p style="margin: 0 0 8px; color: rgba(255,255,255,0.9); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Notification Type</p>
+            <p style="margin: 0; color: white; font-size: 16px; font-weight: 500;">${_formatNotificationType(notificationType)}</p>
+        </div>
+
+        <div style="background-color: $_darkBackground; border-left: 4px solid $typeColor; padding: 20px; margin-bottom: 20px; border-radius: 8px;">
+            <p style="margin: 0 0 8px; color: $_textSecondary; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Message</p>
+            <p style="margin: 0; color: $_textPrimary; font-size: 16px; line-height: 1.6; white-space: pre-wrap;">$notificationBody</p>
+        </div>
+
+        $actorInfo
+
+        <div style="padding: 20px; background-color: $_darkBackground; border-radius: 8px; margin-top: 24px;">
+            <p style="margin: 0; color: $_textSecondary; font-size: 14px;">
+                <strong style="color: $_textPrimary;">Notification Time:</strong> ${_formatNotificationDateTime(createdAt)}
+            </p>
+        </div>
+
+        <p style="margin: 32px 0 0; color: $_textSecondary; font-size: 15px; line-height: 1.6; text-align: center;">
+            To manage your notification preferences, open the app and go to <strong style="color: $_textPrimary;">Settings → Notification Preferences</strong>.
+        </p>
+        ''';
+
+    return _getEmailTemplate(
+      title: notificationTitle,
+      content: content,
+      footerText: 'Stay updated with your tasks and team activities',
+      appName: appName,
+      currentAppVersion: currentAppVersion,
+    );
+  }
+
+  /// Helper: Get color for notification type
+  static String _getNotificationTypeColor(String type) {
+    switch (type) {
+      case NotificationConstants.typeTaskAssigned:
+      case NotificationConstants.typeTeamInvite:
+        return _primaryBlue;
+      case NotificationConstants.typeDeadlineReminder:
+      case NotificationConstants.typeTaskOverdue:
+        return '#EF4444'; // Red
+      case NotificationConstants.typeTaskCompleted:
+      case NotificationConstants.typeTeamMemberAdded:
+        return _successGreen;
+      case NotificationConstants.typeTaskStatusChange:
+      case NotificationConstants.typeTaskPriorityChange:
+        return _warningOrange;
+      case NotificationConstants.typeSystem:
+        return '#94A3B8'; // Gray
+      default:
+        return _primaryBlue;
+    }
+  }
+
+  /// Helper: Get icon for notification type
+  static String _getNotificationTypeIcon(String type) {
+    switch (type) {
+      case NotificationConstants.typeTaskAssigned:
+        return '📋';
+      case NotificationConstants.typeTaskCompleted:
+        return '✅';
+      case NotificationConstants.typeTaskStatusChange:
+        return '🔄';
+      case NotificationConstants.typeTaskPriorityChange:
+        return '⚡';
+      case NotificationConstants.typeDeadlineReminder:
+        return '⏰';
+      case NotificationConstants.typeTaskOverdue:
+        return '⚠️';
+      case NotificationConstants.typeTeamInvite:
+        return '👥';
+      case NotificationConstants.typeTeamMemberAdded:
+        return '🤝';
+      case NotificationConstants.typeTeamMemberRemoved:
+        return '👋';
+      case NotificationConstants.typeSystem:
+        return '🔔';
+      default:
+        return '📬';
+    }
+  }
+
+  /// Helper: Get darker shade of color
+  static String _getDarkerShade(String color) {
+    // Simple darkening by reducing brightness
+    switch (color) {
+      case '#2E90FA':
+        return '#1E6FD9';
+      case '#EF4444':
+        return '#DC2626';
+      case '#10B981':
+        return '#0D9668';
+      case '#F59E0B':
+        return '#D97706';
+      case '#94A3B8':
+        return '#64748B';
+      default:
+        return '#1E6FD9';
+    }
+  }
+
+  /// Helper: Format notification type
+  static String _formatNotificationType(String type) {
+    return type
+        .split('_')
+        .where((word) => word.isNotEmpty) // Filter out empty strings
+        .map((word) => word[0].toUpperCase() + word.substring(1))
+        .join(' ');
+  }
+
+  /// Helper: Format notification date time
+  static String _formatNotificationDateTime(DateTime dateTime) {
+    final months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    final month = months[dateTime.month - 1];
+    final day = dateTime.day;
+    final year = dateTime.year;
+    final hour = dateTime.hour.toString().padLeft(2, '0');
+    final minute = dateTime.minute.toString().padLeft(2, '0');
+    return '$month $day, $year at $hour:$minute';
   }
 }

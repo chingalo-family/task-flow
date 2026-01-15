@@ -95,7 +95,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(2, 614660561691660408),
     name: 'NotificationEntity',
-    lastPropertyId: const obx_int.IdUid(14, 3863776433235736798),
+    lastPropertyId: const obx_int.IdUid(16, 8813270417220745206),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -177,6 +177,19 @@ final _entities = <obx_int.ModelEntity>[
         type: 1,
         flags: 0,
       ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(15, 752466136519467273),
+        name: 'recipientUserId',
+        type: 9,
+        flags: 2048,
+        indexId: const obx_int.IdUid(6, 3345183028946530900),
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(16, 8813270417220745206),
+        name: 'recipientUserName',
+        type: 9,
+        flags: 0,
+      ),
     ],
     relations: <obx_int.ModelRelation>[],
     backlinks: <obx_int.ModelBacklink>[],
@@ -184,7 +197,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(3, 636520496469286108),
     name: 'TaskEntity',
-    lastPropertyId: const obx_int.IdUid(24, 3590199673161262875),
+    lastPropertyId: const obx_int.IdUid(26, 6113045763969807576),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -330,6 +343,18 @@ final _entities = <obx_int.ModelEntity>[
         id: const obx_int.IdUid(24, 3590199673161262875),
         name: 'remindMe',
         type: 1,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(25, 2188586564773724666),
+        name: 'userId',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(26, 6113045763969807576),
+        name: 'userName',
+        type: 9,
         flags: 0,
       ),
     ],
@@ -491,7 +516,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
     generatorVersion: obx_int.GeneratorVersion.v2025_12_16,
     entities: _entities,
     lastEntityId: const obx_int.IdUid(4, 8634427917478567143),
-    lastIndexId: const obx_int.IdUid(5, 811543964467735373),
+    lastIndexId: const obx_int.IdUid(6, 3345183028946530900),
     lastRelationId: const obx_int.IdUid(0, 0),
     lastSequenceId: const obx_int.IdUid(0, 0),
     retiredEntityUids: const [],
@@ -630,7 +655,11 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final actorAvatarUrlOffset = object.actorAvatarUrl == null
             ? null
             : fbb.writeString(object.actorAvatarUrl!);
-        fbb.startTable(15);
+        final recipientUserIdOffset = fbb.writeString(object.recipientUserId);
+        final recipientUserNameOffset = fbb.writeString(
+          object.recipientUserName,
+        );
+        fbb.startTable(17);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, notificationIdOffset);
         fbb.addOffset(2, titleOffset);
@@ -644,6 +673,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
         fbb.addOffset(10, actorAvatarUrlOffset);
         fbb.addInt64(11, object.createdAt.millisecondsSinceEpoch);
         fbb.addBool(12, object.isSynced);
+        fbb.addOffset(14, recipientUserIdOffset);
+        fbb.addOffset(15, recipientUserNameOffset);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -689,6 +720,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final actorAvatarUrlParam = const fb.StringReader(
           asciiOptimization: true,
         ).vTableGetNullable(buffer, rootOffset, 24);
+        final recipientUserIdParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 32, '');
+        final recipientUserNameParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 34, '');
         final createdAtParam = DateTime.fromMillisecondsSinceEpoch(
           const fb.Int64Reader().vTableGet(buffer, rootOffset, 26, 0),
         );
@@ -710,6 +747,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
           actorUserId: actorUserIdParam,
           actorUsername: actorUsernameParam,
           actorAvatarUrl: actorAvatarUrlParam,
+          recipientUserId: recipientUserIdParam,
+          recipientUserName: recipientUserNameParam,
           createdAt: createdAtParam,
           isSynced: isSyncedParam,
         );
@@ -766,7 +805,13 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final subtasksJsonOffset = object.subtasksJson == null
             ? null
             : fbb.writeString(object.subtasksJson!);
-        fbb.startTable(25);
+        final userIdOffset = object.userId == null
+            ? null
+            : fbb.writeString(object.userId!);
+        final userNameOffset = object.userName == null
+            ? null
+            : fbb.writeString(object.userName!);
+        fbb.startTable(27);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, taskIdOffset);
         fbb.addOffset(2, titleOffset);
@@ -791,6 +836,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
         fbb.addOffset(21, teamNameOffset);
         fbb.addOffset(22, subtasksJsonOffset);
         fbb.addBool(23, object.remindMe);
+        fbb.addOffset(24, userIdOffset);
+        fbb.addOffset(25, userNameOffset);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -878,6 +925,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
           32,
           0,
         );
+        final userIdParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 52);
+        final userNameParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 54);
         final isSyncedParam = const fb.BoolReader().vTableGet(
           buffer,
           rootOffset,
@@ -912,6 +965,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
           subtasksJson: subtasksJsonParam,
           remindMe: remindMeParam,
           progress: progressParam,
+          userId: userIdParam,
+          userName: userNameParam,
           isSynced: isSyncedParam,
           createdAt: createdAtParam,
           updatedAt: updatedAtParam,
@@ -1185,6 +1240,16 @@ class NotificationEntity_ {
   static final isSynced = obx.QueryBooleanProperty<NotificationEntity>(
     _entities[1].properties[12],
   );
+
+  /// See [NotificationEntity.recipientUserId].
+  static final recipientUserId = obx.QueryStringProperty<NotificationEntity>(
+    _entities[1].properties[13],
+  );
+
+  /// See [NotificationEntity.recipientUserName].
+  static final recipientUserName = obx.QueryStringProperty<NotificationEntity>(
+    _entities[1].properties[14],
+  );
 }
 
 /// [TaskEntity] entity fields to define ObjectBox queries.
@@ -1307,6 +1372,16 @@ class TaskEntity_ {
   /// See [TaskEntity.remindMe].
   static final remindMe = obx.QueryBooleanProperty<TaskEntity>(
     _entities[2].properties[23],
+  );
+
+  /// See [TaskEntity.userId].
+  static final userId = obx.QueryStringProperty<TaskEntity>(
+    _entities[2].properties[24],
+  );
+
+  /// See [TaskEntity.userName].
+  static final userName = obx.QueryStringProperty<TaskEntity>(
+    _entities[2].properties[25],
   );
 }
 

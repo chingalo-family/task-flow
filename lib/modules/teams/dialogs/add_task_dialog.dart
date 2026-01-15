@@ -102,7 +102,9 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
               selectedDueDate: _selectedDueDate,
               remindMe: _remindMe,
               selectedTeam: widget.team,
-              selectedAssignees: _selectedAssignee != null ? [_selectedAssignee!] : [],
+              selectedAssignees: _selectedAssignee != null
+                  ? [_selectedAssignee!]
+                  : [],
               selectedTags: _selectedTags, // Added tags
               onPriorityChanged: (priority) {
                 setState(() {
@@ -132,7 +134,8 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                   _selectedAssignee = assignee;
                 });
               },
-              onTagsChanged: (tags) { // Added tags callback
+              onTagsChanged: (tags) {
+                // Added tags callback
                 setState(() {
                   _selectedTags = tags;
                 });
@@ -187,6 +190,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
     }
 
     final taskState = Provider.of<TaskState>(context, listen: false);
+    final userState = Provider.of<UserState>(context, listen: false);
 
     // Generate a better ID for new tasks
     final timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -211,6 +215,8 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
       progress: 0,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
+      userId: userState.currentUser?.id.toString(),
+      userName: userState.currentUser?.username,
     );
 
     taskState.addTask(task);

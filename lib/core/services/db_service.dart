@@ -28,11 +28,7 @@ class DBService {
     if (_opened) return;
 
     try {
-      // On macOS, use getApplicationDocumentsDirectory for better compatibility
-      // with ObjectBox when sandboxing is disabled. This avoids permission issues
-      // that can occur with Application Support directory.
       final dir = await getApplicationDocumentsDirectory();
-      // Create a subdirectory for ObjectBox to keep database files organized
       final storeDir = Directory('${dir.path}/objectbox');
       if (!await storeDir.exists()) {
         await storeDir.create(recursive: true);
