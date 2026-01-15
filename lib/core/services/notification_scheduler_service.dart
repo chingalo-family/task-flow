@@ -4,30 +4,10 @@ import 'package:task_flow/core/services/preference_service.dart';
 
 /// Service for scheduling and executing background notification tasks
 /// 
-/// Note: This service provides the core logic for background tasks.
-/// For actual background execution on mobile platforms, integrate with:
+/// This service integrates with BackgroundNotificationService for actual
+/// background execution on mobile platforms using:
 /// - workmanager package for Android/iOS background tasks
 /// - flutter_local_notifications for local notification scheduling
-/// 
-/// Example integration:
-/// ```dart
-/// import 'package:workmanager/workmanager.dart';
-/// 
-/// void callbackDispatcher() {
-///   Workmanager().executeTask((task, inputData) async {
-///     await NotificationSchedulerService().executeScheduledCheck();
-///     return Future.value(true);
-///   });
-/// }
-/// 
-/// // In main.dart
-/// Workmanager().initialize(callbackDispatcher);
-/// Workmanager().registerPeriodicTask(
-///   "notification-check",
-///   "notificationCheck",
-///   frequency: Duration(hours: 24),
-/// );
-/// ```
 class NotificationSchedulerService {
   NotificationSchedulerService._();
   static final NotificationSchedulerService _instance =

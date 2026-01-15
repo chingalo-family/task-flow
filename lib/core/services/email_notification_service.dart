@@ -2,7 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:task_flow/core/models/email_notification.dart';
 import 'package:task_flow/core/models/notification.dart';
 import 'package:task_flow/core/services/email_service.dart';
+import 'package:task_flow/core/services/email_templates.dart';
 import 'package:task_flow/core/services/preference_service.dart';
+import 'package:task_flow/core/constants/app_constant.dart';
 
 /// Service for sending email notifications for critical events
 class EmailNotificationService {
@@ -81,7 +83,15 @@ class EmailNotificationService {
     String recipientEmail,
   ) {
     final subject = _getEmailSubject(notification);
-    final htmlBody = _getEmailHtmlBody(notification);
+    final htmlBody = EmailTemplates.getInAppNotificationEmail(
+      notificationTitle: notification.title,
+      notificationBody: notification.body ?? '',
+      notificationType: notification.type,
+      createdAt: notification.createdAt,
+      appName: AppConstant.appName,
+      currentAppVersion: AppConstant.appVersion,
+      actorUsername: notification.actorUsername,
+    );
 
     return EmailNotification(
       recipients: [recipientEmail],
@@ -107,97 +117,5 @@ class EmailNotificationService {
       default:
         return notification.title;
     }
-  }
-
-  String _getEmailHtmlBody(Notification notification) {
-    final actorInfo = notification.actorUsername != null
-        ? '<p><strong>From:</strong> ${notification.actorUsername}</p>'
-        : '';
-
-    return '''
-<!DOCTYPE html>
-<html>
-<head>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    .header {
-      background-color: #4A90E2;
-      color: white;
-      padding: 20px;
-      border-radius: 5px 5px 0 0;
-    }
-    .content {
-      background-color: #f4f4f4;
-      padding: 20px;
-      border-radius: 0 0 5px 5px;
-    }
-    .notification-type {
-      display: inline-block;
-      padding: 5px 10px;
-      background-color: ${_getTypeColor(notification.type)};
-      color: white;
-      border-radius: 3px;
-      font-size: 12px;
-      margin-bottom: 10px;
-    }
-    .footer {
-      margin-top: 20px;
-      padding-top: 20px;
-      border-top: 1px solid #ddd;
-      font-size: 12px;
-      color: #666;
-    }
-  </style>
-</head>
-<body>
-  <div class="header">
-    <h1>${notification.title}</h1>
-  </div>
-  <div class="content">
-    <span class="notification-type">${_formatNotificationType(notification.type)}</span>
-    <p>${notification.body ?? ''}</p>
-    $actorInfo
-    <p><small>Created: ${_formatDateTime(notification.createdAt)}</small></p>
-  </div>
-  <div class="footer">
-    <p>This is an automated notification from Task Flow.</p>
-    <p>To manage your notification preferences, please visit the app settings.</p>
-  </div>
-</body>
-</html>
-''';
-  }
-
-  String _getTypeColor(String type) {
-    switch (type) {
-      case 'task_assigned':
-      case 'team_invite':
-        return '#4A90E2';
-      case 'deadline_reminder':
-      case 'task_overdue':
-        return '#E74C3C';
-      case 'system':
-        return '#95A5A6';
-      default:
-        return '#4A90E2';
-    }
-  }
-
-  String _formatNotificationType(String type) {
-    return type
-        .split('_')
-        .map((word) => word[0].toUpperCase() + word.substring(1))
-        .join(' ');
-  }
-
-  String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
 }
