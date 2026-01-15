@@ -33,9 +33,9 @@ class MockTaskService extends _i1.Mock implements _i2.TaskService {
   }
 
   @override
-  _i3.Future<_i4.Task?> createTask(_i4.Task? task) =>
+  _i3.Future<_i4.Task?> createTask(_i4.Task? task, {String? createdBy}) =>
       (super.noSuchMethod(
-            Invocation.method(#createTask, [task]),
+            Invocation.method(#createTask, [task], {#createdBy: createdBy}),
             returnValue: _i3.Future<_i4.Task?>.value(),
           )
           as _i3.Future<_i4.Task?>);
@@ -113,25 +113,37 @@ class MockTaskService extends _i1.Mock implements _i2.TaskService {
           as _i3.Future<bool>);
 
   @override
-  _i3.Future<bool> updateTaskStatus(String? id, String? status) =>
+  _i3.Future<bool> updateTaskStatus(
+    String? id,
+    String? status, {
+    String? changedBy,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#updateTaskStatus, [id, status]),
+            Invocation.method(
+              #updateTaskStatus,
+              [id, status],
+              {#changedBy: changedBy},
+            ),
             returnValue: _i3.Future<bool>.value(false),
           )
           as _i3.Future<bool>);
 
   @override
-  _i3.Future<bool> markAsCompleted(String? id) =>
+  _i3.Future<bool> markAsCompleted(String? id, {String? completedBy}) =>
       (super.noSuchMethod(
-            Invocation.method(#markAsCompleted, [id]),
+            Invocation.method(
+              #markAsCompleted,
+              [id],
+              {#completedBy: completedBy},
+            ),
             returnValue: _i3.Future<bool>.value(false),
           )
           as _i3.Future<bool>);
 
   @override
-  _i3.Future<bool> markAsPending(String? id) =>
+  _i3.Future<bool> markAsPending(String? id, {String? changedBy}) =>
       (super.noSuchMethod(
-            Invocation.method(#markAsPending, [id]),
+            Invocation.method(#markAsPending, [id], {#changedBy: changedBy}),
             returnValue: _i3.Future<bool>.value(false),
           )
           as _i3.Future<bool>);
@@ -159,4 +171,30 @@ class MockTaskService extends _i1.Mock implements _i2.TaskService {
             returnValue: _i3.Future<List<_i4.Task>>.value(<_i4.Task>[]),
           )
           as _i3.Future<List<_i4.Task>>);
+
+  @override
+  _i3.Future<List<_i4.Task>> getTasksNeedingDeadlineReminders() =>
+      (super.noSuchMethod(
+            Invocation.method(#getTasksNeedingDeadlineReminders, []),
+            returnValue: _i3.Future<List<_i4.Task>>.value(<_i4.Task>[]),
+          )
+          as _i3.Future<List<_i4.Task>>);
+
+  @override
+  _i3.Future<void> createDeadlineReminders() =>
+      (super.noSuchMethod(
+            Invocation.method(#createDeadlineReminders, []),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
+
+  @override
+  _i3.Future<void> createOverdueTaskNotifications() =>
+      (super.noSuchMethod(
+            Invocation.method(#createOverdueTaskNotifications, []),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 }

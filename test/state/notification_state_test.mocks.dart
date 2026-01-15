@@ -45,6 +45,20 @@ class MockNotificationService extends _i1.Mock
           as _i3.Future<_i4.Notification?>);
 
   @override
+  _i3.Future<_i4.Notification?> createNotificationForTeam(
+    _i4.Notification? notification,
+    String? teamId,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#createNotificationForTeam, [
+              notification,
+              teamId,
+            ]),
+            returnValue: _i3.Future<_i4.Notification?>.value(),
+          )
+          as _i3.Future<_i4.Notification?>);
+
+  @override
   _i3.Future<_i4.Notification?> getNotificationById(String? id) =>
       (super.noSuchMethod(
             Invocation.method(#getNotificationById, [id]),
