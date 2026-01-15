@@ -236,6 +236,8 @@ class NotificationService {
     required String taskTitle,
     required String taskId,
     required String actorUsername,
+    required String recipientUserId,
+    required String recipientUserName,
   }) async {
     final notification = Notification(
       id: AppUtil.getUid(),
@@ -245,6 +247,8 @@ class NotificationService {
       isRead: false,
       actorUsername: actorUsername,
       createdAt: DateTime.now(),
+      recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
     );
     return await createNotification(notification);
   }
@@ -253,15 +257,19 @@ class NotificationService {
     required String teamName,
     required String teamId,
     required String actorUsername,
+    required String recipientUserId,
+    required String recipientUserName,
   }) async {
     final notification = Notification(
       id: AppUtil.getUid(),
       title: 'Team Invitation',
       body: '$actorUsername invited you to join "$teamName"',
-      type: 'team_invite',
+      type: NotificationConstants.typeTeamInvite,
       isRead: false,
       actorUsername: actorUsername,
       createdAt: DateTime.now(),
+      recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
     );
     return await createNotification(notification);
   }
@@ -270,15 +278,19 @@ class NotificationService {
     required String taskTitle,
     required String taskId,
     required String actorUsername,
+    required String recipientUserId,
+    required String recipientUserName,
   }) async {
     final notification = Notification(
       id: AppUtil.getUid(),
       title: 'Task Completed',
       body: '$actorUsername completed "$taskTitle"',
-      type: 'task_completed',
+      type: NotificationConstants.typeTaskCompleted,
       isRead: false,
       actorUsername: actorUsername,
       createdAt: DateTime.now(),
+      recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
     );
     return await createNotification(notification);
   }

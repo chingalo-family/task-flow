@@ -3,6 +3,7 @@ import 'package:task_flow/core/constants/task_constants.dart';
 import 'package:task_flow/core/models/task.dart';
 import 'package:task_flow/core/offline_db/task_offline_provider/task_offline_provider.dart';
 import 'package:task_flow/core/services/notification_service.dart';
+import 'package:task_flow/core/services/user_service.dart';
 import 'package:task_flow/core/utils/notification_utils.dart';
 
 class TaskService {
@@ -12,24 +13,15 @@ class TaskService {
   final _offline = TaskOfflineProvider();
   final _notificationService = NotificationService();
 
-  Future<Task?> createTask(
-    Task task, {
-    required String userId,
-    required String userName,
-  }) async {
+  Future<Task?> createTask(Task task) async {
     try {
       if (task.title.trim().isEmpty) {
         throw Exception('Task title cannot be empty');
       }
-      
-      // Ensure task has creator information
-      final taskWithCreator = task.copyWith(
-        userId: userId,
-        userName: userName,
-      );
-      
+      final userId = task.userId ?? '';
+      final userName = task.userName ?? '';
+      final taskWithCreator = task.copyWith(userId: userId, userName: userName);
       await _offline.addOrUpdateTask(taskWithCreator);
-
       // Create notification for assigned user(s)
       if (taskWithCreator.assignedToUsername != null &&
           taskWithCreator.assignedToUserId != null) {
@@ -171,7 +163,7 @@ class TaskService {
       final success = await updateTask(updatedTask);
       if (success) {
         final actor = changedBy ?? task.assignedToUsername ?? 'Someone';
-
+        final user = await UserService().getUserById(task.userId ?? '');
         // Create notification for status change
         if (oldStatus != status) {
           final notification =
@@ -180,6 +172,8 @@ class TaskService {
                 newStatus: status,
                 changedBy: actor,
                 taskId: task.id,
+                recipientUserId: task.userId ?? '',
+                recipientUserName: user?.username ?? '',
               );
           if (task.teamId != null) {
             await _notificationService.createNotificationForTeam(
@@ -198,6 +192,8 @@ class TaskService {
                 taskTitle: task.title,
                 completedBy: actor,
                 taskId: task.id,
+                recipientUserId: task.userId ?? '',
+                recipientUserName: user?.username ?? '',
               );
           if (task.teamId != null) {
             await _notificationService.createNotificationForTeam(
@@ -306,11 +302,14 @@ class TaskService {
     try {
       final tasks = await getTasksNeedingDeadlineReminders();
       for (final task in tasks) {
+        final user = await UserService().getUserById(task.userId ?? '');
         final notification =
             NotificationUtils.createDeadlineReminderNotification(
               taskTitle: task.title,
               dueDate: task.dueDate!,
               taskId: task.id,
+              recipientUserId: task.userId ?? '',
+              recipientUserName: user?.username ?? '',
             );
         if (task.teamId != null) {
           await _notificationService.createNotificationForTeam(
@@ -331,10 +330,13 @@ class TaskService {
     try {
       final overdueTasks = await getOverdueTasks();
       for (final task in overdueTasks) {
+        final user = await UserService().getUserById(task.userId ?? '');
         final notification = NotificationUtils.createTaskOverdueNotification(
           taskTitle: task.title,
           dueDate: task.dueDate!,
           taskId: task.id,
+          recipientUserId: task.userId ?? '',
+          recipientUserName: user?.username ?? '',
         );
         if (task.teamId != null) {
           await _notificationService.createNotificationForTeam(

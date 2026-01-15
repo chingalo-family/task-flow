@@ -9,6 +9,8 @@ void main() {
         id: '1',
         title: 'Test Notification',
         type: NotificationConstants.typeTaskAssigned,
+        recipientUserId: '',
+        recipientUserName: '',
       );
 
       expect(notification.id, '1');
@@ -32,6 +34,8 @@ void main() {
         actorUsername: 'testuser',
         actorAvatarUrl: 'https://example.com/avatar.png',
         createdAt: createdAt,
+        recipientUserId: '',
+        recipientUserName: '',
       );
 
       expect(notification.id, '1');
@@ -48,14 +52,26 @@ void main() {
     });
 
     test('should default isRead to false', () {
-      final notification = Notification(id: '1', title: 'Test', type: 'system');
+      final notification = Notification(
+        id: '1',
+        title: 'Test',
+        type: 'system',
+        recipientUserId: '',
+        recipientUserName: '',
+      );
 
       expect(notification.isRead, false);
     });
 
     test('should default createdAt to current time if not provided', () {
       final before = DateTime.now();
-      final notification = Notification(id: '1', title: 'Test', type: 'system');
+      final notification = Notification(
+        id: '1',
+        title: 'Test',
+        type: 'system',
+        recipientUserId: '',
+        recipientUserName: '',
+      );
       final after = DateTime.now();
 
       expect(
@@ -75,6 +91,8 @@ void main() {
         id: '1',
         title: 'Original',
         type: NotificationConstants.typeTaskAssigned,
+        recipientUserId: '',
+        recipientUserName: '',
       );
 
       final copied = original.copyWith(title: 'Updated', isRead: true);
@@ -91,6 +109,8 @@ void main() {
         title: 'Test',
         type: 'system',
         isRead: true,
+        recipientUserId: '',
+        recipientUserName: '',
       );
 
       final copied = original.copyWith();
@@ -107,6 +127,8 @@ void main() {
         title: 'Test',
         type: 'system',
         createdAt: DateTime.now(),
+        recipientUserId: '',
+        recipientUserName: '',
       );
 
       final timeAgo = notification.getTimeAgo();
@@ -122,6 +144,8 @@ void main() {
         type: 'system',
         body: 'Original body',
         actorUsername: 'user1',
+        recipientUserId: '',
+        recipientUserName: '',
       );
 
       final copied = original.copyWith(body: 'New body');

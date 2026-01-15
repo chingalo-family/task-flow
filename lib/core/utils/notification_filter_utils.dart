@@ -12,13 +12,11 @@ class NotificationFilterUtils {
     var filteredNotifications = notifications;
     if (currentUserId != null && currentUserId.isNotEmpty) {
       filteredNotifications = notifications
-          .where((notification) =>
-              notification.recipientUserId == null ||
-              notification.recipientUserId == currentUserId)
+          .where(
+            (notification) => notification.recipientUserId == currentUserId,
+          )
           .toList();
     }
-
-    // Then apply category filter
     switch (filter) {
       case 'Unread':
         return filteredNotifications
@@ -26,13 +24,17 @@ class NotificationFilterUtils {
             .toList();
       case 'Mentions':
         return filteredNotifications
-            .where((notification) =>
-                notification.type == NotificationConstants.typeMention)
+            .where(
+              (notification) =>
+                  notification.type == NotificationConstants.typeMention,
+            )
             .toList();
       case 'Assigned to Me':
         return filteredNotifications
-            .where((notification) =>
-                notification.type == NotificationConstants.typeTaskAssigned)
+            .where(
+              (notification) =>
+                  notification.type == NotificationConstants.typeTaskAssigned,
+            )
             .toList();
       case 'System':
         return filteredNotifications
@@ -49,20 +51,17 @@ class NotificationFilterUtils {
     }
   }
 
-  /// Get notifications for current user only (excludes notifications for other users)
   static List<app_notification.Notification> filterNotificationsForCurrentUser(
     List<app_notification.Notification> notifications,
     String currentUserId,
   ) {
     return notifications
-        .where((notification) =>
-            notification.recipientUserId == null ||
-            notification.recipientUserId == currentUserId)
+        .where((notification) => notification.recipientUserId == currentUserId)
         .toList();
   }
 
   static Map<String, List<app_notification.Notification>>
-      groupNotificationsByTime(
+  groupNotificationsByTime(
     List<app_notification.Notification> notifications, {
     int recentHoursThreshold = 24,
   }) {

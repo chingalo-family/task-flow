@@ -14,6 +14,7 @@ class NotificationConstants {
   static const String typeTaskOverdue = 'task_overdue';
   static const String typeTaskAssignmentChange = 'task_assignment_change';
   static const String typeTaskDueDateChange = 'task_due_date_change';
+  static const String typeTaskStatusChanged = 'task_status_changed';
 
   // Preference keys
   static const String prefNotificationsEnabled = 'notifications_enabled';

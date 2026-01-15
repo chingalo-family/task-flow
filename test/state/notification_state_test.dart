@@ -33,14 +33,29 @@ void main() {
 
     test('should initialize with notifications and preferences', () async {
       final notifications = [
-        Notification(id: '1', title: 'Test 1', type: 'system'),
-        Notification(id: '2', title: 'Test 2', type: 'system', isRead: true),
+        Notification(
+          id: '1',
+          title: 'Test 1',
+          type: 'system',
+          recipientUserId: '',
+          recipientUserName: '',
+        ),
+        Notification(
+          id: '2',
+          title: 'Test 2',
+          type: 'system',
+          isRead: true,
+          recipientUserId: '',
+          recipientUserName: '',
+        ),
       ];
 
-      when(mockPreferenceService.getBool('notifications_enabled'))
-          .thenAnswer((_) async => true);
-      when(mockNotificationService.getAllNotifications())
-          .thenAnswer((_) async => notifications);
+      when(
+        mockPreferenceService.getBool('notifications_enabled'),
+      ).thenAnswer((_) async => true);
+      when(
+        mockNotificationService.getAllNotifications(),
+      ).thenAnswer((_) async => notifications);
 
       await notificationState.initialize();
 
@@ -50,22 +65,29 @@ void main() {
       expect(notificationState.loading, false);
     });
 
-    test('should default notifications enabled to true if preference not set', () async {
-      when(mockPreferenceService.getBool('notifications_enabled'))
-          .thenAnswer((_) async => null);
-      when(mockNotificationService.getAllNotifications())
-          .thenAnswer((_) async => []);
+    test(
+      'should default notifications enabled to true if preference not set',
+      () async {
+        when(
+          mockPreferenceService.getBool('notifications_enabled'),
+        ).thenAnswer((_) async => null);
+        when(
+          mockNotificationService.getAllNotifications(),
+        ).thenAnswer((_) async => []);
 
-      await notificationState.initialize();
+        await notificationState.initialize();
 
-      expect(notificationState.notificationsEnabled, true);
-    });
+        expect(notificationState.notificationsEnabled, true);
+      },
+    );
 
     test('should handle initialization errors gracefully', () async {
-      when(mockPreferenceService.getBool('notifications_enabled'))
-          .thenThrow(Exception('Preference error'));
-      when(mockNotificationService.getAllNotifications())
-          .thenThrow(Exception('Network error'));
+      when(
+        mockPreferenceService.getBool('notifications_enabled'),
+      ).thenThrow(Exception('Preference error'));
+      when(
+        mockNotificationService.getAllNotifications(),
+      ).thenThrow(Exception('Network error'));
 
       await notificationState.initialize();
 
@@ -76,15 +98,38 @@ void main() {
 
     test('should get unread notifications', () async {
       final notifications = [
-        Notification(id: '1', title: 'Test 1', type: 'system', isRead: false),
-        Notification(id: '2', title: 'Test 2', type: 'system', isRead: true),
-        Notification(id: '3', title: 'Test 3', type: 'system', isRead: false),
+        Notification(
+          id: '1',
+          title: 'Test 1',
+          type: 'system',
+          isRead: false,
+          recipientUserId: '',
+          recipientUserName: '',
+        ),
+        Notification(
+          id: '2',
+          title: 'Test 2',
+          type: 'system',
+          isRead: true,
+          recipientUserId: '',
+          recipientUserName: '',
+        ),
+        Notification(
+          id: '3',
+          title: 'Test 3',
+          type: 'system',
+          isRead: false,
+          recipientUserId: '',
+          recipientUserName: '',
+        ),
       ];
 
-      when(mockPreferenceService.getBool('notifications_enabled'))
-          .thenAnswer((_) async => true);
-      when(mockNotificationService.getAllNotifications())
-          .thenAnswer((_) async => notifications);
+      when(
+        mockPreferenceService.getBool('notifications_enabled'),
+      ).thenAnswer((_) async => true);
+      when(
+        mockNotificationService.getAllNotifications(),
+      ).thenAnswer((_) async => notifications);
 
       await notificationState.initialize();
 
@@ -93,14 +138,16 @@ void main() {
     });
 
     test('should set notifications enabled preference', () async {
-      when(mockPreferenceService.setBool('notifications_enabled', false))
-          .thenAnswer((_) async => {});
+      when(
+        mockPreferenceService.setBool('notifications_enabled', false),
+      ).thenAnswer((_) async => {});
 
       await notificationState.setNotificationsEnabled(false);
 
       expect(notificationState.notificationsEnabled, false);
-      verify(mockPreferenceService.setBool('notifications_enabled', false))
-          .called(1);
+      verify(
+        mockPreferenceService.setBool('notifications_enabled', false),
+      ).called(1);
     });
 
     test('should mark notification as read', () async {
@@ -109,14 +156,19 @@ void main() {
         title: 'Test',
         type: 'system',
         isRead: false,
+        recipientUserId: '',
+        recipientUserName: '',
       );
 
-      when(mockPreferenceService.getBool('notifications_enabled'))
-          .thenAnswer((_) async => true);
-      when(mockNotificationService.getAllNotifications())
-          .thenAnswer((_) async => [notification]);
-      when(mockNotificationService.markAsRead('1'))
-          .thenAnswer((_) async => true);
+      when(
+        mockPreferenceService.getBool('notifications_enabled'),
+      ).thenAnswer((_) async => true);
+      when(
+        mockNotificationService.getAllNotifications(),
+      ).thenAnswer((_) async => [notification]);
+      when(
+        mockNotificationService.markAsRead('1'),
+      ).thenAnswer((_) async => true);
 
       await notificationState.initialize();
       expect(notificationState.unreadCount, 1);
@@ -134,14 +186,19 @@ void main() {
         title: 'Test',
         type: 'system',
         isRead: false,
+        recipientUserId: '',
+        recipientUserName: '',
       );
 
-      when(mockPreferenceService.getBool('notifications_enabled'))
-          .thenAnswer((_) async => true);
-      when(mockNotificationService.getAllNotifications())
-          .thenAnswer((_) async => [notification]);
-      when(mockNotificationService.markAsRead('1'))
-          .thenAnswer((_) async => false);
+      when(
+        mockPreferenceService.getBool('notifications_enabled'),
+      ).thenAnswer((_) async => true);
+      when(
+        mockNotificationService.getAllNotifications(),
+      ).thenAnswer((_) async => [notification]);
+      when(
+        mockNotificationService.markAsRead('1'),
+      ).thenAnswer((_) async => false);
 
       await notificationState.initialize();
       await notificationState.markAsRead('1');
@@ -151,16 +208,33 @@ void main() {
 
     test('should mark all notifications as read', () async {
       final notifications = [
-        Notification(id: '1', title: 'Test 1', type: 'system', isRead: false),
-        Notification(id: '2', title: 'Test 2', type: 'system', isRead: false),
+        Notification(
+          id: '1',
+          title: 'Test 1',
+          type: 'system',
+          isRead: false,
+          recipientUserId: '',
+          recipientUserName: '',
+        ),
+        Notification(
+          id: '2',
+          title: 'Test 2',
+          type: 'system',
+          isRead: false,
+          recipientUserId: '',
+          recipientUserName: '',
+        ),
       ];
 
-      when(mockPreferenceService.getBool('notifications_enabled'))
-          .thenAnswer((_) async => true);
-      when(mockNotificationService.getAllNotifications())
-          .thenAnswer((_) async => notifications);
-      when(mockNotificationService.markAllAsRead())
-          .thenAnswer((_) async => true);
+      when(
+        mockPreferenceService.getBool('notifications_enabled'),
+      ).thenAnswer((_) async => true);
+      when(
+        mockNotificationService.getAllNotifications(),
+      ).thenAnswer((_) async => notifications);
+      when(
+        mockNotificationService.markAllAsRead(),
+      ).thenAnswer((_) async => true);
 
       await notificationState.initialize();
       expect(notificationState.unreadCount, 2);
@@ -175,16 +249,31 @@ void main() {
 
     test('should delete notification', () async {
       final notifications = [
-        Notification(id: '1', title: 'Test 1', type: 'system'),
-        Notification(id: '2', title: 'Test 2', type: 'system'),
+        Notification(
+          id: '1',
+          title: 'Test 1',
+          type: 'system',
+          recipientUserId: '',
+          recipientUserName: '',
+        ),
+        Notification(
+          id: '2',
+          title: 'Test 2',
+          type: 'system',
+          recipientUserId: '',
+          recipientUserName: '',
+        ),
       ];
 
-      when(mockPreferenceService.getBool('notifications_enabled'))
-          .thenAnswer((_) async => true);
-      when(mockNotificationService.getAllNotifications())
-          .thenAnswer((_) async => notifications);
-      when(mockNotificationService.deleteNotification('1'))
-          .thenAnswer((_) async => true);
+      when(
+        mockPreferenceService.getBool('notifications_enabled'),
+      ).thenAnswer((_) async => true);
+      when(
+        mockNotificationService.getAllNotifications(),
+      ).thenAnswer((_) async => notifications);
+      when(
+        mockNotificationService.deleteNotification('1'),
+      ).thenAnswer((_) async => true);
 
       await notificationState.initialize();
       expect(notificationState.totalNotifications, 2);
@@ -197,28 +286,52 @@ void main() {
     });
 
     test('should add notification', () async {
-      final notification = Notification(id: '1', title: 'Test', type: 'system');
+      final notification = Notification(
+        id: '1',
+        title: 'Test',
+        type: 'system',
+        recipientUserId: '',
+        recipientUserName: '',
+      );
 
-      when(mockNotificationService.createNotification(notification))
-          .thenAnswer((_) async => notification);
+      when(
+        mockNotificationService.createNotification(notification),
+      ).thenAnswer((_) async => notification);
 
       await notificationState.addNotification(notification);
 
       expect(notificationState.totalNotifications, 1);
       expect(notificationState.notifications[0], notification);
-      verify(mockNotificationService.createNotification(notification)).called(1);
+      verify(
+        mockNotificationService.createNotification(notification),
+      ).called(1);
     });
 
     test('should add notifications at the beginning', () async {
-      final existing = Notification(id: '1', title: 'Existing', type: 'system');
-      final newNotif = Notification(id: '2', title: 'New', type: 'system');
+      final existing = Notification(
+        id: '1',
+        title: 'Existing',
+        type: 'system',
+        recipientUserId: '',
+        recipientUserName: '',
+      );
+      final newNotif = Notification(
+        id: '2',
+        title: 'New',
+        type: 'system',
+        recipientUserId: '',
+        recipientUserName: '',
+      );
 
-      when(mockPreferenceService.getBool('notifications_enabled'))
-          .thenAnswer((_) async => true);
-      when(mockNotificationService.getAllNotifications())
-          .thenAnswer((_) async => [existing]);
-      when(mockNotificationService.createNotification(newNotif))
-          .thenAnswer((_) async => newNotif);
+      when(
+        mockPreferenceService.getBool('notifications_enabled'),
+      ).thenAnswer((_) async => true);
+      when(
+        mockNotificationService.getAllNotifications(),
+      ).thenAnswer((_) async => [existing]);
+      when(
+        mockNotificationService.createNotification(newNotif),
+      ).thenAnswer((_) async => newNotif);
 
       await notificationState.initialize();
       await notificationState.addNotification(newNotif);
@@ -229,14 +342,28 @@ void main() {
 
     test('should add multiple notifications', () async {
       final notifications = [
-        Notification(id: '1', title: 'Test 1', type: 'system'),
-        Notification(id: '2', title: 'Test 2', type: 'system'),
+        Notification(
+          id: '1',
+          title: 'Test 1',
+          type: 'system',
+          recipientUserId: '',
+          recipientUserName: '',
+        ),
+        Notification(
+          id: '2',
+          title: 'Test 2',
+          type: 'system',
+          recipientUserId: '',
+          recipientUserName: '',
+        ),
       ];
 
-      when(mockNotificationService.createNotification(any))
-          .thenAnswer((_) async => null);
-      when(mockNotificationService.getAllNotifications())
-          .thenAnswer((_) async => notifications);
+      when(
+        mockNotificationService.createNotification(any),
+      ).thenAnswer((_) async => null);
+      when(
+        mockNotificationService.getAllNotifications(),
+      ).thenAnswer((_) async => notifications);
 
       await notificationState.addNotifications(notifications);
 
@@ -245,16 +372,29 @@ void main() {
 
     test('should clear all notifications', () async {
       final notifications = [
-        Notification(id: '1', title: 'Test 1', type: 'system'),
-        Notification(id: '2', title: 'Test 2', type: 'system'),
+        Notification(
+          id: '1',
+          title: 'Test 1',
+          type: 'system',
+          recipientUserId: '',
+          recipientUserName: '',
+        ),
+        Notification(
+          id: '2',
+          title: 'Test 2',
+          type: 'system',
+          recipientUserId: '',
+          recipientUserName: '',
+        ),
       ];
 
-      when(mockPreferenceService.getBool('notifications_enabled'))
-          .thenAnswer((_) async => true);
-      when(mockNotificationService.getAllNotifications())
-          .thenAnswer((_) async => notifications);
-      when(mockNotificationService.deleteAll())
-          .thenAnswer((_) async => true);
+      when(
+        mockPreferenceService.getBool('notifications_enabled'),
+      ).thenAnswer((_) async => true);
+      when(
+        mockNotificationService.getAllNotifications(),
+      ).thenAnswer((_) async => notifications);
+      when(mockNotificationService.deleteAll()).thenAnswer((_) async => true);
 
       await notificationState.initialize();
       expect(notificationState.totalNotifications, 2);
@@ -267,19 +407,41 @@ void main() {
 
     test('should get notifications by type', () async {
       final notifications = [
-        Notification(id: '1', title: 'Test 1', type: 'task_assigned'),
-        Notification(id: '2', title: 'Test 2', type: 'system'),
-        Notification(id: '3', title: 'Test 3', type: 'task_assigned'),
+        Notification(
+          id: '1',
+          title: 'Test 1',
+          type: 'task_assigned',
+          recipientUserId: '',
+          recipientUserName: '',
+        ),
+        Notification(
+          id: '2',
+          title: 'Test 2',
+          type: 'system',
+          recipientUserId: '',
+          recipientUserName: '',
+        ),
+        Notification(
+          id: '3',
+          title: 'Test 3',
+          type: 'task_assigned',
+          recipientUserId: '',
+          recipientUserName: '',
+        ),
       ];
 
-      when(mockPreferenceService.getBool('notifications_enabled'))
-          .thenAnswer((_) async => true);
-      when(mockNotificationService.getAllNotifications())
-          .thenAnswer((_) async => notifications);
+      when(
+        mockPreferenceService.getBool('notifications_enabled'),
+      ).thenAnswer((_) async => true);
+      when(
+        mockNotificationService.getAllNotifications(),
+      ).thenAnswer((_) async => notifications);
 
       await notificationState.initialize();
 
-      final taskNotifs = notificationState.getNotificationsByType('task_assigned');
+      final taskNotifs = notificationState.getNotificationsByType(
+        'task_assigned',
+      );
 
       expect(taskNotifs.length, 2);
       expect(taskNotifs.every((n) => n.type == 'task_assigned'), true);
@@ -287,26 +449,60 @@ void main() {
 
     test('should get unread notifications by type', () async {
       final notifications = [
-        Notification(id: '1', title: 'Test 1', type: 'task_assigned', isRead: false),
-        Notification(id: '2', title: 'Test 2', type: 'task_assigned', isRead: true),
-        Notification(id: '3', title: 'Test 3', type: 'task_assigned', isRead: false),
-        Notification(id: '4', title: 'Test 4', type: 'system', isRead: false),
+        Notification(
+          id: '1',
+          title: 'Test 1',
+          type: 'task_assigned',
+          isRead: false,
+          recipientUserId: '',
+          recipientUserName: '',
+        ),
+        Notification(
+          id: '2',
+          title: 'Test 2',
+          type: 'task_assigned',
+          isRead: true,
+          recipientUserId: '',
+          recipientUserName: '',
+        ),
+        Notification(
+          id: '3',
+          title: 'Test 3',
+          type: 'task_assigned',
+          isRead: false,
+          recipientUserId: '',
+          recipientUserName: '',
+        ),
+        Notification(
+          id: '4',
+          title: 'Test 4',
+          type: 'system',
+          isRead: false,
+          recipientUserId: '',
+          recipientUserName: '',
+        ),
       ];
 
-      when(mockPreferenceService.getBool('notifications_enabled'))
-          .thenAnswer((_) async => true);
-      when(mockNotificationService.getAllNotifications())
-          .thenAnswer((_) async => notifications);
+      when(
+        mockPreferenceService.getBool('notifications_enabled'),
+      ).thenAnswer((_) async => true);
+      when(
+        mockNotificationService.getAllNotifications(),
+      ).thenAnswer((_) async => notifications);
 
       await notificationState.initialize();
 
-      final unreadTaskNotifs = 
-          notificationState.getUnreadNotificationsByType('task_assigned');
+      final unreadTaskNotifs = notificationState.getUnreadNotificationsByType(
+        'task_assigned',
+      );
 
       expect(unreadTaskNotifs.length, 2);
-      expect(unreadTaskNotifs.every(
-        (n) => n.type == 'task_assigned' && n.isRead == false
-      ), true);
+      expect(
+        unreadTaskNotifs.every(
+          (n) => n.type == 'task_assigned' && n.isRead == false,
+        ),
+        true,
+      );
     });
   });
 }

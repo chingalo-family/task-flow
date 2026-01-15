@@ -161,12 +161,16 @@ class MockNotificationService extends _i1.Mock
     required String? taskTitle,
     required String? taskId,
     required String? actorUsername,
+    required String? recipientUserId,
+    required String? recipientUserName,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#createTaskAssignedNotification, [], {
               #taskTitle: taskTitle,
               #taskId: taskId,
               #actorUsername: actorUsername,
+              #recipientUserId: recipientUserId,
+              #recipientUserName: recipientUserName,
             }),
             returnValue: _i3.Future<_i4.Notification?>.value(),
           )
@@ -177,12 +181,16 @@ class MockNotificationService extends _i1.Mock
     required String? teamName,
     required String? teamId,
     required String? actorUsername,
+    required String? recipientUserId,
+    required String? recipientUserName,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#createTeamInviteNotification, [], {
               #teamName: teamName,
               #teamId: teamId,
               #actorUsername: actorUsername,
+              #recipientUserId: recipientUserId,
+              #recipientUserName: recipientUserName,
             }),
             returnValue: _i3.Future<_i4.Notification?>.value(),
           )
@@ -193,12 +201,16 @@ class MockNotificationService extends _i1.Mock
     required String? taskTitle,
     required String? taskId,
     required String? actorUsername,
+    required String? recipientUserId,
+    required String? recipientUserName,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#createTaskCompletedNotification, [], {
               #taskTitle: taskTitle,
               #taskId: taskId,
               #actorUsername: actorUsername,
+              #recipientUserId: recipientUserId,
+              #recipientUserName: recipientUserName,
             }),
             returnValue: _i3.Future<_i4.Notification?>.value(),
           )

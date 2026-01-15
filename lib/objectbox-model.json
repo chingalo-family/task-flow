@@ -64,7 +64,7 @@
     },
     {
       "id": "2:614660561691660408",
-      "lastPropertyId": "14:3863776433235736798",
+      "lastPropertyId": "16:8813270417220745206",
       "name": "NotificationEntity",
       "properties": [
         {
@@ -134,13 +134,25 @@
           "id": "13:1049038385883546181",
           "name": "isSynced",
           "type": 1
+        },
+        {
+          "id": "15:752466136519467273",
+          "name": "recipientUserId",
+          "indexId": "6:3345183028946530900",
+          "type": 9,
+          "flags": 2048
+        },
+        {
+          "id": "16:8813270417220745206",
+          "name": "recipientUserName",
+          "type": 9
         }
       ],
       "relations": []
     },
     {
       "id": "3:636520496469286108",
-      "lastPropertyId": "24:3590199673161262875",
+      "lastPropertyId": "26:6113045763969807576",
       "name": "TaskEntity",
       "properties": [
         {
@@ -265,6 +277,16 @@
           "id": "24:3590199673161262875",
           "name": "remindMe",
           "type": 1
+        },
+        {
+          "id": "25:2188586564773724666",
+          "name": "userId",
+          "type": 9
+        },
+        {
+          "id": "26:6113045763969807576",
+          "name": "userName",
+          "type": 9
         }
       ],
       "relations": []
@@ -366,7 +388,7 @@
     }
   ],
   "lastEntityId": "4:8634427917478567143",
-  "lastIndexId": "5:811543964467735373",
+  "lastIndexId": "6:3345183028946530900",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,

@@ -33,9 +33,9 @@ class MockTaskService extends _i1.Mock implements _i2.TaskService {
   }
 
   @override
-  _i3.Future<_i4.Task?> createTask(_i4.Task? task, {String? createdBy}) =>
+  _i3.Future<_i4.Task?> createTask(_i4.Task? task) =>
       (super.noSuchMethod(
-            Invocation.method(#createTask, [task], {#createdBy: createdBy}),
+            Invocation.method(#createTask, [task]),
             returnValue: _i3.Future<_i4.Task?>.value(),
           )
           as _i3.Future<_i4.Task?>);

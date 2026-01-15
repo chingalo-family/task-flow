@@ -3,6 +3,7 @@ import 'package:task_flow/core/models/team.dart';
 import 'package:task_flow/core/models/task_status.dart';
 import 'package:task_flow/core/offline_db/team_offline_provider/team_offline_provider.dart';
 import 'package:task_flow/core/services/notification_service.dart';
+import 'package:task_flow/core/services/user_service.dart';
 import 'package:task_flow/core/utils/notification_utils.dart';
 
 class TeamService {
@@ -72,9 +73,14 @@ class TeamService {
     }
   }
 
-  Future<bool> addMemberToTeam(String teamId, String userId, {String? addedBy}) async {
+  Future<bool> addMemberToTeam(
+    String teamId,
+    String userId, {
+    String? addedBy,
+  }) async {
     try {
       final team = await getTeamById(teamId);
+      final user = await UserService().getUserById(userId);
       if (team == null) return false;
 
       final memberIds = List<String>.from(team.memberIds ?? []);
@@ -90,12 +96,15 @@ class TeamService {
         // Create notification for team member added
         if (success) {
           final actor = addedBy ?? team.createdByUsername ?? 'Team Admin';
-          final notification = NotificationUtils.createTeamMemberAddedNotification(
-            teamName: team.name,
-            memberUsername: userId,
-            addedBy: actor,
-            teamId: teamId,
-          );
+          final notification =
+              NotificationUtils.createTeamMemberAddedNotification(
+                teamName: team.name,
+                memberUsername: userId,
+                addedBy: actor,
+                teamId: teamId,
+                recipientUserId: userId,
+                recipientUserName: user?.username ?? userId,
+              );
           await _notificationService.createNotificationForTeam(
             notification,
             teamId,
@@ -111,9 +120,14 @@ class TeamService {
     }
   }
 
-  Future<bool> removeMemberFromTeam(String teamId, String userId, {String? removedBy}) async {
+  Future<bool> removeMemberFromTeam(
+    String teamId,
+    String userId, {
+    String? removedBy,
+  }) async {
     try {
       final team = await getTeamById(teamId);
+      final user = await UserService().getUserById(userId);
       if (team == null) return false;
       final memberIds = List<String>.from(team.memberIds ?? []);
       memberIds.remove(userId);
@@ -127,12 +141,15 @@ class TeamService {
       // Create notification for team member removed
       if (success) {
         final actor = removedBy ?? team.createdByUsername ?? 'Team Admin';
-        final notification = NotificationUtils.createTeamMemberRemovedNotification(
-          teamName: team.name,
-          memberUsername: userId,
-          removedBy: actor,
-          teamId: teamId,
-        );
+        final notification =
+            NotificationUtils.createTeamMemberRemovedNotification(
+              teamName: team.name,
+              memberUsername: userId,
+              removedBy: actor,
+              teamId: teamId,
+              recipientUserId: userId,
+              recipientUserName: user?.username ?? userId,
+            );
         await _notificationService.createNotificationForTeam(
           notification,
           teamId,
