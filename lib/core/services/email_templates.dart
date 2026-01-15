@@ -1,3 +1,5 @@
+import 'package:task_flow/core/constants/notification_constants.dart';
+
 class EmailTemplates {
   // App theme colors matching the dark theme
   static const String _primaryBlue = '#2E90FA';
@@ -297,7 +299,7 @@ class EmailTemplates {
     // Determine notification color based on type
     final typeColor = _getNotificationTypeColor(notificationType);
     final typeIcon = _getNotificationTypeIcon(notificationType);
-    
+
     final actorInfo = actorUsername != null
         ? '''
         <div style="background-color: $_darkBackground; border-left: 4px solid $typeColor; padding: 20px; margin-bottom: 16px; border-radius: 8px;">
@@ -307,7 +309,8 @@ class EmailTemplates {
         '''
         : '';
 
-    final content = '''
+    final content =
+        '''
         <h2 style="margin: 0 0 24px; color: $_textPrimary; font-size: 24px; font-weight: 600;">$notificationTitle</h2>
 
         <div style="background: linear-gradient(135deg, $typeColor 0%, ${_getDarkerShade(typeColor)} 100%); padding: 20px; border-radius: 12px; margin: 24px 0;">
@@ -348,19 +351,19 @@ class EmailTemplates {
   /// Helper: Get color for notification type
   static String _getNotificationTypeColor(String type) {
     switch (type) {
-      case 'task_assigned':
-      case 'team_invite':
+      case NotificationConstants.typeTaskAssigned:
+      case NotificationConstants.typeTeamInvite:
         return _primaryBlue;
-      case 'deadline_reminder':
-      case 'task_overdue':
+      case NotificationConstants.typeDeadlineReminder:
+      case NotificationConstants.typeTaskOverdue:
         return '#EF4444'; // Red
-      case 'task_completed':
-      case 'team_member_added':
+      case NotificationConstants.typeTaskCompleted:
+      case NotificationConstants.typeTeamMemberAdded:
         return _successGreen;
-      case 'task_status_change':
-      case 'task_priority_change':
+      case NotificationConstants.typeTaskStatusChange:
+      case NotificationConstants.typeTaskPriorityChange:
         return _warningOrange;
-      case 'system':
+      case NotificationConstants.typeSystem:
         return '#94A3B8'; // Gray
       default:
         return _primaryBlue;
@@ -370,25 +373,25 @@ class EmailTemplates {
   /// Helper: Get icon for notification type
   static String _getNotificationTypeIcon(String type) {
     switch (type) {
-      case 'task_assigned':
+      case NotificationConstants.typeTaskAssigned:
         return '📋';
-      case 'task_completed':
+      case NotificationConstants.typeTaskCompleted:
         return '✅';
-      case 'task_status_change':
+      case NotificationConstants.typeTaskStatusChange:
         return '🔄';
-      case 'task_priority_change':
+      case NotificationConstants.typeTaskPriorityChange:
         return '⚡';
-      case 'deadline_reminder':
+      case NotificationConstants.typeDeadlineReminder:
         return '⏰';
-      case 'task_overdue':
+      case NotificationConstants.typeTaskOverdue:
         return '⚠️';
-      case 'team_invite':
+      case NotificationConstants.typeTeamInvite:
         return '👥';
-      case 'team_member_added':
+      case NotificationConstants.typeTeamMemberAdded:
         return '🤝';
-      case 'team_member_removed':
+      case NotificationConstants.typeTeamMemberRemoved:
         return '👋';
-      case 'system':
+      case NotificationConstants.typeSystem:
         return '🔔';
       default:
         return '📬';
@@ -425,7 +428,20 @@ class EmailTemplates {
 
   /// Helper: Format notification date time
   static String _formatNotificationDateTime(DateTime dateTime) {
-    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    final months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
     final month = months[dateTime.month - 1];
     final day = dateTime.day;
     final year = dateTime.year;

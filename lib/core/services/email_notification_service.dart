@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:task_flow/core/constants/notification_constants.dart';
 import 'package:task_flow/core/models/email_notification.dart';
 import 'package:task_flow/core/models/notification.dart';
 import 'package:task_flow/core/services/email_service.dart';
@@ -57,11 +58,11 @@ class EmailNotificationService {
   bool _isCriticalNotification(String type) {
     // Send emails only for critical notifications
     final criticalTypes = [
-      'task_assigned',
-      'team_invite',
-      'deadline_reminder',
-      'task_overdue',
-      'system',
+      NotificationConstants.typeTaskAssigned,
+      NotificationConstants.typeTeamInvite,
+      NotificationConstants.typeDeadlineReminder,
+      NotificationConstants.typeTaskOverdue,
+      NotificationConstants.typeSystem,
     ];
     return criticalTypes.contains(type);
   }
@@ -94,15 +95,15 @@ class EmailNotificationService {
 
   String _getEmailSubject(Notification notification) {
     switch (notification.type) {
-      case 'task_assigned':
+      case NotificationConstants.typeTaskAssigned:
         return 'New Task Assigned - ${notification.title}';
-      case 'team_invite':
+      case NotificationConstants.typeTeamInvite:
         return 'Team Invitation - ${notification.title}';
-      case 'deadline_reminder':
+      case NotificationConstants.typeDeadlineReminder:
         return 'Task Deadline Reminder';
-      case 'task_overdue':
+      case NotificationConstants.typeTaskOverdue:
         return 'Overdue Task Alert';
-      case 'system':
+      case NotificationConstants.typeSystem:
         return 'System Notification - ${notification.title}';
       default:
         return notification.title;

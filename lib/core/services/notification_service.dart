@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:task_flow/core/constants/notification_constants.dart';
 import 'package:task_flow/core/models/notification.dart';
 import 'package:task_flow/core/offline_db/notification_offline_provider/notification_offline_provider.dart';
 import 'package:task_flow/core/utils/utils.dart';
@@ -23,8 +24,9 @@ class NotificationService {
       }
 
       // Check if this notification type is enabled
-      final typeEnabled =
-          await _prefService.isNotificationTypeEnabled(notification.type);
+      final typeEnabled = await _prefService.isNotificationTypeEnabled(
+        notification.type,
+      );
       if (!typeEnabled) {
         return null;
       }
@@ -73,10 +75,10 @@ class NotificationService {
             )
           : notification;
       await _offline.addOrUpdateNotification(notificationToSave);
-      
+
       // Send email notification for critical types
       await _sendEmailNotificationIfNeeded(notificationToSave);
-      
+
       return notificationToSave;
     } catch (e) {
       debugPrint('Error saving notification: $e');
@@ -239,7 +241,7 @@ class NotificationService {
       id: AppUtil.getUid(),
       title: 'New Task Assigned',
       body: '$actorUsername assigned you to "$taskTitle"',
-      type: 'task_assigned',
+      type: NotificationConstants.typeTaskAssigned,
       isRead: false,
       actorUsername: actorUsername,
       createdAt: DateTime.now(),
