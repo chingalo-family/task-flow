@@ -44,7 +44,7 @@ class NotificationSchedulerService {
       debugPrint('Executing scheduled notification check...');
 
       // Check if scheduled notifications are enabled
-      final enabled = await _areScheduledNotificationsEnabled();
+      final enabled = await areScheduledNotificationsEnabled();
       if (!enabled) {
         debugPrint('Scheduled notifications are disabled');
         return;
@@ -86,13 +86,8 @@ class NotificationSchedulerService {
   }
 
   /// Check if scheduled notifications are enabled
-  Future<bool> _areScheduledNotificationsEnabled() async {
-    return await _prefs.getBool('scheduled_notifications_enabled') ?? true;
-  }
-
-  /// Get scheduled notifications enabled status
   Future<bool> areScheduledNotificationsEnabled() async {
-    return await _areScheduledNotificationsEnabled();
+    return await _prefs.getBool('scheduled_notifications_enabled') ?? true;
   }
 
   /// Enable or disable scheduled notifications
@@ -140,7 +135,7 @@ class NotificationSchedulerService {
   Future<Map<String, dynamic>> getCheckStatistics() async {
     final lastCheck = await getLastCheckTime();
     final preferredHour = await getPreferredCheckTime();
-    final enabled = await _areScheduledNotificationsEnabled();
+    final enabled = await areScheduledNotificationsEnabled();
 
     return {
       'enabled': enabled,
