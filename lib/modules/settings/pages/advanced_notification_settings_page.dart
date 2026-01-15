@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/services/email_notification_service.dart';
 import 'package:task_flow/core/services/notification_scheduler_service.dart';
@@ -81,12 +82,24 @@ class _AdvancedNotificationSettingsPageState
     setState(() {
       _preferredCheckTime = hour;
     });
-    await _schedulerService.setPreferredCheckTime(hour);
+    
+    try {
+      await _schedulerService.setPreferredCheckTime(hour);
 
-    // Reschedule background tasks with new time
-    if (_scheduledNotificationsEnabled) {
-      final backgroundService = BackgroundNotificationService();
-      await backgroundService.schedulePeriodicChecks();
+      // Reschedule background tasks with new time
+      if (_scheduledNotificationsEnabled) {
+        final backgroundService = BackgroundNotificationService();
+        await backgroundService.schedulePeriodicChecks();
+        _showSnackBar('Check time updated to $hour:00');
+      }
+    } catch (e) {
+      debugPrint('Error updating preferred check time: $e');
+      _showSnackBar('Failed to update check time');
+      // Revert the UI state if save failed
+      final savedTime = await _schedulerService.getPreferredCheckTime();
+      setState(() {
+        _preferredCheckTime = savedTime;
+      });
     }
   }
 

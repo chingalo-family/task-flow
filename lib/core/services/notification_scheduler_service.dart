@@ -95,13 +95,30 @@ class NotificationSchedulerService {
     if (hour < 0 || hour > 23) {
       throw ArgumentError('Hour must be between 0 and 23');
     }
-    await _prefs.setString('preferred_check_time', hour.toString());
+    try {
+      await _prefs.setString('preferred_check_time', hour.toString());
+      debugPrint('Preferred check time set to: $hour:00');
+    } catch (e) {
+      debugPrint('Error setting preferred check time: $e');
+      rethrow;
+    }
   }
 
   /// Get the preferred check time
   Future<int> getPreferredCheckTime() async {
-    final hour = await _prefs.getString('preferred_check_time');
-    return hour != null ? int.parse(hour) : 6; // Default: 6 AM
+    try {
+      final hour = await _prefs.getString('preferred_check_time');
+      if (hour != null && hour.isNotEmpty) {
+        final parsedHour = int.tryParse(hour);
+        if (parsedHour != null && parsedHour >= 0 && parsedHour <= 23) {
+          return parsedHour;
+        }
+      }
+      return 6; // Default: 6 AM
+    } catch (e) {
+      debugPrint('Error getting preferred check time: $e');
+      return 6; // Default: 6 AM on error
+    }
   }
 
   /// Manual trigger for testing purposes

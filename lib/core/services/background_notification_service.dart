@@ -83,39 +83,44 @@ class BackgroundNotificationService {
 
   /// Schedule periodic background checks
   Future<void> schedulePeriodicChecks() async {
-    final schedulerService = NotificationSchedulerService();
-    final enabled = await schedulerService.areScheduledNotificationsEnabled();
+    try {
+      final schedulerService = NotificationSchedulerService();
+      final enabled = await schedulerService.areScheduledNotificationsEnabled();
 
-    if (!enabled) {
-      await cancelPeriodicChecks();
-      return;
+      if (!enabled) {
+        await cancelPeriodicChecks();
+        return;
+      }
+
+      final preferredHour = await schedulerService.getPreferredCheckTime();
+
+      // Calculate initial delay to preferred time
+      final now = DateTime.now();
+      var nextRun = DateTime(now.year, now.month, now.day, preferredHour);
+
+      if (nextRun.isBefore(now)) {
+        nextRun = nextRun.add(const Duration(days: 1));
+      }
+
+      final initialDelay = nextRun.difference(now);
+
+      // Register periodic task (runs daily)
+      await Workmanager().registerPeriodicTask(
+        uniqueTaskName,
+        taskCheckTaskName,
+        frequency: const Duration(days: 1),
+        initialDelay: initialDelay,
+        constraints: Constraints(networkType: NetworkType.connected),
+        existingWorkPolicy: ExistingWorkPolicy.replace,
+      );
+
+      debugPrint(
+        'Scheduled periodic notification checks at $preferredHour:00 daily',
+      );
+    } catch (e) {
+      debugPrint('Error scheduling periodic checks: $e');
+      rethrow;
     }
-
-    final preferredHour = await schedulerService.getPreferredCheckTime();
-
-    // Calculate initial delay to preferred time
-    final now = DateTime.now();
-    var nextRun = DateTime(now.year, now.month, now.day, preferredHour);
-
-    if (nextRun.isBefore(now)) {
-      nextRun = nextRun.add(const Duration(days: 1));
-    }
-
-    final initialDelay = nextRun.difference(now);
-
-    // Register periodic task (runs daily)
-    await Workmanager().registerPeriodicTask(
-      uniqueTaskName,
-      taskCheckTaskName,
-      frequency: const Duration(days: 1),
-      initialDelay: initialDelay,
-      constraints: Constraints(networkType: NetworkType.connected),
-      existingWorkPolicy: ExistingWorkPolicy.replace,
-    );
-
-    debugPrint(
-      'Scheduled periodic notification checks at $preferredHour:00 daily',
-    );
   }
 
   /// Cancel periodic background checks
