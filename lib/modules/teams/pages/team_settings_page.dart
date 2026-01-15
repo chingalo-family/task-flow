@@ -35,9 +35,7 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
 
           return ListView(
             padding: const EdgeInsets.all(16),
-            children: [
-              _buildTaskStatusesSection(context, teamState, team),
-            ],
+            children: [_buildTaskStatusesSection(context, teamState, team)],
           );
         },
       ),

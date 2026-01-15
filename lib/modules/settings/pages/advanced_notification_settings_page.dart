@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/services/email_notification_service.dart';
@@ -68,11 +69,13 @@ class _AdvancedNotificationSettingsPageState
     setState(() {
       _emailNotificationsEnabled = enabled;
     });
-    
+
     try {
       await _emailService.setEmailNotificationsEnabled(enabled);
       _showSnackBar(
-        enabled ? 'Email notifications enabled' : 'Email notifications disabled',
+        enabled
+            ? 'Email notifications enabled'
+            : 'Email notifications disabled',
       );
     } catch (e) {
       debugPrint('Error updating email notifications: $e');
@@ -88,7 +91,7 @@ class _AdvancedNotificationSettingsPageState
     setState(() {
       _scheduledNotificationsEnabled = enabled;
     });
-    
+
     try {
       await _schedulerService.setScheduledNotificationsEnabled(enabled);
 
@@ -101,6 +104,20 @@ class _AdvancedNotificationSettingsPageState
         await backgroundService.cancelPeriodicChecks();
         _showSnackBar('Background checks cancelled');
       }
+    } on PlatformException catch (e) {
+      debugPrint('Platform error updating scheduled notifications: $e');
+      String errorMessage = 'Background tasks not supported on this device';
+
+      if (e.code == 'BACKGROUND_TASKS_UNAVAILABLE') {
+        errorMessage = 'Background tasks unavailable. Check app permissions.';
+      }
+
+      _showSnackBar(errorMessage);
+
+      // Revert the UI state if operation failed
+      setState(() {
+        _scheduledNotificationsEnabled = !enabled;
+      });
     } catch (e) {
       debugPrint('Error updating scheduled notifications: $e');
       _showSnackBar('Failed to update scheduled notifications');
@@ -115,7 +132,7 @@ class _AdvancedNotificationSettingsPageState
     setState(() {
       _preferredCheckTime = hour;
     });
-    
+
     try {
       await _schedulerService.setPreferredCheckTime(hour);
 
@@ -125,6 +142,15 @@ class _AdvancedNotificationSettingsPageState
         await backgroundService.schedulePeriodicChecks();
         _showSnackBar('Check time updated to $hour:00');
       }
+    } on PlatformException catch (e) {
+      debugPrint('Platform error updating preferred check time: $e');
+      _showSnackBar('Background tasks not available on this device');
+
+      // Revert the UI state if save failed
+      final savedTime = await _schedulerService.getPreferredCheckTime();
+      setState(() {
+        _preferredCheckTime = savedTime;
+      });
     } catch (e) {
       debugPrint('Error updating preferred check time: $e');
       _showSnackBar('Failed to update check time');
@@ -138,7 +164,7 @@ class _AdvancedNotificationSettingsPageState
 
   Future<void> _triggerManualCheck() async {
     _showSnackBar('Running notification check...');
-    
+
     try {
       await _schedulerService.manualTrigger();
       final lastCheck = await _schedulerService.getLastCheckTime();

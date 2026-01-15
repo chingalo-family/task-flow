@@ -11,7 +11,8 @@ class Notification {
   final String? actorUserId;
   final String? actorUsername;
   final String? actorAvatarUrl;
-  final String recipientUserId; // User who should receive this notification (required)
+  final String
+  recipientUserId; // User who should receive this notification (required)
   final String recipientUserName; // Name of recipient user (required)
   final DateTime createdAt;
 

@@ -12,10 +12,10 @@ class UserEntity {
   String? email;
   String? phoneNumber;
   bool isLogin;
-  
+
   @Property(type: PropertyType.date)
   DateTime createdAt;
-  
+
   @Property(type: PropertyType.date)
   DateTime updatedAt;
 

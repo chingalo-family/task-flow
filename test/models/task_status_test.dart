@@ -41,10 +41,7 @@ void main() {
         color: Colors.blue,
       );
 
-      final copied = original.copyWith(
-        name: 'Updated',
-        order: 10,
-      );
+      final copied = original.copyWith(name: 'Updated', order: 10);
 
       expect(copied.id, 'status1');
       expect(copied.name, 'Updated');
@@ -105,11 +102,7 @@ void main() {
     });
 
     test('should handle missing optional fields in fromJson', () {
-      final json = {
-        'id': 'status1',
-        'name': 'Test',
-        'color': 0xFF2E90FA,
-      };
+      final json = {'id': 'status1', 'name': 'Test', 'color': 0xFF2E90FA};
 
       final status = TaskStatus.fromJson(json);
 

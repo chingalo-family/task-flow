@@ -3,7 +3,7 @@ import 'package:task_flow/core/services/task_service.dart';
 import 'package:task_flow/core/services/preference_service.dart';
 
 /// Service for scheduling and executing background notification tasks
-/// 
+///
 /// This service integrates with BackgroundNotificationService for actual
 /// background execution on mobile platforms using:
 /// - workmanager package for Android/iOS background tasks
@@ -144,12 +144,7 @@ class NotificationSchedulerService {
 
   String? _calculateNextCheck(int preferredHour) {
     final now = DateTime.now();
-    DateTime nextCheck = DateTime(
-      now.year,
-      now.month,
-      now.day,
-      preferredHour,
-    );
+    DateTime nextCheck = DateTime(now.year, now.month, now.day, preferredHour);
 
     // If the preferred time has already passed today, schedule for tomorrow
     if (nextCheck.isBefore(now)) {

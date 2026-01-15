@@ -62,9 +62,7 @@ class _NotificationPreferencesPageState
       ),
       body: _loading
           ? Center(
-              child: CircularProgressIndicator(
-                color: AppConstant.primaryBlue,
-              ),
+              child: CircularProgressIndicator(color: AppConstant.primaryBlue),
             )
           : SafeArea(
               child: SingleChildScrollView(

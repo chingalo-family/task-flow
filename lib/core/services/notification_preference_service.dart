@@ -20,28 +20,28 @@ class NotificationPreferenceService {
           await _prefs.getBool(NotificationConstants.prefTaskCompleted) ?? true;
       final taskStatusChange =
           await _prefs.getBool(NotificationConstants.prefTaskStatusChange) ??
-              true;
+          true;
       final taskComment =
           await _prefs.getBool(NotificationConstants.prefTaskComment) ?? true;
       final taskMention =
           await _prefs.getBool(NotificationConstants.prefTaskMention) ?? true;
       final deadlineReminder =
           await _prefs.getBool(NotificationConstants.prefDeadlineReminder) ??
-              true;
+          true;
       final teamInvite =
           await _prefs.getBool(NotificationConstants.prefTeamInvite) ?? true;
       final teamMemberAdded =
           await _prefs.getBool(NotificationConstants.prefTeamMemberAdded) ??
-              true;
+          true;
       final teamMemberRemoved =
           await _prefs.getBool(NotificationConstants.prefTeamMemberRemoved) ??
-              true;
+          true;
       final systemNotifications =
           await _prefs.getBool(NotificationConstants.prefSystemNotifications) ??
-              true;
+          true;
       final taskPriorityChange =
           await _prefs.getBool(NotificationConstants.prefTaskPriorityChange) ??
-              true;
+          true;
       final taskOverdue =
           await _prefs.getBool(NotificationConstants.prefTaskOverdue) ?? true;
 
@@ -147,10 +147,7 @@ class NotificationPreferenceService {
   }
 
   /// Check if a specific notification type is enabled for a team
-  Future<bool> isTeamNotificationTypeEnabled(
-    String teamId,
-    String type,
-  ) async {
+  Future<bool> isTeamNotificationTypeEnabled(String teamId, String type) async {
     final prefs = await getTeamPreferences(teamId);
     return prefs.isNotificationTypeEnabled(type);
   }

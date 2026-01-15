@@ -417,10 +417,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 runSpacing: AppConstant.spacing8,
                 children: _task.tags!.map((tag) {
                   return Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
-                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
                       color: AppConstant.primaryBlue.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(16),
@@ -965,14 +962,19 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 ),
                 decoration: BoxDecoration(
                   color: AppConstant.cardBackground,
-                  borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                  borderRadius: BorderRadius.circular(
+                    AppConstant.borderRadius12,
+                  ),
                   border: Border.all(
                     color: AppConstant.textSecondary.withValues(alpha: 0.1),
                   ),
                 ),
                 child: TextFormField(
                   controller: titleController,
-                  style: TextStyle(color: AppConstant.textPrimary, fontSize: 16),
+                  style: TextStyle(
+                    color: AppConstant.textPrimary,
+                    fontSize: 16,
+                  ),
                   decoration: InputDecoration(
                     hintText: 'Enter subtask title...',
                     hintStyle: TextStyle(
@@ -1005,9 +1007,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                       context,
                       listen: false,
                     );
-                    final subtasks = List<Subtask>.from(
-                      _task.subtasks ?? [],
-                    );
+                    final subtasks = List<Subtask>.from(_task.subtasks ?? []);
                     subtasks.add(
                       Subtask(
                         id: '${DateTime.now().millisecondsSinceEpoch}_${subtasks.length}',
@@ -1092,14 +1092,19 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 ),
                 decoration: BoxDecoration(
                   color: AppConstant.cardBackground,
-                  borderRadius: BorderRadius.circular(AppConstant.borderRadius12),
+                  borderRadius: BorderRadius.circular(
+                    AppConstant.borderRadius12,
+                  ),
                   border: Border.all(
                     color: AppConstant.textSecondary.withValues(alpha: 0.1),
                   ),
                 ),
                 child: TextFormField(
                   controller: titleController,
-                  style: TextStyle(color: AppConstant.textPrimary, fontSize: 16),
+                  style: TextStyle(
+                    color: AppConstant.textPrimary,
+                    fontSize: 16,
+                  ),
                   decoration: InputDecoration(
                     hintText: 'Enter subtask title...',
                     hintStyle: TextStyle(
@@ -1132,9 +1137,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                       context,
                       listen: false,
                     );
-                    final subtasks = List<Subtask>.from(
-                      _task.subtasks ?? [],
-                    );
+                    final subtasks = List<Subtask>.from(_task.subtasks ?? []);
                     subtasks[index] = subtask.copyWith(
                       title: titleController.text.trim(),
                     );

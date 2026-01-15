@@ -222,7 +222,8 @@ class _SettingsPageState extends State<SettingsPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => const AdvancedNotificationSettingsPage(),
+                            builder: (_) =>
+                                const AdvancedNotificationSettingsPage(),
                           ),
                         );
                       },

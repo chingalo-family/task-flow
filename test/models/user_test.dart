@@ -48,10 +48,7 @@ void main() {
     });
 
     test('User fromJson with missing optional fields', () {
-      final json = {
-        'id': '456',
-        'username': 'minimaluser',
-      };
+      final json = {'id': '456', 'username': 'minimaluser'};
 
       final user = User.fromJson(json);
 

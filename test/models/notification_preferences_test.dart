@@ -52,10 +52,7 @@ void main() {
 
     test('should copy with updated values', () {
       final prefs = NotificationPreferences();
-      final updated = prefs.copyWith(
-        taskAssigned: false,
-        taskCompleted: false,
-      );
+      final updated = prefs.copyWith(taskAssigned: false, taskCompleted: false);
 
       expect(updated.taskAssigned, false);
       expect(updated.taskCompleted, false);
@@ -108,9 +105,7 @@ void main() {
     });
 
     test('should create from JSON with missing values defaulting to true', () {
-      final json = <String, dynamic>{
-        'taskAssigned': false,
-      };
+      final json = <String, dynamic>{'taskAssigned': false};
       final prefs = NotificationPreferences.fromJson(json);
 
       expect(prefs.taskAssigned, false);

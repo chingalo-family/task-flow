@@ -21,7 +21,11 @@ class PreferenceService {
   }
 
   /// Set string value (user-specific by default)
-  Future<void> setString(String key, String value, {bool global = false}) async {
+  Future<void> setString(
+    String key,
+    String value, {
+    bool global = false,
+  }) async {
     final prefs = await SharedPreferences.getInstance();
     final userId = global ? null : await _getCurrentUserId();
     final finalKey = _userKey(key, userId);

@@ -461,7 +461,7 @@ class _TeamDetailPageState extends State<TeamDetailPage>
                     child: TaskCard(task: task),
                   );
                 }),
-              
+
               // Completed Tasks Section
               if (completedTasks.isNotEmpty) ...[
                 SizedBox(height: AppConstant.spacing24),

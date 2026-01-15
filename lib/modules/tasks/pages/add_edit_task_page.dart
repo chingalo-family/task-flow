@@ -40,7 +40,9 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
       _selectedCategory = widget.task!.category;
       _selectedDueDate = widget.task!.dueDate;
       _remindMe = widget.task!.remindMe ?? false;
-      _selectedAssignee = (widget.task!.assignedUserIds != null && widget.task!.assignedUserIds!.isNotEmpty)
+      _selectedAssignee =
+          (widget.task!.assignedUserIds != null &&
+              widget.task!.assignedUserIds!.isNotEmpty)
           ? widget.task!.assignedUserIds!.first
           : null;
       _selectedTags = widget.task!.tags ?? []; // Load existing tags
@@ -99,7 +101,9 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
         remindMe: _remindMe,
         teamId: _selectedTeam?.id,
         teamName: _selectedTeam?.name,
-        assignedUserIds: _selectedAssignee != null ? [_selectedAssignee!] : null,
+        assignedUserIds: _selectedAssignee != null
+            ? [_selectedAssignee!]
+            : null,
         status: widget.task?.status ?? TaskConstants.statusPending,
         progress: widget.task?.progress ?? 0,
         tags: _selectedTags.isEmpty ? null : _selectedTags, // Save tags
@@ -176,7 +180,9 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
           selectedDueDate: _selectedDueDate,
           remindMe: _remindMe,
           selectedTeam: _selectedTeam,
-          selectedAssignees: _selectedAssignee != null ? [_selectedAssignee!] : [],
+          selectedAssignees: _selectedAssignee != null
+              ? [_selectedAssignee!]
+              : [],
           selectedTags: _selectedTags, // Added tags
           onPriorityChanged: (value) {
             setState(() {
@@ -218,7 +224,8 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
               _selectedAssignee = value;
             });
           },
-          onTagsChanged: (value) { // Added tags callback
+          onTagsChanged: (value) {
+            // Added tags callback
             setState(() {
               _selectedTags = value;
             });

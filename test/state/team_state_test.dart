@@ -54,7 +54,7 @@ void main() {
 
     test('should add team', () async {
       final team = Team(id: 'team1', name: 'New Team');
-      
+
       when(mockService.createTeam(team)).thenAnswer((_) async => team);
 
       await teamState.addTeam(team);
@@ -66,7 +66,7 @@ void main() {
 
     test('should not add team if creation fails', () async {
       final team = Team(id: 'team1', name: 'New Team');
-      
+
       when(mockService.createTeam(team)).thenAnswer((_) async => null);
 
       await teamState.addTeam(team);
@@ -199,11 +199,7 @@ void main() {
     });
 
     test('should add task to team', () async {
-      final team = Team(
-        id: 'team1',
-        name: 'Team 1',
-        taskIds: ['task1'],
-      );
+      final team = Team(id: 'team1', name: 'Team 1', taskIds: ['task1']);
 
       when(mockService.getAllTeams()).thenAnswer((_) async => [team]);
       when(mockService.updateTeam(any)).thenAnswer((_) async => true);
@@ -271,7 +267,9 @@ void main() {
       await teamState.updateTaskStatus('team1', 'custom1', updatedStatus);
 
       final updatedTeam = teamState.getTeamById('team1');
-      final status = updatedTeam!.taskStatuses.firstWhere((s) => s.id == 'custom1');
+      final status = updatedTeam!.taskStatuses.firstWhere(
+        (s) => s.id == 'custom1',
+      );
       expect(status.name, 'In Review');
     });
 
@@ -322,8 +320,16 @@ void main() {
     });
 
     test('should reorder task statuses', () async {
-      final status1 = TaskStatus(id: 's1', name: 'Status 1', color: Colors.blue);
-      final status2 = TaskStatus(id: 's2', name: 'Status 2', color: Colors.green);
+      final status1 = TaskStatus(
+        id: 's1',
+        name: 'Status 1',
+        color: Colors.blue,
+      );
+      final status2 = TaskStatus(
+        id: 's2',
+        name: 'Status 2',
+        color: Colors.green,
+      );
       final team = Team(
         id: 'team1',
         name: 'Team 1',

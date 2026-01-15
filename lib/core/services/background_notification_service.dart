@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:workmanager/workmanager.dart';
@@ -69,10 +70,19 @@ class BackgroundNotificationService {
 
   /// Initialize WorkManager for background tasks
   Future<void> _initializeWorkManager() async {
-    await Workmanager().initialize(
-      callbackDispatcher,
-      isInDebugMode: kDebugMode,
-    );
+    try {
+      await Workmanager().initialize(
+        callbackDispatcher,
+        isInDebugMode: kDebugMode,
+      );
+    } on PlatformException catch (e) {
+      debugPrint('WorkManager initialization failed: ${e.message}');
+      debugPrint('Background tasks may not work on this platform');
+      // Don't rethrow - allow app to continue without background tasks
+    } catch (e) {
+      debugPrint('WorkManager initialization error: $e');
+      // Don't rethrow - allow app to continue without background tasks
+    }
   }
 
   /// Handle notification tap
@@ -117,6 +127,18 @@ class BackgroundNotificationService {
       debugPrint(
         'Scheduled periodic notification checks at $preferredHour:00 daily',
       );
+    } on PlatformException catch (e) {
+      debugPrint('Platform error scheduling periodic checks: ${e.message}');
+      debugPrint(
+        'Background tasks may not be supported on this platform/device',
+      );
+      // Rethrow with a more user-friendly message
+      throw PlatformException(
+        code: 'BACKGROUND_TASKS_UNAVAILABLE',
+        message:
+            'Background tasks are not supported on this device. '
+            'Please ensure the app has proper permissions and native configuration.',
+      );
     } catch (e) {
       debugPrint('Error scheduling periodic checks: $e');
       rethrow;
@@ -125,8 +147,16 @@ class BackgroundNotificationService {
 
   /// Cancel periodic background checks
   Future<void> cancelPeriodicChecks() async {
-    await Workmanager().cancelByUniqueName(uniqueTaskName);
-    debugPrint('Cancelled periodic notification checks');
+    try {
+      await Workmanager().cancelByUniqueName(uniqueTaskName);
+      debugPrint('Cancelled periodic notification checks');
+    } on PlatformException catch (e) {
+      debugPrint('Platform error cancelling periodic checks: ${e.message}');
+      // Don't rethrow - cancellation failure is not critical
+    } catch (e) {
+      debugPrint('Error cancelling periodic checks: $e');
+      // Don't rethrow - cancellation failure is not critical
+    }
   }
 
   /// Show local notification

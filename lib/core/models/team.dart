@@ -72,7 +72,8 @@ class Team {
       updatedAt: updatedAt ?? this.updatedAt,
       teamIcon: teamIcon ?? this.teamIcon,
       teamColor: teamColor ?? this.teamColor,
-      notificationPreferences: notificationPreferences ?? this.notificationPreferences,
+      notificationPreferences:
+          notificationPreferences ?? this.notificationPreferences,
     );
   }
 }

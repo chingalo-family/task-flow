@@ -7,10 +7,7 @@ import 'package:task_flow/modules/settings/components/preference_toggle_item.dar
 class TeamNotificationPreferences extends StatefulWidget {
   final String teamId;
 
-  const TeamNotificationPreferences({
-    super.key,
-    required this.teamId,
-  });
+  const TeamNotificationPreferences({super.key, required this.teamId});
 
   @override
   State<TeamNotificationPreferences> createState() =>
@@ -48,9 +45,7 @@ class _TeamNotificationPreferencesState
   Widget build(BuildContext context) {
     if (_loading) {
       return Center(
-        child: CircularProgressIndicator(
-          color: AppConstant.primaryBlue,
-        ),
+        child: CircularProgressIndicator(color: AppConstant.primaryBlue),
       );
     }
 

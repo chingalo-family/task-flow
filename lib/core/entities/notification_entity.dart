@@ -9,7 +9,8 @@ class NotificationEntity {
   String notificationId;
   String title;
   String? body;
-  String type; // 'task_assigned', 'team_invite', 'task_completed', 'mention', etc.
+  String
+  type; // 'task_assigned', 'team_invite', 'task_completed', 'mention', etc.
 
   bool isRead;
   String? relatedEntityId;
@@ -18,7 +19,7 @@ class NotificationEntity {
   String? actorUserId;
   String? actorUsername;
   String? actorAvatarUrl;
-  
+
   @Index()
   String recipientUserId; // User who should receive this notification (required)
   String recipientUserName; // Name of recipient user (required)
