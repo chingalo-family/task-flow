@@ -39,42 +39,75 @@ class _AdvancedNotificationSettingsPageState
   }
 
   Future<void> _loadSettings() async {
-    final emailEnabled = await _emailService.areEmailNotificationsEnabled();
-    final scheduledEnabled = await _schedulerService
-        .areScheduledNotificationsEnabled();
-    final checkTime = await _schedulerService.getPreferredCheckTime();
-    final lastCheck = await _schedulerService.getLastCheckTime();
+    try {
+      final emailEnabled = await _emailService.areEmailNotificationsEnabled();
+      final scheduledEnabled = await _schedulerService
+          .areScheduledNotificationsEnabled();
+      final checkTime = await _schedulerService.getPreferredCheckTime();
+      final lastCheck = await _schedulerService.getLastCheckTime();
 
-    setState(() {
-      _emailNotificationsEnabled = emailEnabled;
-      _scheduledNotificationsEnabled = scheduledEnabled;
-      _preferredCheckTime = checkTime;
-      _lastCheckTime = lastCheck;
-      _loading = false;
-    });
+      setState(() {
+        _emailNotificationsEnabled = emailEnabled;
+        _scheduledNotificationsEnabled = scheduledEnabled;
+        _preferredCheckTime = checkTime;
+        _lastCheckTime = lastCheck;
+        _loading = false;
+      });
+    } catch (e) {
+      debugPrint('Error loading settings: $e');
+      setState(() {
+        _loading = false;
+      });
+      if (mounted) {
+        _showSnackBar('Failed to load settings');
+      }
+    }
   }
 
   Future<void> _updateEmailNotificationsEnabled(bool enabled) async {
     setState(() {
       _emailNotificationsEnabled = enabled;
     });
-    await _emailService.setEmailNotificationsEnabled(enabled);
+    
+    try {
+      await _emailService.setEmailNotificationsEnabled(enabled);
+      _showSnackBar(
+        enabled ? 'Email notifications enabled' : 'Email notifications disabled',
+      );
+    } catch (e) {
+      debugPrint('Error updating email notifications: $e');
+      _showSnackBar('Failed to update email notifications');
+      // Revert the UI state if save failed
+      setState(() {
+        _emailNotificationsEnabled = !enabled;
+      });
+    }
   }
 
   Future<void> _updateScheduledNotificationsEnabled(bool enabled) async {
     setState(() {
       _scheduledNotificationsEnabled = enabled;
     });
-    await _schedulerService.setScheduledNotificationsEnabled(enabled);
+    
+    try {
+      await _schedulerService.setScheduledNotificationsEnabled(enabled);
 
-    // Schedule or cancel background tasks
-    final backgroundService = BackgroundNotificationService();
-    if (enabled) {
-      await backgroundService.schedulePeriodicChecks();
-      _showSnackBar('Background checks scheduled');
-    } else {
-      await backgroundService.cancelPeriodicChecks();
-      _showSnackBar('Background checks cancelled');
+      // Schedule or cancel background tasks
+      final backgroundService = BackgroundNotificationService();
+      if (enabled) {
+        await backgroundService.schedulePeriodicChecks();
+        _showSnackBar('Background checks scheduled');
+      } else {
+        await backgroundService.cancelPeriodicChecks();
+        _showSnackBar('Background checks cancelled');
+      }
+    } catch (e) {
+      debugPrint('Error updating scheduled notifications: $e');
+      _showSnackBar('Failed to update scheduled notifications');
+      // Revert the UI state if operation failed
+      setState(() {
+        _scheduledNotificationsEnabled = !enabled;
+      });
     }
   }
 
@@ -105,11 +138,18 @@ class _AdvancedNotificationSettingsPageState
 
   Future<void> _triggerManualCheck() async {
     _showSnackBar('Running notification check...');
-    await _schedulerService.manualTrigger();
-    final lastCheck = await _schedulerService.getLastCheckTime();
-    _lastCheckTime = lastCheck;
-    setState(() {});
-    _showSnackBar('Notification check completed');
+    
+    try {
+      await _schedulerService.manualTrigger();
+      final lastCheck = await _schedulerService.getLastCheckTime();
+      setState(() {
+        _lastCheckTime = lastCheck;
+      });
+      _showSnackBar('Notification check completed');
+    } catch (e) {
+      debugPrint('Error running manual check: $e');
+      _showSnackBar('Failed to run notification check');
+    }
   }
 
   void _showSnackBar(String message) {
