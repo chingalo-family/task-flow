@@ -3,6 +3,7 @@ import 'package:task_flow/core/models/notification.dart';
 import 'package:task_flow/core/offline_db/notification_offline_provider/notification_offline_provider.dart';
 import 'package:task_flow/core/utils/utils.dart';
 import 'package:task_flow/core/services/notification_preference_service.dart';
+import 'package:task_flow/core/services/email_notification_service.dart';
 
 class NotificationService {
   NotificationService._();
@@ -11,6 +12,7 @@ class NotificationService {
 
   final _offline = NotificationOfflineProvider();
   final _prefService = NotificationPreferenceService();
+  final _emailService = EmailNotificationService();
 
   Future<Notification?> createNotification(Notification notification) async {
     try {
@@ -71,10 +73,30 @@ class NotificationService {
             )
           : notification;
       await _offline.addOrUpdateNotification(notificationToSave);
+      
+      // Send email notification for critical types
+      await _sendEmailNotificationIfNeeded(notificationToSave);
+      
       return notificationToSave;
     } catch (e) {
       debugPrint('Error saving notification: $e');
       return null;
+    }
+  }
+
+  /// Send email notification if enabled and notification is critical
+  Future<void> _sendEmailNotificationIfNeeded(Notification notification) async {
+    try {
+      final userEmail = await _emailService.getUserEmail();
+      if (userEmail != null && userEmail.isNotEmpty) {
+        await _emailService.sendEmailNotification(
+          notification: notification,
+          recipientEmail: userEmail,
+        );
+      }
+    } catch (e) {
+      debugPrint('Error sending email notification: $e');
+      // Don't fail the notification creation if email fails
     }
   }
 

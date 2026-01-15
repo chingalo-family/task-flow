@@ -11,6 +11,7 @@ import 'package:task_flow/modules/login/login_page.dart';
 import 'package:task_flow/modules/settings/pages/privacy_policy_page.dart';
 import 'package:task_flow/modules/settings/pages/contact_us_page.dart';
 import 'package:task_flow/modules/settings/pages/notification_preferences_page.dart';
+import 'package:task_flow/modules/settings/pages/advanced_notification_settings_page.dart';
 import 'package:task_flow/modules/settings/components/change_password_form.dart';
 import 'package:task_flow/modules/settings/components/profile_avatar_with_edit.dart';
 import 'package:task_flow/modules/settings/components/info_display_field.dart';
@@ -206,6 +207,22 @@ class _SettingsPageState extends State<SettingsPage> {
                           context,
                           MaterialPageRoute(
                             builder: (_) => const NotificationPreferencesPage(),
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(height: AppConstant.spacing12),
+
+                    // Advanced Notification Settings
+                    SettingsTile(
+                      icon: Icons.settings_applications,
+                      title: 'Advanced Notifications',
+                      subtitle: 'Email & scheduled checks',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const AdvancedNotificationSettingsPage(),
                           ),
                         );
                       },
