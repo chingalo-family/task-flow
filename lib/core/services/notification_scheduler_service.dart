@@ -90,6 +90,11 @@ class NotificationSchedulerService {
     return await _prefs.getBool('scheduled_notifications_enabled') ?? true;
   }
 
+  /// Get scheduled notifications enabled status
+  Future<bool> areScheduledNotificationsEnabled() async {
+    return await _areScheduledNotificationsEnabled();
+  }
+
   /// Enable or disable scheduled notifications
   Future<void> setScheduledNotificationsEnabled(bool enabled) async {
     await _prefs.setBool('scheduled_notifications_enabled', enabled);

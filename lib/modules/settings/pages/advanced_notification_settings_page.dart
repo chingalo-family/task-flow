@@ -45,7 +45,7 @@ class _AdvancedNotificationSettingsPageState
     final emailEnabled = await _emailService.areEmailNotificationsEnabled();
     final email = await _emailService.getUserEmail();
     final scheduledEnabled =
-        await _schedulerService.setScheduledNotificationsEnabled(true);
+        await _schedulerService.areScheduledNotificationsEnabled();
     final checkTime = await _schedulerService.getPreferredCheckTime();
     final lastCheck = await _schedulerService.getLastCheckTime();
 
