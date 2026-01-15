@@ -121,7 +121,7 @@ class NotificationSchedulerService {
   /// Get the preferred check time
   Future<int> getPreferredCheckTime() async {
     final hour = await _prefs.getString('preferred_check_time');
-    return hour != null ? int.parse(hour) : 9; // Default: 9 AM
+    return hour != null ? int.parse(hour) : 6; // Default: 6 AM
   }
 
   /// Manual trigger for testing purposes

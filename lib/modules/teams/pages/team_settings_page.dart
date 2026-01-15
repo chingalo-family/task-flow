@@ -6,7 +6,6 @@ import 'package:task_flow/core/models/models.dart';
 import 'package:task_flow/core/utils/utils.dart';
 import 'package:task_flow/modules/teams/components/add_status_container.dart';
 import 'package:task_flow/modules/teams/components/edit_status_container.dart';
-import 'package:task_flow/modules/teams/components/team_notification_preferences.dart';
 
 class TeamSettingsPage extends StatefulWidget {
   final String teamId;
@@ -38,8 +37,6 @@ class _TeamSettingsPageState extends State<TeamSettingsPage> {
             padding: const EdgeInsets.all(16),
             children: [
               _buildTaskStatusesSection(context, teamState, team),
-              const SizedBox(height: 32),
-              TeamNotificationPreferences(teamId: widget.teamId),
             ],
           );
         },

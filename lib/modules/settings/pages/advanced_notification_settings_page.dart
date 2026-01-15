@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/services/email_notification_service.dart';
 import 'package:task_flow/core/services/notification_scheduler_service.dart';
@@ -23,7 +25,7 @@ class _AdvancedNotificationSettingsPageState
   bool _emailNotificationsEnabled = false;
   bool _scheduledNotificationsEnabled = true;
   String _userEmail = '';
-  int _preferredCheckTime = 9;
+  int _preferredCheckTime = 6;
   DateTime? _lastCheckTime;
   bool _loading = true;
 
@@ -43,16 +45,25 @@ class _AdvancedNotificationSettingsPageState
 
   Future<void> _loadSettings() async {
     final emailEnabled = await _emailService.areEmailNotificationsEnabled();
-    final email = await _emailService.getUserEmail();
+    final savedEmail = await _emailService.getUserEmail();
     final scheduledEnabled =
         await _schedulerService.areScheduledNotificationsEnabled();
     final checkTime = await _schedulerService.getPreferredCheckTime();
     final lastCheck = await _schedulerService.getLastCheckTime();
 
+    // Get current user's email from UserState
+    final userState = context.read<UserState>();
+    final currentUserEmail = userState.currentUser?.email ?? '';
+
+    // Use saved email if exists and not blank, otherwise use current user's email
+    final emailToUse = (savedEmail != null && savedEmail.isNotEmpty)
+        ? savedEmail
+        : currentUserEmail;
+
     setState(() {
       _emailNotificationsEnabled = emailEnabled;
-      _userEmail = email ?? '';
-      _emailController.text = _userEmail;
+      _userEmail = emailToUse;
+      _emailController.text = emailToUse;
       _scheduledNotificationsEnabled = scheduledEnabled;
       _preferredCheckTime = checkTime;
       _lastCheckTime = lastCheck;
