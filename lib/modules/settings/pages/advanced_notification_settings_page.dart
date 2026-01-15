@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
 import 'package:task_flow/core/services/email_notification_service.dart';
 import 'package:task_flow/core/services/notification_scheduler_service.dart';
 import 'package:task_flow/modules/settings/components/preference_toggle_item.dart';
-import 'package:task_flow/core/components/forms/input_field.dart';
 import 'package:task_flow/core/components/cards/section_header.dart';
 import 'package:task_flow/core/components/buttons/primary_button.dart';
 
@@ -21,15 +18,12 @@ class _AdvancedNotificationSettingsPageState
     extends State<AdvancedNotificationSettingsPage> {
   final _emailService = EmailNotificationService();
   final _schedulerService = NotificationSchedulerService();
-  
+
   bool _emailNotificationsEnabled = false;
   bool _scheduledNotificationsEnabled = true;
-  String _userEmail = '';
   int _preferredCheckTime = 6;
   DateTime? _lastCheckTime;
   bool _loading = true;
-
-  final _emailController = TextEditingController();
 
   @override
   void initState() {
@@ -39,31 +33,18 @@ class _AdvancedNotificationSettingsPageState
 
   @override
   void dispose() {
-    _emailController.dispose();
     super.dispose();
   }
 
   Future<void> _loadSettings() async {
     final emailEnabled = await _emailService.areEmailNotificationsEnabled();
-    final savedEmail = await _emailService.getUserEmail();
-    final scheduledEnabled =
-        await _schedulerService.areScheduledNotificationsEnabled();
+    final scheduledEnabled = await _schedulerService
+        .areScheduledNotificationsEnabled();
     final checkTime = await _schedulerService.getPreferredCheckTime();
     final lastCheck = await _schedulerService.getLastCheckTime();
 
-    // Get current user's email from UserState
-    final userState = context.read<UserState>();
-    final currentUserEmail = userState.currentUser?.email ?? '';
-
-    // Use saved email if exists and not blank, otherwise use current user's email
-    final emailToUse = (savedEmail != null && savedEmail.isNotEmpty)
-        ? savedEmail
-        : currentUserEmail;
-
     setState(() {
       _emailNotificationsEnabled = emailEnabled;
-      _userEmail = emailToUse;
-      _emailController.text = emailToUse;
       _scheduledNotificationsEnabled = scheduledEnabled;
       _preferredCheckTime = checkTime;
       _lastCheckTime = lastCheck;
@@ -85,23 +66,6 @@ class _AdvancedNotificationSettingsPageState
     await _schedulerService.setScheduledNotificationsEnabled(enabled);
   }
 
-  Future<void> _saveEmailAddress() async {
-    final email = _emailController.text.trim();
-    if (email.isNotEmpty && _isValidEmail(email)) {
-      setState(() {
-        _userEmail = email;
-      });
-      await _emailService.setUserEmail(email);
-      _showSnackBar('Email address saved');
-    } else {
-      _showSnackBar('Please enter a valid email address');
-    }
-  }
-
-  bool _isValidEmail(String email) {
-    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
-  }
-
   Future<void> _updatePreferredCheckTime(int hour) async {
     setState(() {
       _preferredCheckTime = hour;
@@ -113,16 +77,15 @@ class _AdvancedNotificationSettingsPageState
     _showSnackBar('Running notification check...');
     await _schedulerService.manualTrigger();
     final lastCheck = await _schedulerService.getLastCheckTime();
-    setState(() {
-      _lastCheckTime = lastCheck;
-    });
+    _lastCheckTime = lastCheck;
+    setState(() {});
     _showSnackBar('Notification check completed');
   }
 
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -147,9 +110,7 @@ class _AdvancedNotificationSettingsPageState
       ),
       body: _loading
           ? Center(
-              child: CircularProgressIndicator(
-                color: AppConstant.primaryBlue,
-              ),
+              child: CircularProgressIndicator(color: AppConstant.primaryBlue),
             )
           : SafeArea(
               child: SingleChildScrollView(
@@ -174,40 +135,7 @@ class _AdvancedNotificationSettingsPageState
                       value: _emailNotificationsEnabled,
                       onChanged: _updateEmailNotificationsEnabled,
                     ),
-
-                    if (_emailNotificationsEnabled) ...[
-                      SizedBox(height: AppConstant.spacing16),
-                      InputField(
-                        controller: _emailController,
-                        hintText: 'Enter your email',
-                        icon: Icons.email,
-                        labelText: 'Email Address',
-                        keyboardType: TextInputType.emailAddress,
-                      ),
-                      SizedBox(height: AppConstant.spacing12),
-                      PrimaryButton(
-                        onPressed: _saveEmailAddress,
-                        child: Text(
-                          'Save Email',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: AppConstant.spacing8),
-                      Text(
-                        'Critical notifications (task assignments, deadlines, team invites) will be sent to this email',
-                        style: TextStyle(
-                          color: AppConstant.textSecondary,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-
                     SizedBox(height: AppConstant.spacing32),
-
                     // Scheduled Checks Section
                     SectionHeader(
                       title: 'Scheduled Checks',
@@ -232,8 +160,9 @@ class _AdvancedNotificationSettingsPageState
                         padding: EdgeInsets.all(AppConstant.spacing16),
                         decoration: BoxDecoration(
                           color: AppConstant.cardBackground,
-                          borderRadius:
-                              BorderRadius.circular(AppConstant.borderRadius12),
+                          borderRadius: BorderRadius.circular(
+                            AppConstant.borderRadius12,
+                          ),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -345,8 +274,9 @@ class _AdvancedNotificationSettingsPageState
                       padding: EdgeInsets.all(AppConstant.spacing16),
                       decoration: BoxDecoration(
                         color: AppConstant.primaryBlue.withValues(alpha: 0.1),
-                        borderRadius:
-                            BorderRadius.circular(AppConstant.borderRadius12),
+                        borderRadius: BorderRadius.circular(
+                          AppConstant.borderRadius12,
+                        ),
                         border: Border.all(
                           color: AppConstant.primaryBlue.withValues(alpha: 0.3),
                         ),
