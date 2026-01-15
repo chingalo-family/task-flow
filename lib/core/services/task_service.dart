@@ -12,32 +12,45 @@ class TaskService {
   final _offline = TaskOfflineProvider();
   final _notificationService = NotificationService();
 
-  Future<Task?> createTask(Task task, {String? createdBy}) async {
+  Future<Task?> createTask(
+    Task task, {
+    required String userId,
+    required String userName,
+  }) async {
     try {
       if (task.title.trim().isEmpty) {
         throw Exception('Task title cannot be empty');
       }
-      await _offline.addOrUpdateTask(task);
+      
+      // Ensure task has creator information
+      final taskWithCreator = task.copyWith(
+        userId: userId,
+        userName: userName,
+      );
+      
+      await _offline.addOrUpdateTask(taskWithCreator);
 
       // Create notification for assigned user(s)
-      if (task.assignedToUsername != null) {
-        final assignedBy = createdBy ?? '';
+      if (taskWithCreator.assignedToUsername != null &&
+          taskWithCreator.assignedToUserId != null) {
         final notification = NotificationUtils.createTaskAssignedNotification(
-          taskTitle: task.title,
-          assignedBy: assignedBy,
-          taskId: task.id,
+          taskTitle: taskWithCreator.title,
+          assignedBy: userName,
+          taskId: taskWithCreator.id,
+          recipientUserId: taskWithCreator.assignedToUserId!,
+          recipientUserName: taskWithCreator.assignedToUsername!,
         );
-        if (task.teamId != null) {
+        if (taskWithCreator.teamId != null) {
           await _notificationService.createNotificationForTeam(
             notification,
-            task.teamId!,
+            taskWithCreator.teamId!,
           );
         } else {
           await _notificationService.createNotification(notification);
         }
       }
 
-      return task;
+      return taskWithCreator;
     } catch (e) {
       debugPrint('Error creating task: $e');
       return null;

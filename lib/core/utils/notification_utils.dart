@@ -7,7 +7,8 @@ class NotificationUtils {
     required String taskTitle,
     required String assignedBy,
     String? taskId,
-    String? recipientUserId,
+    required String recipientUserId,
+    required String recipientUserName,
   }) {
     return app_notification.Notification(
       id: AppUtil.getUid(),
@@ -17,6 +18,7 @@ class NotificationUtils {
       isRead: false,
       actorUsername: assignedBy,
       recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
       createdAt: DateTime.now(),
       relatedEntityId: taskId,
       relatedEntityType: NotificationConstants.entityTypeTask,
@@ -27,7 +29,8 @@ class NotificationUtils {
     required String taskTitle,
     required String completedBy,
     String? taskId,
-    String? recipientUserId,
+    required String recipientUserId,
+    required String recipientUserName,
   }) {
     return app_notification.Notification(
       id: AppUtil.getUid(),
@@ -37,6 +40,7 @@ class NotificationUtils {
       isRead: false,
       actorUsername: completedBy,
       recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
       createdAt: DateTime.now(),
       relatedEntityId: taskId,
       relatedEntityType: NotificationConstants.entityTypeTask,
@@ -47,7 +51,8 @@ class NotificationUtils {
     required String teamName,
     required String invitedBy,
     String? teamId,
-    String? recipientUserId,
+    required String recipientUserId,
+    required String recipientUserName,
   }) {
     return app_notification.Notification(
       id: AppUtil.getUid(),
@@ -57,6 +62,7 @@ class NotificationUtils {
       isRead: false,
       actorUsername: invitedBy,
       recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
       createdAt: DateTime.now(),
       relatedEntityId: teamId,
       relatedEntityType: NotificationConstants.entityTypeTeam,
@@ -68,7 +74,8 @@ class NotificationUtils {
     required String context,
     String? entityId,
     String? preview,
-    String? recipientUserId,
+    required String recipientUserId,
+    required String recipientUserName,
   }) {
     return app_notification.Notification(
       id: AppUtil.getUid(),
@@ -78,6 +85,7 @@ class NotificationUtils {
       isRead: false,
       actorUsername: mentionedBy,
       recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
       createdAt: DateTime.now(),
       relatedEntityId: entityId,
       relatedEntityType: context,
@@ -88,7 +96,8 @@ class NotificationUtils {
     required String taskTitle,
     required DateTime dueDate,
     String? taskId,
-    String? recipientUserId,
+    required String recipientUserId,
+    required String recipientUserName,
   }) {
     final now = DateTime.now();
     final difference = dueDate.difference(now);
@@ -107,6 +116,7 @@ class NotificationUtils {
       type: NotificationConstants.typeDeadlineReminder,
       isRead: false,
       recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
       createdAt: DateTime.now(),
       relatedEntityId: taskId,
       relatedEntityType: NotificationConstants.entityTypeTask,
@@ -118,7 +128,8 @@ class NotificationUtils {
     required String commentedBy,
     String? commentPreview,
     String? taskId,
-    String? recipientUserId,
+    required String recipientUserId,
+    required String recipientUserName,
   }) {
     return app_notification.Notification(
       id: AppUtil.getUid(),
@@ -128,6 +139,7 @@ class NotificationUtils {
       isRead: false,
       actorUsername: commentedBy,
       recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
       createdAt: DateTime.now(),
       relatedEntityId: taskId,
       relatedEntityType: NotificationConstants.entityTypeTask,
@@ -139,16 +151,18 @@ class NotificationUtils {
     required String newStatus,
     required String changedBy,
     String? taskId,
-    String? recipientUserId,
+    required String recipientUserId,
+    required String recipientUserName,
   }) {
     return app_notification.Notification(
       id: AppUtil.getUid(),
       title: 'Task status updated',
       body: '$changedBy changed "$taskTitle" to $newStatus',
-      type: NotificationConstants.typeTaskStatusChange,
+      type: NotificationConstants.typeTaskStatusChanged,
       isRead: false,
       actorUsername: changedBy,
       recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
       createdAt: DateTime.now(),
       relatedEntityId: taskId,
       relatedEntityType: NotificationConstants.entityTypeTask,
@@ -158,7 +172,8 @@ class NotificationUtils {
   static app_notification.Notification createSystemNotification({
     required String title,
     required String message,
-    String? recipientUserId,
+    required String recipientUserId,
+    required String recipientUserName,
   }) {
     return app_notification.Notification(
       id: AppUtil.getUid(),
@@ -167,6 +182,7 @@ class NotificationUtils {
       type: NotificationConstants.typeSystem,
       isRead: false,
       recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
       createdAt: DateTime.now(),
     );
   }
@@ -178,7 +194,8 @@ class NotificationUtils {
     String? actorUsername,
     String? relatedEntityId,
     String? relatedEntityType,
-    String? recipientUserId,
+    required String recipientUserId,
+    required String recipientUserName,
   }) {
     return app_notification.Notification(
       id: AppUtil.getUid(),
@@ -188,6 +205,7 @@ class NotificationUtils {
       isRead: false,
       actorUsername: actorUsername,
       recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
       createdAt: DateTime.now(),
       relatedEntityId: relatedEntityId,
       relatedEntityType: relatedEntityType,
@@ -199,7 +217,8 @@ class NotificationUtils {
     required String memberUsername,
     required String addedBy,
     String? teamId,
-    String? recipientUserId,
+    required String recipientUserId,
+    required String recipientUserName,
   }) {
     return app_notification.Notification(
       id: AppUtil.getUid(),
@@ -209,6 +228,7 @@ class NotificationUtils {
       isRead: false,
       actorUsername: addedBy,
       recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
       createdAt: DateTime.now(),
       relatedEntityId: teamId,
       relatedEntityType: NotificationConstants.entityTypeTeam,
@@ -220,7 +240,8 @@ class NotificationUtils {
     required String memberUsername,
     required String removedBy,
     String? teamId,
-    String? recipientUserId,
+    required String recipientUserId,
+    required String recipientUserName,
   }) {
     return app_notification.Notification(
       id: AppUtil.getUid(),
@@ -230,6 +251,7 @@ class NotificationUtils {
       isRead: false,
       actorUsername: removedBy,
       recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
       createdAt: DateTime.now(),
       relatedEntityId: teamId,
       relatedEntityType: NotificationConstants.entityTypeTeam,
@@ -241,7 +263,8 @@ class NotificationUtils {
     required String newPriority,
     required String changedBy,
     String? taskId,
-    String? recipientUserId,
+    required String recipientUserId,
+    required String recipientUserName,
   }) {
     return app_notification.Notification(
       id: AppUtil.getUid(),
@@ -251,6 +274,7 @@ class NotificationUtils {
       isRead: false,
       actorUsername: changedBy,
       recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
       createdAt: DateTime.now(),
       relatedEntityId: taskId,
       relatedEntityType: NotificationConstants.entityTypeTask,
@@ -261,7 +285,8 @@ class NotificationUtils {
     required String taskTitle,
     required DateTime dueDate,
     String? taskId,
-    String? recipientUserId,
+    required String recipientUserId,
+    required String recipientUserName,
   }) {
     final now = DateTime.now();
     final difference = now.difference(dueDate);
@@ -280,6 +305,7 @@ class NotificationUtils {
       type: NotificationConstants.typeTaskOverdue,
       isRead: false,
       recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
       createdAt: DateTime.now(),
       relatedEntityId: taskId,
       relatedEntityType: NotificationConstants.entityTypeTask,
@@ -291,7 +317,8 @@ class NotificationUtils {
     required String newAssignee,
     required String changedBy,
     String? taskId,
-    String? recipientUserId,
+    required String recipientUserId,
+    required String recipientUserName,
   }) {
     return app_notification.Notification(
       id: AppUtil.getUid(),
@@ -301,6 +328,7 @@ class NotificationUtils {
       isRead: false,
       actorUsername: changedBy,
       recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
       createdAt: DateTime.now(),
       relatedEntityId: taskId,
       relatedEntityType: NotificationConstants.entityTypeTask,
@@ -312,7 +340,8 @@ class NotificationUtils {
     required DateTime newDueDate,
     required String changedBy,
     String? taskId,
-    String? recipientUserId,
+    required String recipientUserId,
+    required String recipientUserName,
   }) {
     final now = DateTime.now();
     final difference = newDueDate.difference(now);
@@ -332,6 +361,7 @@ class NotificationUtils {
       isRead: false,
       actorUsername: changedBy,
       recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
       createdAt: DateTime.now(),
       relatedEntityId: taskId,
       relatedEntityType: NotificationConstants.entityTypeTask,

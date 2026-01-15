@@ -37,6 +37,9 @@ class TaskEntity {
   bool? remindMe;
   int progress; // 0-100
 
+  String? userId; // User who created this task
+  String? userName; // Name of user who created this task
+
   bool isSynced;
 
   @Property(type: PropertyType.date)
@@ -67,6 +70,8 @@ class TaskEntity {
     this.subtasksJson,
     this.remindMe,
     this.progress = 0,
+    this.userId,
+    this.userName,
     this.isSynced = false,
     DateTime? createdAt,
     DateTime? updatedAt,

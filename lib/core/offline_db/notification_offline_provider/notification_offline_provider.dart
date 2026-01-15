@@ -118,6 +118,7 @@ class NotificationOfflineProvider {
       actorUsername: entity.actorUsername,
       actorAvatarUrl: entity.actorAvatarUrl,
       recipientUserId: entity.recipientUserId,
+      recipientUserName: entity.recipientUserName,
       createdAt: entity.createdAt,
     );
   }
@@ -135,6 +136,7 @@ class NotificationOfflineProvider {
       actorUsername: notification.actorUsername,
       actorAvatarUrl: notification.actorAvatarUrl,
       recipientUserId: notification.recipientUserId,
+      recipientUserName: notification.recipientUserName,
       createdAt: notification.createdAt,
     );
   }

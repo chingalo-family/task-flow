@@ -11,7 +11,8 @@ class Notification {
   final String? actorUserId;
   final String? actorUsername;
   final String? actorAvatarUrl;
-  final String? recipientUserId; // User who should receive this notification
+  final String recipientUserId; // User who should receive this notification (required)
+  final String recipientUserName; // Name of recipient user (required)
   final DateTime createdAt;
 
   Notification({
@@ -25,7 +26,8 @@ class Notification {
     this.actorUserId,
     this.actorUsername,
     this.actorAvatarUrl,
-    this.recipientUserId,
+    required this.recipientUserId,
+    required this.recipientUserName,
     DateTime? createdAt,
   }) : createdAt = createdAt ?? DateTime.now();
 
@@ -41,6 +43,7 @@ class Notification {
     String? actorUsername,
     String? actorAvatarUrl,
     String? recipientUserId,
+    String? recipientUserName,
     DateTime? createdAt,
   }) {
     return Notification(
@@ -55,6 +58,7 @@ class Notification {
       actorUsername: actorUsername ?? this.actorUsername,
       actorAvatarUrl: actorAvatarUrl ?? this.actorAvatarUrl,
       recipientUserId: recipientUserId ?? this.recipientUserId,
+      recipientUserName: recipientUserName ?? this.recipientUserName,
       createdAt: createdAt ?? this.createdAt,
     );
   }
