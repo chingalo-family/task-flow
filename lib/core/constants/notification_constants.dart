@@ -26,14 +26,11 @@ class NotificationConstants {
   static const String prefTeamInvite = 'notif_pref_team_invite';
   static const String prefTeamMemberAdded = 'notif_pref_team_member_added';
   static const String prefTeamMemberRemoved = 'notif_pref_team_member_removed';
-  static const String prefSystemNotifications = 'notif_pref_system_notifications';
-  static const String prefTaskPriorityChange = 'notif_pref_task_priority_change';
+  static const String prefSystemNotifications =
+      'notif_pref_system_notifications';
+  static const String prefTaskPriorityChange =
+      'notif_pref_task_priority_change';
   static const String prefTaskOverdue = 'notif_pref_task_overdue';
-
-  // Team notification preferences (prefix with team ID)
-  static String getTeamPrefKey(String teamId, String prefType) {
-    return 'team_${teamId}_$prefType';
-  }
 
   // Related entity types
   static const String entityTypeTask = 'task';
