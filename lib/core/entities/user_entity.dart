@@ -2,6 +2,7 @@ import 'package:objectbox/objectbox.dart';
 
 @Entity()
 class UserEntity {
+  @Id()
   int id; // ObjectBox id
 
   String apiUserId; // API user id
