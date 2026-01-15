@@ -88,6 +88,7 @@ class EmailNotificationService {
       subject: subject,
       htmlBody: htmlBody,
       ccRecipients: const [],
+      textBody: '',
     );
   }
 

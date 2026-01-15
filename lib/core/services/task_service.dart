@@ -21,7 +21,7 @@ class TaskService {
 
       // Create notification for assigned user(s)
       if (task.assignedToUsername != null) {
-        final assignedBy = createdBy ?? task.createdByUsername ?? 'Someone';
+        final assignedBy = createdBy ?? '';
         final notification = NotificationUtils.createTaskAssignedNotification(
           taskTitle: task.title,
           assignedBy: assignedBy,
@@ -137,7 +137,11 @@ class TaskService {
     }
   }
 
-  Future<bool> updateTaskStatus(String id, String status, {String? changedBy}) async {
+  Future<bool> updateTaskStatus(
+    String id,
+    String status, {
+    String? changedBy,
+  }) async {
     try {
       final task = await getTaskById(id);
       if (task == null) return false;
@@ -154,16 +158,16 @@ class TaskService {
       final success = await updateTask(updatedTask);
       if (success) {
         final actor = changedBy ?? task.assignedToUsername ?? 'Someone';
-        
+
         // Create notification for status change
         if (oldStatus != status) {
           final notification =
               NotificationUtils.createTaskStatusChangeNotification(
-            taskTitle: task.title,
-            newStatus: status,
-            changedBy: actor,
-            taskId: task.id,
-          );
+                taskTitle: task.title,
+                newStatus: status,
+                changedBy: actor,
+                taskId: task.id,
+              );
           if (task.teamId != null) {
             await _notificationService.createNotificationForTeam(
               notification,
@@ -176,11 +180,12 @@ class TaskService {
 
         // Create task completed notification
         if (status == TaskConstants.statusCompleted) {
-          final notification = NotificationUtils.createTaskCompletedNotification(
-            taskTitle: task.title,
-            completedBy: actor,
-            taskId: task.id,
-          );
+          final notification =
+              NotificationUtils.createTaskCompletedNotification(
+                taskTitle: task.title,
+                completedBy: actor,
+                taskId: task.id,
+              );
           if (task.teamId != null) {
             await _notificationService.createNotificationForTeam(
               notification,
@@ -200,11 +205,19 @@ class TaskService {
   }
 
   Future<bool> markAsCompleted(String id, {String? completedBy}) async {
-    return await updateTaskStatus(id, TaskConstants.statusCompleted, changedBy: completedBy);
+    return await updateTaskStatus(
+      id,
+      TaskConstants.statusCompleted,
+      changedBy: completedBy,
+    );
   }
 
   Future<bool> markAsPending(String id, {String? changedBy}) async {
-    return await updateTaskStatus(id, TaskConstants.statusPending, changedBy: changedBy);
+    return await updateTaskStatus(
+      id,
+      TaskConstants.statusPending,
+      changedBy: changedBy,
+    );
   }
 
   Future<List<Task>> getOverdueTasks() async {
@@ -282,10 +295,10 @@ class TaskService {
       for (final task in tasks) {
         final notification =
             NotificationUtils.createDeadlineReminderNotification(
-          taskTitle: task.title,
-          dueDate: task.dueDate!,
-          taskId: task.id,
-        );
+              taskTitle: task.title,
+              dueDate: task.dueDate!,
+              taskId: task.id,
+            );
         if (task.teamId != null) {
           await _notificationService.createNotificationForTeam(
             notification,
