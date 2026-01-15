@@ -168,14 +168,22 @@ class _AdvancedNotificationSettingsPageState
                       SizedBox(height: AppConstant.spacing16),
                       InputField(
                         controller: _emailController,
-                        label: 'Email Address',
                         hintText: 'Enter your email',
+                        icon: Icons.email,
+                        labelText: 'Email Address',
                         keyboardType: TextInputType.emailAddress,
                       ),
                       SizedBox(height: AppConstant.spacing12),
                       PrimaryButton(
-                        text: 'Save Email',
                         onPressed: _saveEmailAddress,
+                        child: Text(
+                          'Save Email',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
                       SizedBox(height: AppConstant.spacing8),
                       Text(
@@ -300,9 +308,22 @@ class _AdvancedNotificationSettingsPageState
                         ),
                       SizedBox(height: AppConstant.spacing16),
                       PrimaryButton(
-                        text: 'Run Check Now',
                         onPressed: _triggerManualCheck,
-                        icon: Icons.play_arrow,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.play_arrow, color: Colors.white),
+                            SizedBox(width: AppConstant.spacing8),
+                            Text(
+                              'Run Check Now',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
 
