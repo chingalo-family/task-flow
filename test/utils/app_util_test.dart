@@ -31,16 +31,19 @@ void main() {
         expect(AppUtil.isPasswordValid('Ab1!'), false);
       });
 
-      test('should return true for password with various special characters', () {
-        expect(AppUtil.isPasswordValid('Test123!'), true);
-        expect(AppUtil.isPasswordValid('Test123@'), true);
-        expect(AppUtil.isPasswordValid('Test123#'), true);
-        expect(AppUtil.isPasswordValid('Test123\$'), true);
-        expect(AppUtil.isPasswordValid('Test123%'), true);
-        expect(AppUtil.isPasswordValid('Test123^'), true);
-        expect(AppUtil.isPasswordValid('Test123&'), true);
-        expect(AppUtil.isPasswordValid('Test123*'), true);
-      });
+      test(
+        'should return true for password with various special characters',
+        () {
+          expect(AppUtil.isPasswordValid('Test123!'), true);
+          expect(AppUtil.isPasswordValid('Test123@'), true);
+          expect(AppUtil.isPasswordValid('Test123#'), true);
+          expect(AppUtil.isPasswordValid('Test123\$'), true);
+          expect(AppUtil.isPasswordValid('Test123%'), true);
+          expect(AppUtil.isPasswordValid('Test123^'), true);
+          expect(AppUtil.isPasswordValid('Test123&'), true);
+          expect(AppUtil.isPasswordValid('Test123*'), true);
+        },
+      );
 
       test('should return false for empty password', () {
         expect(AppUtil.isPasswordValid(''), false);
@@ -115,21 +118,21 @@ void main() {
     group('getUid', () {
       test('should generate UID', () {
         final uid = AppUtil.getUid();
-        
+
         expect(uid, isNotNull);
         expect(uid, isA<String>());
       });
 
       test('should generate UID with correct length', () {
         final uid = AppUtil.getUid();
-        
+
         expect(uid.length, 11);
       });
 
       test('should generate UID starting with letter', () {
         final uid = AppUtil.getUid();
         final firstChar = uid[0];
-        
+
         expect(RegExp(r'[a-zA-Z]').hasMatch(firstChar), true);
       });
 
@@ -137,7 +140,7 @@ void main() {
         final uid1 = AppUtil.getUid();
         final uid2 = AppUtil.getUid();
         final uid3 = AppUtil.getUid();
-        
+
         expect(uid1, isNot(equals(uid2)));
         expect(uid2, isNot(equals(uid3)));
         expect(uid1, isNot(equals(uid3)));
@@ -145,7 +148,7 @@ void main() {
 
       test('should generate UID with alphanumeric characters', () {
         final uid = AppUtil.getUid();
-        
+
         expect(RegExp(r'^[a-zA-Z0-9]+$').hasMatch(uid), true);
       });
 

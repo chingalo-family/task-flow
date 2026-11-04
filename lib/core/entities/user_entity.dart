@@ -2,6 +2,7 @@ import 'package:objectbox/objectbox.dart';
 
 @Entity()
 class UserEntity {
+  @Id()
   int id; // ObjectBox id
 
   String apiUserId; // API user id
@@ -11,7 +12,11 @@ class UserEntity {
   String? email;
   String? phoneNumber;
   bool isLogin;
+
+  @Property(type: PropertyType.date)
   DateTime createdAt;
+
+  @Property(type: PropertyType.date)
   DateTime updatedAt;
 
   UserEntity({

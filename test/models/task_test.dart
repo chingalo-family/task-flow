@@ -5,10 +5,7 @@ import 'package:task_flow/core/constants/task_constants.dart';
 void main() {
   group('Task Model Tests', () {
     test('Task creation with required fields', () {
-      final task = Task(
-        id: '1',
-        title: 'Test Task',
-      );
+      final task = Task(id: '1', title: 'Test Task');
 
       expect(task.id, '1');
       expect(task.title, 'Test Task');
@@ -86,9 +83,21 @@ void main() {
     });
 
     test('Task status getters work correctly', () {
-      final pendingTask = Task(id: '1', title: 'Pending', status: TaskConstants.statusPending);
-      final inProgressTask = Task(id: '2', title: 'In Progress', status: TaskConstants.statusInProgress);
-      final completedTask = Task(id: '3', title: 'Completed', status: TaskConstants.statusCompleted);
+      final pendingTask = Task(
+        id: '1',
+        title: 'Pending',
+        status: TaskConstants.statusPending,
+      );
+      final inProgressTask = Task(
+        id: '2',
+        title: 'In Progress',
+        status: TaskConstants.statusInProgress,
+      );
+      final completedTask = Task(
+        id: '3',
+        title: 'Completed',
+        status: TaskConstants.statusCompleted,
+      );
 
       expect(pendingTask.isPending, true);
       expect(pendingTask.isInProgress, false);
@@ -104,9 +113,21 @@ void main() {
     });
 
     test('Task priority getters work correctly', () {
-      final lowTask = Task(id: '1', title: 'Low', priority: TaskConstants.priorityLow);
-      final mediumTask = Task(id: '2', title: 'Medium', priority: TaskConstants.priorityMedium);
-      final highTask = Task(id: '3', title: 'High', priority: TaskConstants.priorityHigh);
+      final lowTask = Task(
+        id: '1',
+        title: 'Low',
+        priority: TaskConstants.priorityLow,
+      );
+      final mediumTask = Task(
+        id: '2',
+        title: 'Medium',
+        priority: TaskConstants.priorityMedium,
+      );
+      final highTask = Task(
+        id: '3',
+        title: 'High',
+        priority: TaskConstants.priorityHigh,
+      );
 
       expect(lowTask.isLowPriority, true);
       expect(lowTask.isMediumPriority, false);
@@ -127,7 +148,11 @@ void main() {
       final futureDate = now.add(Duration(days: 1));
 
       final overdueTask = Task(id: '1', title: 'Overdue', dueDate: pastDate);
-      final notOverdueTask = Task(id: '2', title: 'Not Overdue', dueDate: futureDate);
+      final notOverdueTask = Task(
+        id: '2',
+        title: 'Not Overdue',
+        dueDate: futureDate,
+      );
       final noDueDateTask = Task(id: '3', title: 'No Due Date');
       final completedOverdueTask = Task(
         id: '4',
@@ -150,7 +175,11 @@ void main() {
         Subtask(id: 'st4', title: 'Subtask 4', isCompleted: false),
       ];
 
-      final task = Task(id: '1', title: 'Task with Subtasks', subtasks: subtasks);
+      final task = Task(
+        id: '1',
+        title: 'Task with Subtasks',
+        subtasks: subtasks,
+      );
 
       expect(task.subtasksTotal, 4);
       expect(task.subtasksCompleted, 2);

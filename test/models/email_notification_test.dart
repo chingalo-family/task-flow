@@ -61,7 +61,7 @@ void main() {
       );
 
       final result = email.toString();
-      
+
       expect(result, contains('Test Subject'));
       expect(result, contains('test@example.com'));
       expect(result, '<Test Subject> [test@example.com]');
@@ -76,7 +76,7 @@ void main() {
       );
 
       final result = email.toString();
-      
+
       expect(result, '<Test Subject> null');
     });
 
@@ -89,7 +89,7 @@ void main() {
       );
 
       final result = email.toString();
-      
+
       expect(result, '<null> [test@example.com]');
     });
 

@@ -38,6 +38,8 @@ class Task {
   final List<Subtask>? subtasks;
   final bool? remindMe;
   final int progress;
+  final String? userId; // User who created this task
+  final String? userName; // Name of user who created this task
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -62,6 +64,8 @@ class Task {
     this.subtasks = const [],
     this.remindMe,
     this.progress = 0,
+    this.userId,
+    this.userName,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : createdAt = createdAt ?? DateTime.now(),
@@ -88,6 +92,8 @@ class Task {
     List<Subtask>? subtasks,
     bool? remindMe,
     int? progress,
+    String? userId,
+    String? userName,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -112,6 +118,8 @@ class Task {
       subtasks: subtasks ?? this.subtasks,
       remindMe: remindMe ?? this.remindMe,
       progress: progress ?? this.progress,
+      userId: userId ?? this.userId,
+      userName: userName ?? this.userName,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

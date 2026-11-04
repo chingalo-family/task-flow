@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/notification_state/notification_state.dart';
+import 'package:task_flow/app_state/user_state/user_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
+import 'package:task_flow/core/services/email_notification_service.dart';
 import 'package:task_flow/modules/tasks/tasks_page.dart';
 import 'package:task_flow/modules/teams/teams_page.dart';
 import 'package:task_flow/modules/notifications/notifications_page.dart';
@@ -21,11 +23,15 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final userState = Provider.of<UserState>(context, listen: false);
       final notificationState = Provider.of<NotificationState>(
         context,
         listen: false,
       );
       await notificationState.initialize();
+      await EmailNotificationService().setUserEmail(
+        userState.currentUser?.email ?? '',
+      );
     });
   }
 

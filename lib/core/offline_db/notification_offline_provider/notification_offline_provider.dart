@@ -112,7 +112,13 @@ class NotificationOfflineProvider {
       body: entity.body,
       type: entity.type,
       isRead: entity.isRead,
+      relatedEntityId: entity.relatedEntityId,
+      relatedEntityType: entity.relatedEntityType,
+      actorUserId: entity.actorUserId,
       actorUsername: entity.actorUsername,
+      actorAvatarUrl: entity.actorAvatarUrl,
+      recipientUserId: entity.recipientUserId,
+      recipientUserName: entity.recipientUserName,
       createdAt: entity.createdAt,
     );
   }
@@ -124,7 +130,13 @@ class NotificationOfflineProvider {
       body: notification.body,
       type: notification.type,
       isRead: notification.isRead,
+      relatedEntityId: notification.relatedEntityId,
+      relatedEntityType: notification.relatedEntityType,
+      actorUserId: notification.actorUserId,
       actorUsername: notification.actorUsername,
+      actorAvatarUrl: notification.actorAvatarUrl,
+      recipientUserId: notification.recipientUserId,
+      recipientUserName: notification.recipientUserName,
       createdAt: notification.createdAt,
     );
   }

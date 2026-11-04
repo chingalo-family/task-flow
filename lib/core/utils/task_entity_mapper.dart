@@ -77,6 +77,8 @@ class TaskEntityMapper {
       subtasksJson: subtasksJson,
       remindMe: task.remindMe,
       progress: task.progress,
+      userId: task.userId,
+      userName: task.userName,
       isSynced: false,
       createdAt: task.createdAt,
       updatedAt: task.updatedAt,
@@ -171,6 +173,8 @@ class TaskEntityMapper {
       subtasks: subtasks,
       remindMe: entity.remindMe,
       progress: entity.progress,
+      userId: entity.userId,
+      userName: entity.userName,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_flow/app_state/notification_state/notification_state.dart';
 import 'package:task_flow/core/constants/app_constant.dart';
+import 'package:task_flow/core/constants/notification_constants.dart';
 import 'package:task_flow/core/models/models.dart' as app_notif;
 
 class NotificationCard extends StatelessWidget {
@@ -11,15 +12,15 @@ class NotificationCard extends StatelessWidget {
 
   IconData _getNotificationIcon() {
     switch (notification.type) {
-      case 'task_assigned':
+      case NotificationConstants.typeTaskAssigned:
         return Icons.task_alt;
-      case 'team_invite':
+      case NotificationConstants.typeTeamInvite:
         return Icons.people;
-      case 'task_completed':
+      case NotificationConstants.typeTaskCompleted:
         return Icons.check_circle;
-      case 'mention':
+      case NotificationConstants.typeMention:
         return Icons.alternate_email;
-      case 'deadline_reminder':
+      case NotificationConstants.typeDeadlineReminder:
         return Icons.alarm;
       default:
         return Icons.notifications;
@@ -28,15 +29,15 @@ class NotificationCard extends StatelessWidget {
 
   Color _getNotificationColor() {
     switch (notification.type) {
-      case 'task_assigned':
+      case NotificationConstants.typeTaskAssigned:
         return AppConstant.primaryBlue;
-      case 'team_invite':
+      case NotificationConstants.typeTeamInvite:
         return AppConstant.successGreen;
-      case 'task_completed':
+      case NotificationConstants.typeTaskCompleted:
         return AppConstant.successGreen;
-      case 'mention':
+      case NotificationConstants.typeMention:
         return AppConstant.warningOrange;
-      case 'deadline_reminder':
+      case NotificationConstants.typeDeadlineReminder:
         return AppConstant.errorRed;
       default:
         return AppConstant.primaryBlue;

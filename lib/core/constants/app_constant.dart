@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 class AppConstant {
   static const double appBarHeight = 70.0;
   static const double defaultPadding = 10.0;
-  static const Color defaultColor = Color(0xFFC678DD);
 
   // Task Flow Theme Colors
   static const Color primaryBlue = Color(0xFF2E90FA);

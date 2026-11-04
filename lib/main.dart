@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:task_flow/my_app.dart';
 
 import 'package:task_flow/core/services/db_service.dart';
+import 'package:task_flow/core/services/background_notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +14,15 @@ void main() async {
   } catch (e) {
     debugPrint('⚠️ ObjectBox initialization failed: $e');
     debugPrint('📱 App will run without offline database support');
+  }
+
+  // Initialize background notification service for workmanager and local notifications
+  try {
+    await BackgroundNotificationService().initialize();
+    debugPrint('✅ Background notification service initialized successfully');
+  } catch (e) {
+    debugPrint('⚠️ Background notification service initialization failed: $e');
+    debugPrint('📱 App will run without background notification support');
   }
 
   runApp(const MyApp());

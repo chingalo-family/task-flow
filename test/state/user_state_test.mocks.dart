@@ -138,4 +138,12 @@ class MockUserService extends _i1.Mock implements _i2.UserService {
             returnValue: _i3.Future<List<_i4.User>>.value(<_i4.User>[]),
           )
           as _i3.Future<List<_i4.User>>);
+
+  @override
+  _i3.Future<_i4.User?> getUserById(String? id) =>
+      (super.noSuchMethod(
+            Invocation.method(#getUserById, [id]),
+            returnValue: _i3.Future<_i4.User?>.value(),
+          )
+          as _i3.Future<_i4.User?>);
 }

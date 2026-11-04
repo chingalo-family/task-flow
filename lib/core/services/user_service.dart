@@ -178,4 +178,8 @@ class UserService {
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
   }
+
+  Future<User?> getUserById(String id) async {
+    return await _offline.getUserById(id);
+  }
 }

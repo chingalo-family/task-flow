@@ -13,6 +13,7 @@ export 'task_status.dart';
 
 // Notification
 export 'notification.dart';
+export 'notification_preferences.dart';
 
 // User
 export 'user.dart';

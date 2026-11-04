@@ -90,7 +90,7 @@ void main() {
     test('categories should be const and comparable', () {
       final cat1 = TaskCategory.design;
       final cat2 = TaskCategory.design;
-      
+
       expect(identical(cat1, cat2), true);
     });
 

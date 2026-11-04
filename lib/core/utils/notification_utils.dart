@@ -1,22 +1,27 @@
 import 'package:task_flow/core/models/models.dart' as app_notification;
 import 'package:task_flow/core/utils/utils.dart';
+import 'package:task_flow/core/constants/notification_constants.dart';
 
 class NotificationUtils {
   static app_notification.Notification createTaskAssignedNotification({
     required String taskTitle,
     required String assignedBy,
     String? taskId,
+    required String recipientUserId,
+    required String recipientUserName,
   }) {
     return app_notification.Notification(
       id: AppUtil.getUid(),
       title: 'New task assigned',
       body: '$assignedBy assigned you to "$taskTitle"',
-      type: 'task_assigned',
+      type: NotificationConstants.typeTaskAssigned,
       isRead: false,
       actorUsername: assignedBy,
+      recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
       createdAt: DateTime.now(),
       relatedEntityId: taskId,
-      relatedEntityType: 'task',
+      relatedEntityType: NotificationConstants.entityTypeTask,
     );
   }
 
@@ -24,17 +29,21 @@ class NotificationUtils {
     required String taskTitle,
     required String completedBy,
     String? taskId,
+    required String recipientUserId,
+    required String recipientUserName,
   }) {
     return app_notification.Notification(
       id: AppUtil.getUid(),
       title: 'Task completed',
       body: '$completedBy marked "$taskTitle" as complete',
-      type: 'task_completed',
+      type: NotificationConstants.typeTaskCompleted,
       isRead: false,
       actorUsername: completedBy,
+      recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
       createdAt: DateTime.now(),
       relatedEntityId: taskId,
-      relatedEntityType: 'task',
+      relatedEntityType: NotificationConstants.entityTypeTask,
     );
   }
 
@@ -42,17 +51,21 @@ class NotificationUtils {
     required String teamName,
     required String invitedBy,
     String? teamId,
+    required String recipientUserId,
+    required String recipientUserName,
   }) {
     return app_notification.Notification(
       id: AppUtil.getUid(),
       title: 'Team invitation',
       body: 'You\'ve been invited to join $teamName',
-      type: 'team_invite',
+      type: NotificationConstants.typeTeamInvite,
       isRead: false,
       actorUsername: invitedBy,
+      recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
       createdAt: DateTime.now(),
       relatedEntityId: teamId,
-      relatedEntityType: 'team',
+      relatedEntityType: NotificationConstants.entityTypeTeam,
     );
   }
 
@@ -61,14 +74,18 @@ class NotificationUtils {
     required String context,
     String? entityId,
     String? preview,
+    required String recipientUserId,
+    required String recipientUserName,
   }) {
     return app_notification.Notification(
       id: AppUtil.getUid(),
       title: 'Mentioned in $context',
       body: preview ?? '$mentionedBy mentioned you in a $context',
-      type: 'mention',
+      type: NotificationConstants.typeMention,
       isRead: false,
       actorUsername: mentionedBy,
+      recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
       createdAt: DateTime.now(),
       relatedEntityId: entityId,
       relatedEntityType: context,
@@ -79,6 +96,8 @@ class NotificationUtils {
     required String taskTitle,
     required DateTime dueDate,
     String? taskId,
+    required String recipientUserId,
+    required String recipientUserName,
   }) {
     final now = DateTime.now();
     final difference = dueDate.difference(now);
@@ -94,11 +113,13 @@ class NotificationUtils {
       id: AppUtil.getUid(),
       title: 'Deadline reminder',
       body: '"$taskTitle" is due $timeText',
-      type: 'deadline_reminder',
+      type: NotificationConstants.typeDeadlineReminder,
       isRead: false,
+      recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
       createdAt: DateTime.now(),
       relatedEntityId: taskId,
-      relatedEntityType: 'task',
+      relatedEntityType: NotificationConstants.entityTypeTask,
     );
   }
 
@@ -107,17 +128,21 @@ class NotificationUtils {
     required String commentedBy,
     String? commentPreview,
     String? taskId,
+    required String recipientUserId,
+    required String recipientUserName,
   }) {
     return app_notification.Notification(
       id: AppUtil.getUid(),
       title: '$commentedBy commented',
       body: commentPreview ?? '$commentedBy commented on "$taskTitle"',
-      type: 'task_comment',
+      type: NotificationConstants.typeTaskComment,
       isRead: false,
       actorUsername: commentedBy,
+      recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
       createdAt: DateTime.now(),
       relatedEntityId: taskId,
-      relatedEntityType: 'task',
+      relatedEntityType: NotificationConstants.entityTypeTask,
     );
   }
 
@@ -126,30 +151,38 @@ class NotificationUtils {
     required String newStatus,
     required String changedBy,
     String? taskId,
+    required String recipientUserId,
+    required String recipientUserName,
   }) {
     return app_notification.Notification(
       id: AppUtil.getUid(),
       title: 'Task status updated',
       body: '$changedBy changed "$taskTitle" to $newStatus',
-      type: 'task_status_change',
+      type: NotificationConstants.typeTaskStatusChanged,
       isRead: false,
       actorUsername: changedBy,
+      recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
       createdAt: DateTime.now(),
       relatedEntityId: taskId,
-      relatedEntityType: 'task',
+      relatedEntityType: NotificationConstants.entityTypeTask,
     );
   }
 
   static app_notification.Notification createSystemNotification({
     required String title,
     required String message,
+    required String recipientUserId,
+    required String recipientUserName,
   }) {
     return app_notification.Notification(
       id: AppUtil.getUid(),
       title: title,
       body: message,
-      type: 'system',
+      type: NotificationConstants.typeSystem,
       isRead: false,
+      recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
       createdAt: DateTime.now(),
     );
   }
@@ -161,6 +194,8 @@ class NotificationUtils {
     String? actorUsername,
     String? relatedEntityId,
     String? relatedEntityType,
+    required String recipientUserId,
+    required String recipientUserName,
   }) {
     return app_notification.Notification(
       id: AppUtil.getUid(),
@@ -169,9 +204,167 @@ class NotificationUtils {
       type: type,
       isRead: false,
       actorUsername: actorUsername,
+      recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
       createdAt: DateTime.now(),
       relatedEntityId: relatedEntityId,
       relatedEntityType: relatedEntityType,
+    );
+  }
+
+  static app_notification.Notification createTeamMemberAddedNotification({
+    required String teamName,
+    required String memberUsername,
+    required String addedBy,
+    String? teamId,
+    required String recipientUserId,
+    required String recipientUserName,
+  }) {
+    return app_notification.Notification(
+      id: AppUtil.getUid(),
+      title: 'New team member',
+      body: '$addedBy added $memberUsername to $teamName',
+      type: NotificationConstants.typeTeamMemberAdded,
+      isRead: false,
+      actorUsername: addedBy,
+      recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
+      createdAt: DateTime.now(),
+      relatedEntityId: teamId,
+      relatedEntityType: NotificationConstants.entityTypeTeam,
+    );
+  }
+
+  static app_notification.Notification createTeamMemberRemovedNotification({
+    required String teamName,
+    required String memberUsername,
+    required String removedBy,
+    String? teamId,
+    required String recipientUserId,
+    required String recipientUserName,
+  }) {
+    return app_notification.Notification(
+      id: AppUtil.getUid(),
+      title: 'Team member removed',
+      body: '$removedBy removed $memberUsername from $teamName',
+      type: NotificationConstants.typeTeamMemberRemoved,
+      isRead: false,
+      actorUsername: removedBy,
+      recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
+      createdAt: DateTime.now(),
+      relatedEntityId: teamId,
+      relatedEntityType: NotificationConstants.entityTypeTeam,
+    );
+  }
+
+  static app_notification.Notification createTaskPriorityChangeNotification({
+    required String taskTitle,
+    required String newPriority,
+    required String changedBy,
+    String? taskId,
+    required String recipientUserId,
+    required String recipientUserName,
+  }) {
+    return app_notification.Notification(
+      id: AppUtil.getUid(),
+      title: 'Task priority changed',
+      body: '$changedBy changed "$taskTitle" priority to $newPriority',
+      type: NotificationConstants.typeTaskPriorityChange,
+      isRead: false,
+      actorUsername: changedBy,
+      recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
+      createdAt: DateTime.now(),
+      relatedEntityId: taskId,
+      relatedEntityType: NotificationConstants.entityTypeTask,
+    );
+  }
+
+  static app_notification.Notification createTaskOverdueNotification({
+    required String taskTitle,
+    required DateTime dueDate,
+    String? taskId,
+    required String recipientUserId,
+    required String recipientUserName,
+  }) {
+    final now = DateTime.now();
+    final difference = now.difference(dueDate);
+    String timeText;
+    if (difference.inDays == 0) {
+      timeText = 'today';
+    } else if (difference.inDays == 1) {
+      timeText = '1 day ago';
+    } else {
+      timeText = '${difference.inDays} days ago';
+    }
+    return app_notification.Notification(
+      id: AppUtil.getUid(),
+      title: 'Task overdue',
+      body: '"$taskTitle" was due $timeText',
+      type: NotificationConstants.typeTaskOverdue,
+      isRead: false,
+      recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
+      createdAt: DateTime.now(),
+      relatedEntityId: taskId,
+      relatedEntityType: NotificationConstants.entityTypeTask,
+    );
+  }
+
+  static app_notification.Notification createTaskAssignmentChangeNotification({
+    required String taskTitle,
+    required String newAssignee,
+    required String changedBy,
+    String? taskId,
+    required String recipientUserId,
+    required String recipientUserName,
+  }) {
+    return app_notification.Notification(
+      id: AppUtil.getUid(),
+      title: 'Task reassigned',
+      body: '$changedBy reassigned "$taskTitle" to $newAssignee',
+      type: NotificationConstants.typeTaskAssignmentChange,
+      isRead: false,
+      actorUsername: changedBy,
+      recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
+      createdAt: DateTime.now(),
+      relatedEntityId: taskId,
+      relatedEntityType: NotificationConstants.entityTypeTask,
+    );
+  }
+
+  static app_notification.Notification createTaskDueDateChangeNotification({
+    required String taskTitle,
+    required DateTime newDueDate,
+    required String changedBy,
+    String? taskId,
+    required String recipientUserId,
+    required String recipientUserName,
+  }) {
+    final now = DateTime.now();
+    final difference = newDueDate.difference(now);
+    String timeText;
+    if (difference.inHours < 24) {
+      timeText = 'today';
+    } else if (difference.inHours < 48) {
+      timeText = 'tomorrow';
+    } else {
+      timeText = 'in ${difference.inDays} days';
+    }
+    return app_notification.Notification(
+      id: AppUtil.getUid(),
+      title: 'Due date changed',
+      body: '$changedBy changed "$taskTitle" due date to $timeText',
+      type: NotificationConstants.typeTaskDueDateChange,
+      isRead: false,
+      actorUsername: changedBy,
+      recipientUserId: recipientUserId,
+      recipientUserName: recipientUserName,
+      createdAt: DateTime.now(),
+      relatedEntityId: taskId,
+      relatedEntityType: NotificationConstants.entityTypeTask,
     );
   }
 
@@ -183,22 +376,34 @@ class NotificationUtils {
 
   static String getNotificationIcon(String type) {
     switch (type) {
-      case 'task_assigned':
+      case NotificationConstants.typeTaskAssigned:
         return 'task_alt';
-      case 'team_invite':
+      case NotificationConstants.typeTeamInvite:
         return 'people';
-      case 'task_completed':
+      case NotificationConstants.typeTaskCompleted:
         return 'check_circle';
-      case 'mention':
+      case NotificationConstants.typeMention:
         return 'alternate_email';
-      case 'deadline_reminder':
+      case NotificationConstants.typeDeadlineReminder:
         return 'alarm';
-      case 'task_comment':
+      case NotificationConstants.typeTaskComment:
         return 'comment';
-      case 'task_status_change':
+      case NotificationConstants.typeTaskStatusChange:
         return 'update';
-      case 'system':
+      case NotificationConstants.typeSystem:
         return 'info';
+      case NotificationConstants.typeTeamMemberAdded:
+        return 'person_add';
+      case NotificationConstants.typeTeamMemberRemoved:
+        return 'person_remove';
+      case NotificationConstants.typeTaskPriorityChange:
+        return 'priority_high';
+      case NotificationConstants.typeTaskOverdue:
+        return 'warning';
+      case NotificationConstants.typeTaskAssignmentChange:
+        return 'swap_horiz';
+      case NotificationConstants.typeTaskDueDateChange:
+        return 'event';
       default:
         return 'notifications';
     }
@@ -206,19 +411,25 @@ class NotificationUtils {
 
   static String getNotificationColor(String type) {
     switch (type) {
-      case 'task_assigned':
+      case NotificationConstants.typeTaskAssigned:
         return 'primaryBlue';
-      case 'team_invite':
-      case 'task_completed':
+      case NotificationConstants.typeTeamInvite:
+      case NotificationConstants.typeTaskCompleted:
+      case NotificationConstants.typeTeamMemberAdded:
         return 'successGreen';
-      case 'mention':
-      case 'task_comment':
+      case NotificationConstants.typeMention:
+      case NotificationConstants.typeTaskComment:
+      case NotificationConstants.typeTaskPriorityChange:
         return 'warningOrange';
-      case 'deadline_reminder':
+      case NotificationConstants.typeDeadlineReminder:
+      case NotificationConstants.typeTaskOverdue:
         return 'errorRed';
-      case 'task_status_change':
+      case NotificationConstants.typeTaskStatusChange:
+      case NotificationConstants.typeTaskAssignmentChange:
+      case NotificationConstants.typeTaskDueDateChange:
         return 'primaryBlue';
-      case 'system':
+      case NotificationConstants.typeTeamMemberRemoved:
+      case NotificationConstants.typeSystem:
         return 'textSecondary';
       default:
         return 'primaryBlue';

@@ -6,10 +6,7 @@ import 'package:task_flow/core/models/task_status.dart';
 void main() {
   group('Team', () {
     test('should create team with required fields', () {
-      final team = Team(
-        id: 'team1',
-        name: 'Engineering Team',
-      );
+      final team = Team(id: 'team1', name: 'Engineering Team');
 
       expect(team.id, 'team1');
       expect(team.name, 'Engineering Team');
@@ -22,11 +19,7 @@ void main() {
       final createdAt = DateTime(2024, 1, 1);
       final updatedAt = DateTime(2024, 1, 2);
       final customStatuses = [
-        TaskStatus(
-          id: 'custom1',
-          name: 'Review',
-          color: Colors.orange,
-        ),
+        TaskStatus(id: 'custom1', name: 'Review', color: Colors.orange),
       ];
 
       final team = Team(
@@ -63,37 +56,40 @@ void main() {
     });
 
     test('should default memberCount to 0', () {
-      final team = Team(
-        id: 'team1',
-        name: 'Test Team',
-      );
+      final team = Team(id: 'team1', name: 'Test Team');
 
       expect(team.memberCount, 0);
     });
 
     test('should default timestamps to current time', () {
       final before = DateTime.now();
-      final team = Team(
-        id: 'team1',
-        name: 'Test Team',
-      );
+      final team = Team(id: 'team1', name: 'Test Team');
       final after = DateTime.now();
 
-      expect(team.createdAt.isAfter(before) || 
-             team.createdAt.isAtSameMomentAs(before), true);
-      expect(team.createdAt.isBefore(after) || 
-             team.createdAt.isAtSameMomentAs(after), true);
-      expect(team.updatedAt.isAfter(before) || 
-             team.updatedAt.isAtSameMomentAs(before), true);
-      expect(team.updatedAt.isBefore(after) || 
-             team.updatedAt.isAtSameMomentAs(after), true);
+      expect(
+        team.createdAt.isAfter(before) ||
+            team.createdAt.isAtSameMomentAs(before),
+        true,
+      );
+      expect(
+        team.createdAt.isBefore(after) ||
+            team.createdAt.isAtSameMomentAs(after),
+        true,
+      );
+      expect(
+        team.updatedAt.isAfter(before) ||
+            team.updatedAt.isAtSameMomentAs(before),
+        true,
+      );
+      expect(
+        team.updatedAt.isBefore(after) ||
+            team.updatedAt.isAtSameMomentAs(after),
+        true,
+      );
     });
 
     test('should return default statuses when customTaskStatuses is null', () {
-      final team = Team(
-        id: 'team1',
-        name: 'Test Team',
-      );
+      final team = Team(id: 'team1', name: 'Test Team');
 
       final statuses = team.taskStatuses;
       final defaultStatuses = TaskStatus.getDefaultStatuses();
@@ -106,11 +102,7 @@ void main() {
 
     test('should return custom statuses when provided', () {
       final customStatuses = [
-        TaskStatus(
-          id: 'custom1',
-          name: 'Review',
-          color: Colors.orange,
-        ),
+        TaskStatus(id: 'custom1', name: 'Review', color: Colors.orange),
       ];
 
       final team = Team(
@@ -125,16 +117,9 @@ void main() {
     });
 
     test('should copy team with updated fields', () {
-      final original = Team(
-        id: 'team1',
-        name: 'Original Team',
-        memberCount: 3,
-      );
+      final original = Team(id: 'team1', name: 'Original Team', memberCount: 3);
 
-      final copied = original.copyWith(
-        name: 'Updated Team',
-        memberCount: 5,
-      );
+      final copied = original.copyWith(name: 'Updated Team', memberCount: 5);
 
       expect(copied.id, 'team1');
       expect(copied.name, 'Updated Team');
@@ -173,37 +158,22 @@ void main() {
     });
 
     test('should copy team with new task list', () {
-      final original = Team(
-        id: 'team1',
-        name: 'Test Team',
-        taskIds: ['task1'],
-      );
+      final original = Team(id: 'team1', name: 'Test Team', taskIds: ['task1']);
 
-      final copied = original.copyWith(
-        taskIds: ['task1', 'task2'],
-      );
+      final copied = original.copyWith(taskIds: ['task1', 'task2']);
 
       expect(copied.taskIds, ['task1', 'task2']);
       expect(original.taskIds, ['task1']);
     });
 
     test('should copy team with custom statuses', () {
-      final original = Team(
-        id: 'team1',
-        name: 'Test Team',
-      );
+      final original = Team(id: 'team1', name: 'Test Team');
 
       final newStatuses = [
-        TaskStatus(
-          id: 'custom1',
-          name: 'Review',
-          color: Colors.orange,
-        ),
+        TaskStatus(id: 'custom1', name: 'Review', color: Colors.orange),
       ];
 
-      final copied = original.copyWith(
-        customTaskStatuses: newStatuses,
-      );
+      final copied = original.copyWith(customTaskStatuses: newStatuses);
 
       expect(copied.customTaskStatuses, newStatuses);
       expect(copied.taskStatuses, newStatuses);
